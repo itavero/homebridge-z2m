@@ -1,16 +1,16 @@
 {
   "private": true,
-  "displayName": "Plugin Name",
-  "name": "homebridge-plugin-name",
-  "version": "1.0.0",
-  "description": "A short description about what your plugin does.",
+  "displayName": "Homebridge Zigbee2mqtt",
+  "name": "homebridge-z2m",
+  "version": "0.0.1",
+  "description": "Expose your Zigbee devices to HomeKit with ease, by integrating zigbee2mqtt with Homebridge.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/USERNAME/GITHUB_PROJECT_NAME.git"
+    "url": "git://github.com/itavero/homebridge-z2m.git"
   },
   "bugs": {
-    "url": "https://github.com/USERNAME/GITHUB_PROJECT_NAME/issues"
+    "url": "https://github.com/itavero/homebridge-z2m/issues"
   },
   "engines": {
     "node": ">=10.17.0",
@@ -36,6 +36,7 @@
     "nodemon": "^2.0.4",
     "rimraf": "^3.0.2",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.5",
+    "mqtt": "^4.1.0"
   }
 }

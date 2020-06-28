@@ -1,130 +1,299 @@
-import { Service, PlatformAccessory, CharacteristicValue, CharacteristicSetCallback, CharacteristicGetCallback } from 'homebridge';
+import { Service, PlatformAccessory, WithUUID, Characteristic, CharacteristicValue, CharacteristicSetCallback, CharacteristicGetCallback } from 'homebridge';
 
-import { ExampleHomebridgePlatform } from './platform';
+import { Zigbee2mqttPlatform } from './platform';
+import { Zigbee2mqttDeviceInfo } from './models';
 
-/**
- * Platform Accessory
- * An instance of this class is created for each accessory your platform registers
- * Each accessory may expose multiple services of different service types.
- */
-export class ExamplePlatformAccessory {
-  private service: Service;
-
-  /**
-   * These are just used to create a working example
-   * You should implement your own code to track the state of your accessory
-   */
-  private exampleStates = {
-    On: false,
-    Brightness: 100,
-  }
+export class Zigbee2mqttAccessory {
+  public static readonly IGNORED_STATE_KEYS : Set<string> = new Set<string>(['last_seen', 'linkquality', 'voltage', 'pressure', 'illuminance']);
+  private readonly services : ServiceWrapper[] = [];
 
   constructor(
-    private readonly platform: ExampleHomebridgePlatform,
-    private readonly accessory: PlatformAccessory,
+    private readonly platform: Zigbee2mqttPlatform,
+    public readonly accessory: PlatformAccessory,
   ) {
+    this.updateDeviceInformation(accessory.context.device);
+    this.handleServices();
+  }
 
-    // set accessory information
+  get UUID(): string {
+    return this.accessory.UUID; 
+  }
+
+  get ieeeAddress(): string {
+    return this.accessory.context.device.ieeeAddr; 
+  }
+
+  matchesIdentifier(id:string) : boolean {
+    return (id === this.ieeeAddress || this.accessory.context.device.friendly_name === id);
+  }
+
+  updateDeviceInformation(info: Zigbee2mqttDeviceInfo) {
+    this.accessory.context.device = info;
+
+    let manufacturer : string = info.manufacturerName ?? 'zigbee2mqtt';
+    if (info.vendor && info.vendor !== '-') {
+      manufacturer = info.vendor;
+    }
+  
     this.accessory.getService(this.platform.Service.AccessoryInformation)!
-      .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Default-Manufacturer')
-      .setCharacteristic(this.platform.Characteristic.Model, 'Default-Model')
-      .setCharacteristic(this.platform.Characteristic.SerialNumber, 'Default-Serial');
+      .updateCharacteristic(this.platform.Characteristic.Manufacturer, manufacturer)
+      .updateCharacteristic(this.platform.Characteristic.Model, info.modelID ?? 'unknown')
+      .updateCharacteristic(this.platform.Characteristic.SerialNumber, info.ieeeAddr)
+      .updateCharacteristic(this.platform.Characteristic.HardwareRevision, info.hardwareVersion ?? '?')
+      .updateCharacteristic(this.platform.Characteristic.FirmwareRevision, info.softwareBuildID ?? '?');
 
-    // get the LightBulb service if it exists, otherwise create a new LightBulb service
-    // you can create multiple services for each accessory
-    this.service = this.accessory.getService(this.platform.Service.Lightbulb) || this.accessory.addService(this.platform.Service.Lightbulb);
-
-    // To avoid "Cannot add a Service with the same UUID another Service without also defining a unique 'subtype' property." error,
-    // when creating multiple services of the same type, you need to use the following syntax to specify a name and subtype id:
-    // this.accessory.getService('NAME') ?? this.accessory.addService(this.platform.Service.Lightbulb, 'NAME', 'USER_DEFINED_SUBTYPE');
-
-    // set the service name, this is what is displayed as the default name on the Home app
-    // in this example we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
-    this.service.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.exampleDisplayName);
-
-    // each service must implement at-minimum the "required characteristics" for the given service type
-    // see https://developers.homebridge.io/#/service/Lightbulb
-
-    // register handlers for the On/Off Characteristic
-    this.service.getCharacteristic(this.platform.Characteristic.On)
-      .on('set', this.setOn.bind(this))                // SET - bind to the `setOn` method below
-      .on('get', this.getOn.bind(this));               // GET - bind to the `getOn` method below
-
-    // register handlers for the Brightness Characteristic
-    this.service.getCharacteristic(this.platform.Characteristic.Brightness)
-      .on('set', this.setBrightness.bind(this));       // SET - bind to the 'setBrightness` method below
-
-    // EXAMPLE ONLY
-    // Example showing how to update the state of a Characteristic asynchronously instead
-    // of using the `on('get')` handlers.
-    //
-    // Here we change update the brightness to a random value every 5 seconds using 
-    // the `updateCharacteristic` method.
-    setInterval(() => {
-      // assign the current brightness a random value between 0 and 100
-      const currentBrightness = Math.floor(Math.random() * 100);
-
-      // push the new value to HomeKit
-      this.service.updateCharacteristic(this.platform.Characteristic.Brightness, currentBrightness);
-
-      this.platform.log.debug('Pushed updated current Brightness state to HomeKit:', currentBrightness);
-    }, 10000);
+    this.platform.api.updatePlatformAccessories([this.accessory]);
   }
 
-  /**
-   * Handle "SET" requests from HomeKit
-   * These are sent when the user changes the state of an accessory, for example, turning on a Light bulb.
-   */
-  setOn(value: CharacteristicValue, callback: CharacteristicSetCallback) {
+  updateStates(state: Record<string, unknown>) {
+    // Refresh cached state
+    const newKeys : Set<string> = new Set<string>();
+    if (!this.accessory.context.state || !(this.accessory.context.state instanceof Map)) {
+      this.accessory.context.state = new Map<string, CharacteristicValue>();
+    }
+    for (const key in state) {
+      newKeys.add(key);
+      this.accessory.context.state.set(key, state[key]);
+      this.accessory.context.state.del;
+    }
 
-    // implement your own code to turn your device on/off
-    this.exampleStates.On = value as boolean;
+    for (const key of (this.accessory.context.state as Map<string, CharacteristicValue>).keys()) {
+      if (!newKeys.has(key)) {
+        this.platform.log.debug('Remove old property with key:', key);
+        this.accessory.context.state.delete(key);
+      }
+    }
 
-    this.platform.log.debug('Set Characteristic On ->', value);
-
-    // you must call the callback function
-    callback(null);
+    this.handleServices();
   }
 
-  /**
-   * Handle the "GET" requests from HomeKit
-   * These are sent when HomeKit wants to know the current state of the accessory, for example, checking if a Light bulb is on.
-   * 
-   * GET requests should return as fast as possbile. A long delay here will result in
-   * HomeKit being unresponsive and a bad user experience in general.
-   * 
-   * If your device takes time to respond you should update the status of your device
-   * asynchronously instead using the `updateCharacteristic` method instead.
+  private handleServices() {
+    if (!this.accessory.context.state || !(this.accessory.context.state instanceof Map)) {
+      // nothing to do
+      this.platform.log.debug(`Accessory ${this.accessory.displayName} has no state (yet).`);
+      return;
+    }
 
-   * @example
-   * this.service.updateCharacteristic(this.platform.Characteristic.On, true)
-   */
-  getOn(callback: CharacteristicGetCallback) {
+    const state = this.accessory.context.state as Map<string, CharacteristicValue>;
+    const handledKeys = new Set<string>();
 
-    // implement your own code to check if the device is on
-    const isOn = this.exampleStates.On;
+    // Iterate over existing services
+    for (let i = this.services.length - 1; i >= 0; i--) {
+      const srv = this.services[i];
+      const keysUsed = this.callServiceWrapper(srv, state);
 
-    this.platform.log.debug('Get Characteristic On ->', isOn);
+      if (keysUsed.size > 0) {
+        keysUsed.forEach((key) => handledKeys.add(key));
+      } else {
+        // Get rid of old service
+        srv.remove(this.accessory);
+        this.services.splice(i, 1);
+      }
+    }
 
-    // you must call the callback function
-    // the first argument should be null if there were no errors
-    // the second argument should be the value to return
-    callback(null, isOn);
+    // Create new services for unhandled keys
+    let hasNewServices = false;
+    for (const key of state.keys()) {
+      if (handledKeys.has(key) || Zigbee2mqttAccessory.IGNORED_STATE_KEYS.has(key)) {
+        // Already handled or ignored 
+        continue;
+      }
+
+      // Create new service (if possible)
+      switch (key) {
+        case 'humidity':
+        {
+          this.platform.log.debug(`Adding HumiditySensor to accessory ${this.accessory.displayName}.`);
+          const wrapper = new SingleReadOnlyValueServiceWrapper('humidity',
+            this.getOrAddService(this.platform.Service.HumiditySensor),
+            this.platform.Characteristic.CurrentRelativeHumidity);
+          this.addService(wrapper, state);
+          hasNewServices = true;
+          break;
+        }
+        case 'temperature':
+        {
+          this.platform.log.debug(`Adding TemperatureSensor to accessory ${this.accessory.displayName}.`);
+          const wrapper = new SingleReadOnlyValueServiceWrapper('temperature',
+            this.getOrAddService(this.platform.Service.TemperatureSensor),
+            this.platform.Characteristic.CurrentTemperature);
+          this.addService(wrapper, state);
+          hasNewServices = true;
+          break;
+        }
+        case 'illuminance_lux':
+        {
+          this.platform.log.debug(`Adding LightSensor to accessory ${this.accessory.displayName}.`);
+          const wrapper = new SingleReadOnlyValueServiceWrapper('illuminance_lux',
+            this.getOrAddService(this.platform.Service.LightSensor),
+            this.platform.Characteristic.CurrentAmbientLightLevel);
+          this.addService(wrapper, state);
+          hasNewServices = true;
+          break;
+        }
+        case 'contact':
+        {
+          this.platform.log.debug(`Adding ContactSensor to accessory ${this.accessory.displayName}.`);
+          const wrapper = new SingleReadOnlyValueServiceWrapper('contact',
+            this.getOrAddService(this.platform.Service.ContactSensor),
+            this.platform.Characteristic.ContactSensorState,
+            (key, value) => value as boolean ? this.platform.Characteristic.ContactSensorState.CONTACT_DETECTED : this.platform.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED);
+          this.addService(wrapper, state);
+          hasNewServices = true;
+          break;
+        }
+        case 'occupancy':
+        {
+          this.platform.log.debug(`Adding OccupancySensor to accessory ${this.accessory.displayName}.`);
+          const wrapper = new SingleReadOnlyValueServiceWrapper('occupancy',
+            this.getOrAddService(this.platform.Service.OccupancySensor),
+            this.platform.Characteristic.OccupancyDetected,
+            (key, value) => value as boolean ? this.platform.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED : this.platform.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
+          this.addService(wrapper, state);
+          hasNewServices = true;
+          break;
+        }
+        case 'smoke':
+        {
+          this.platform.log.debug(`Adding SmokeSensor to accessory ${this.accessory.displayName}.`);
+          const wrapper = new SingleReadOnlyValueServiceWrapper('smoke',
+            this.getOrAddService(this.platform.Service.SmokeSensor),
+            this.platform.Characteristic.SmokeDetected,
+            (key, value) => value as boolean ? this.platform.Characteristic.SmokeDetected.SMOKE_DETECTED : this.platform.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED);
+          this.addService(wrapper, state);
+          hasNewServices = true;
+          break;
+        }
+        case 'water_leak':
+        {
+          this.platform.log.debug(`Adding LeakSensor to accessory ${this.accessory.displayName}.`);
+          const wrapper = new SingleReadOnlyValueServiceWrapper('water_leak',
+            this.getOrAddService(this.platform.Service.LeakSensor),
+            this.platform.Characteristic.LeakDetected,
+            (key, value) => value as boolean ? this.platform.Characteristic.LeakDetected.LEAK_DETECTED : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED);
+          this.addService(wrapper, state);
+          hasNewServices = true;
+          break;
+        }
+        case 'battery':
+        {
+          this.platform.log.debug(`Adding BatteryService to accessory ${this.accessory.displayName}.`);
+          const wrapper = new BatteryServiceWrapper(this.getOrAddService(this.platform.Service.BatteryService), this.platform.Characteristic);
+          this.addService(wrapper, state);
+          hasNewServices = true;
+          break;
+        }
+        default:
+          this.platform.log.debug(`Unhandled key '${key}' for accessory '${this.accessory.context.device.friendly_name}'`);
+          break;
+      }
+
+      this.platform.api.updatePlatformAccessories([this.accessory]);
+    }
   }
 
-  /**
-   * Handle "SET" requests from HomeKit
-   * These are sent when the user changes the state of an accessory, for example, changing the Brightness
-   */
-  setBrightness(value: CharacteristicValue, callback: CharacteristicSetCallback) {
+  private addService(srv:ServiceWrapper, state:Map<string, CharacteristicValue>) {
+    this.services.push(srv);
+    this.callServiceWrapper(srv, state);
+    this.platform.api.updatePlatformAccessories([this.accessory]);
+  }
 
-    // implement your own code to set the brightness
-    this.exampleStates.Brightness = value as number;
+  private callServiceWrapper(srv:ServiceWrapper, state:Map<string, CharacteristicValue>) : Set<string> {
+    const handledKeys = new Set<string>();
+    for (const key of state.keys()) {
+      if (srv.appliesToKey(key)) {
+        srv.updateValueForKey(key, state.get(key) as CharacteristicValue);
+        handledKeys.add(key);
+      }
+    }
+    return handledKeys; 
+  }
 
-    this.platform.log.debug('Set Characteristic Brightness -> ', value);
+  private getOrAddService<T extends WithUUID<typeof Service>>(service: T, setNameCharacteristic = true, name: string | undefined = undefined): Service {
+    const existingService = this.accessory.getService(service);
+    if (existingService !== undefined) {
+      return existingService;
+    }
 
-    // you must call the callback function
-    callback(null);
+    const newService = this.accessory.addService(service);
+    if (setNameCharacteristic) {
+      let displayName : string = this.accessory.displayName;
+      if (name !== undefined) {
+        displayName = name as string;
+      }
+      newService.updateCharacteristic(this.platform.Characteristic.Name, displayName);
+    }
+    return newService;
+  }
+}
+
+export interface ServiceWrapper {
+  appliesToKey(key:string) : boolean;
+  updateValueForKey(key:string, value:CharacteristicValue);
+  remove(accessory:PlatformAccessory);
+}
+
+export interface MqttValueTransformer {
+  (key: string, value: CharacteristicValue): CharacteristicValue;
+}
+
+export class SingleReadOnlyValueServiceWrapper implements ServiceWrapper {
+  
+  constructor(
+    private readonly key: string,
+    private readonly service: Service,
+    private readonly characteristic : string | WithUUID<new () => Characteristic>,
+    private readonly transformMqttValue : MqttValueTransformer | undefined = undefined,
+  ) {
+  }
+
+  updateValueForKey(key: string, value: CharacteristicValue) {
+    if (this.key === key) {
+      if (this.transformMqttValue !== undefined) {
+        value = this.transformMqttValue(key, value);
+      }
+      this.service.updateCharacteristic(this.characteristic, value);
+    }
+  }
+
+  appliesToKey(key: string): boolean {
+    return this.key === key;
+  }
+
+  remove(accessory:PlatformAccessory) {
+    accessory.removeService(this.service);
+  }
+}
+
+export class BatteryServiceWrapper implements ServiceWrapper {
+  private readonly levelCharacteristic : string | WithUUID<new () => Characteristic>;
+  private readonly statusLowBatteryCharacteristic : string | WithUUID<new () => Characteristic>;
+  private readonly levelLow : CharacteristicValue;
+  private readonly levelNormal : CharacteristicValue;
+  constructor(
+    private readonly service: Service, characteristics: typeof Characteristic) {
+    this.service.updateCharacteristic(characteristics.ChargingState, characteristics.ChargingState.NOT_CHARGEABLE);
+    this.levelCharacteristic = characteristics.BatteryLevel;
+    this.statusLowBatteryCharacteristic = characteristics.StatusLowBattery;
+    this.levelLow = characteristics.StatusLowBattery.BATTERY_LEVEL_LOW;
+    this.levelNormal = characteristics.StatusLowBattery.BATTERY_LEVEL_NORMAL;
+  }
+
+  appliesToKey(key: string): boolean {
+    return key === 'battery';
+  }
+
+  updateValueForKey(key: string, value: CharacteristicValue) {
+    if (key === 'battery') {
+      this.service.updateCharacteristic(this.levelCharacteristic, value);
+      this.service.updateCharacteristic(this.statusLowBatteryCharacteristic, (value < 30) ? this.levelLow : this.levelNormal);
+    }
+  }
+
+  remove(accessory: PlatformAccessory) {
+    accessory.removeService(this.service);
   }
 
 }
+
+

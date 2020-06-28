@@ -37,6 +37,7 @@
     "rimraf": "^3.0.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5",
-    "mqtt": "^4.1.0"
+    "mqtt": "^4.1.0",
+    "color-convert": "^2.0.1"
   }
 }

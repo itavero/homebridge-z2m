@@ -1,4 +1,4 @@
-import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic, CharacteristicValue, CharacteristicSetCallback, CharacteristicGetCallback } from 'homebridge';
+import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { Zigbee2mqttAccessory } from './platformAccessory';
@@ -32,7 +32,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
     this.log.info(`Connecting to MQTT server at ${config.mqtt.server}`);
 
-    const options : mqtt.IClientOptions = {};
+    const options: mqtt.IClientOptions = {};
 
     if (config.mqtt.version) {
       options.protocolVersion = config.mqtt.version;
@@ -65,7 +65,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       options.clientId = config.mqtt.client_id;
     }
 
-    if (config.mqtt.hasOwnProperty('reject_unauthorized') && !config.mqtt.reject_unauthorized) {
+    if ('reject_unauthorized' in config.mqtt && !config.mqtt.reject_unauthorized) {
       this.log.debug('MQTT reject_unauthorized set false, ignoring certificate warnings.');
       options.rejectUnauthorized = false;
     }
@@ -81,7 +81,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     // to start discovery of new accessories.
     this.api.on('didFinishLaunching', () => {
       log.debug('Executed didFinishLaunching callback');
-      
+
       // Setup MQTT callbacks and subscription
       this.MqttClient.on('message', this.onMessage);
       this.MqttClient.subscribe(config.mqtt.base_topic + '/#');
@@ -91,37 +91,37 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     });
   }
 
-  onMessage(topic: string, payload: Buffer, packet: mqtt.Packet) {
+  private onMessage(topic: string, payload: Buffer) {
     if (!topic.startsWith(`${this.config.mqtt.base_topic}/`)) {
       this.log.debug('Ignore message, because topic is unexpected.', topic);
       return;
     }
 
     topic = topic.substr(this.config.mqtt.base_topic.length + 1);
-    this.log.debug('Received message on topic ', topic);
 
     if (topic === 'bridge/config/devices') {
       // Update accessories
-      const devices : Zigbee2mqttDeviceInfo[] = JSON.parse(payload.toString());
+      const devices: Zigbee2mqttDeviceInfo[] = JSON.parse(payload.toString());
       this.handleReceivedDevices(devices);
     } else if (topic.indexOf('/') === -1) {
       const state = JSON.parse(payload.toString());
       // Probably a status update from a device
       this.handleDeviceUpdate(topic, state);
+    } else {
+      this.log.debug(`Received message on '${topic}', but it was not handled`);
     }
   }
 
-  async handleDeviceUpdate(topic: string, state: Record<string, unknown>) {
+  private async handleDeviceUpdate(topic: string, state: Record<string, unknown>) {
     const accessory = this.accessories.find((acc) => acc.matchesIdentifier(topic));
     if (accessory) {
       accessory.updateStates(state);
     } else {
-      this.log.debug(`Device with identifier ${topic} not found for update.`);
+      this.log.debug(`Device '${topic}' not found for update.`);
     }
   }
 
-
-  handleReceivedDevices(devices: Zigbee2mqttDeviceInfo[]) {
+  private handleReceivedDevices(devices: Zigbee2mqttDeviceInfo[]) {
     devices.forEach((device) => {
       if (device.friendly_name === 'Coordinator' || device.type === 'Coordinator') {
         // skip coordinator
@@ -132,7 +132,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     });
 
     // Remove devices that are no longer present
-    const staleAccessories : PlatformAccessory[] = [];
+    const staleAccessories: PlatformAccessory[] = [];
     for (let i = this.accessories.length - 1; i >= 0; --i) {
       const foundIndex = devices.findIndex((d) => d.ieeeAddr === this.accessories[i].ieeeAddress);
       if (foundIndex < 0) {
@@ -176,18 +176,17 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
   }
 
-
   private async discoverDevices() {
     await this.publishMessage('bridge/config/devices/get', '', {});
   }
 
-  isConnected() : boolean {
+  isConnected(): boolean {
     return this.MqttClient && !this.MqttClient.reconnecting;
   }
 
   async publishMessage(topic: string, payload: string, options: mqtt.IClientPublishOptions) {
     topic = `${this.config.mqtt.base_topic}/${topic}`;
-    options = {qos: 0, retain: false, ...options};
+    options = { qos: 0, retain: false, ...options };
     if (!this.isConnected) {
       this.log.error('Not connected to MQTT server!');
       this.log.error(`Cannot send message: topic: '${topic}', payload: '${payload}`);

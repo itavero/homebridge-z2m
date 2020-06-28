@@ -1,79 +1,79 @@
 {
-  "pluginAlias": "zigbee2mqtt",
-  "pluginType": "platform",
-  "singular": true,
-  "schema": {
-    "type": "object",
-    "properties": {
-      "mqtt": {
-        "title": "MQTT",
-        "type": "object",
-        "required": true,
-        "properties": {
-        "base_topic": {
-          "title": "Base topic",
-          "type": "string",
-          "required": true,
-          "default": "zigbee2mqtt"
-        },
-        "server": {
-          "title": "Server",
-          "type": "string",
-          "required": true,
-          "default": "mqtt://localhost:1883"
-        },
-        "ca": {
-          "title": "SSL/TLS certificate of CA",
-          "type": "string",
-          "required": false
-        },
-        "key": {
-          "title": "SSL/TLS key for client-authentication",
-          "type": "string",
-          "required": false
-        },
-        "cert": {
-          "title": "SSL/TLS certificate for client-authentication",
-          "type": "string",
-          "required": false
-        },
-        "user": {
-          "title": "Username",
-          "type": "string",
-          "required": false
-        },
-        "password": {
-          "title": "Password",
-          "type": "string",
-          "required": false
-        },
-        "client_id": {
-          "title": "Client ID",
-          "type": "string",
-          "default": "homebridge-z2m",
-          "required": false
-        },
-        "reject_unauthorized": {
-          "title": "Disable self-signed SSL certificates",
-          "type": "boolean",
-          "default": false,
-          "required": false
-        },
-        "keepalive": {
-          "title": "Keep Alive",
-          "type": "integer",
-          "default": 60,
-          "required": false
-        },
-        "version": {
-          "title": "MQTT version",
-          "type": "integer",
-          "default": 4,
-          "minimum": 4,
-          "maximum": 5,
-          "required": false
+  "pluginAlias":"zigbee2mqtt",
+  "pluginType":"platform",
+  "singular":true,
+  "schema":{
+     "type":"object",
+     "properties":{
+        "mqtt":{
+           "title":"MQTT",
+           "type":"object",
+           "required":true,
+           "properties":{
+              "base_topic":{
+                 "title":"Base topic",
+                 "type":"string",
+                 "required":true,
+                 "default":"zigbee2mqtt"
+              },
+              "server":{
+                 "title":"Server",
+                 "type":"string",
+                 "required":true,
+                 "default":"mqtt://localhost:1883"
+              },
+              "ca":{
+                 "title":"SSL/TLS certificate of CA",
+                 "type":"string",
+                 "required":false
+              },
+              "key":{
+                 "title":"SSL/TLS key for client-authentication",
+                 "type":"string",
+                 "required":false
+              },
+              "cert":{
+                 "title":"SSL/TLS certificate for client-authentication",
+                 "type":"string",
+                 "required":false
+              },
+              "user":{
+                 "title":"Username",
+                 "type":"string",
+                 "required":false
+              },
+              "password":{
+                 "title":"Password",
+                 "type":"string",
+                 "required":false
+              },
+              "client_id":{
+                 "title":"Client ID",
+                 "type":"string",
+                 "required":false
+              },
+              "reject_unauthorized":{
+                 "title":"Disable self-signed SSL certificates",
+                 "type":"boolean",
+                 "default":false,
+                 "required":false
+              },
+              "keepalive":{
+                 "title":"Keep Alive",
+                 "type":"integer",
+                 "default":60,
+                 "required":false
+              },
+              "version":{
+                 "title":"MQTT version",
+                 "type":"integer",
+                 "default":4,
+                 "minimum":4,
+                 "maximum":5,
+                 "required":false
+              }
+           }
         }
-      }
-    }
+     }
   }
 }

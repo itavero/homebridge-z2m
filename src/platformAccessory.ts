@@ -386,10 +386,39 @@ export class BatteryServiceWrapper implements ServiceWrapper {
 
 }
 
-export class SwitchServiceWrapper implements ServiceWrapper {
+export class DelayedPublisher {
+
+  private pendingPublishData: Record<string, unknown>;
+  private publishIsScheduled: boolean;
+
+  constructor(private readonly publish: MqttPublisher) {
+    this.pendingPublishData = {};
+    this.publishIsScheduled = false;
+  }
+
+  protected queuePublishData(data: Record<string, unknown>) {
+    this.pendingPublishData = { ...this.pendingPublishData, ...data };
+
+    if (!this.publishIsScheduled) {
+      this.publishIsScheduled = true;
+      process.nextTick(() => {
+        this.publishPendingData();
+      });
+    }
+  }
+
+  private publishPendingData() {
+    this.publishIsScheduled = false;
+    this.publish(this.pendingPublishData);
+    this.pendingPublishData = {};
+  }
+}
+
+export class SwitchServiceWrapper extends DelayedPublisher implements ServiceWrapper {
   private readonly onCharacteristic: WithUUID<new () => Characteristic>;
   constructor(
-    protected readonly service: Service, characteristics: typeof Characteristic, protected readonly publish: MqttPublisher) {
+    protected readonly service: Service, characteristics: typeof Characteristic, publish: MqttPublisher) {
+    super(publish);
     this.onCharacteristic = characteristics.On;
     service.getCharacteristic(this.onCharacteristic)
       .on('set', this.setOn.bind(this));
@@ -412,7 +441,7 @@ export class SwitchServiceWrapper implements ServiceWrapper {
 
   private setOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = { state: (value as boolean) ? 'ON' : 'OFF' };
-    this.publish(data);
+    this.queuePublishData(data);
     callback(null);
   }
 
@@ -436,7 +465,7 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
   private saturation: number;
 
   constructor(
-    protected readonly service: Service, characteristics: typeof Characteristic, protected readonly publish: MqttPublisher) {
+    protected readonly service: Service, characteristics: typeof Characteristic, publish: MqttPublisher) {
     super(service, characteristics, publish);
     this.brightnessCharacteristic = characteristics.Brightness;
     this.colorTemperatureCharacteristic = characteristics.ColorTemperature;
@@ -533,13 +562,14 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
 
   private setBrightness(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = { brightness: Math.ceil((value as number) * (255 / 100)) };
-    this.publish(data);
+    this.queuePublishData(data);
     callback(null);
   }
 
   private setColorTemperature(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = { color_temp: value as number };
-    this.publish(data);
+
+    this.queuePublishData(data);
     callback(null);
   }
 
@@ -550,7 +580,7 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
 
       const xy = LightbulbServiceWrapper.convertHueSatToXy(this.hue, this.saturation);
       const data = { color: { x: xy[0], y: xy[1] } };
-      this.publish(data);
+      this.queuePublishData(data);
     }
   }
 

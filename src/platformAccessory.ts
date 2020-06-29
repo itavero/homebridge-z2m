@@ -2,6 +2,7 @@ import { Service, PlatformAccessory, WithUUID, Characteristic, CharacteristicVal
 
 import { Zigbee2mqttPlatform } from './platform';
 import { Zigbee2mqttDeviceInfo } from './models';
+import { ExtendedTimer } from './timer';
 
 import * as color_convert from 'color-convert';
 
@@ -10,26 +11,59 @@ export class Zigbee2mqttAccessory {
     ['last_seen', 'linkquality', 'voltage', 'pressure', 'illuminance', 'update_available']);
 
   private readonly services: ServiceWrapper[] = [];
+  private readonly updateTimer: ExtendedTimer;
 
   constructor(
     private readonly platform: Zigbee2mqttPlatform,
     public readonly accessory: PlatformAccessory,
   ) {
     this.updateDeviceInformation(accessory.context.device);
-    this.handleServices();
 
-    // TODO: Try to recreate ServiceWrapper instances based on restored services? maybe?
+    // Recreate ServiceWrappers from restored services
+    for (const srv of this.accessory.services) {
+      const uuid = srv.getServiceId();
 
-    // Ask Zigbee2mqtt for data after a few seconds.
-    // TODO Add repeats and cancel/postpone it when we get state data.
-    setTimeout(() => {
+      switch (uuid) {
+        case this.platform.Service.TemperatureSensor.UUID:
+          this.createServiceForKey('temperature');
+          break;
+        case this.platform.Service.HumiditySensor.UUID:
+          this.createServiceForKey('humidity');
+          break;
+        case this.platform.Service.ContactSensor.UUID:
+          this.createServiceForKey('contact');
+          break;
+        case this.platform.Service.LightSensor.UUID:
+          this.createServiceForKey('illuminance_lux');
+          break;
+        case this.platform.Service.OccupancySensor.UUID:
+          this.createServiceForKey('occupancy');
+          break;
+        case this.platform.Service.SmokeSensor.UUID:
+          this.createServiceForKey('smoke');
+          break;
+        case this.platform.Service.LeakSensor.UUID:
+          this.createServiceForKey('water_leak');
+          break;
+        case this.platform.Service.Lightbulb.UUID:
+          this.createServiceForKey('brightness');
+          break;
+        case this.platform.Service.Switch.UUID:
+          this.createServiceForKey('state');
+          break;
+        default:
+          //ignore this service.
+          break;
+      }
+    }
+
+    // Ask Zigbee2mqtt for a status update at least once an hour.
+    this.updateTimer = new ExtendedTimer(() => {
       this.publishGet();
-    }, Zigbee2mqttAccessory.getRandomIntervalMs(1, 15));
-  }
+    }, (60 * 60 * 1000));
 
-  private static getRandomIntervalMs(min_seconds: number, max_seconds: number): number {
-    const delta = (max_seconds - min_seconds) * 1000;
-    return (min_seconds * 1000) + Math.floor(Math.random() * delta);
+    // Immediately request an update to start off.
+    this.publishGet();
   }
 
   get UUID(): string {
@@ -63,36 +97,19 @@ export class Zigbee2mqttAccessory {
   }
 
   updateStates(state: Record<string, unknown>) {
-    // Cancel timer
-    // Refresh cached state
-    const newKeys: Set<string> = new Set<string>();
-    if (!this.accessory.context.state || !(this.accessory.context.state instanceof Map)) {
-      this.accessory.context.state = new Map<string, CharacteristicValue>();
-    }
+    // Restart timer
+    this.updateTimer.restart();
+
+    // Generate map
+    const map = new Map<string, CharacteristicValue>();
     for (const key in state) {
-      newKeys.add(key);
-      this.accessory.context.state.set(key, state[key]);
-      this.accessory.context.state.del;
+      map.set(key, state[key] as CharacteristicValue);
     }
 
-    for (const key of (this.accessory.context.state as Map<string, CharacteristicValue>).keys()) {
-      if (!newKeys.has(key)) {
-        this.platform.log.debug('Remove old property with key:', key);
-        this.accessory.context.state.delete(key);
-      }
-    }
-
-    this.handleServices();
+    this.handleServices(map);
   }
 
-  private handleServices() {
-    if (!this.accessory.context.state || !(this.accessory.context.state instanceof Map)) {
-      // nothing to do
-      this.platform.log.debug(`Accessory ${this.accessory.displayName} has no state (yet).`);
-      return;
-    }
-
-    const state = this.accessory.context.state as Map<string, CharacteristicValue>;
+  private handleServices(state: Map<string, CharacteristicValue>) {
     const handledKeys = new Set<string>();
 
     // Iterate over existing services
@@ -119,104 +136,7 @@ export class Zigbee2mqttAccessory {
         continue;
       }
 
-      // Create new service (if possible)
-      switch (key) {
-        case 'humidity':
-        {
-          const wrapper = new SingleReadOnlyValueServiceWrapper('humidity',
-            this.getOrAddService(this.platform.Service.HumiditySensor),
-            this.platform.Characteristic.CurrentRelativeHumidity);
-          this.addService(wrapper, state, handledKeys);
-          break;
-        }
-        case 'temperature':
-        {
-          const wrapper = new SingleReadOnlyValueServiceWrapper('temperature',
-            this.getOrAddService(this.platform.Service.TemperatureSensor),
-            this.platform.Characteristic.CurrentTemperature);
-          this.addService(wrapper, state, handledKeys);
-          break;
-        }
-        case 'illuminance_lux':
-        {
-          const wrapper = new SingleReadOnlyValueServiceWrapper('illuminance_lux',
-            this.getOrAddService(this.platform.Service.LightSensor),
-            this.platform.Characteristic.CurrentAmbientLightLevel);
-          this.addService(wrapper, state, handledKeys);
-          break;
-        }
-        case 'contact':
-        {
-          const wrapper = new SingleReadOnlyValueServiceWrapper('contact',
-            this.getOrAddService(this.platform.Service.ContactSensor),
-            this.platform.Characteristic.ContactSensorState,
-            (key, value) => value as boolean
-              ? this.platform.Characteristic.ContactSensorState.CONTACT_DETECTED
-              : this.platform.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED);
-          this.addService(wrapper, state, handledKeys);
-          break;
-        }
-        case 'occupancy':
-        {
-          const wrapper = new SingleReadOnlyValueServiceWrapper('occupancy',
-            this.getOrAddService(this.platform.Service.OccupancySensor),
-            this.platform.Characteristic.OccupancyDetected,
-            (key, value) => value as boolean
-              ? this.platform.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED
-              : this.platform.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
-          this.addService(wrapper, state, handledKeys);
-          break;
-        }
-        case 'smoke':
-        {
-          const wrapper = new SingleReadOnlyValueServiceWrapper('smoke',
-            this.getOrAddService(this.platform.Service.SmokeSensor),
-            this.platform.Characteristic.SmokeDetected,
-            (key, value) => value as boolean
-              ? this.platform.Characteristic.SmokeDetected.SMOKE_DETECTED
-              : this.platform.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED);
-          this.addService(wrapper, state, handledKeys);
-          break;
-        }
-        case 'water_leak':
-        {
-          const wrapper = new SingleReadOnlyValueServiceWrapper('water_leak',
-            this.getOrAddService(this.platform.Service.LeakSensor),
-            this.platform.Characteristic.LeakDetected,
-            (key, value) => value as boolean
-              ? this.platform.Characteristic.LeakDetected.LEAK_DETECTED
-              : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED);
-          this.addService(wrapper, state, handledKeys);
-          break;
-        }
-        case 'battery':
-        {
-          const wrapper = new BatteryServiceWrapper(this.getOrAddService(this.platform.Service.BatteryService),
-            this.platform.Characteristic);
-          this.addService(wrapper, state, handledKeys);
-          break;
-        }
-        case 'state':
-        {
-          const wrapper = new SwitchServiceWrapper(this.getOrAddService(this.platform.Service.Switch),
-            this.platform.Characteristic, this.publishSet.bind(this));
-          this.addService(wrapper, state, handledKeys);
-          break;
-        }
-        case 'brightness':
-        case 'color_temp':
-        case 'color':
-        {
-          this.removeOtherServicesUsingKey('state');
-          const wrapper = new LightbulbServiceWrapper(this.getOrAddService(this.platform.Service.Lightbulb),
-            this.platform.Characteristic, this.publishSet.bind(this));
-          this.addService(wrapper, state, handledKeys);
-          break;
-        }
-        default:
-          // All remaining unhandled keys will be logged a few lines down.
-          break;
-      }
+      this.createServiceForKey(key, state, handledKeys);
     }
 
     if (initialNumberOfUnhandledKeys !== unhandledKeys.size) {
@@ -232,15 +152,129 @@ export class Zigbee2mqttAccessory {
     }
   }
 
-  private addService(srv: ServiceWrapper, state: Map<string, CharacteristicValue>, handledKeys: Set<string>) {
+  private createServiceForKey(key: string, state: Map<string, CharacteristicValue> | undefined = undefined,
+    handledKeys: Set<string> | undefined = undefined) {
+    // Create new service (if possible)
+    switch (key) {
+      case 'humidity':
+      {
+        const wrapper = new SingleReadOnlyValueServiceWrapper('humidity',
+          this.getOrAddService(this.platform.Service.HumiditySensor),
+          this.platform.Characteristic.CurrentRelativeHumidity);
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'temperature':
+      {
+        const wrapper = new SingleReadOnlyValueServiceWrapper('temperature',
+          this.getOrAddService(this.platform.Service.TemperatureSensor),
+          this.platform.Characteristic.CurrentTemperature);
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'illuminance_lux':
+      {
+        const wrapper = new SingleReadOnlyValueServiceWrapper('illuminance_lux',
+          this.getOrAddService(this.platform.Service.LightSensor),
+          this.platform.Characteristic.CurrentAmbientLightLevel);
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'contact':
+      {
+        const wrapper = new SingleReadOnlyValueServiceWrapper('contact',
+          this.getOrAddService(this.platform.Service.ContactSensor),
+          this.platform.Characteristic.ContactSensorState,
+          (key, value) => value as boolean
+            ? this.platform.Characteristic.ContactSensorState.CONTACT_DETECTED
+            : this.platform.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED);
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'occupancy':
+      {
+        const wrapper = new SingleReadOnlyValueServiceWrapper('occupancy',
+          this.getOrAddService(this.platform.Service.OccupancySensor),
+          this.platform.Characteristic.OccupancyDetected,
+          (key, value) => value as boolean
+            ? this.platform.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED
+            : this.platform.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'smoke':
+      {
+        const wrapper = new SingleReadOnlyValueServiceWrapper('smoke',
+          this.getOrAddService(this.platform.Service.SmokeSensor),
+          this.platform.Characteristic.SmokeDetected,
+          (key, value) => value as boolean
+            ? this.platform.Characteristic.SmokeDetected.SMOKE_DETECTED
+            : this.platform.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED);
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'water_leak':
+      {
+        const wrapper = new SingleReadOnlyValueServiceWrapper('water_leak',
+          this.getOrAddService(this.platform.Service.LeakSensor),
+          this.platform.Characteristic.LeakDetected,
+          (key, value) => value as boolean
+            ? this.platform.Characteristic.LeakDetected.LEAK_DETECTED
+            : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED);
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'battery':
+      {
+        const wrapper = new BatteryServiceWrapper(this.getOrAddService(this.platform.Service.BatteryService),
+          this.platform.Characteristic);
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'state':
+      {
+        const wrapper = new SwitchServiceWrapper(this.getOrAddService(this.platform.Service.Switch),
+          this.platform.Characteristic, this.publishSet.bind(this));
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'brightness':
+      case 'color_temp':
+      case 'color':
+      {
+        this.removeOtherServicesUsingKey('state');
+        const wrapper = new LightbulbServiceWrapper(this.getOrAddService(this.platform.Service.Lightbulb),
+          this.platform.Characteristic, this.publishSet.bind(this));
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'position':
+      {
+        const wrapper = new WindowCoveringServiceWrapper(this.getOrAddService(this.platform.Service.WindowCovering),
+          this.platform.Characteristic, this.publishSet.bind(this), this.publishGet.bind(this));
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      default:
+        // All remaining unhandled keys will be logged a few lines down.
+        break;
+    }
+  }
+
+  private addService(srv: ServiceWrapper, state: Map<string, CharacteristicValue> | undefined, handledKeys: Set<string> | undefined) {
     this.platform.log.debug(`Adding ${srv.displayName} to accessory ${this.accessory.displayName}.`);
     this.services.push(srv);
-    const used_keys = this.callServiceWrapper(srv, state);
+    let used_keys: Set<string> = new Set<string>();
+    if (state !== undefined) {
+      used_keys = this.callServiceWrapper(srv, state);
+    }
     this.platform.api.updatePlatformAccessories([this.accessory]);
 
-    // Remove keys that have been handled by this service
-    for (const key of used_keys) {
-      handledKeys.add(key);
+    if (handledKeys !== undefined) {
+      // Add keys that have been handled by this service to the given set
+      for (const key of used_keys) {
+        handledKeys.add(key);
+      }
     }
   }
 
@@ -315,8 +349,12 @@ export interface MqttValueTransformer {
   (key: string, value: CharacteristicValue): CharacteristicValue;
 }
 
-export interface MqttPublisher {
+export interface MqttSetPublisher {
   (data: Record<string, unknown>): void;
+}
+
+export interface MqttGetPublisher {
+  (keys: string[] | undefined): void
 }
 
 export class SingleReadOnlyValueServiceWrapper implements ServiceWrapper {
@@ -386,12 +424,110 @@ export class BatteryServiceWrapper implements ServiceWrapper {
 
 }
 
+export class WindowCoveringServiceWrapper implements ServiceWrapper {
+  private readonly currentPositionCharacteristic: WithUUID<new () => Characteristic>;
+  private readonly targetPositionCharacteristic: WithUUID<new () => Characteristic>;
+  private readonly positionStateCharacteristic: WithUUID<new () => Characteristic>;
+  private readonly stateDecreasing: CharacteristicValue;
+  private readonly stateIncreasing: CharacteristicValue;
+  private readonly stateStopped: CharacteristicValue;
+  private currentPosition: number;
+  private targetPosition: number;
+
+  private readonly updateTimer: ExtendedTimer;
+
+  constructor(
+    private readonly service: Service, characteristics: typeof Characteristic, private readonly setPublisher: MqttSetPublisher,
+    private readonly getPublisher: MqttGetPublisher) {
+    this.currentPositionCharacteristic = characteristics.CurrentPosition;
+    this.targetPositionCharacteristic = characteristics.TargetPosition;
+    this.positionStateCharacteristic = characteristics.PositionState;
+    this.stateDecreasing = characteristics.PositionState.DECREASING;
+    this.stateIncreasing = characteristics.PositionState.INCREASING;
+    this.stateStopped = characteristics.PositionState.STOPPED;
+
+    this.currentPosition = -1;
+    this.targetPosition = -1;
+
+    this.updateTimer = new ExtendedTimer(this.requestPositionUpdate.bind(this), 2000);
+
+    service.getCharacteristic(this.targetPositionCharacteristic)
+      .on('set', this.setTargetPosition.bind(this));
+
+    service.getCharacteristic(this.positionStateCharacteristic)
+      .setValue(this.stateStopped);
+  }
+
+  get displayName(): string {
+    return 'WindowCovering';
+  }
+
+  private setTargetPosition(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
+    this.targetPosition = value as number;
+    this.setPublisher({ position: this.targetPosition });
+
+    // Assume state of cover
+    if (this.targetPosition > this.currentPosition) {
+      this.service.getCharacteristic(this.positionStateCharacteristic)
+        .setValue(this.stateIncreasing);
+    } else if (this.targetPosition < this.currentPosition) {
+      this.service.getCharacteristic(this.positionStateCharacteristic)
+        .setValue(this.stateDecreasing);
+    }
+
+    // Start requesting frequent updates.
+    this.updateTimer.start();
+
+    callback(null);
+  }
+
+  private requestPositionUpdate() {
+    // Manually polling for the state, because that was needed with my Swedish blinds.
+    this.getPublisher(['position']);
+  }
+
+  appliesToKey(key: string): boolean {
+    return key === 'position';
+  }
+
+  updateValueForKey(key: string, value: unknown): void {
+    if (key === 'position') {
+      const newPosition = value as number;
+
+      let state = this.stateStopped;
+      if (this.currentPosition >= 0) {
+        if (newPosition > this.currentPosition) {
+          state = this.stateIncreasing;
+        } else if (newPosition < this.currentPosition) {
+          state = this.stateDecreasing;
+        } else {
+          // Stop requesting frequent updates
+          this.updateTimer.stop();
+        }
+      }
+
+      this.service.getCharacteristic(this.positionStateCharacteristic)
+        .updateValue(state);
+
+      this.service.getCharacteristic(this.currentPositionCharacteristic)
+        .updateValue(newPosition);
+
+      this.currentPosition = newPosition;
+    }
+  }
+
+  remove(accessory: PlatformAccessory): void {
+    accessory.removeService(this.service);
+  }
+
+}
+
 export class DelayedPublisher {
 
   private pendingPublishData: Record<string, unknown>;
   private publishIsScheduled: boolean;
 
-  constructor(private readonly publish: MqttPublisher) {
+  constructor(private readonly publish: MqttSetPublisher) {
     this.pendingPublishData = {};
     this.publishIsScheduled = false;
   }
@@ -417,7 +553,7 @@ export class DelayedPublisher {
 export class SwitchServiceWrapper extends DelayedPublisher implements ServiceWrapper {
   private readonly onCharacteristic: WithUUID<new () => Characteristic>;
   constructor(
-    protected readonly service: Service, characteristics: typeof Characteristic, publish: MqttPublisher) {
+    protected readonly service: Service, characteristics: typeof Characteristic, publish: MqttSetPublisher) {
     super(publish);
     this.onCharacteristic = characteristics.On;
     service.getCharacteristic(this.onCharacteristic)
@@ -465,7 +601,7 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
   private saturation: number;
 
   constructor(
-    protected readonly service: Service, characteristics: typeof Characteristic, publish: MqttPublisher) {
+    protected readonly service: Service, characteristics: typeof Characteristic, publish: MqttSetPublisher) {
     super(service, characteristics, publish);
     this.brightnessCharacteristic = characteristics.Brightness;
     this.colorTemperatureCharacteristic = characteristics.ColorTemperature;

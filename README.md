@@ -71,6 +71,7 @@ Whenever it receives a message for a device (on `zigbee2mqtt/[FRIENDLY_NAME]` to
 | `occupancy` | [OccupancySensor](https://developers.homebridge.io/#/service/OccupancySensor) |
 | `smoke` | [SmokeSensor](https://developers.homebridge.io/#/service/SmokeSensor) |
 | `water_leak` | [LeakSensor](https://developers.homebridge.io/#/service/LeakSensor) |
+| `position` | [WindowCovering](https://developers.homebridge.io/#/service/WindowCovering) |
 | `battery` | [BatteryService](https://developers.homebridge.io/#/service/BatteryService) _(currently [StatusLowBattery](https://developers.homebridge.io/#/characteristic/StatusLowBattery) is set to **Low** when the reported battery level is less than 30%)_ |
 
 This way this homebridge plugin does not have to know the different devices. In other words, if a new device gets added to zigbee2mqtt, you probably only have to update zigbee2mqtt and not this plugin.

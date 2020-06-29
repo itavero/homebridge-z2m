@@ -532,7 +532,7 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
   }
 
   private setBrightness(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
-    const data = { brightness: value as number };
+    const data = { brightness: Math.ceil((value as number) * (255 / 100)) };
     this.publish(data);
     callback(null);
   }
@@ -578,7 +578,7 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
     switch (key) {
       case 'brightness':
         this.addBrightness();
-        this.service.updateCharacteristic(this.brightnessCharacteristic, value as number);
+        this.service.updateCharacteristic(this.brightnessCharacteristic, Math.round(((value as number) / 255) * 100));
         break;
       case 'color_temp':
         this.addColorTemperature();

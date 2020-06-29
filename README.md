@@ -73,7 +73,7 @@ Whenever it receives a message for a device (on `zigbee2mqtt/[FRIENDLY_NAME]` to
 | `water_leak` | [LeakSensor](https://developers.homebridge.io/#/service/LeakSensor) |
 | `battery` | [BatteryService](https://developers.homebridge.io/#/service/BatteryService) _(currently [StatusLowBattery](https://developers.homebridge.io/#/characteristic/StatusLowBattery) is set to **Low** when the reported battery level is less than 30%)_ |
 
-This way this homebridge plugin does not have to know the different devices. In other words, if a new device gets added to zigbee2mqtt, you probably on have to update zigbee2mqtt and not this plugin.
+This way this homebridge plugin does not have to know the different devices. In other words, if a new device gets added to zigbee2mqtt, you probably only have to update zigbee2mqtt and not this plugin.
 
 Unfortunately, a downside is that the device must have published its data before the plugin knows how HomeKit could use it. All devices except the Coordinator will be exposed to HomeKit, even before any services are discovered. So, you could already put your new device in the right room in the _Home_ app, even though you might not be able to use it already.
 
@@ -81,7 +81,7 @@ _(TBD: How to handle devices [light bulbs for instance] that almost never publis
 
 _(TBD: How to ignore/exclude devices? Probably need a configuration item for that.)_
 
-_(TBD: How to handle when a lights state contains both `color_temp` and `color`? Which one to follow? Maybe monitor for changes or monitor `zigbee2mqtt/[FRIENDLY_NAME]/set`?)
+_(TBD: How to handle when a lights state contains both `color_temp` and `color`? Which one to follow? Maybe monitor for changes or monitor `zigbee2mqtt/[FRIENDLY_NAME]/set`?)_
 
 ## Roadmap 🛣
 Below is a list of ideas I still have for this plugin. Of course, right now my priority is to be able to monitor and control my Zigbee devices first.

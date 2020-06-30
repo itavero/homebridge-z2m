@@ -1,7 +1,7 @@
 # homebridge-z2m
 
-<a href="https://www.npmjs.com/package/homebridge"><img title="npm version" src="https://badgen.net/npm/v/homebridge-z2m" ></a>
-<a href="https://www.npmjs.com/package/homebridge"><img title="npm downloads" src="https://badgen.net/npm/dt/homebridge-z2m" ></a>
+<a href="https://www.npmjs.com/package/homebridge-z2m"><img title="npm version" src="https://badgen.net/npm/v/homebridge-z2m" ></a>
+<a href="https://www.npmjs.com/package/homebridge-z2m"><img title="npm downloads" src="https://badgen.net/npm/dt/homebridge-z2m" ></a>
 
 Expose your Zigbee devices to HomeKit with ease, by integrating 🐝 [zigbee2mqtt](https://www.zigbee2mqtt.io/) with 🏠 [Homebridge](https://homebridge.io/) (via an MQTT message broker).
 

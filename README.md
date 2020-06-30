@@ -1,4 +1,8 @@
 # homebridge-z2m
+
+<a href="https://www.npmjs.com/package/homebridge"><img title="npm version" src="https://badgen.net/npm/v/homebridge-z2m" ></a>
+<a href="https://www.npmjs.com/package/homebridge"><img title="npm downloads" src="https://badgen.net/npm/dt/homebridge-z2m" ></a>
+
 Expose your Zigbee devices to HomeKit with ease, by integrating 🐝 [zigbee2mqtt](https://www.zigbee2mqtt.io/) with 🏠 [Homebridge](https://homebridge.io/) (via an MQTT message broker).
 
 ## Work in progress 👷‍♂️
@@ -21,13 +25,13 @@ If you cannot find an existing issue that describes your bug or feature, feel fr
 Please try to provide enough (background) information.
 
 ## Installation
-> Note: at the moment this plugin is not yet published. Instructions below will apply once it is published, or you have to install it manually from the Git repository.
+> ⚠️ This plugin is still under active development. Things might break between release.
 
 First of all, make sure you have [zigbee2mqtt](https://www.zigbee2mqtt.io) setup correctly. Without a working zigbee2mqtt installation, this plugin won't be able to do much for you.
 
 The easiest way to install this plugin and configure this plugin, is by using [Homebridge Config UI X](https://www.npmjs.com/package/homebridge-config-ui-x). On the _Plugins_ tab, look for `z2m` or `zigbee2mqtt` and hit the _Install_ button. After that you can configure the plugin settings via the same page.
 
-An alternative way is to manually call `npm i -g homebridge-z2m` (⚠️TBD) and add the configuration to the `platforms` array of your Homebridge `config.json`.
+An alternative way is to manually call `npm i -g homebridge-z2m` and add the configuration to the `platforms` array of your Homebridge `config.json`.
 
 ### Configuration ⚙️
 The bare minimum configuration looks like this:
@@ -78,8 +82,6 @@ This way this homebridge plugin does not have to know the different devices. In 
 
 Unfortunately, a downside is that the device must have published its data before the plugin knows how HomeKit could use it. All devices except the Coordinator will be exposed to HomeKit, even before any services are discovered. So, you could already put your new device in the right room in the _Home_ app, even though you might not be able to use it already.
 
-_(TBD: How to handle devices [light bulbs for instance] that almost never publish data? Maybe periodically publish an empty message to `zigbee2mqtt/[FRIENDLY_NAME]/get` for devices of which no state has been received?)_
-
 _(TBD: How to ignore/exclude devices? Probably need a configuration item for that.)_
 
 _(TBD: How to handle when a lights state contains both `color_temp` and `color`? Which one to follow? Maybe monitor for changes or monitor `zigbee2mqtt/[FRIENDLY_NAME]/set`?)_
@@ -89,4 +91,5 @@ Below is a list of ideas I still have for this plugin. Of course, right now my p
 
 * "virtual" switch to enable/disable `permit_join` (and also have it automatically turn off when a timer elapses or a device is paired).
 * When `update_available` is set to `true`, provide a switch service to start the FW update via HomeKit (and maybe see if it is possible to provide feedback on the progress somehow). I might add this to each device individually, or maybe generate one virtual device that acts as a binary sensor (so that you can also get some kind of notification when an update is available) and add multiple switches to that.
+* Support for push buttons (including double click and hold, if possible).
 * If available, use the information for the Home Assistant MQTT discovery, to figure out available services even before the data is published.

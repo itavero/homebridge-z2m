@@ -51,6 +51,12 @@ export class Zigbee2mqttAccessory {
         case this.platform.Service.Switch.UUID:
           this.createServiceForKey('state');
           break;
+        case this.platform.Service.WindowCovering.UUID:
+          this.createServiceForKey('position');
+          break;
+        case this.platform.Service.BatteryService.UUID:
+          this.createServiceForKey('battery');
+          break;
         default:
           //ignore this service.
           break;
@@ -496,9 +502,9 @@ export class WindowCoveringServiceWrapper implements ServiceWrapper {
 
       let state = this.stateStopped;
       if (this.currentPosition >= 0) {
-        if (newPosition > this.currentPosition) {
+        if (newPosition > this.currentPosition && newPosition < 100) {
           state = this.stateIncreasing;
-        } else if (newPosition < this.currentPosition) {
+        } else if (newPosition < this.currentPosition && newPosition > 0) {
           state = this.stateDecreasing;
         } else {
           // Stop requesting frequent updates

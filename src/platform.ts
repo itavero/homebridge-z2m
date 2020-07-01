@@ -123,6 +123,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   private handleReceivedDevices(devices: Zigbee2mqttDeviceInfo[]) {
     devices.forEach((device) => {
+      if (this.isDeviceExcluded(device.ieeeAddr)) {
+        return;
+      }
       if (device.friendly_name === 'Coordinator' || device.type === 'Coordinator') {
         // skip coordinator
         this.log.debug('Skip Coordinator with IEEE address:', device.ieeeAddr);
@@ -135,8 +138,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     const staleAccessories: PlatformAccessory[] = [];
     for (let i = this.accessories.length - 1; i >= 0; --i) {
       const foundIndex = devices.findIndex((d) => d.ieeeAddr === this.accessories[i].ieeeAddress);
-      if (foundIndex < 0) {
-        // Not found; remove it.
+      if (foundIndex < 0 || this.isDeviceExcluded(this.accessories[i].ieeeAddress)) {
+        // Not found or excluded; remove it.
         staleAccessories.push(this.accessories[i].accessory);
         this.accessories.splice(i, 1);
       }
@@ -151,7 +154,20 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     this.addAccessory(accessory);
   }
 
+  private isDeviceExcluded(ieeeAddr : string) : boolean {
+    if (this.config?.devices?.exclude !== undefined && Array.isArray(this.config.devices.exclude)) {
+      if (this.config.devices.exclude.includes(ieeeAddr)) {
+        this.log.debug(`Accessory ${ieeeAddr} is excluded.`);
+        return true;
+      }
+    }
+    return false;
+  }
+
   private addAccessory(accessory: PlatformAccessory) {
+    if (this.isDeviceExcluded(accessory.context.device.ieeeAddr)) {
+      return;
+    }
     if (this.accessories.findIndex((acc) => acc.UUID === accessory.UUID) < 0) {
       // New entry
       this.log.info('Adding accessory', accessory.displayName);
@@ -161,6 +177,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private createOrUpdateAccessory(device: Zigbee2mqttDeviceInfo) {
+    if (this.isDeviceExcluded(device.ieeeAddr)) {
+      return;
+    }
     const uuid = this.api.hap.uuid.generate(device.ieeeAddr);
     const existingAcc = this.accessories.find((acc) => acc.UUID === uuid);
     if (existingAcc) {

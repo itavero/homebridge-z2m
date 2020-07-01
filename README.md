@@ -34,13 +34,19 @@ The easiest way to install this plugin and configure this plugin, is by using [H
 An alternative way is to manually call `npm i -g homebridge-z2m` and add the configuration to the `platforms` array of your Homebridge `config.json`.
 
 ### Configuration ⚙️
-The bare minimum configuration looks like this:
+A (rather minimal) configuration looks like this:
 ```json
 {
    "platform": "zigbee2mqtt",
    "mqtt": {
       "base_topic": "zigbee2mqtt",
       "server": "mqtt://localhost:1883"
+   },
+   "devices": {
+      "exclude": [
+         "0x1234567890abcdef",
+         "0xabcdef1234567890"
+      ]
    }
 }
 ```
@@ -57,7 +63,9 @@ Within the `mqtt` object, you can add pretty much all the configuration options 
 * `keepalive`
 * `version`
 
-Please refer to the [zigbee2mqtt documentation](https://www.zigbee2mqtt.io/information/configuration.html) for more information.
+Please refer to the [zigbee2mqtt documentation](https://www.zigbee2mqtt.io/information/configuration.html) for more information on the MQTT options.
+
+Within `devices.exclude` you can put an array with the IEEE addresses of the Zigbee devices you wish to exclude from this integration.
 
 ## How it (should 😉) work
 The plugin listens to the [MQTT messages](https://www.zigbee2mqtt.io/information/mqtt_topics_and_message_structure.html) published by zigbee2mqtt.

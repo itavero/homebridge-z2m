@@ -6,6 +6,8 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+
+## [0.0.3][] - 2020-07-01
 ### Added
 
 - Devices can now be excluded via the configuration (`devices` > `exclude`).
@@ -15,3 +17,7 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 
 - Restore BatteryServuce and WindowConvering properly on start up.
 - Improve state determination for WindowCovering.
+
+
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v0.0.3...HEAD
+[0.0.3]: https://github.com/itavero/homebridge-z2m/tree/v0.0.3

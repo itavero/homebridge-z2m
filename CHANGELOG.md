@@ -21,3 +21,4 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 
 [Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v0.0.3...HEAD
 [0.0.3]: https://github.com/itavero/homebridge-z2m/tree/v0.0.3
+[0.0.2]: https://github.com/itavero/homebridge-z2m/tree/v0.0.2

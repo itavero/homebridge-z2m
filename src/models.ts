@@ -15,3 +15,6 @@ export interface Zigbee2mqttDeviceInfo {
    modelID?: string;
    hardwareVersion?: number;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isDeviceInfo = (x: any): x is Zigbee2mqttDeviceInfo => (x.ieeeAddr && x.friendly_name);

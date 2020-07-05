@@ -24,6 +24,19 @@ If you find your issue already exists, make relevant comments and add your [reac
 If you cannot find an existing issue that describes your bug or feature, feel free to submit an new issue.
 Please try to provide enough (background) information.
 
+### Testing the latest changes
+After a bug fix or new feature is pushed to GitHub, you can already try it even before it is released.
+There's two ways to install the latest stuff from GitHub on your machine:
+
+1. Use the install command: `npm i -g itavero/homebridge-z2m#master` (in which `master` is the name of the branch)
+2. Checkout the repository locally, and run the following commands:
+   ```
+   cd path/to/git/repository
+   npm i
+   npm run build
+   npm link
+   ```
+
 ## Installation
 > ⚠️ This plugin is still under active development. Things might break between release.
 
@@ -65,7 +78,7 @@ Within the `mqtt` object, you can add pretty much all the configuration options 
 
 Please refer to the [zigbee2mqtt documentation](https://www.zigbee2mqtt.io/information/configuration.html) for more information on the MQTT options.
 
-Within `devices.exclude` you can put an array with the IEEE addresses of the Zigbee devices you wish to exclude from this integration.
+Within `devices.exclude` you can put an array with the IEEE addresses, or the `friendly_name`, of the Zigbee devices you wish to exclude from this integration.
 
 ## How it (should 😉) work
 The plugin listens to the [MQTT messages](https://www.zigbee2mqtt.io/information/mqtt_topics_and_message_structure.html) published by zigbee2mqtt.

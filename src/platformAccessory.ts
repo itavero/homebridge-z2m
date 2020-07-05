@@ -374,7 +374,7 @@ export class SingleReadOnlyValueServiceWrapper implements ServiceWrapper {
   }
 
   get displayName(): string {
-    return this.service.constructor.name;
+    return `${this.key} (${this.service.UUID}`;
   }
 
   updateValueForKey(key: string, value: unknown): void {

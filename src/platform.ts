@@ -2,7 +2,7 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, 
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { Zigbee2mqttAccessory } from './platformAccessory';
-import { Zigbee2mqttDeviceInfo } from './models';
+import { Zigbee2mqttDeviceInfo, isDeviceInfo } from './models';
 
 import * as mqtt from 'mqtt';
 import * as fs from 'fs';
@@ -80,8 +80,6 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     // in order to ensure they weren't added to homebridge already. This event can also be used
     // to start discovery of new accessories.
     this.api.on('didFinishLaunching', () => {
-      log.debug('Executed didFinishLaunching callback');
-
       // Setup MQTT callbacks and subscription
       this.MqttClient.on('message', this.onMessage);
       this.MqttClient.subscribe(config.mqtt.base_topic + '/#');
@@ -108,22 +106,24 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       // Probably a status update from a device
       this.handleDeviceUpdate(topic, state);
     } else {
-      this.log.debug(`Received message on '${topic}', but it was not handled`);
+      this.log.debug(`Unhandled message on topic: ${topic}`);
     }
   }
 
   private async handleDeviceUpdate(topic: string, state: Record<string, unknown>) {
-    const accessory = this.accessories.find((acc) => acc.matchesIdentifier(topic));
-    if (accessory) {
-      accessory.updateStates(state);
-    } else {
-      this.log.debug(`Device '${topic}' not found for update.`);
+    if (!this.isDeviceExcluded(topic)) {
+      const accessory = this.accessories.find((acc) => acc.matchesIdentifier(topic));
+      if (accessory) {
+        accessory.updateStates(state);
+      } else {
+        this.log.debug(`Device '${topic}' not found for update.`);
+      }
     }
   }
 
   private handleReceivedDevices(devices: Zigbee2mqttDeviceInfo[]) {
     devices.forEach((device) => {
-      if (this.isDeviceExcluded(device.ieeeAddr)) {
+      if (this.isDeviceExcluded(device)) {
         return;
       }
       if (device.friendly_name === 'Coordinator' || device.type === 'Coordinator') {
@@ -138,7 +138,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     const staleAccessories: PlatformAccessory[] = [];
     for (let i = this.accessories.length - 1; i >= 0; --i) {
       const foundIndex = devices.findIndex((d) => d.ieeeAddr === this.accessories[i].ieeeAddress);
-      if (foundIndex < 0 || this.isDeviceExcluded(this.accessories[i].ieeeAddress)) {
+      if (foundIndex < 0 || this.isDeviceExcluded(this.accessories[i].accessory.context.device)) {
         // Not found or excluded; remove it.
         staleAccessories.push(this.accessories[i].accessory);
         this.accessories.splice(i, 1);
@@ -150,34 +150,50 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   configureAccessory(accessory: PlatformAccessory) {
-    this.log.debug('Loading accessory from cache:', accessory.displayName);
     this.addAccessory(accessory);
   }
 
-  private isDeviceExcluded(ieeeAddr : string) : boolean {
-    if (this.config?.devices?.exclude !== undefined && Array.isArray(this.config.devices.exclude)) {
-      if (this.config.devices.exclude.includes(ieeeAddr)) {
-        this.log.debug(`Accessory ${ieeeAddr} is excluded.`);
-        return true;
+  private isDeviceExcluded(device: Zigbee2mqttDeviceInfo | string): boolean {
+    if (Array.isArray(this.config?.devices?.exclude)) {
+      const identifiers : string[] = [];
+      if (isDeviceInfo(device)) {
+        identifiers.push(device.ieeeAddr.toLocaleLowerCase());
+        identifiers.push(device.friendly_name.toLocaleLowerCase());
+      } else {
+        identifiers.push(device.toLocaleLowerCase());
+      }
+      for (const key of this.config.devices.exclude) {
+        if (identifiers.includes(key.toLocaleLowerCase())) {
+          return true;
+        }
       }
     }
     return false;
   }
 
   private addAccessory(accessory: PlatformAccessory) {
-    if (this.isDeviceExcluded(accessory.context.device.ieeeAddr)) {
+    if (this.isDeviceExcluded(accessory.context.device)) {
+      this.log.warn(`Excluded device found on startup: ${accessory.context.device.friendly_name} (${accessory.context.device.ieeeAddr}).`);
+      process.nextTick(() => {  
+        try {
+          this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+        } catch (error) {
+          this.log.error('Trying to delete accessory because it is excluded.');
+          this.log.error(error);
+        }
+      });
       return;
     }
     if (this.accessories.findIndex((acc) => acc.UUID === accessory.UUID) < 0) {
       // New entry
-      this.log.info('Adding accessory', accessory.displayName);
+      this.log.info('Restoring accessory:', accessory.displayName);
       const acc = new Zigbee2mqttAccessory(this, accessory);
       this.accessories.push(acc);
     }
   }
 
   private createOrUpdateAccessory(device: Zigbee2mqttDeviceInfo) {
-    if (this.isDeviceExcluded(device.ieeeAddr)) {
+    if (this.isDeviceExcluded(device)) {
       return;
     }
     const uuid = this.api.hap.uuid.generate(device.ieeeAddr);
@@ -186,7 +202,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       existingAcc.updateDeviceInformation(device);
     } else {
       // New entry
-      this.log.info('Creating accessory', device.friendly_name);
+      this.log.info('New accessory:', device.friendly_name);
       const accessory = new this.api.platformAccessory(device.friendly_name, uuid);
       accessory.context.device = device;
       this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
@@ -208,11 +224,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     options = { qos: 0, retain: false, ...options };
     if (!this.isConnected) {
       this.log.error('Not connected to MQTT server!');
-      this.log.error(`Cannot send message: topic: '${topic}', payload: '${payload}`);
+      this.log.error(`Cannot send message to '${topic}': '${payload}`);
       return;
     }
 
-    this.log.info(`MQTT publish: topic '${topic}', payload '${payload}'`);
+    this.log.info(`Publish to '${topic}': '${payload}'`);
 
     return new Promise((resolve) => {
       this.MqttClient.publish(topic, payload, options, () => resolve());

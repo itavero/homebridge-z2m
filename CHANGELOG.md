@@ -6,6 +6,13 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+### Added
+
+- Devices can now be excluded using their `friendly_name` as well as their IEEE address.
+
+### Changed
+
+- README now mentions how to run the "development" version.
 
 ## [0.0.3][] - 2020-07-01
 ### Added

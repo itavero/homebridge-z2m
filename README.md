@@ -87,8 +87,8 @@ It detects the devices using the `zigbee2mqtt/bridge/config/devices` topic.
 Whenever it receives a message for a device (on `zigbee2mqtt/[FRIENDLY_NAME]` topics), it tries to deduct the available HomeKit services from the elements in that message and publishes/updates these. The following elements are currently handled:
 | JSON key | HomeKit Service |
 |-|-|
-| `state` | [Switch](https://developers.homebridge.io/#/service/Switch) _(or [Lightbulb](https://developers.homebridge.io/#/service/Lightbulb); see next row)_ |
-| `brightness`, `color_temp`, `color` | [Lightbulb](https://developers.homebridge.io/#/service/Lightbulb) _(combined with `state`)_ |
+| `state` / `state_left` / `state_right` | [Switch](https://developers.homebridge.io/#/service/Switch) _(or [Lightbulb](https://developers.homebridge.io/#/service/Lightbulb); see next row)_ |
+| `brightness`, `color_temp`, `color` | [Lightbulb](https://developers.homebridge.io/#/service/Lightbulb) _(requires `state` to be present too)_ |
 | `temperature` | [TemperatureSensor](https://developers.homebridge.io/#/service/TemperatureSensor) |
 | `humidity` | [HumiditySensor](https://developers.homebridge.io/#/service/HumiditySensor) |
 | `contact` | [ContactSensor](https://developers.homebridge.io/#/service/ContactSensor) |
@@ -102,8 +102,6 @@ Whenever it receives a message for a device (on `zigbee2mqtt/[FRIENDLY_NAME]` to
 This way this homebridge plugin does not have to know the different devices. In other words, if a new device gets added to zigbee2mqtt, you probably only have to update zigbee2mqtt and not this plugin.
 
 Unfortunately, a downside is that the device must have published its data before the plugin knows how HomeKit could use it. All devices except the Coordinator will be exposed to HomeKit, even before any services are discovered. So, you could already put your new device in the right room in the _Home_ app, even though you might not be able to use it already.
-
-_(TBD: How to ignore/exclude devices? Probably need a configuration item for that.)_
 
 _(TBD: How to handle when a lights state contains both `color_temp` and `color`? Which one to follow? Maybe monitor for changes or monitor `zigbee2mqtt/[FRIENDLY_NAME]/set`?)_
 

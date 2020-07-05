@@ -6,6 +6,8 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+
+## [0.0.5][] - 2020-07-05
 ### Changed
 
 - Removed support for Air Pressure Sensors (temporarily) due to [#6](https://github.com/itavero/homebridge-z2m/issues/6).
@@ -37,7 +39,8 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v0.0.4...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v0.0.5...HEAD
+[0.0.5]: https://github.com/itavero/homebridge-z2m/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/itavero/homebridge-z2m/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/itavero/homebridge-z2m/tree/v0.0.3
 [0.0.2]: https://github.com/itavero/homebridge-z2m/tree/v0.0.2

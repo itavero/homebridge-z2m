@@ -248,10 +248,13 @@ export class Zigbee2mqttAccessory {
       case 'color_temp':
       case 'color':
       {
-        this.removeOtherServicesUsingKey('state');
-        const wrapper = new LightbulbServiceWrapper(this.getOrAddService(this.platform.Service.Lightbulb),
-          this.platform.Characteristic, this.publishSet.bind(this));
-        this.addService(wrapper, state, handledKeys);
+        if (state === undefined || state.has('state')) {
+          // Only add a light bulb if the `state` is also available.
+          this.removeOtherServicesUsingKey('state');
+          const wrapper = new LightbulbServiceWrapper(this.getOrAddService(this.platform.Service.Lightbulb),
+            this.platform.Characteristic, this.publishSet.bind(this));
+          this.addService(wrapper, state, handledKeys);
+        }
         break;
       }
       case 'position':

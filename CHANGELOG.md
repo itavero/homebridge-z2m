@@ -14,6 +14,10 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 
 - README now mentions how to run the "development" version.
 
+### Fixed
+
+- Hue Dimmer Switch appears as a light bulb ([#1](https://github.com/itavero/homebridge-z2m/issues/1))
+
 ## [0.0.3][] - 2020-07-01
 ### Added
 

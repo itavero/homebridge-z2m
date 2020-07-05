@@ -13,11 +13,18 @@ export class Zigbee2mqttAccessory {
   private readonly services: ServiceWrapper[] = [];
   private readonly updateTimer: ExtendedTimer;
 
+  private pendingPublishData: Record<string, unknown>;
+  private publishIsScheduled: boolean;
+
   constructor(
     private readonly platform: Zigbee2mqttPlatform,
     public readonly accessory: PlatformAccessory,
   ) {
     this.updateDeviceInformation(accessory.context.device);
+
+    // Setup delayed publishing
+    this.pendingPublishData = {};
+    this.publishIsScheduled = false;
 
     // Recreate ServiceWrappers from restored services
     for (const srv of this.accessory.services) {
@@ -49,7 +56,11 @@ export class Zigbee2mqttAccessory {
           this.createServiceForKey('brightness');
           break;
         case this.platform.Service.Switch.UUID:
-          this.createServiceForKey('state');
+          if (srv.subtype) {
+            this.createServiceForKey('state_' + srv.subtype);
+          } else {
+            this.createServiceForKey('state');
+          }
           break;
         case this.platform.Service.WindowCovering.UUID:
           this.createServiceForKey('position');
@@ -238,9 +249,12 @@ export class Zigbee2mqttAccessory {
         break;
       }
       case 'state':
+      case 'state_left':
+      case 'state_right':
       {
-        const wrapper = new SwitchServiceWrapper(this.getOrAddService(this.platform.Service.Switch),
-          this.platform.Characteristic, this.publishSet.bind(this));
+        const subType = SwitchServiceWrapper.getSubTypeFromKey(key);
+        const wrapper = new SwitchServiceWrapper(this.getOrAddService(this.platform.Service.Switch, subType),
+          this.platform.Characteristic, this.queuePublishData.bind(this), key);
         this.addService(wrapper, state, handledKeys);
         break;
       }
@@ -252,7 +266,7 @@ export class Zigbee2mqttAccessory {
           // Only add a light bulb if the `state` is also available.
           this.removeOtherServicesUsingKey('state');
           const wrapper = new LightbulbServiceWrapper(this.getOrAddService(this.platform.Service.Lightbulb),
-            this.platform.Characteristic, this.publishSet.bind(this));
+            this.platform.Characteristic, this.queuePublishData.bind(this));
           this.addService(wrapper, state, handledKeys);
         }
         break;
@@ -260,7 +274,7 @@ export class Zigbee2mqttAccessory {
       case 'position':
       {
         const wrapper = new WindowCoveringServiceWrapper(this.getOrAddService(this.platform.Service.WindowCovering),
-          this.platform.Characteristic, this.publishSet.bind(this), this.publishGet.bind(this));
+          this.platform.Characteristic, this.queuePublishData.bind(this), this.publishGet.bind(this));
         this.addService(wrapper, state, handledKeys);
         break;
       }
@@ -310,27 +324,38 @@ export class Zigbee2mqttAccessory {
     return handledKeys;
   }
 
-  private getOrAddService<T extends WithUUID<typeof Service>>(service: T, setNameCharacteristic = true,
-    name: string | undefined = undefined): Service {
-    const existingService = this.accessory.getService(service);
+  private getOrAddService<T extends WithUUID<typeof Service>>(service: T, subType?: string, name?: string): Service {
+    this.accessory.getServiceByUUIDAndSubType;
+    const existingService = subType ? this.accessory.getServiceById(service, subType) : this.accessory.getService(service);
     if (existingService !== undefined) {
       return existingService;
     }
 
-    const newService = this.accessory.addService(service);
-    if (setNameCharacteristic) {
-      let displayName: string = this.accessory.displayName;
-      if (name !== undefined) {
-        displayName = name as string;
+    if (!name) {
+      name = this.accessory.displayName;
+      if (subType) {
+        name += ' ' + subType;
       }
-      newService.updateCharacteristic(this.platform.Characteristic.Name, displayName);
     }
-    return newService;
+
+    return this.accessory.addService(service, name, subType);
   }
 
-  private publishSet(data: Record<string, unknown>): void {
-    // Publish using ieeeAddr, as that will never change and the friendly_name might.
-    this.platform.publishMessage(`${this.accessory.context.device.ieeeAddr}/set`, JSON.stringify(data), { qos: 2 });
+  private queuePublishData(data: Record<string, unknown>): void {
+    this.pendingPublishData = { ...this.pendingPublishData, ...data };
+
+    if (!this.publishIsScheduled) {
+      this.publishIsScheduled = true;
+      process.nextTick(() => {
+        this.publishPendingData();
+      });
+    }
+  }
+
+  private publishPendingData() {
+    this.publishIsScheduled = false;
+    this.platform.publishMessage(`${this.accessory.context.device.ieeeAddr}/set`, JSON.stringify(this.pendingPublishData), { qos: 2 });
+    this.pendingPublishData = {};
   }
 
   private publishGet(keys: string[] | undefined = undefined): void {
@@ -377,7 +402,7 @@ export class SingleReadOnlyValueServiceWrapper implements ServiceWrapper {
   }
 
   get displayName(): string {
-    return `${this.key} (${this.service.UUID}`;
+    return `${this.key} (${this.service.UUID})`;
   }
 
   updateValueForKey(key: string, value: unknown): void {
@@ -531,62 +556,43 @@ export class WindowCoveringServiceWrapper implements ServiceWrapper {
 
 }
 
-export class DelayedPublisher {
-
-  private pendingPublishData: Record<string, unknown>;
-  private publishIsScheduled: boolean;
-
-  constructor(private readonly publish: MqttSetPublisher) {
-    this.pendingPublishData = {};
-    this.publishIsScheduled = false;
-  }
-
-  protected queuePublishData(data: Record<string, unknown>) {
-    this.pendingPublishData = { ...this.pendingPublishData, ...data };
-
-    if (!this.publishIsScheduled) {
-      this.publishIsScheduled = true;
-      process.nextTick(() => {
-        this.publishPendingData();
-      });
-    }
-  }
-
-  private publishPendingData() {
-    this.publishIsScheduled = false;
-    this.publish(this.pendingPublishData);
-    this.pendingPublishData = {};
-  }
-}
-
-export class SwitchServiceWrapper extends DelayedPublisher implements ServiceWrapper {
+export class SwitchServiceWrapper implements ServiceWrapper {
   private readonly onCharacteristic: WithUUID<new () => Characteristic>;
   constructor(
-    protected readonly service: Service, characteristics: typeof Characteristic, publish: MqttSetPublisher) {
-    super(publish);
+    protected readonly service: Service, characteristics: typeof Characteristic, protected readonly setPublisher: MqttSetPublisher,
+    private readonly key: string = 'state') {
     this.onCharacteristic = characteristics.On;
     service.getCharacteristic(this.onCharacteristic)
       .on('set', this.setOn.bind(this));
   }
 
+  static getSubTypeFromKey(key: string): string | undefined {
+    if (!key.startsWith('state_')) {
+      return undefined;
+    }
+
+    return (key.substr(6));
+  }
+
   get displayName(): string {
-    return 'Switch';
+    return `Switch (${this.key})`;
   }
 
   appliesToKey(key: string): boolean {
-    return key === 'state';
+    return key === this.key;
   }
 
   updateValueForKey(key: string, value: unknown): void {
-    if (key === 'state') {
+    if (key === this.key) {
       const actualValue: boolean = (value === 'ON');
       this.service.updateCharacteristic(this.onCharacteristic, actualValue);
     }
   }
 
   private setOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
-    const data = { state: (value as boolean) ? 'ON' : 'OFF' };
-    this.queuePublishData(data);
+    const data = {};
+    data[this.key] = (value as boolean) ? 'ON' : 'OFF';
+    this.setPublisher(data);
     callback(null);
   }
 
@@ -707,14 +713,14 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
 
   private setBrightness(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = { brightness: Math.ceil((value as number) * (255 / 100)) };
-    this.queuePublishData(data);
+    this.setPublisher(data);
     callback(null);
   }
 
   private setColorTemperature(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = { color_temp: value as number };
 
-    this.queuePublishData(data);
+    this.setPublisher(data);
     callback(null);
   }
 
@@ -725,7 +731,7 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
 
       const xy = LightbulbServiceWrapper.convertHueSatToXy(this.hue, this.saturation);
       const data = { color: { x: xy[0], y: xy[1] } };
-      this.queuePublishData(data);
+      this.setPublisher(data);
     }
   }
 

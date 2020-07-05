@@ -10,6 +10,7 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 
 - Devices can now be excluded using their `friendly_name` as well as their IEEE address.
 - Support for switches that use `state_left` and `state_right`.  ([#5](https://github.com/itavero/homebridge-z2m/issues/5))
+- Support for Air Pressure Sensors
 
 ### Changed
 

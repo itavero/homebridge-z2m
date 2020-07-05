@@ -28,8 +28,8 @@
     "homebridge-plugin"
   ],
   "dependencies": {
-    "mqtt": "^4.1.0",
-    "color-convert": "^2.0.1"
+    "color-convert": "^2.0.1",
+    "mqtt": "^4.1.0"
   },
   "devDependencies": {
     "@types/node": "^14.0.14",

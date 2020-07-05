@@ -25,7 +25,15 @@
     "postversion": "git push && git push --tags"
   },
   "keywords": [
-    "homebridge-plugin"
+    "homebridge-plugin",
+    "zigbee2mqtt",
+    "zigbee",
+    "mqtt",
+    "xiaomi",
+    "hue",
+    "tradfri",
+    "aqara",
+    "homekit"
   ],
   "dependencies": {
     "color-convert": "^2.0.1",

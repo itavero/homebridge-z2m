@@ -6,6 +6,9 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+### Changed
+
+- Removed support for Air Pressure Sensors (temporarily) due to [#6](https://github.com/itavero/homebridge-z2m/issues/6).
 
 ## [0.0.4][] - 2020-07-05
 ### Added

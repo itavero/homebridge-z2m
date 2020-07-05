@@ -3,13 +3,12 @@ import { Service, PlatformAccessory, WithUUID, Characteristic, CharacteristicVal
 import { Zigbee2mqttPlatform } from './platform';
 import { Zigbee2mqttDeviceInfo } from './models';
 import { ExtendedTimer } from './timer';
-import { CustomServices, CustomCharacteristics } from './customServices';
 
 import * as color_convert from 'color-convert';
 
 export class Zigbee2mqttAccessory {
   public static readonly IGNORED_STATE_KEYS: Set<string> = new Set<string>(
-    ['last_seen', 'linkquality', 'voltage', 'smoke_density', 'illuminance', 'update_available']);
+    ['last_seen', 'linkquality', 'voltage', 'pressure', 'smoke_density', 'illuminance', 'update_available']);
 
   private readonly services: ServiceWrapper[] = [];
   private readonly updateTimer: ExtendedTimer;
@@ -72,9 +71,6 @@ export class Zigbee2mqttAccessory {
           break;
         case this.platform.Service.BatteryService.UUID:
           this.createServiceForKey('battery');
-          break;
-        case CustomServices.AirPressureSensor.UUID:
-          this.createServiceForKey('pressure');
           break;
         default:
           //ignore this service.
@@ -253,14 +249,6 @@ export class Zigbee2mqttAccessory {
       {
         const wrapper = new BatteryServiceWrapper(this.getOrAddService(this.platform.Service.BatteryService),
           this.platform.Characteristic);
-        this.addService(wrapper, state, handledKeys);
-        break;
-      }
-      case 'pressure':
-      {
-        const wrapper = new SingleReadOnlyValueServiceWrapper('pressure',
-          this.getOrAddService(CustomServices.AirPressureSensor),
-          CustomCharacteristics.AirPressure);
         this.addService(wrapper, state, handledKeys);
         break;
       }

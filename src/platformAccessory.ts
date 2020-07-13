@@ -3,6 +3,7 @@ import { Service, PlatformAccessory, WithUUID, Characteristic, CharacteristicVal
 import { Zigbee2mqttPlatform } from './platform';
 import { Zigbee2mqttDeviceInfo } from './models';
 import { ExtendedTimer } from './timer';
+import { hap } from './hap';
 
 import * as color_convert from 'color-convert';
 
@@ -261,8 +262,7 @@ export class Zigbee2mqttAccessory {
       }
       case 'battery':
       {
-        const wrapper = new BatteryServiceWrapper(this.getOrAddService(this.platform.Service.BatteryService),
-          this.platform.Characteristic);
+        const wrapper = new BatteryServiceWrapper(this.getOrAddService(this.platform.Service.BatteryService));
         this.addService(wrapper, state, handledKeys);
         break;
       }
@@ -279,7 +279,7 @@ export class Zigbee2mqttAccessory {
       {
         const subType = SwitchServiceWrapper.getSubTypeFromKey(key);
         const wrapper = new SwitchServiceWrapper(this.getOrAddService(this.platform.Service.Switch, subType),
-          this.platform.Characteristic, this.queuePublishData.bind(this), key);
+          this.queuePublishData.bind(this), key);
         this.addService(wrapper, state, handledKeys);
         break;
       }
@@ -291,7 +291,7 @@ export class Zigbee2mqttAccessory {
           // Only add a light bulb if the `state` is also available.
           this.removeOtherServicesUsingKey('state');
           const wrapper = new LightbulbServiceWrapper(this.getOrAddService(this.platform.Service.Lightbulb),
-            this.platform.Characteristic, this.queuePublishData.bind(this));
+            this.queuePublishData.bind(this));
           this.addService(wrapper, state, handledKeys);
         }
         break;
@@ -299,7 +299,7 @@ export class Zigbee2mqttAccessory {
       case 'position':
       {
         const wrapper = new WindowCoveringServiceWrapper(this.getOrAddService(this.platform.Service.WindowCovering),
-          this.platform.Characteristic, this.queuePublishData.bind(this), this.publishGet.bind(this));
+          this.queuePublishData.bind(this), this.publishGet.bind(this));
         this.addService(wrapper, state, handledKeys);
         break;
       }
@@ -449,17 +449,9 @@ export class SingleReadOnlyValueServiceWrapper implements ServiceWrapper {
 }
 
 export class BatteryServiceWrapper implements ServiceWrapper {
-  private readonly levelCharacteristic: WithUUID<new () => Characteristic>;
-  private readonly statusLowBatteryCharacteristic: WithUUID<new () => Characteristic>;
-  private readonly levelLow: CharacteristicValue;
-  private readonly levelNormal: CharacteristicValue;
   constructor(
-    private readonly service: Service, characteristics: typeof Characteristic) {
-    this.service.updateCharacteristic(characteristics.ChargingState, characteristics.ChargingState.NOT_CHARGEABLE);
-    this.levelCharacteristic = characteristics.BatteryLevel;
-    this.statusLowBatteryCharacteristic = characteristics.StatusLowBattery;
-    this.levelLow = characteristics.StatusLowBattery.BATTERY_LEVEL_LOW;
-    this.levelNormal = characteristics.StatusLowBattery.BATTERY_LEVEL_NORMAL;
+    private readonly service: Service) {
+    this.service.updateCharacteristic(hap.Characteristic.ChargingState, hap.Characteristic.ChargingState.NOT_CHARGEABLE);
   }
 
   get displayName(): string {
@@ -472,49 +464,37 @@ export class BatteryServiceWrapper implements ServiceWrapper {
 
   updateValueForKey(key: string, value: unknown): void {
     if (key === 'battery') {
-      this.service.updateCharacteristic(this.levelCharacteristic, value as number);
-      this.service.updateCharacteristic(this.statusLowBatteryCharacteristic, (value as number < 30) ? this.levelLow : this.levelNormal);
+      this.service.updateCharacteristic(hap.Characteristic.BatteryLevel, value as number);
+      this.service.updateCharacteristic(hap.Characteristic.StatusLowBattery, (value as number < 30)
+        ? hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW
+        : hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
     }
   }
 
   remove(accessory: PlatformAccessory): void {
     accessory.removeService(this.service);
   }
-
 }
 
 export class WindowCoveringServiceWrapper implements ServiceWrapper {
-  private readonly currentPositionCharacteristic: WithUUID<new () => Characteristic>;
-  private readonly targetPositionCharacteristic: WithUUID<new () => Characteristic>;
-  private readonly positionStateCharacteristic: WithUUID<new () => Characteristic>;
-  private readonly stateDecreasing: CharacteristicValue;
-  private readonly stateIncreasing: CharacteristicValue;
-  private readonly stateStopped: CharacteristicValue;
   private currentPosition: number;
   private targetPosition: number;
 
   private readonly updateTimer: ExtendedTimer;
 
   constructor(
-    private readonly service: Service, characteristics: typeof Characteristic, private readonly setPublisher: MqttSetPublisher,
+    private readonly service: Service, private readonly setPublisher: MqttSetPublisher,
     private readonly getPublisher: MqttGetPublisher) {
-    this.currentPositionCharacteristic = characteristics.CurrentPosition;
-    this.targetPositionCharacteristic = characteristics.TargetPosition;
-    this.positionStateCharacteristic = characteristics.PositionState;
-    this.stateDecreasing = characteristics.PositionState.DECREASING;
-    this.stateIncreasing = characteristics.PositionState.INCREASING;
-    this.stateStopped = characteristics.PositionState.STOPPED;
-
     this.currentPosition = -1;
     this.targetPosition = -1;
 
     this.updateTimer = new ExtendedTimer(this.requestPositionUpdate.bind(this), 2000);
 
-    service.getCharacteristic(this.targetPositionCharacteristic)
+    service.getCharacteristic(hap.Characteristic.TargetPosition)
       .on('set', this.setTargetPosition.bind(this));
 
-    service.getCharacteristic(this.positionStateCharacteristic)
-      .setValue(this.stateStopped);
+    service.getCharacteristic(hap.Characteristic.PositionState)
+      .setValue(hap.Characteristic.PositionState.STOPPED);
   }
 
   get displayName(): string {
@@ -527,11 +507,11 @@ export class WindowCoveringServiceWrapper implements ServiceWrapper {
 
     // Assume state of cover
     if (this.targetPosition > this.currentPosition) {
-      this.service.getCharacteristic(this.positionStateCharacteristic)
-        .setValue(this.stateIncreasing);
+      this.service.getCharacteristic(hap.Characteristic.PositionState)
+        .setValue(hap.Characteristic.PositionState.INCREASING);
     } else if (this.targetPosition < this.currentPosition) {
-      this.service.getCharacteristic(this.positionStateCharacteristic)
-        .setValue(this.stateDecreasing);
+      this.service.getCharacteristic(hap.Characteristic.PositionState)
+        .setValue(hap.Characteristic.PositionState.DECREASING);
     }
 
     // Start requesting frequent updates.
@@ -552,23 +532,22 @@ export class WindowCoveringServiceWrapper implements ServiceWrapper {
   updateValueForKey(key: string, value: unknown): void {
     if (key === 'position') {
       const newPosition = value as number;
-
-      let state = this.stateStopped;
+      let state = hap.Characteristic.PositionState.STOPPED;
       if (this.currentPosition >= 0) {
         if (newPosition > this.currentPosition && newPosition < 100) {
-          state = this.stateIncreasing;
+          state = hap.Characteristic.PositionState.INCREASING;
         } else if (newPosition < this.currentPosition && newPosition > 0) {
-          state = this.stateDecreasing;
+          state = hap.Characteristic.PositionState.DECREASING;
         } else {
           // Stop requesting frequent updates
           this.updateTimer.stop();
         }
       }
 
-      this.service.getCharacteristic(this.positionStateCharacteristic)
+      this.service.getCharacteristic(hap.Characteristic.PositionState)
         .updateValue(state);
 
-      this.service.getCharacteristic(this.currentPositionCharacteristic)
+      this.service.getCharacteristic(hap.Characteristic.CurrentPosition)
         .updateValue(newPosition);
 
       this.currentPosition = newPosition;
@@ -582,12 +561,10 @@ export class WindowCoveringServiceWrapper implements ServiceWrapper {
 }
 
 export class SwitchServiceWrapper implements ServiceWrapper {
-  private readonly onCharacteristic: WithUUID<new () => Characteristic>;
   constructor(
-    protected readonly service: Service, characteristics: typeof Characteristic, protected readonly setPublisher: MqttSetPublisher,
+    protected readonly service: Service, protected readonly setPublisher: MqttSetPublisher,
     private readonly key: string = 'state') {
-    this.onCharacteristic = characteristics.On;
-    service.getCharacteristic(this.onCharacteristic)
+    service.getCharacteristic(hap.Characteristic.On)
       .on('set', this.setOn.bind(this));
   }
 
@@ -610,7 +587,7 @@ export class SwitchServiceWrapper implements ServiceWrapper {
   updateValueForKey(key: string, value: unknown): void {
     if (key === this.key) {
       const actualValue: boolean = (value === 'ON');
-      this.service.updateCharacteristic(this.onCharacteristic, actualValue);
+      this.service.updateCharacteristic(hap.Characteristic.On, actualValue);
     }
   }
 
@@ -627,10 +604,6 @@ export class SwitchServiceWrapper implements ServiceWrapper {
 }
 
 export class LightbulbServiceWrapper extends SwitchServiceWrapper {
-  private readonly brightnessCharacteristic: WithUUID<new () => Characteristic>;
-  private readonly colorTemperatureCharacteristic: WithUUID<new () => Characteristic>;
-  private readonly hueCharacteristic: WithUUID<new () => Characteristic>;
-  private readonly saturationCharacteristic: WithUUID<new () => Characteristic>;
   private hasBrightness: boolean;
   private hasColorTemperature: boolean;
   private hasColors: boolean;
@@ -641,12 +614,8 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
   private saturation: number;
 
   constructor(
-    protected readonly service: Service, characteristics: typeof Characteristic, publish: MqttSetPublisher) {
-    super(service, characteristics, publish);
-    this.brightnessCharacteristic = characteristics.Brightness;
-    this.colorTemperatureCharacteristic = characteristics.ColorTemperature;
-    this.hueCharacteristic = characteristics.Hue;
-    this.saturationCharacteristic = characteristics.Saturation;
+    protected readonly service: Service, publish: MqttSetPublisher) {
+    super(service, publish);
     this.hasBrightness = false;
     this.hasColorTemperature = false;
     this.hasColors = false;
@@ -709,7 +678,7 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
 
   private addBrightness() {
     if (!this.hasBrightness) {
-      this.service.getCharacteristic(this.brightnessCharacteristic)
+      this.service.getCharacteristic(hap.Characteristic.Brightness)
         .on('set', this.setBrightness.bind(this));
       this.hasBrightness = true;
     }
@@ -717,9 +686,9 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
 
   private addColors() {
     if (!this.hasColors) {
-      this.service.getCharacteristic(this.hueCharacteristic)
+      this.service.getCharacteristic(hap.Characteristic.Hue)
         .on('set', this.setHue.bind(this));
-      this.service.getCharacteristic(this.saturationCharacteristic)
+      this.service.getCharacteristic(hap.Characteristic.Saturation)
         .on('set', this.setSaturation.bind(this));
 
       this.receivedHue = false;
@@ -730,7 +699,7 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
 
   private addColorTemperature() {
     if (!this.hasColorTemperature) {
-      this.service.getCharacteristic(this.colorTemperatureCharacteristic)
+      this.service.getCharacteristic(hap.Characteristic.ColorTemperature)
         .on('set', this.setColorTemperature.bind(this));
       this.hasColorTemperature = true;
     }
@@ -784,11 +753,11 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
     switch (key) {
       case 'brightness':
         this.addBrightness();
-        this.service.updateCharacteristic(this.brightnessCharacteristic, Math.round(((value as number) / 255) * 100));
+        this.service.updateCharacteristic(hap.Characteristic.Brightness, Math.round(((value as number) / 255) * 100));
         break;
       case 'color_temp':
         this.addColorTemperature();
-        this.service.updateCharacteristic(this.colorTemperatureCharacteristic, value as number);
+        this.service.updateCharacteristic(hap.Characteristic.ColorTemperature, value as number);
         break;
       case 'color':
       {
@@ -796,8 +765,8 @@ export class LightbulbServiceWrapper extends SwitchServiceWrapper {
         const hueSat = LightbulbServiceWrapper.convertXyToHueSat((value as Record<string, unknown>).x as number,
             (value as Record<string, unknown>).y as number);
 
-        this.service.updateCharacteristic(this.hueCharacteristic, hueSat[0]);
-        this.service.updateCharacteristic(this.saturationCharacteristic, hueSat[1]);
+        this.service.updateCharacteristic(hap.Characteristic.Hue, hueSat[0]);
+        this.service.updateCharacteristic(hap.Characteristic.Saturation, hueSat[1]);
         break;
       }
     }

@@ -36,34 +36,34 @@ export class Zigbee2mqttAccessory {
       const uuid = srv.getServiceId();
 
       switch (uuid) {
-        case this.platform.Service.TemperatureSensor.UUID:
+        case hap.Service.TemperatureSensor.UUID:
           this.createServiceForKey('temperature');
           break;
-        case this.platform.Service.HumiditySensor.UUID:
+        case hap.Service.HumiditySensor.UUID:
           this.createServiceForKey('humidity');
           break;
-        case this.platform.Service.ContactSensor.UUID:
+        case hap.Service.ContactSensor.UUID:
           this.createServiceForKey('contact');
           break;
-        case this.platform.Service.LightSensor.UUID:
+        case hap.Service.LightSensor.UUID:
           this.createServiceForKey('illuminance_lux');
           break;
-        case this.platform.Service.OccupancySensor.UUID:
+        case hap.Service.OccupancySensor.UUID:
           this.createServiceForKey('occupancy');
           break;
-        case this.platform.Service.SmokeSensor.UUID:
+        case hap.Service.SmokeSensor.UUID:
           this.createServiceForKey('smoke');
           break;
-        case this.platform.Service.LeakSensor.UUID:
+        case hap.Service.LeakSensor.UUID:
           this.createServiceForKey('water_leak');
           break;
-        case this.platform.Service.CarbonMonoxideSensor.UUID:
+        case hap.Service.CarbonMonoxideSensor.UUID:
           this.createServiceForKey('carbon_monoxide');
           break;
-        case this.platform.Service.Lightbulb.UUID:
+        case hap.Service.Lightbulb.UUID:
           this.createServiceForKey('brightness');
           break;
-        case this.platform.Service.Switch.UUID:
+        case hap.Service.Switch.UUID:
           if (srv.subtype) {
             this.createServiceForKey('state_' + srv.subtype);
           } else {
@@ -73,7 +73,7 @@ export class Zigbee2mqttAccessory {
             this.createServiceForKey('state', example);
           }
           break;
-        case this.platform.Service.LockMechanism.UUID:
+        case hap.Service.LockMechanism.UUID:
         {
           // Pass map with example value for state, to make sure that a Lock Mechanism is created.
           const example = new Map<string, CharacteristicValue>();
@@ -81,10 +81,10 @@ export class Zigbee2mqttAccessory {
           this.createServiceForKey('state', example);
           break;
         }
-        case this.platform.Service.WindowCovering.UUID:
+        case hap.Service.WindowCovering.UUID:
           this.createServiceForKey('position');
           break;
-        case this.platform.Service.BatteryService.UUID:
+        case hap.Service.BatteryService.UUID:
           this.createServiceForKey('battery');
           break;
         default:
@@ -122,12 +122,12 @@ export class Zigbee2mqttAccessory {
       manufacturer = info.vendor;
     }
 
-    this.accessory.getService(this.platform.Service.AccessoryInformation)!
-      .updateCharacteristic(this.platform.Characteristic.Manufacturer, manufacturer)
-      .updateCharacteristic(this.platform.Characteristic.Model, info.modelID ?? 'unknown')
-      .updateCharacteristic(this.platform.Characteristic.SerialNumber, info.ieeeAddr)
-      .updateCharacteristic(this.platform.Characteristic.HardwareRevision, info.hardwareVersion ?? '?')
-      .updateCharacteristic(this.platform.Characteristic.FirmwareRevision, info.softwareBuildID ?? '?');
+    this.accessory.getService(hap.Service.AccessoryInformation)!
+      .updateCharacteristic(hap.Characteristic.Manufacturer, manufacturer)
+      .updateCharacteristic(hap.Characteristic.Model, info.modelID ?? 'unknown')
+      .updateCharacteristic(hap.Characteristic.SerialNumber, info.ieeeAddr)
+      .updateCharacteristic(hap.Characteristic.HardwareRevision, info.hardwareVersion ?? '?')
+      .updateCharacteristic(hap.Characteristic.FirmwareRevision, info.softwareBuildID ?? '?');
 
     this.platform.api.updatePlatformAccessories([this.accessory]);
   }
@@ -195,85 +195,85 @@ export class Zigbee2mqttAccessory {
       case 'humidity':
       {
         const wrapper = new SingleReadOnlyValueServiceWrapper('humidity',
-          this.getOrAddService(this.platform.Service.HumiditySensor),
-          this.platform.Characteristic.CurrentRelativeHumidity);
+          this.getOrAddService(hap.Service.HumiditySensor),
+          hap.Characteristic.CurrentRelativeHumidity);
         this.addService(wrapper, state, handledKeys);
         break;
       }
       case 'temperature':
       {
         const wrapper = new SingleReadOnlyValueServiceWrapper('temperature',
-          this.getOrAddService(this.platform.Service.TemperatureSensor),
-          this.platform.Characteristic.CurrentTemperature);
+          this.getOrAddService(hap.Service.TemperatureSensor),
+          hap.Characteristic.CurrentTemperature);
         this.addService(wrapper, state, handledKeys);
         break;
       }
       case 'illuminance_lux':
       {
         const wrapper = new SingleReadOnlyValueServiceWrapper('illuminance_lux',
-          this.getOrAddService(this.platform.Service.LightSensor),
-          this.platform.Characteristic.CurrentAmbientLightLevel);
+          this.getOrAddService(hap.Service.LightSensor),
+          hap.Characteristic.CurrentAmbientLightLevel);
         this.addService(wrapper, state, handledKeys);
         break;
       }
       case 'contact':
       {
         const wrapper = new SingleReadOnlyValueServiceWrapper('contact',
-          this.getOrAddService(this.platform.Service.ContactSensor),
-          this.platform.Characteristic.ContactSensorState,
+          this.getOrAddService(hap.Service.ContactSensor),
+          hap.Characteristic.ContactSensorState,
           (key, value) => value as boolean
-            ? this.platform.Characteristic.ContactSensorState.CONTACT_DETECTED
-            : this.platform.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED);
+            ? hap.Characteristic.ContactSensorState.CONTACT_DETECTED
+            : hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED);
         this.addService(wrapper, state, handledKeys);
         break;
       }
       case 'occupancy':
       {
         const wrapper = new SingleReadOnlyValueServiceWrapper('occupancy',
-          this.getOrAddService(this.platform.Service.OccupancySensor),
-          this.platform.Characteristic.OccupancyDetected,
+          this.getOrAddService(hap.Service.OccupancySensor),
+          hap.Characteristic.OccupancyDetected,
           (key, value) => value as boolean
-            ? this.platform.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED
-            : this.platform.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
+            ? hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED
+            : hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
         this.addService(wrapper, state, handledKeys);
         break;
       }
       case 'smoke':
       {
         const wrapper = new SingleReadOnlyValueServiceWrapper('smoke',
-          this.getOrAddService(this.platform.Service.SmokeSensor),
-          this.platform.Characteristic.SmokeDetected,
+          this.getOrAddService(hap.Service.SmokeSensor),
+          hap.Characteristic.SmokeDetected,
           (key, value) => value as boolean
-            ? this.platform.Characteristic.SmokeDetected.SMOKE_DETECTED
-            : this.platform.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED);
+            ? hap.Characteristic.SmokeDetected.SMOKE_DETECTED
+            : hap.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED);
         this.addService(wrapper, state, handledKeys);
         break;
       }
       case 'carbon_monoxide':
       {
         const wrapper = new SingleReadOnlyValueServiceWrapper('carbon_monoxide',
-          this.getOrAddService(this.platform.Service.CarbonMonoxideSensor),
-          this.platform.Characteristic.CarbonMonoxideDetected,
+          this.getOrAddService(hap.Service.CarbonMonoxideSensor),
+          hap.Characteristic.CarbonMonoxideDetected,
           (key, value) => value as boolean
-            ? this.platform.Characteristic.CarbonMonoxideDetected.CO_LEVELS_ABNORMAL
-            : this.platform.Characteristic.CarbonMonoxideDetected.CO_LEVELS_NORMAL);
+            ? hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_ABNORMAL
+            : hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_NORMAL);
         this.addService(wrapper, state, handledKeys);
         break;
       }
       case 'water_leak':
       {
         const wrapper = new SingleReadOnlyValueServiceWrapper('water_leak',
-          this.getOrAddService(this.platform.Service.LeakSensor),
-          this.platform.Characteristic.LeakDetected,
+          this.getOrAddService(hap.Service.LeakSensor),
+          hap.Characteristic.LeakDetected,
           (key, value) => value as boolean
-            ? this.platform.Characteristic.LeakDetected.LEAK_DETECTED
-            : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED);
+            ? hap.Characteristic.LeakDetected.LEAK_DETECTED
+            : hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED);
         this.addService(wrapper, state, handledKeys);
         break;
       }
       case 'battery':
       {
-        const wrapper = new BatteryServiceWrapper(this.getOrAddService(this.platform.Service.BatteryService));
+        const wrapper = new BatteryServiceWrapper(this.getOrAddService(hap.Service.BatteryService));
         this.addService(wrapper, state, handledKeys);
         break;
       }
@@ -289,7 +289,7 @@ export class Zigbee2mqttAccessory {
             this.queuePublishData.bind(this));
           this.addService(wrapper, state, handledKeys);
         } else {
-          const wrapper = new SwitchServiceWrapper(this.getOrAddService(this.platform.Service.Switch),
+          const wrapper = new SwitchServiceWrapper(this.getOrAddService(hap.Service.Switch),
             this.queuePublishData.bind(this), key);
           this.addService(wrapper, state, handledKeys);
         }
@@ -306,7 +306,7 @@ export class Zigbee2mqttAccessory {
       case 'state_bottom_right':
       {
         const subType = SwitchServiceWrapper.getSubTypeFromKey(key);
-        const wrapper = new SwitchServiceWrapper(this.getOrAddService(this.platform.Service.Switch, subType),
+        const wrapper = new SwitchServiceWrapper(this.getOrAddService(hap.Service.Switch, subType),
           this.queuePublishData.bind(this), key);
         this.addService(wrapper, state, handledKeys);
         break;
@@ -318,7 +318,7 @@ export class Zigbee2mqttAccessory {
         if (state === undefined || state.has('state')) {
           // Only add a light bulb if the `state` is also available.
           this.removeOtherServicesUsingKey('state');
-          const wrapper = new LightbulbServiceWrapper(this.getOrAddService(this.platform.Service.Lightbulb),
+          const wrapper = new LightbulbServiceWrapper(this.getOrAddService(hap.Service.Lightbulb),
             this.queuePublishData.bind(this));
           this.addService(wrapper, state, handledKeys);
         }
@@ -326,7 +326,7 @@ export class Zigbee2mqttAccessory {
       }
       case 'position':
       {
-        const wrapper = new WindowCoveringServiceWrapper(this.getOrAddService(this.platform.Service.WindowCovering),
+        const wrapper = new WindowCoveringServiceWrapper(this.getOrAddService(hap.Service.WindowCovering),
           this.queuePublishData.bind(this), this.publishGet.bind(this));
         this.addService(wrapper, state, handledKeys);
         break;
@@ -707,7 +707,7 @@ export class SwitchServiceWrapper implements ServiceWrapper {
 
   private setOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    data[this.key] = (value as boolean) ? SwitchServiceWrapper.ON: SwitchServiceWrapper.OFF;
+    data[this.key] = (value as boolean) ? SwitchServiceWrapper.ON : SwitchServiceWrapper.OFF;
     this.setPublisher(data);
     callback(null);
   }

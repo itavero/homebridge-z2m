@@ -56,6 +56,9 @@ export class Zigbee2mqttAccessory {
         case this.platform.Service.LeakSensor.UUID:
           this.createServiceForKey('water_leak');
           break;
+        case this.platform.Service.CarbonMonoxideSensor.UUID:
+          this.createServiceForKey('carbon_monoxide');
+          break;
         case this.platform.Service.Lightbulb.UUID:
           this.createServiceForKey('brightness');
           break;
@@ -231,6 +234,17 @@ export class Zigbee2mqttAccessory {
           (key, value) => value as boolean
             ? this.platform.Characteristic.SmokeDetected.SMOKE_DETECTED
             : this.platform.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED);
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'carbon_monoxide':
+      {
+        const wrapper = new SingleReadOnlyValueServiceWrapper('carbon_monoxide',
+          this.getOrAddService(this.platform.Service.CarbonMonoxideSensor),
+          this.platform.Characteristic.CarbonMonoxideDetected,
+          (key, value) => value as boolean
+            ? this.platform.Characteristic.CarbonMonoxideDetected.CO_LEVELS_ABNORMAL
+            : this.platform.Characteristic.CarbonMonoxideDetected.CO_LEVELS_NORMAL);
         this.addService(wrapper, state, handledKeys);
         break;
       }

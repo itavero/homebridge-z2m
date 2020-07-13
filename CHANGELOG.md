@@ -9,6 +9,7 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 ### Added
 
 - Support for switches (relays) with more than two outputs (added a lot of keys starting with `state_`).
+- Carbon Monoxide Sensor support.
 
 ### Changed
 

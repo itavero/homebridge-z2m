@@ -67,9 +67,20 @@ export class Zigbee2mqttAccessory {
           if (srv.subtype) {
             this.createServiceForKey('state_' + srv.subtype);
           } else {
-            this.createServiceForKey('state');
+            // Pass map with example value for state, to make sure that a Switch is created.
+            const example = new Map<string, CharacteristicValue>();
+            example.set('state', SwitchServiceWrapper.OFF);
+            this.createServiceForKey('state', example);
           }
           break;
+        case this.platform.Service.LockMechanism.UUID:
+        {
+          // Pass map with example value for state, to make sure that a Lock Mechanism is created.
+          const example = new Map<string, CharacteristicValue>();
+          example.set('state', LockMechanismServiceWrapper.UNLOCKED);
+          this.createServiceForKey('state', example);
+          break;
+        }
         case this.platform.Service.WindowCovering.UUID:
           this.createServiceForKey('position');
           break;
@@ -267,6 +278,23 @@ export class Zigbee2mqttAccessory {
         break;
       }
       case 'state':
+      {
+        let isLock = false;
+        if (state) {
+          const value = state.get(key);
+          isLock = (value === LockMechanismServiceWrapper.LOCKED || value === LockMechanismServiceWrapper.UNLOCKED);
+        }
+        if (isLock) {
+          const wrapper = new LockMechanismServiceWrapper(this.getOrAddService(hap.Service.LockMechanism),
+            this.queuePublishData.bind(this));
+          this.addService(wrapper, state, handledKeys);
+        } else {
+          const wrapper = new SwitchServiceWrapper(this.getOrAddService(this.platform.Service.Switch),
+            this.queuePublishData.bind(this), key);
+          this.addService(wrapper, state, handledKeys);
+        }
+        break;
+      }
       case 'state_left':
       case 'state_right':
       case 'state_center':
@@ -560,7 +588,93 @@ export class WindowCoveringServiceWrapper implements ServiceWrapper {
 
 }
 
+export class LockMechanismServiceWrapper implements ServiceWrapper {
+  static readonly LOCKED = 'LOCK';
+  static readonly UNLOCKED = 'UNLOCK';
+
+  private lockStateIsAvailable: boolean;
+
+  constructor(
+    private readonly service: Service, private readonly setPublisher: MqttSetPublisher) {
+    this.lockStateIsAvailable = false;
+
+    service.getCharacteristic(hap.Characteristic.LockTargetState)
+      .on('set', this.setTargetState.bind(this));
+
+    service.getCharacteristic(hap.Characteristic.LockCurrentState)
+      .setValue(hap.Characteristic.LockCurrentState.UNKNOWN);
+  }
+
+  get displayName(): string {
+    return 'LockMechanism';
+  }
+
+  private setTargetState(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
+    const shouldBeLocked = (value as number) !== hap.Characteristic.LockTargetState.UNSECURED;
+    this.setPublisher({ state: shouldBeLocked ? LockMechanismServiceWrapper.LOCKED : LockMechanismServiceWrapper.UNLOCKED });
+    callback(null);
+  }
+
+  appliesToKey(key: string): boolean {
+    return key === 'state' || key === 'lock_state';
+  }
+
+  updateValueForKey(key: string, value: unknown): void {
+    let updatedState: CharacteristicValue;
+    switch (key) {
+      case 'lock_state':
+        this.lockStateIsAvailable = true;
+        switch (value as string) {
+          case 'not_fully_locked':
+            updatedState = hap.Characteristic.LockCurrentState.JAMMED;
+            break;
+          case 'locked':
+            updatedState = hap.Characteristic.LockCurrentState.SECURED;
+            break;
+          case 'unlocked':
+            updatedState = hap.Characteristic.LockCurrentState.UNSECURED;
+            break;
+          default:
+            updatedState = hap.Characteristic.LockCurrentState.UNKNOWN;
+            break;
+        }
+        this.service.getCharacteristic(hap.Characteristic.LockCurrentState)
+          .updateValue(updatedState);
+        break;
+      case 'state':
+        if (this.lockStateIsAvailable) {
+          // Don't use this value if `lock_state` is also reported.
+          return;
+        }
+        switch (value as string) {
+          case LockMechanismServiceWrapper.LOCKED:
+            updatedState = hap.Characteristic.LockCurrentState.SECURED;
+            break;
+          case LockMechanismServiceWrapper.UNLOCKED:
+            updatedState = hap.Characteristic.LockCurrentState.UNSECURED;
+            break;
+          default:
+            updatedState = hap.Characteristic.LockCurrentState.UNKNOWN;
+            break;
+        }
+        this.service.getCharacteristic(hap.Characteristic.LockCurrentState)
+          .updateValue(updatedState);
+        break;
+      default:
+        // Ignore other keys.
+        break;
+    }
+  }
+
+  remove(accessory: PlatformAccessory): void {
+    accessory.removeService(this.service);
+  }
+}
+
 export class SwitchServiceWrapper implements ServiceWrapper {
+  static readonly ON = 'ON';
+  static readonly OFF = 'OFF';
+
   constructor(
     protected readonly service: Service, protected readonly setPublisher: MqttSetPublisher,
     private readonly key: string = 'state') {
@@ -586,14 +700,14 @@ export class SwitchServiceWrapper implements ServiceWrapper {
 
   updateValueForKey(key: string, value: unknown): void {
     if (key === this.key) {
-      const actualValue: boolean = (value === 'ON');
+      const actualValue: boolean = (value === SwitchServiceWrapper.ON);
       this.service.updateCharacteristic(hap.Characteristic.On, actualValue);
     }
   }
 
   private setOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    data[this.key] = (value as boolean) ? 'ON' : 'OFF';
+    data[this.key] = (value as boolean) ? SwitchServiceWrapper.ON: SwitchServiceWrapper.OFF;
     this.setPublisher(data);
     callback(null);
   }

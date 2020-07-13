@@ -10,10 +10,11 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 
 - Support for switches (relays) with more than two outputs (added a lot of keys starting with `state_`).
 - Carbon Monoxide Sensor support.
+- Lock Mechanism support, based on `state` [`LOCK`, `UNLOCK`] and `lock_state`, if available. (see [#9](https://github.com/itavero/homebridge-z2m/issues/9))
 
 ### Changed
 
-- Call to `registerPlatform` changed to include package name (see [#8](https://github.com/itavero/homebridge-z2m/issues/6)).
+- Call to `registerPlatform` changed to include package name (see [#8](https://github.com/itavero/homebridge-z2m/issues/8)).
 - Use global `hap` variable to access characteristics, instead of storing references in each ServiceWrapper.
 
 ## [0.0.5][] - 2020-07-05

@@ -87,7 +87,7 @@ It detects the devices using the `zigbee2mqtt/bridge/config/devices` topic.
 Whenever it receives a message for a device (on `zigbee2mqtt/[FRIENDLY_NAME]` topics), it tries to deduct the available HomeKit services from the elements in that message and publishes/updates these. The following elements are currently handled:
 | JSON key | HomeKit Service |
 |-|-|
-| `state` / `state_left` / `state_right` | [Switch](https://developers.homebridge.io/#/service/Switch) _(or [Lightbulb](https://developers.homebridge.io/#/service/Lightbulb); see next row)_ |
+| `state` / `state_left` / `state_right` / `state_center` / `state_top_left` / `state_center_left` / `state_bottom_left` / `state_top_right` / `state_center_right` / `state_bottom_right` | [Switch](https://developers.homebridge.io/#/service/Switch) _(or [Lightbulb](https://developers.homebridge.io/#/service/Lightbulb); see next row)_ |
 | `brightness`, `color_temp`, `color` | [Lightbulb](https://developers.homebridge.io/#/service/Lightbulb) _(requires `state` to be present too)_ |
 | `temperature` | [TemperatureSensor](https://developers.homebridge.io/#/service/TemperatureSensor) |
 | `humidity` | [HumiditySensor](https://developers.homebridge.io/#/service/HumiditySensor) |

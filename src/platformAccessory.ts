@@ -255,6 +255,13 @@ export class Zigbee2mqttAccessory {
       case 'state':
       case 'state_left':
       case 'state_right':
+      case 'state_center':
+      case 'state_top_left':
+      case 'state_center_left':
+      case 'state_bottom_left':
+      case 'state_top_right':
+      case 'state_center_right':
+      case 'state_bottom_right':
       {
         const subType = SwitchServiceWrapper.getSubTypeFromKey(key);
         const wrapper = new SwitchServiceWrapper(this.getOrAddService(this.platform.Service.Switch, subType),

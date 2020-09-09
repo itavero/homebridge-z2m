@@ -15,7 +15,6 @@
   "rules": {
     "quotes": ["warn", "single"],
     "indent": ["warn", 2, { "SwitchCase": 1 }],
-    "linebreak-style": ["warn", "unix"],
     "semi": ["warn", "always"],
     "comma-dangle": ["warn", "always-multiline"],
     "dot-notation": "off",

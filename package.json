@@ -13,7 +13,7 @@
   },
   "engines": {
     "node": ">=10.17.0",
-    "homebridge": ">0.4.53"
+    "homebridge": ">=1.0.0"
   },
   "main": "dist/index.js",
   "scripts": {
@@ -37,18 +37,18 @@
   ],
   "dependencies": {
     "color-convert": "^2.0.1",
-    "mqtt": "^4.1.0"
+    "mqtt": "^4.2.1"
   },
   "devDependencies": {
-    "@types/node": "^14.0.14",
-    "@typescript-eslint/eslint-plugin": "^3.4.0",
-    "@typescript-eslint/parser": "^3.4.0",
-    "eslint": "^7.3.1",
-    "homebridge": "^1.1.1",
+    "@types/node": "^14.6.4",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
+    "eslint": "^7.8.1",
+    "homebridge": "^1.1.6",
     "nodemon": "^2.0.4",
     "rimraf": "^3.0.2",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.5",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.2",
     "version-changelog": "^3.1.1",
     "changelog-verify": "^1.1.2"
   }

@@ -38,7 +38,7 @@ There's two ways to install the latest stuff from GitHub on your machine:
    ```
 
 ## Installation
-> ⚠️ This plugin is still under active development. Things might break between release.
+> ⚠️ This plugin is still under active development. Things might break/change between releases.
 
 First of all, make sure you have [zigbee2mqtt](https://www.zigbee2mqtt.io) setup correctly. Without a working zigbee2mqtt installation, this plugin won't be able to do much for you.
 
@@ -55,12 +55,18 @@ A (rather minimal) configuration looks like this:
       "base_topic": "zigbee2mqtt",
       "server": "mqtt://localhost:1883"
    },
-   "devices": {
-      "exclude": [
-         "0x1234567890abcdef",
-         "0xabcdef1234567890"
-      ]
-   }
+   "devices": [
+      {
+         "id": "0x1234567890abcdef",
+         "exclude": true
+      },
+      {
+         "id": "0xabcdef1234567890",
+         "excluded_keys": [
+            "battery"
+         ]
+      }
+   ]
 }
 ```
 Within the `mqtt` object, you can add pretty much all the configuration options that zigbee2mqtt also has, with the same keys as in the zigbee2mqtt configuration YAML file:
@@ -78,7 +84,12 @@ Within the `mqtt` object, you can add pretty much all the configuration options 
 
 Please refer to the [zigbee2mqtt documentation](https://www.zigbee2mqtt.io/information/configuration.html) for more information on the MQTT options.
 
-Within `devices.exclude` you can put an array with the IEEE addresses, or the `friendly_name`, of the Zigbee devices you wish to exclude from this integration.
+>  ⚠️ **IMPORTANT:** The `devices` part of the configuration changed in **v0.0.7**
+
+Within `devices`, you can set options for specific devices, based on their IEEE addresses or the `friendly_name`.
+Currently the following options are available:
+* `exclude`: if set to `true` this device will not be exposed via HomeKit.
+* `excluded_keys`: an array of keys that should be ignored/excluded from the status message published by zigbee2mqtt.
 
 ## How it (should 😉) work
 The plugin listens to the [MQTT messages](https://www.zigbee2mqtt.io/information/mqtt_topics_and_message_structure.html) published by zigbee2mqtt.

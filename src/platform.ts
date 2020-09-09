@@ -153,8 +153,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     this.addAccessory(accessory);
   }
 
-  private isDeviceExcluded(device: Zigbee2mqttDeviceInfo | string): boolean {
-    if (Array.isArray(this.config?.devices?.exclude)) {
+  private getAdditionalConfigForDevice(device: Zigbee2mqttDeviceInfo | string): Record<string, unknown> | undefined {
+    if (Array.isArray(this.config?.devices)) {
       const identifiers : string[] = [];
       if (isDeviceInfo(device)) {
         identifiers.push(device.ieeeAddr.toLocaleLowerCase());
@@ -162,11 +162,26 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       } else {
         identifiers.push(device.toLocaleLowerCase());
       }
-      for (const key of this.config.devices.exclude) {
-        if (identifiers.includes(key.toLocaleLowerCase())) {
-          return true;
+
+      for (const devConfig of this.config.devices) {
+        try {
+          if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
+            return devConfig;
+          }
+        } catch(error) {
+          this.log.error('Unable to process device configuration.');
+          this.log.error(error);
         }
       }
+    }
+    return undefined;
+  }
+
+  private isDeviceExcluded(device: Zigbee2mqttDeviceInfo | string): boolean {
+    const additionalConfig = this.getAdditionalConfigForDevice(device);
+    if (additionalConfig !== undefined && additionalConfig.exclude) {
+      this.log.debug(`Device is excluded: ${additionalConfig.id}`);
+      return true;
     }
     return false;
   }
@@ -184,10 +199,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       });
       return;
     }
+
     if (this.accessories.findIndex((acc) => acc.UUID === accessory.UUID) < 0) {
       // New entry
       this.log.info('Restoring accessory:', accessory.displayName);
-      const acc = new Zigbee2mqttAccessory(this, accessory);
+      const acc = new Zigbee2mqttAccessory(this, accessory, this.getAdditionalConfigForDevice(accessory.context.device));
       this.accessories.push(acc);
     }
   }
@@ -206,7 +222,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       const accessory = new this.api.platformAccessory(device.friendly_name, uuid);
       accessory.context.device = device;
       this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-      const acc = new Zigbee2mqttAccessory(this, accessory);
+      const acc = new Zigbee2mqttAccessory(this, accessory, this.getAdditionalConfigForDevice(device));
       this.accessories.push(acc);
     }
   }

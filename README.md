@@ -100,7 +100,7 @@ Whenever it receives a message for a device (on `zigbee2mqtt/[FRIENDLY_NAME]` to
 | `position` | [WindowCovering](https://developers.homebridge.io/#/service/WindowCovering) |
 | `battery` | [BatteryService](https://developers.homebridge.io/#/service/BatteryService) _(currently [StatusLowBattery](https://developers.homebridge.io/#/characteristic/StatusLowBattery) is set to **Low** when the reported battery level is less than 30%)_ |
 | `carbon_monoxide` | [CarbonMonoxideSensor](https://developers.homebridge.io/#/service/CarbonMonoxideSensor) |
-| `pressure` | **Temporarily removed**: Air Pressure Sensor _(using same service and characteristic as Elgato Eve Weather)_ |
+| `pressure` | Air Pressure Sensor _(using same service and characteristic as Elgato Eve Weather)_ |
 
 This way this homebridge plugin does not have to know the different devices. In other words, if a new device gets added to zigbee2mqtt, you probably only have to update zigbee2mqtt and not this plugin.
 

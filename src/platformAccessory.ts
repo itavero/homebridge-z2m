@@ -4,12 +4,13 @@ import { Zigbee2mqttPlatform } from './platform';
 import { Zigbee2mqttDeviceInfo } from './models';
 import { ExtendedTimer } from './timer';
 import { hap } from './hap';
+import { CustomServices, ServiceFactory } from './customServices';
 
 import * as color_convert from 'color-convert';
 
 export class Zigbee2mqttAccessory {
   public static readonly IGNORED_STATE_KEYS: Set<string> = new Set<string>(
-    ['last_seen', 'linkquality', 'voltage', 'pressure', 'smoke_density', 'illuminance', 'update_available']);
+    ['last_seen', 'linkquality', 'voltage', 'smoke_density', 'illuminance', 'update_available']);
 
   private readonly services: ServiceWrapper[] = [];
   private readonly updateTimer: ExtendedTimer;
@@ -86,6 +87,9 @@ export class Zigbee2mqttAccessory {
           break;
         case hap.Service.BatteryService.UUID:
           this.createServiceForKey('battery');
+          break;
+        case CustomServices.AirPressureSensorUUID:
+          this.createServiceForKey('pressure');
           break;
         default:
           //ignore this service.
@@ -213,6 +217,14 @@ export class Zigbee2mqttAccessory {
         const wrapper = new SingleReadOnlyValueServiceWrapper('illuminance_lux',
           this.getOrAddService(hap.Service.LightSensor),
           hap.Characteristic.CurrentAmbientLightLevel);
+        this.addService(wrapper, state, handledKeys);
+        break;
+      }
+      case 'pressure':
+      {
+        const wrapper = new SingleReadOnlyValueServiceWrapper('pressure',
+          this.getOrAddServiceById(CustomServices.AirPressureSensorUUID, CustomServices.AirPressureSensor),
+          'Air Pressure');
         this.addService(wrapper, state, handledKeys);
         break;
       }
@@ -377,8 +389,30 @@ export class Zigbee2mqttAccessory {
     return handledKeys;
   }
 
+  private getOrAddServiceById(uuid: string, factory: ServiceFactory, subType?: string, name?: string): Service {
+    let existingService: Service | undefined = undefined;
+
+    if (subType) {
+      existingService = this.accessory.getServiceById(uuid, subType);
+    } else {
+      existingService = this.accessory.services.find((srv) => srv.UUID === uuid);
+    }
+
+    if (existingService !== undefined) {
+      return existingService;
+    }
+
+    if (!name) {
+      name = this.accessory.displayName;
+      if (subType) {
+        name += ' ' + subType;
+      }
+    }
+
+    return this.accessory.addService(factory(name, subType));
+  }
+
   private getOrAddService<T extends WithUUID<typeof Service>>(service: T, subType?: string, name?: string): Service {
-    this.accessory.getServiceByUUIDAndSubType;
     const existingService = subType ? this.accessory.getServiceById(service, subType) : this.accessory.getService(service);
     if (existingService !== undefined) {
       return existingService;
@@ -449,7 +483,7 @@ export class SingleReadOnlyValueServiceWrapper implements ServiceWrapper {
   constructor(
     private readonly key: string,
     private readonly service: Service,
-    private readonly characteristic: WithUUID<new () => Characteristic>,
+    private readonly characteristic: string | WithUUID<new () => Characteristic>,
     private readonly transformMqttValue: MqttValueTransformer | undefined = undefined,
   ) {
   }

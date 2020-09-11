@@ -6,6 +6,9 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+### Added
+
+- Restored support for Air Pressure Sensors.
 
 ## [0.0.6][] - 2020-09-09
 ### Added

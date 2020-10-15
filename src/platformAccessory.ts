@@ -14,7 +14,7 @@ export class Zigbee2mqttAccessory {
 
   private readonly services: ServiceWrapper[] = [];
   private readonly updateTimer: ExtendedTimer;
-  private readonly additionalConfig: Record<string, unknown> 
+  private readonly additionalConfig: Record<string, unknown>;
   
   private pendingPublishData: Record<string, unknown>;
   private publishIsScheduled: boolean;
@@ -498,7 +498,7 @@ export interface MqttSetPublisher {
 }
 
 export interface MqttGetPublisher {
-  (keys: string[] | undefined): void
+  (keys: string[] | undefined): void;
 }
 
 export class SingleReadOnlyValueServiceWrapper implements ServiceWrapper {

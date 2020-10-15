@@ -3,6 +3,7 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { Zigbee2mqttAccessory } from './platformAccessory';
 import { Zigbee2mqttDeviceInfo, isDeviceInfo } from './models';
+import { MqttConfiguration } from './configModels';
 
 import * as mqtt from 'mqtt';
 import * as fs from 'fs';
@@ -27,50 +28,50 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   ) {
     this.onMessage = this.onMessage.bind(this);
 
-    if (!config.mqtt.server || !config.mqtt.base_topic) {
+    if (!this.mqttConfig.server || !this.mqttConfig.base_topic) {
       this.log.error('No MQTT server and/or base_topic defined!');
     }
-    this.log.info(`Connecting to MQTT server at ${config.mqtt.server}`);
+    this.log.info(`Connecting to MQTT server at ${this.mqttConfig.server}`);
 
     const options: mqtt.IClientOptions = {};
 
-    if (config.mqtt.version) {
-      options.protocolVersion = config.mqtt.version;
+    if (this.mqttConfig.version) {
+      options.protocolVersion = this.mqttConfig.version;
     }
 
-    if (config.mqtt.keepalive) {
-      this.log.debug(`Using MQTT keepalive: ${config.mqtt.keepalive}`);
-      options.keepalive = config.mqtt.keepalive;
+    if (this.mqttConfig.keepalive) {
+      this.log.debug(`Using MQTT keepalive: ${this.mqttConfig.keepalive}`);
+      options.keepalive = this.mqttConfig.keepalive;
     }
 
-    if (config.mqtt.ca) {
-      this.log.debug(`MQTT SSL/TLS: Path to CA certificate = ${config.mqtt.ca}`);
-      options.ca = fs.readFileSync(config.mqtt.ca);
+    if (this.mqttConfig.ca) {
+      this.log.debug(`MQTT SSL/TLS: Path to CA certificate = ${this.mqttConfig.ca}`);
+      options.ca = fs.readFileSync(this.mqttConfig.ca);
     }
 
-    if (config.mqtt.key && config.mqtt.cert) {
-      this.log.debug(`MQTT SSL/TLS: Path to client key = ${config.mqtt.key}`);
-      this.log.debug(`MQTT SSL/TLS: Path to client certificate = ${config.mqtt.cert}`);
-      options.key = fs.readFileSync(config.mqtt.key);
-      options.cert = fs.readFileSync(config.mqtt.cert);
+    if (this.mqttConfig.key && this.mqttConfig.cert) {
+      this.log.debug(`MQTT SSL/TLS: Path to client key = ${this.mqttConfig.key}`);
+      this.log.debug(`MQTT SSL/TLS: Path to client certificate = ${this.mqttConfig.cert}`);
+      options.key = fs.readFileSync(this.mqttConfig.key);
+      options.cert = fs.readFileSync(this.mqttConfig.cert);
     }
 
-    if (config.mqtt.user && config.mqtt.password) {
-      options.username = config.mqtt.user;
-      options.password = config.mqtt.password;
+    if (this.mqttConfig.user && this.mqttConfig.password) {
+      options.username = this.mqttConfig.user;
+      options.password = this.mqttConfig.password;
     }
 
-    if (config.mqtt.client_id) {
-      this.log.debug(`Using MQTT client ID: '${config.mqtt.client_id}'`);
-      options.clientId = config.mqtt.client_id;
+    if (this.mqttConfig.client_id) {
+      this.log.debug(`Using MQTT client ID: '${this.mqttConfig.client_id}'`);
+      options.clientId = this.mqttConfig.client_id;
     }
 
-    if ('reject_unauthorized' in config.mqtt && !config.mqtt.reject_unauthorized) {
+    if ('reject_unauthorized' in this.mqttConfig && !this.mqttConfig.reject_unauthorized) {
       this.log.debug('MQTT reject_unauthorized set false, ignoring certificate warnings.');
       options.rejectUnauthorized = false;
     }
 
-    this.MqttClient = mqtt.connect(config.mqtt.server, options);
+    this.MqttClient = mqtt.connect(this.mqttConfig.server, options);
     this.MqttClient.on('connect', () => {
       this.log.info('Connected to MQTT server');
     });
@@ -82,21 +83,25 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     this.api.on('didFinishLaunching', () => {
       // Setup MQTT callbacks and subscription
       this.MqttClient.on('message', this.onMessage);
-      this.MqttClient.subscribe(config.mqtt.base_topic + '/#');
+      this.MqttClient.subscribe(this.mqttConfig.base_topic + '/#');
 
       // run the method to discover / register your devices as accessories
       this.discoverDevices();
     });
   }
 
+  get mqttConfig(): MqttConfiguration {
+    return this.config.mqtt as MqttConfiguration;
+  }
+
   private onMessage(topic: string, payload: Buffer) {
     try {
-      if (!topic.startsWith(`${this.config.mqtt.base_topic}/`)) {
+      if (!topic.startsWith(`${this.mqttConfig.base_topic}/`)) {
         this.log.debug('Ignore message, because topic is unexpected.', topic);
         return;
       }
 
-      topic = topic.substr(this.config.mqtt.base_topic.length + 1);
+      topic = topic.substr(this.mqttConfig.base_topic.length + 1);
 
       if (topic === 'bridge/config/devices') {
         // Update accessories
@@ -241,7 +246,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   async publishMessage(topic: string, payload: string, options: mqtt.IClientPublishOptions) {
-    topic = `${this.config.mqtt.base_topic}/${topic}`;
+    topic = `${this.mqttConfig.base_topic}/${topic}`;
     options = { qos: 0, retain: false, ...options };
     if (!this.isConnected) {
       this.log.error('Not connected to MQTT server!');

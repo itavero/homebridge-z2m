@@ -68,7 +68,7 @@
                   "title": "MQTT version",
                   "type": "integer",
                   "default": 4,
-                  "minimum": 4,
+                  "minimum": 3,
                   "maximum": 5,
                   "required": false
                }

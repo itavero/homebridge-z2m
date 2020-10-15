@@ -90,23 +90,28 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private onMessage(topic: string, payload: Buffer) {
-    if (!topic.startsWith(`${this.config.mqtt.base_topic}/`)) {
-      this.log.debug('Ignore message, because topic is unexpected.', topic);
-      return;
-    }
+    try {
+      if (!topic.startsWith(`${this.config.mqtt.base_topic}/`)) {
+        this.log.debug('Ignore message, because topic is unexpected.', topic);
+        return;
+      }
 
-    topic = topic.substr(this.config.mqtt.base_topic.length + 1);
+      topic = topic.substr(this.config.mqtt.base_topic.length + 1);
 
-    if (topic === 'bridge/config/devices') {
-      // Update accessories
-      const devices: Zigbee2mqttDeviceInfo[] = JSON.parse(payload.toString());
-      this.handleReceivedDevices(devices);
-    } else if (topic.indexOf('/') === -1) {
-      const state = JSON.parse(payload.toString());
-      // Probably a status update from a device
-      this.handleDeviceUpdate(topic, state);
-    } else {
-      this.log.debug(`Unhandled message on topic: ${topic}`);
+      if (topic === 'bridge/config/devices') {
+        // Update accessories
+        const devices: Zigbee2mqttDeviceInfo[] = JSON.parse(payload.toString());
+        this.handleReceivedDevices(devices);
+      } else if (topic.indexOf('/') === -1) {
+        const state = JSON.parse(payload.toString());
+        // Probably a status update from a device
+        this.handleDeviceUpdate(topic, state);
+      } else {
+        this.log.debug(`Unhandled message on topic: ${topic}`);
+      }
+    } catch (Error) {
+      this.log.error('Failed to process MQTT message. (Maybe check the MQTT version?)');
+      this.log.error(Error);
     }
   }
 

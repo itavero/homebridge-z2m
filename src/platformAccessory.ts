@@ -14,7 +14,8 @@ export class Zigbee2mqttAccessory {
 
   private readonly services: ServiceWrapper[] = [];
   private readonly updateTimer: ExtendedTimer;
-
+  private readonly additionalConfig: Record<string, unknown> 
+  
   private pendingPublishData: Record<string, unknown>;
   private publishIsScheduled: boolean;
 
@@ -25,10 +26,18 @@ export class Zigbee2mqttAccessory {
   constructor(
     private readonly platform: Zigbee2mqttPlatform,
     public readonly accessory: PlatformAccessory,
+    additionalConfig: Record<string, unknown> | undefined,
   ) {
     // Setup delayed publishing
     this.pendingPublishData = {};
     this.publishIsScheduled = false;
+
+    // Store additional config
+    if (additionalConfig === undefined) {
+      this.additionalConfig = {};
+    } else {
+      this.additionalConfig = additionalConfig;
+    }
 
     this.updateDeviceInformation(accessory.context.device);
 
@@ -141,8 +150,16 @@ export class Zigbee2mqttAccessory {
     this.updateTimer.restart();
 
     // Generate map
+    let excluded_keys : string[] = [];
+    if (Array.isArray(this.additionalConfig.excluded_keys)) {
+      excluded_keys = this.additionalConfig.excluded_keys;
+    }
     const map = new Map<string, CharacteristicValue>();
     for (const key in state) {
+      if (excluded_keys.includes(key)) {
+        this.log.debug(`Exclude '${key}' from state for ${this.ieeeAddress} as configured.`);
+        continue;
+      }
       map.set(key, state[key] as CharacteristicValue);
     }
 
@@ -194,6 +211,12 @@ export class Zigbee2mqttAccessory {
 
   private createServiceForKey(key: string, state: Map<string, CharacteristicValue> | undefined = undefined,
     handledKeys: Set<string> | undefined = undefined) {
+    // Check if key is excluded/ignored
+    if (Array.isArray(this.additionalConfig.excluded_keys) && this.additionalConfig.excluded_keys.includes(key)) {
+      this.log.debug(`Key '${key}' excluded for device '${this.ieeeAddress}' in configuration.`);
+      return;
+    }
+
     // Create new service (if possible)
     switch (key) {
       case 'humidity':

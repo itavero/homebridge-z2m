@@ -12,8 +12,8 @@
     "url": "https://github.com/itavero/homebridge-z2m/issues"
   },
   "funding": {
-    "type" : "paypal",
-    "url" : "https://paypal.me/arnom"
+    "type": "paypal",
+    "url": "https://paypal.me/arnom"
   },
   "engines": {
     "node": ">=10.17.0",

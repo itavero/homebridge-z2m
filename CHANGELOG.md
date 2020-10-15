@@ -9,6 +9,11 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 ### Added
 
 - Restored support for Air Pressure Sensors.
+- Configure excluded/ignored keys per device. (see [#12](https://github.com/itavero/homebridge-z2m/issues/12))
+
+### Changed
+
+- **BREAKING**: The configuration JSON slightly changed because of the new feature. This means that excluding devices is now done in a different way. See the example in the README. (related to [#12](https://github.com/itavero/homebridge-z2m/issues/12))
 
 ## [0.0.6][] - 2020-09-09
 ### Added

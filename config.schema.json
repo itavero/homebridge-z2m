@@ -76,14 +76,32 @@
          },
          "devices": {
             "title": "Devices",
-            "type": "object",
+            "type": "array",
             "required": false,
-            "properties": {
-               "exclude": {
-                  "title": "Excluded devices",
-                  "type": "array",
-                  "items": {
-                     "type": "string"
+            "items": {
+               "type": "object",
+               "properties": {
+                  "id": {
+                     "title": "Zigbee Identifier / Friendly name",
+                     "type": "string",
+                     "required": true,
+                     "minLength": 3
+                  },
+                  "exclude": {
+                     "title": "Exclude entire device",
+                     "type": "boolean",
+                     "default": false,
+                     "required": false
+                  },
+                  "excluded_keys": {
+                     "title": "Excluded keys",
+                     "type": "array",
+                     "default": false,
+                     "required": false,
+                     "items": {
+                        "type": "string",
+                        "minLength": 1
+                     }
                   }
                }
             }

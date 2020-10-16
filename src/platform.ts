@@ -175,7 +175,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
       for (const devConfig of this.config.devices) {
         try {
-          if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
+          if (devConfig !== undefined && devConfig.id !== undefined && identifiers.includes(devConfig.id.toLocaleLowerCase())) {
             return devConfig;
           }
         } catch(error) {
@@ -199,7 +199,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private addAccessory(accessory: PlatformAccessory) {
     if (this.isDeviceExcluded(accessory.context.device)) {
       this.log.warn(`Excluded device found on startup: ${accessory.context.device.friendly_name} (${accessory.context.device.ieeeAddr}).`);
-      process.nextTick(() => {  
+      process.nextTick(() => {
         try {
           this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
         } catch (error) {

@@ -4,7 +4,7 @@ import { Zigbee2mqttPlatform } from './platform';
 import { Zigbee2mqttDeviceInfo } from './models';
 import { ExtendedTimer } from './timer';
 import { hap } from './hap';
-import { CustomServices, ServiceFactory } from './customServices';
+import { CustomCharacteristics, CustomServices, ServiceFactory } from './customServices';
 
 import * as color_convert from 'color-convert';
 
@@ -729,8 +729,17 @@ export class LockMechanismServiceWrapper implements ServiceWrapper {
 }
 
 export class SwitchServiceWrapper implements ServiceWrapper {
+  private static readonly ElectricalMeasurementCharacteristics : Map<string, () => Characteristic> = new Map([
+    ['current', () => CustomCharacteristics.Current],
+    ['energy', () => CustomCharacteristics.EnergyConsumption],
+    ['power', () => CustomCharacteristics.Power],
+    ['voltage', () => CustomCharacteristics.Voltage],
+  ]);
+
   static readonly ON = 'ON';
   static readonly OFF = 'OFF';
+
+  private readonly _customCharacteristicKeys : Set<string> = new Set<string>();
 
   constructor(
     protected readonly service: Service, protected readonly setPublisher: MqttSetPublisher,
@@ -752,14 +761,30 @@ export class SwitchServiceWrapper implements ServiceWrapper {
   }
 
   appliesToKey(key: string): boolean {
-    return key === this.key;
+    return key === this.key || SwitchServiceWrapper.ElectricalMeasurementCharacteristics.has(key);
   }
 
   updateValueForKey(key: string, value: unknown): void {
     if (key === this.key) {
       const actualValue: boolean = (value === SwitchServiceWrapper.ON);
       this.service.updateCharacteristic(hap.Characteristic.On, actualValue);
+    } else if (SwitchServiceWrapper.ElectricalMeasurementCharacteristics.has(key)) {
+      const characteristic = SwitchServiceWrapper.ElectricalMeasurementCharacteristics.get(key);
+      if (characteristic !== undefined) {
+        this.updateCustomEnergyCharacteristic(key, characteristic(), value as number);
+      }
     }
+  }
+
+  private updateCustomEnergyCharacteristic(key: string, characteristic: Characteristic, value: number) {
+    if (!this._customCharacteristicKeys.has(key)) {
+      const result = this.service.getCharacteristic(characteristic.displayName);
+      if (result === undefined) {
+        this.service.addCharacteristic(characteristic);
+      }
+      this._customCharacteristicKeys.add(key);
+    }
+    this.service.updateCharacteristic(characteristic.displayName, value);
   }
 
   private setOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {

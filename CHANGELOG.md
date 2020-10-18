@@ -10,6 +10,10 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 
 - Electrical measurement information added for switches/lights that support it (using the Elgato Eve Energy characteristics).
 
+### Fixed
+
+- Removed some default values from `config.schema.json` so that the config UI will not generate an invalid configuration. (see [#16](https://github.com/itavero/homebridge-z2m/pull/16))
+
 ## [0.0.7][] - 2020-10-15
 ### Added
 

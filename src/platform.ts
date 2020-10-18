@@ -174,13 +174,17 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       }
 
       for (const devConfig of this.config.devices) {
-        try {
-          if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
-            return devConfig;
+        if ('id' in devConfig) {
+          try {
+            if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
+              return devConfig;
+            }
+          } catch(error) {
+            this.log.error(`Unable to process device configuration for '${devConfig.id}'.`);
+            this.log.error(error);
           }
-        } catch(error) {
-          this.log.error('Unable to process device configuration.');
-          this.log.error(error);
+        } else {
+          this.log.warn('Configuration contains a device without the required id field.');
         }
       }
     }

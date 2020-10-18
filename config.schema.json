@@ -90,13 +90,11 @@
                   "exclude": {
                      "title": "Exclude entire device",
                      "type": "boolean",
-                     "default": false,
                      "required": false
                   },
                   "excluded_keys": {
                      "title": "Excluded keys",
                      "type": "array",
-                     "default": false,
                      "required": false,
                      "items": {
                         "type": "string",

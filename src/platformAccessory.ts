@@ -478,7 +478,7 @@ export class Zigbee2mqttAccessory {
 
     // Publish using ieeeAddr, as that will never change and the friendly_name might.
     this.platform.publishMessage(`${this.accessory.context.device.ieeeAddr}/get`,
-      (keys !== undefined && keys.length > 0) ? JSON.stringify(data) : '', { qos: 1 });
+      (keys !== undefined && keys.length > 0) ? JSON.stringify(data) : '{}', { qos: 1 });
   }
 }
 

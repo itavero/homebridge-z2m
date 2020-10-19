@@ -13,6 +13,7 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 ### Fixed
 
 - Removed some default values from `config.schema.json` so that the config UI will not generate an invalid configuration. (see [#16](https://github.com/itavero/homebridge-z2m/pull/16))
+- Fix support for friendly names that contain a (`/`) forward slash. (see [#19](https://github.com/itavero/homebridge-z2m/issues/19))
 
 ## [0.0.7][] - 2020-10-15
 ### Added

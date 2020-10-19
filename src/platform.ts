@@ -94,6 +94,12 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     return this.config.mqtt as MqttConfiguration;
   }
 
+  private canBeADeviceStatusTopic(topic: string): boolean {
+    return !topic.startsWith('bridge/')
+      && !topic.endsWith('/get')
+      && !topic.endsWith('/set');
+  }
+
   private onMessage(topic: string, payload: Buffer) {
     try {
       if (!topic.startsWith(`${this.mqttConfig.base_topic}/`)) {
@@ -107,7 +113,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         // Update accessories
         const devices: Zigbee2mqttDeviceInfo[] = JSON.parse(payload.toString());
         this.handleReceivedDevices(devices);
-      } else if (topic.indexOf('/') === -1) {
+      } else if (this.canBeADeviceStatusTopic(topic)) {
         const state = JSON.parse(payload.toString());
         // Probably a status update from a device
         this.handleDeviceUpdate(topic, state);
@@ -126,7 +132,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       if (accessory) {
         accessory.updateStates(state);
       } else {
-        this.log.debug(`Device '${topic}' not found for update.`);
+        this.log.debug(`No device found matching topic '${topic}'`);
       }
     }
   }
@@ -165,7 +171,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   private getAdditionalConfigForDevice(device: Zigbee2mqttDeviceInfo | string): Record<string, unknown> | undefined {
     if (Array.isArray(this.config?.devices)) {
-      const identifiers : string[] = [];
+      const identifiers: string[] = [];
       if (isDeviceInfo(device)) {
         identifiers.push(device.ieeeAddr.toLocaleLowerCase());
         identifiers.push(device.friendly_name.toLocaleLowerCase());
@@ -179,7 +185,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
             if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
               return devConfig;
             }
-          } catch(error) {
+          } catch (error) {
             this.log.error(`Unable to process device configuration for '${devConfig.id}'.`);
             this.log.error(error);
           }
@@ -203,7 +209,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private addAccessory(accessory: PlatformAccessory) {
     if (this.isDeviceExcluded(accessory.context.device)) {
       this.log.warn(`Excluded device found on startup: ${accessory.context.device.friendly_name} (${accessory.context.device.ieeeAddr}).`);
-      process.nextTick(() => {  
+      process.nextTick(() => {
         try {
           this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
         } catch (error) {

@@ -65,7 +65,12 @@ export class Zigbee2mqttAccessory {
           this.createServiceForKey('smoke');
           break;
         case hap.Service.LeakSensor.UUID:
-          this.createServiceForKey('water_leak');
+          if (srv.subtype) {
+            // Use subtype as key (more recent version use this sensor type for both water_leak and gas)
+            this.createServiceForKey(srv.subtype);
+          } else {
+            this.createServiceForKey('water_leak');
+          }
           break;
         case hap.Service.CarbonMonoxideSensor.UUID:
           this.createServiceForKey('carbon_monoxide');
@@ -296,9 +301,10 @@ export class Zigbee2mqttAccessory {
         break;
       }
       case 'water_leak':
+      case 'gas':
       {
-        const wrapper = new SingleReadOnlyValueServiceWrapper('water_leak',
-          this.getOrAddService(hap.Service.LeakSensor),
+        const wrapper = new SingleReadOnlyValueServiceWrapper(key,
+          this.getOrAddService(hap.Service.LeakSensor, key),
           hap.Characteristic.LeakDetected,
           (key, value) => value as boolean
             ? hap.Characteristic.LeakDetected.LEAK_DETECTED

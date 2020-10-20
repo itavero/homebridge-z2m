@@ -9,10 +9,11 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 ### Added
 
 - Extended Battery Service with several keys: `battery_low`, `battery_state` and `ac_connected`. Note that `battery_low` will also fake the battery level in case the `battery` key is not present.
+- Support for Gas Detection Sensors (`gas`). These will show up on HomeKit as Leak Sensor. As far as I know there is no built-in type for Methane Gas Sensors.
 
 ### Changed
 
-- Very slightly refactored the handling of keys starting with `state_` so it is more generic.
+- Very slightly refactored the service creation for keys starting with `state_`, to make it more generic.
 
 ## [0.0.8][] - 2020-10-19
 ### Added

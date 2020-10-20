@@ -108,6 +108,7 @@ Whenever it receives a message for a device (on `zigbee2mqtt/[FRIENDLY_NAME]` to
 | `occupancy` | [OccupancySensor](https://developers.homebridge.io/#/service/OccupancySensor) |
 | `smoke` | [SmokeSensor](https://developers.homebridge.io/#/service/SmokeSensor) |
 | `water_leak` | [LeakSensor](https://developers.homebridge.io/#/service/LeakSensor) |
+| `gas` | [LeakSensor](https://developers.homebridge.io/#/service/LeakSensor) _(workaround as there appears to be no builtin in type for gas detectors)_ |
 | `position` | [WindowCovering](https://developers.homebridge.io/#/service/WindowCovering) |
 | `battery` / `battery_low` / `battery_state` / `ac_connected` | [BatteryService](https://developers.homebridge.io/#/service/BatteryService) _(Created if `battery` and/or `battery_low` are present. If `battery` is present and `battery_low` is missing, the [StatusLowBattery](https://developers.homebridge.io/#/characteristic/StatusLowBattery) is set to **Low** when the reported battery level is less than 30%. If `battery_low` is present, but `battery` is not, the battery level will be set to 9% if the battery is low and 99% if it is not)_ |
 | `carbon_monoxide` | [CarbonMonoxideSensor](https://developers.homebridge.io/#/service/CarbonMonoxideSensor) |

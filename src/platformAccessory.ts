@@ -331,22 +331,6 @@ export class Zigbee2mqttAccessory {
         }
         break;
       }
-      case 'state_left':
-      case 'state_right':
-      case 'state_center':
-      case 'state_top_left':
-      case 'state_center_left':
-      case 'state_bottom_left':
-      case 'state_top_right':
-      case 'state_center_right':
-      case 'state_bottom_right':
-      {
-        const subType = SwitchServiceWrapper.getSubTypeFromKey(key);
-        const wrapper = new SwitchServiceWrapper(this.getOrAddService(hap.Service.Switch, subType),
-          this.queuePublishData.bind(this), key);
-        this.addService(wrapper, state, handledKeys);
-        break;
-      }
       case 'brightness':
       case 'color_temp':
       case 'color':
@@ -368,6 +352,12 @@ export class Zigbee2mqttAccessory {
         break;
       }
       default:
+        if (key.startsWith('state_')) {
+          const subType = SwitchServiceWrapper.getSubTypeFromKey(key);
+          const wrapper = new SwitchServiceWrapper(this.getOrAddService(hap.Service.Switch, subType),
+            this.queuePublishData.bind(this), key);
+          this.addService(wrapper, state, handledKeys);
+        }
         // All remaining unhandled keys will be logged a few lines down.
         break;
     }

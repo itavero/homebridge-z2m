@@ -10,6 +10,10 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 
 - Extended Battery Service with several keys: `battery_low`, `battery_state` and `ac_connected`. Note that `battery_low` will also fake the battery level in case the `battery` key is not present.
 
+### Changed
+
+- Very slightly refactored the handling of keys starting with `state_` so it is more generic.
+
 ## [0.0.8][] - 2020-10-19
 ### Added
 

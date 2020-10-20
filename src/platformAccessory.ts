@@ -306,7 +306,8 @@ export class Zigbee2mqttAccessory {
         this.addService(wrapper, state, handledKeys);
         break;
       }
-      case 'battery':
+      case BatteryServiceWrapper.KEY_BATTERY:
+      case BatteryServiceWrapper.KEY_BATTERY_LOW:
       {
         const wrapper = new BatteryServiceWrapper(this.getOrAddService(hap.Service.BatteryService));
         this.addService(wrapper, state, handledKeys);
@@ -534,9 +535,17 @@ export class SingleReadOnlyValueServiceWrapper implements ServiceWrapper {
 }
 
 export class BatteryServiceWrapper implements ServiceWrapper {
+  public static readonly KEY_BATTERY : string = 'battery';
+  public static readonly KEY_BATTERY_LOW : string = 'battery_low';
+  public static readonly KEY_BATTERY_STATE : string = 'battery_state';
+  public static readonly KEY_AC_CONNECTED : string = 'ac_connected';
+
+  private hasBatteryLow = false;
+  private hasBattery = false;
+  private hasChargingIndication = false;
+
   constructor(
     private readonly service: Service) {
-    this.service.updateCharacteristic(hap.Characteristic.ChargingState, hap.Characteristic.ChargingState.NOT_CHARGEABLE);
   }
 
   get displayName(): string {
@@ -544,15 +553,62 @@ export class BatteryServiceWrapper implements ServiceWrapper {
   }
 
   appliesToKey(key: string): boolean {
-    return key === 'battery';
+    return key === BatteryServiceWrapper.KEY_BATTERY
+    || key === BatteryServiceWrapper.KEY_BATTERY_LOW
+    || key === BatteryServiceWrapper.KEY_BATTERY_STATE
+    || key === BatteryServiceWrapper.KEY_AC_CONNECTED;
   }
 
   updateValueForKey(key: string, value: unknown): void {
-    if (key === 'battery') {
-      this.service.updateCharacteristic(hap.Characteristic.BatteryLevel, value as number);
-      this.service.updateCharacteristic(hap.Characteristic.StatusLowBattery, (value as number < 30)
-        ? hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW
-        : hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
+    switch (key) {
+      case BatteryServiceWrapper.KEY_BATTERY:
+      {
+        this.hasBattery = true;
+        const batteryLevel = value as number;
+        this.service.updateCharacteristic(hap.Characteristic.BatteryLevel, batteryLevel);
+        if (!this.hasBatteryLow) {
+          this.service.updateCharacteristic(hap.Characteristic.StatusLowBattery, (batteryLevel < 30)
+            ? hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW
+            : hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
+        }
+        break;
+      }
+      case BatteryServiceWrapper.KEY_BATTERY_LOW:
+      {
+        this.hasBatteryLow = true;
+        const batteryIsLow = (value === 'ON' || value === true);
+        this.service.updateCharacteristic(hap.Characteristic.BatteryLevel, batteryIsLow
+          ? hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW
+          : hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
+        if (!this.hasBattery) {
+          // Fake the actual battery level
+          this.service.updateCharacteristic(hap.Characteristic.BatteryLevel, batteryIsLow ? 9 : 99);
+        }
+        break;
+      }
+      case BatteryServiceWrapper.KEY_BATTERY_STATE:
+      {
+        this.hasChargingIndication = true;
+        const batteryIsCharging = value === 'charging';
+        this.service.updateCharacteristic(hap.Characteristic.ChargingState, batteryIsCharging
+          ? hap.Characteristic.ChargingState.CHARGING
+          : hap.Characteristic.ChargingState.NOT_CHARGING);
+        break;
+      }
+      case BatteryServiceWrapper.KEY_AC_CONNECTED:
+      {
+        this.hasChargingIndication = true;
+        // Assume that the device is charging if AC is connected
+        const batteryIsCharging = value as boolean;
+        this.service.updateCharacteristic(hap.Characteristic.ChargingState, batteryIsCharging
+          ? hap.Characteristic.ChargingState.CHARGING
+          : hap.Characteristic.ChargingState.NOT_CHARGING);
+        break;
+      }
+    }
+
+    if (!this.hasChargingIndication) {
+      this.service.updateCharacteristic(hap.Characteristic.ChargingState, hap.Characteristic.ChargingState.NOT_CHARGEABLE);
     }
   }
 

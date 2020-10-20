@@ -109,7 +109,7 @@ Whenever it receives a message for a device (on `zigbee2mqtt/[FRIENDLY_NAME]` to
 | `smoke` | [SmokeSensor](https://developers.homebridge.io/#/service/SmokeSensor) |
 | `water_leak` | [LeakSensor](https://developers.homebridge.io/#/service/LeakSensor) |
 | `position` | [WindowCovering](https://developers.homebridge.io/#/service/WindowCovering) |
-| `battery` | [BatteryService](https://developers.homebridge.io/#/service/BatteryService) _(currently [StatusLowBattery](https://developers.homebridge.io/#/characteristic/StatusLowBattery) is set to **Low** when the reported battery level is less than 30%)_ |
+| `battery` / `battery_low` / `battery_state` / `ac_connected` | [BatteryService](https://developers.homebridge.io/#/service/BatteryService) _(Created if `battery` and/or `battery_low` are present. If `battery` is present and `battery_low` is missing, the [StatusLowBattery](https://developers.homebridge.io/#/characteristic/StatusLowBattery) is set to **Low** when the reported battery level is less than 30%. If `battery_low` is present, but `battery` is not, the battery level will be set to 9% if the battery is low and 99% if it is not)_ |
 | `carbon_monoxide` | [CarbonMonoxideSensor](https://developers.homebridge.io/#/service/CarbonMonoxideSensor) |
 | `pressure` | Air Pressure Sensor _(using same service and characteristic as Elgato Eve Weather)_ |
 | `power` | Power consumption in Watts, for [Switch](https://developers.homebridge.io/#/service/Switch) or [Lightbulb](https://developers.homebridge.io/#/service/Lightbulb) _(using same characteristic as Elgato Eve Energy)_ |

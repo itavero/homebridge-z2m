@@ -6,6 +6,8 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+
+## [0.0.9][] - 2020-10-20
 ### Added
 
 - Extended Battery Service with several keys: `battery_low`, `battery_state` and `ac_connected`. Note that `battery_low` will also fake the battery level in case the `battery` key is not present.
@@ -81,7 +83,8 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v0.0.8...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v0.0.9...HEAD
+[0.0.9]: https://github.com/itavero/homebridge-z2m/compare/v0.0.8...v0.0.9
 [0.0.8]: https://github.com/itavero/homebridge-z2m/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/itavero/homebridge-z2m/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/itavero/homebridge-z2m/compare/v0.0.5...v0.0.6

@@ -8,9 +8,53 @@ import { CustomCharacteristics, CustomServices, ServiceFactory } from './customS
 
 import * as color_convert from 'color-convert';
 
+class ServiceMappingResult {
+  constructor (
+     public readonly key: string,
+     public readonly exampleValue: CharacteristicValue | undefined = undefined,
+  ) {
+
+  }
+}
+
 export class Zigbee2mqttAccessory {
-  public static readonly IGNORED_STATE_KEYS: Set<string> = new Set<string>(
-    ['last_seen', 'linkquality', 'voltage', 'smoke_density', 'illuminance', 'update_available']);
+  private static readonly IGNORED_STATE_KEYS: Set<string> = new Set<string>(
+    ['last_seen', 'linkquality', 'smoke_density', 'illuminance', 'update_available', 'action', 'click']);
+ 
+  private static mapServiceToKey(srv: Service) : ServiceMappingResult | undefined {
+    switch(srv.UUID) {
+      case hap.Service.TemperatureSensor.UUID:
+        return new ServiceMappingResult('temperature');
+      case hap.Service.HumiditySensor.UUID:
+        return new ServiceMappingResult('humidity');
+      case hap.Service.ContactSensor.UUID:
+        return new ServiceMappingResult('contact');
+      case hap.Service.LightSensor.UUID:
+        return new ServiceMappingResult('illuminance_lux');
+      case hap.Service.OccupancySensor.UUID:
+        return new ServiceMappingResult('occupancy');
+      case hap.Service.SmokeSensor.UUID:
+        return new ServiceMappingResult('smoke');
+      case hap.Service.CarbonMonoxideSensor.UUID:
+        return new ServiceMappingResult('carbon_monoxide');
+      case hap.Service.Lightbulb.UUID:
+        return new ServiceMappingResult('brightness');
+      case hap.Service.WindowCovering.UUID:
+        return new ServiceMappingResult('position');
+      case hap.Service.BatteryService.UUID:
+        return new ServiceMappingResult('battery');
+      case CustomServices.AirPressureSensorUUID:
+        return new ServiceMappingResult('pressure');
+      case hap.Service.LeakSensor.UUID:
+        return srv.subtype ? new ServiceMappingResult(srv.subtype) : undefined;
+      case hap.Service.LockMechanism.UUID:
+        return new ServiceMappingResult('state', LockMechanismServiceWrapper.UNLOCKED);
+      case hap.Service.Switch.UUID:
+        return new ServiceMappingResult(srv.subtype ? 'state_' + srv.subtype : 'state', SwitchServiceWrapper.OFF);
+      default:
+        return undefined;
+    }
+  }
 
   private readonly services: ServiceWrapper[] = [];
   private readonly updateTimer: ExtendedTimer;
@@ -42,72 +86,35 @@ export class Zigbee2mqttAccessory {
     this.updateDeviceInformation(accessory.context.device);
 
     // Recreate ServiceWrappers from restored services
+    const staleServices = new Set<Service>();
     for (const srv of this.accessory.services) {
       const uuid = srv.getServiceId();
+      
+      if (uuid === hap.Service.AccessoryInformation.UUID) {
+        // Accessory Information is handled differently
+        continue;
+      }
 
-      switch (uuid) {
-        case hap.Service.TemperatureSensor.UUID:
-          this.createServiceForKey('temperature');
-          break;
-        case hap.Service.HumiditySensor.UUID:
-          this.createServiceForKey('humidity');
-          break;
-        case hap.Service.ContactSensor.UUID:
-          this.createServiceForKey('contact');
-          break;
-        case hap.Service.LightSensor.UUID:
-          this.createServiceForKey('illuminance_lux');
-          break;
-        case hap.Service.OccupancySensor.UUID:
-          this.createServiceForKey('occupancy');
-          break;
-        case hap.Service.SmokeSensor.UUID:
-          this.createServiceForKey('smoke');
-          break;
-        case hap.Service.LeakSensor.UUID:
-          if (srv.subtype) {
-            // Use subtype as key (more recent version use this sensor type for both water_leak and gas)
-            this.createServiceForKey(srv.subtype);
-          } else {
-            this.createServiceForKey('water_leak');
-          }
-          break;
-        case hap.Service.CarbonMonoxideSensor.UUID:
-          this.createServiceForKey('carbon_monoxide');
-          break;
-        case hap.Service.Lightbulb.UUID:
-          this.createServiceForKey('brightness');
-          break;
-        case hap.Service.Switch.UUID:
-          if (srv.subtype) {
-            this.createServiceForKey('state_' + srv.subtype);
-          } else {
-            // Pass map with example value for state, to make sure that a Switch is created.
-            const example = new Map<string, CharacteristicValue>();
-            example.set('state', SwitchServiceWrapper.OFF);
-            this.createServiceForKey('state', example);
-          }
-          break;
-        case hap.Service.LockMechanism.UUID:
-        {
-          // Pass map with example value for state, to make sure that a Lock Mechanism is created.
-          const example = new Map<string, CharacteristicValue>();
-          example.set('state', LockMechanismServiceWrapper.UNLOCKED);
-          this.createServiceForKey('state', example);
-          break;
+      let isHandled = false;
+      const mapping = Zigbee2mqttAccessory.mapServiceToKey(srv);
+      if (mapping !== undefined) {
+        if (mapping.exampleValue !== undefined) {
+          isHandled = this.createServiceForKey(mapping.key, new Map([[mapping.key, mapping.exampleValue]]));
+        } else {
+          isHandled = this.createServiceForKey(mapping.key);
         }
-        case hap.Service.WindowCovering.UUID:
-          this.createServiceForKey('position');
-          break;
-        case hap.Service.BatteryService.UUID:
-          this.createServiceForKey('battery');
-          break;
-        case CustomServices.AirPressureSensorUUID:
-          this.createServiceForKey('pressure');
-          break;
-        default:
-          //ignore this service.
-          break;
+      }
+      if (!isHandled) {
+        staleServices.add(srv);
+      }
+    }
+
+    // Clean up stale services
+    for (const srv of staleServices) {
+      try {
+        this.accessory.removeService(srv);
+      } catch (Error) {
+        this.log.warn(`Failed to remove stale service with UUID: ${srv.UUID}`);
       }
     }
 
@@ -215,11 +222,11 @@ export class Zigbee2mqttAccessory {
   }
 
   private createServiceForKey(key: string, state: Map<string, CharacteristicValue> | undefined = undefined,
-    handledKeys: Set<string> | undefined = undefined) {
+    handledKeys: Set<string> | undefined = undefined) : boolean {
     // Check if key is excluded/ignored
     if (Array.isArray(this.additionalConfig.excluded_keys) && this.additionalConfig.excluded_keys.includes(key)) {
       this.log.debug(`Key '${key}' excluded for device '${this.ieeeAddress}' in configuration.`);
-      return;
+      return false;
     }
 
     // Create new service (if possible)
@@ -363,10 +370,15 @@ export class Zigbee2mqttAccessory {
           const wrapper = new SwitchServiceWrapper(this.getOrAddService(hap.Service.Switch, subType),
             this.queuePublishData.bind(this), key);
           this.addService(wrapper, state, handledKeys);
+          return true;
         }
-        // All remaining unhandled keys will be logged a few lines down.
-        break;
+        // All remaining unhandled keys will be logged from elsewhere.
+        return false;
     }
+
+    // Default case will return false if the key was not handled.
+    // If we reached this point we can assume a service was created.
+    return true;
   }
 
   private addService(srv: ServiceWrapper, state: Map<string, CharacteristicValue> | undefined, handledKeys: Set<string> | undefined) {
@@ -467,15 +479,23 @@ export class Zigbee2mqttAccessory {
 
   private publishGet(keys: string[] | undefined = undefined): void {
     const data = {};
-    if (keys !== undefined) {
+    if (keys !== undefined && keys.length > 0) {
       for (const k of keys as string[]) {
-        data[k] = '';
+        data[k] = 0;
+      }
+    } else {
+      // Add keys based on known services
+      const serviceKeys = this.accessory.services
+        .map(srv => Zigbee2mqttAccessory.mapServiceToKey(srv)?.key ?? '')
+        .filter(k => k.length > 0);
+      for (const k of serviceKeys) {
+        data[k] = 0;
       }
     }
 
     // Publish using ieeeAddr, as that will never change and the friendly_name might.
     this.platform.publishMessage(`${this.accessory.context.device.ieeeAddr}/get`,
-      (keys !== undefined && keys.length > 0) ? JSON.stringify(data) : '{}', { qos: 1 });
+      JSON.stringify(data), { qos: 1 });
   }
 }
 

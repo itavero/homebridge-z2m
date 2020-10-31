@@ -9,6 +9,11 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 ### Changed
 
 - Only try to parse JSON of a possible status update if we find a matching accessory. Previously errors could show up for the `action` / `click` topics, due to the fixed support fo friendly names with a `/` in v0.0.8.
+- Clean up old/unhandled services upon restoring an accessory.
+- Exclude `action` and `click` key globally as long as there is no support for push buttons/remotes yet.
+- Removed `voltage` key from global exclude list, due to previously added electrical measurement information (in v0.0.8).
+- Refactored the Service to JSON key mapping so it's a separate function.
+- When performing a get operation, all keys (derived from the services that are present) will be added if none where specified. (previously indicated in [#19](https://github.com/itavero/homebridge-z2m/issues/19) that it shouldn't be empty)
 
 ## [0.0.9][] - 2020-10-20
 ### Added

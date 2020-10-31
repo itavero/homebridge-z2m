@@ -114,9 +114,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         const devices: Zigbee2mqttDeviceInfo[] = JSON.parse(payload.toString());
         this.handleReceivedDevices(devices);
       } else if (this.canBeADeviceStatusTopic(topic)) {
-        const state = JSON.parse(payload.toString());
         // Probably a status update from a device
-        this.handleDeviceUpdate(topic, state);
+        this.handleDeviceUpdate(topic, payload.toString());
       } else {
         this.log.debug(`Unhandled message on topic: ${topic}`);
       }
@@ -126,11 +125,17 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
   }
 
-  private async handleDeviceUpdate(topic: string, state: Record<string, unknown>) {
+  private async handleDeviceUpdate(topic: string, statePayload: string) {
     if (!this.isDeviceExcluded(topic)) {
       const accessory = this.accessories.find((acc) => acc.matchesIdentifier(topic));
       if (accessory) {
-        accessory.updateStates(state);
+        try {
+          const state = JSON.parse(statePayload.toString());
+          accessory.updateStates(state);
+        } catch (Error) {
+          this.log.error('Failed to process status update.');
+          this.log.error(Error);
+        }
       } else {
         this.log.debug(`No device found matching topic '${topic}'`);
       }

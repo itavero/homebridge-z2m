@@ -6,6 +6,9 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+### Changed
+
+- Only try to parse JSON of a possible status update if we find a matching accessory. Previously errors could show up for the `action` / `click` topics, due to the fixed support fo friendly names with a `/` in v0.0.8.
 
 ## [0.0.9][] - 2020-10-20
 ### Added

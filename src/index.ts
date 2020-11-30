@@ -1,6 +1,6 @@
 import { API } from 'homebridge';
 
-import { PLUGIN_NAME, PLATFORM_NAME } from './settings';
+import { PLATFORM_NAME } from './settings';
 import { Zigbee2mqttPlatform } from './platform'; 
 import { setHap } from './hap';
 
@@ -9,5 +9,5 @@ import { setHap } from './hap';
  */
 export = (api: API) => {
   setHap(api.hap);
-  api.registerPlatform(PLUGIN_NAME, PLATFORM_NAME, Zigbee2mqttPlatform);
+  api.registerPlatform(PLATFORM_NAME, Zigbee2mqttPlatform);
 };

@@ -121,3 +121,15 @@ dist
 
 # local history
 .history/
+
+# IDE stuff
+.vscode/
+.idea/
+codeStyles/
+inspectionProfiles/
+*.iml
+*.ipr
+*.xml
+
+# Other things
+_*.json

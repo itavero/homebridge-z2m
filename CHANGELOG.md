@@ -6,6 +6,22 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+### Changed
+
+- > ⚠️ **IMPORTANT**: Because the way this plugin works and constructs the accessories, it might be that you have to reconfigure some of your accessories in your HomeKit setup as names/identifiers of certain services might have changed. This should be a one time action, because of this new major version.
+- Use `exposes` information added in zigbee2mqtt v1.16.0 (which is the minimum version required by this plugin from now on).
+  This information is used to determine the available characteristics (and to which services they belong).
+- Refactored internals: split up parts of the code and added automated tests.
+- Cleaned up `README.md`
+- Refactored/changed color conversion for converting hue/saturation to XY, based on [some documentation from Philips Hue](https://developers.meethue.com/develop/application-design-guidance/color-conversion-formulas-rgb-to-xy-and-back/).
+
+### Added
+
+- Documentation has been added in the `docs` folder and on [the new homebridge-z2m website](https://arno.dev/homebridge-z2m/).
+
+### Removed
+
+- Support for Electrical measurement information (added in 0.0.8) was removed. I personally did not have a use case for this information, so instead I decided to focus my efforts on other parts of this major release. If you miss this, please open up a feature request and also let me know what this information is useful for within a HomeKit context.
 
 ## [0.0.10][] - 2020-10-31
 ### Changed

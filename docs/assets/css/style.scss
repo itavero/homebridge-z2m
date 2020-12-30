@@ -1,0 +1,28 @@
+---
+---
+
+// Headers
+$header-heading-color: #FFF;
+$header-bg-color: #C31431;
+$header-bg-color-secondary: #240B36;
+
+// Text
+$section-headings-color: #240B36;
+$body-text-color: #666066;
+$body-link-color: #C31431;
+$blockquote-text-color: #807788;
+
+// Code
+$code-bg-color: #faf3f6;
+$code-text-color: #825674;
+
+// Borders
+$border-color: #f0dce6;
+$table-border-color: #ece9eb;
+$hr-border-color: #f1eff0;
+
+@import "{{ site.theme }}";
+
+.project-tagline {
+   opacity: 1.0;
+}

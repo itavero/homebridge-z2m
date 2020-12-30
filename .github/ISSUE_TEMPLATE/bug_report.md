@@ -21,10 +21,10 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **MQTT messages**
-If possible, please provide the following messages:
-* The device identification from `zigbee2mqtt/bridge/config/devices`
+If possible, please provide the following:
+* The device entry from `zigbee2mqtt/bridge/devices` (note: this is different from `zigbee2mqtt/bridge/config/devices`)
 * Status update from `zigbee2mqtt/[FRIENDLY_NAME]`
-* Messages published by this plugin that might be to your issue (can also be seen in the homebridge logs)
+* Messages published by this plugin that might be related to your issue (can also be seen in the homebridge logs)
 
 **Versions used**
 Please provide the version of the following pieces of software:

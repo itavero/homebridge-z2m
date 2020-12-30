@@ -135,3 +135,12 @@ dist
 
 # All "hidden" folders
 .*/
+
+# Temporary JSON files and helper scripts
+*.sh
+_*.json
+
+# Documentation and tests do not have to be in the package
+docs/
+test/
+jest.config.js

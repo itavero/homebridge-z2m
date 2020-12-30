@@ -6,6 +6,8 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+### Changed
+- Cleaned up published package by "fixing" `.npmignore`
 
 ## [1.0.0][] - 2020-12-30
 ### Changed

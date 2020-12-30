@@ -6,6 +6,8 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+
+## [1.0.0][] - 2020-12-30
 ### Changed
 
 - > ⚠️ **IMPORTANT**: Because the way this plugin works and constructs the accessories, it might be that you have to reconfigure some of your accessories in your HomeKit setup as names/identifiers of certain services might have changed. This should be a one time action, because of this new major version.
@@ -109,7 +111,8 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v0.0.10...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/itavero/homebridge-z2m/compare/v0.0.10...v1.0.0
 [0.0.10]: https://github.com/itavero/homebridge-z2m/compare/v0.0.9...v0.0.10
 [0.0.9]: https://github.com/itavero/homebridge-z2m/compare/v0.0.8...v0.0.9
 [0.0.8]: https://github.com/itavero/homebridge-z2m/compare/v0.0.7...v0.0.8

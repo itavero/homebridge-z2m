@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export interface ExposesEntry {
   type: string;
   name?: string;
@@ -114,8 +112,15 @@ export function exposesAreEqual(first: ExposesEntry, second: ExposesEntry): bool
     || first.value_max !== second.value_max
     || first.value_off !== second.value_off
     || first.value_on !== second.value_on
-    || !_.isEqual(first.values, second.values)) {
+    || first.values?.length !== second.values?.length) {
     return false;
+  }
+
+  if (first.values !== undefined && second?.values !== undefined) {
+    const missing = first.values.filter(v => !(second.values?.includes(v) ?? false));
+    if (missing.length > 0) {
+      return false;
+    }
   }
 
   if (exposesHasFeatures(first) || exposesHasFeatures(second)) {

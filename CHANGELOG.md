@@ -6,6 +6,9 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+### Changed
+
+- Clean up old lodash dependency.
 
 ## [1.0.1][] - 2020-12-30
 ### Changed

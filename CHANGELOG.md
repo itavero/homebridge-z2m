@@ -10,6 +10,10 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 
 - Report an error in the logs if the zigbee2mqtt version is too old. Also check the legacy `bridge/config` topic for this.
 - Bumped the minimum zigbee2mqtt version to the first official release with the new API, version 1.17.0.
+- Migration from pre-v1.0.0 should be a bit smoother. In previous version, all pre-v1.0.0 accessories would be fully removed and then
+  get recreated. This caused all of the automations, room assignments etc. in HomeKit to get lost. With this version the migration from
+  pre-v1.0.0 versions of this plugin should be smoother, although there still probably will be some services/accessories for which this
+  information gets lost.
 
 ## [1.0.2][] - 2020-12-30
 ### Changed

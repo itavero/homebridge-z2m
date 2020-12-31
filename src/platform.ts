@@ -23,6 +23,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   // this is used to track restored cached accessories
   private readonly accessories: Zigbee2mqttAccessory[] = [];
+  private didReceiveDevices: boolean;
 
   constructor(
     public readonly log: Logger,
@@ -30,6 +31,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     public readonly api: API,
   ) {
     this.onMessage = this.onMessage.bind(this);
+    this.didReceiveDevices = false;
 
     if (!this.mqttConfig.server || !this.mqttConfig.base_topic) {
       this.log.error('No MQTT server and/or base_topic defined!');
@@ -77,6 +79,12 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     this.MqttClient = mqtt.connect(this.mqttConfig.server, options);
     this.MqttClient.on('connect', () => {
       this.log.info('Connected to MQTT server');
+      setTimeout(() => {
+        if (!this.didReceiveDevices) {
+          this.log.error('DID NOT RECEIVE ANY DEVICES AFTER BEING CONNECTED FOR TWO MINUTES.\n'
+          + `Please verify that zigbee2mqtt is running and that it is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
+        }
+      }, 120000);
     });
 
     // When this event is fired it means Homebridge has restored all cached accessories from disk.
@@ -100,6 +108,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       this.log.error('!!! UPDATE OF ZIGBEE2MQTT REQUIRED !!! \n' + 
       `zigbee2mqtt v${version} is TOO OLD. The minimum required version is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION}. \n` + 
       `This means that ${PLUGIN_NAME} MIGHT NOT WORK AS EXPECTED!`);
+      throw new Error(`The installed version of ${PLUGIN_NAME} does not work with zigbee2mqtt v${version}. `
+      + `It requires zigbee2mqtt v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
     }
   }
 
@@ -162,6 +172,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   private handleReceivedDevices(devices: DeviceListEntry[]) {
     this.log.debug('Received devices...');
+    this.didReceiveDevices = true;
     devices.filter(d => d.supported 
       && d.definition !== undefined 
       && !this.isDeviceExcluded(d)).forEach(d => this.createOrUpdateAccessory(d));
@@ -185,16 +196,21 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     this.addAccessory(accessory);
   }
 
-  private getAdditionalConfigForDevice(device: DeviceListEntry | string): Record<string, unknown> | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private getAdditionalConfigForDevice(device: any): Record<string, unknown> | undefined {
     if (Array.isArray(this.config?.devices)) {
       const identifiers: string[] = [];
-      if (isDeviceListEntry(device)) {
-        identifiers.push(device.ieee_address.toLocaleLowerCase());
-        identifiers.push(device.friendly_name.toLocaleLowerCase());
-      } else {
+      if (typeof device === 'string') {
         identifiers.push(device.toLocaleLowerCase());
+      } else {
+        if ('ieee_address' in device) {
+          identifiers.push(device.ieee_address.toLocaleLowerCase());
+        }
+        if ('friendly_name' in device) {
+          identifiers.push(device.friendly_name.toLocaleLowerCase());
+        }
       }
-
+    
       for (const devConfig of this.config.devices) {
         if ('id' in devConfig) {
           try {
@@ -206,7 +222,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
             this.log.error(error);
           }
         } else {
-          this.log.warn('Configuration contains a device without the required id field.');
+          this.log.error('Configuration contains a device without the required id field.');
         }
       }
     }
@@ -223,33 +239,29 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private addAccessory(accessory: PlatformAccessory) {
-    let do_remove = false;
-    if (!isDeviceListEntry(accessory.context.device)) {
-      // Old accessory (pre v0.1.0) so it will be removed
-      this.log.warn(`Removing old (pre v0.1.0) accessory ${accessory.context.device.friendly_name} (${accessory.context.device.ieeeAddr}`);
-      do_remove = true;
-    }
-    if (!do_remove && this.isDeviceExcluded(accessory.context.device)) {
+    const ieee_address = accessory.context.device.ieee_address ?? accessory.context.device.ieeeAddr;
+    if (this.isDeviceExcluded(accessory.context.device)) {
       this.log.warn(
-        `Excluded device found on startup: ${accessory.context.device.friendly_name} (${accessory.context.device.ieee_address}).`);
-      do_remove = true;
-    }
-
-    if (do_remove) {
+        `Excluded device found on startup: ${accessory.context.device.friendly_name} (${ieee_address}).`);
       process.nextTick(() => {
         try {
           this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
         } catch (error) {
-          this.log.error('Failed to delete excluded/old accessory.');
+          this.log.error('Failed to delete accessory.');
           this.log.error(error);
         }
       });
       return;
     }
 
+    if (!isDeviceListEntry(accessory.context.device)) {
+      this.log.warn(`Restoring old (pre v1.0.0) accessory ${accessory.context.device.friendly_name} (${ieee_address}). This accessory ` + 
+        `will not work until updated device information is received from zigbee2mqtt v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
+    }
+
     if (this.accessories.findIndex((acc) => acc.UUID === accessory.UUID) < 0) {
       // New entry
-      this.log.info(`Restoring accessory: ${accessory.displayName} (${accessory.context.device.ieee_address})`);
+      this.log.info(`Restoring accessory: ${accessory.displayName} (${ieee_address})`);
       const acc = new Zigbee2mqttAccessory(this, accessory, this.getAdditionalConfigForDevice(accessory.context.device));
       this.accessories.push(acc);
     }
@@ -262,7 +274,6 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     const uuid = this.api.hap.uuid.generate(device.ieee_address);
     const existingAcc = this.accessories.find((acc) => acc.UUID === uuid);
     if (existingAcc) {
-      // Not a pre v0.1.0 accessory
       existingAcc.updateDeviceInformation(device);
     } else {
       // New entry

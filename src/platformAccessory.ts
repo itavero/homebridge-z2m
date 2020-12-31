@@ -4,13 +4,14 @@ import { ExtendedTimer } from './timer';
 import { hap } from './hap';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
 import { BasicAccessory, ServiceHandler } from './converters/interfaces';
-import { deviceListEntriesAreEqual, DeviceListEntry } from './z2mModels';
+import { deviceListEntriesAreEqual, DeviceListEntry, isDeviceDefinition, isDeviceListEntry } from './z2mModels';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;
   private readonly additionalConfig: Record<string, unknown>;
   private readonly exposeConverterManager: ServiceCreatorManager;
   private readonly serviceHandlers = new Map<string, ServiceHandler>();
+  private readonly serviceIds = new Set<string>();
 
   private pendingPublishData: Record<string, unknown>;
   private publishIsScheduled: boolean;
@@ -32,7 +33,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     additionalConfig: Record<string, unknown> | undefined,
     serviceCreatorManager: ServiceCreatorManager = BasicServiceCreatorManager.getInstance(),
   ) {
-    // Store ExposeConverterManager
+    // Store ServiceCreatorManager
     if (serviceCreatorManager === undefined) {
       throw new Error('ServiceCreatorManager is required');
     } else {
@@ -133,7 +134,16 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     }
   }
 
+  static getUniqueIdForService(service: Service): string {
+    if (service.subtype === undefined) {
+      return service.UUID;
+    }
+    return `${service.UUID}_${service.subtype}`;
+  }
+
   getOrAddService(service: Service): Service {
+    this.serviceIds.add(Zigbee2mqttAccessory.getUniqueIdForService(service));
+
     const existingService = this.accessory.services.find(e =>
       e.UUID === service.UUID && e.subtype === service.subtype,
     );
@@ -141,7 +151,6 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     if (existingService !== undefined) {
       return existingService;
     }
-
     return this.accessory.addService(service);
   }
 
@@ -175,25 +184,36 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     return (id === this.ieeeAddress || this.accessory.context.device.friendly_name === id);
   }
 
-  updateDeviceInformation(info: DeviceListEntry, force_update = true) {
-    if (force_update || !deviceListEntriesAreEqual(this.accessory.context.device, info)) {
+  updateDeviceInformation(info: DeviceListEntry | undefined, force_update = true) {
+
+    // Only update the device if a valid device list entry is passed.
+    // This is done so that old, pre-v1.0.0 accessories will only get updated when new device information is received.
+    if (isDeviceListEntry(info)
+    && (force_update || !deviceListEntriesAreEqual(this.accessory.context.device, info))) {
       // Device info has changed
       this.accessory.context.device = info;
 
-      if (info.definition === undefined || info.definition === null) {
-        throw new Error(`No device definition for device ${info.friendly_name} (${info.ieee_address}).`);
+      if (!isDeviceDefinition(info.definition)) {
+        this.log.error(`No device definition for device ${info.friendly_name} (${this.ieeeAddress}).`);
+      } else {
+        // Update accessory info
+        // Not getOrAddService is used so that the service is known in this.serviceIds and will not get filtered out.
+        this.getOrAddService(new hap.Service.AccessoryInformation())
+          .updateCharacteristic(hap.Characteristic.Manufacturer, info.definition.vendor ?? 'zigbee2mqtt')
+          .updateCharacteristic(hap.Characteristic.Model, info.definition.model ?? 'unknown')
+          .updateCharacteristic(hap.Characteristic.SerialNumber, info.ieee_address)
+          .updateCharacteristic(hap.Characteristic.HardwareRevision, info.date_code ?? '?')
+          .updateCharacteristic(hap.Characteristic.FirmwareRevision, info.software_build_id ?? '?');
+        // Create (new) services
+        this.exposeConverterManager.createHomeKitEntitiesFromExposes(this, info.definition.exposes);
       }
 
-      // Update accessory info
-      this.accessory.getService(hap.Service.AccessoryInformation)!
-        .updateCharacteristic(hap.Characteristic.Manufacturer, info.definition.vendor)
-        .updateCharacteristic(hap.Characteristic.Model, info.definition.model)
-        .updateCharacteristic(hap.Characteristic.SerialNumber, info.ieee_address)
-        .updateCharacteristic(hap.Characteristic.HardwareRevision, info.date_code ?? '?')
-        .updateCharacteristic(hap.Characteristic.FirmwareRevision, info.software_build_id ?? '?');
-
-      // Create (new) services
-      this.exposeConverterManager.createHomeKitEntitiesFromExposes(this, info.definition.exposes);
+      // Remove all services of which identifier is not known
+      const staleServices = this.accessory.services.filter(s => !this.serviceIds.has(Zigbee2mqttAccessory.getUniqueIdForService(s)));
+      staleServices.forEach((s) => {
+        this.log.debug(`Clean up stale service ${s.displayName} (${s.UUID}) for accessory ${this.displayName} (${this.ieeeAddress}).`);
+        this.accessory.removeService(s);
+      });
     }
     this.platform.api.updatePlatformAccessories([this.accessory]);
   }

@@ -5,6 +5,7 @@ The plugin currently includes converters for the following types of devices/serv
 * [Switch](switch.md)
 * [Window Cover](cover.md)
 * [Lock Mechanism](lock.md)
+* [Stateless Programmable Switch](action.md) (a.k.a. remote controls / push buttons)
 * [Battery Service](battery.md)
 * [Basic Sensors](sensors.md), a.o.:
   * Humidity

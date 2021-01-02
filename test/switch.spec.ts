@@ -3,7 +3,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { ServiceHandlerTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
 
 describe('Switch', () => {
   beforeEach(() => {
@@ -109,7 +109,7 @@ describe('Switch', () => {
 
     // Shared "state"
     let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlerTestHarness;
+    let harness : ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -118,10 +118,10 @@ describe('Switch', () => {
         const device = testJsonDeviceListEntry(deviceModelJson);
         deviceExposes = device?.definition?.exposes ?? [];
         expect(deviceExposes?.length).toBeGreaterThan(0);
-        const newHarness = new ServiceHandlerTestHarness(hap.Service.Switch);
+        const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
-        newHarness.addExpectedCharacteristic('state', hap.Characteristic.On, true);
+        newHarness.getOrAddHandler(hap.Service.Switch).addExpectedCharacteristic('state', hap.Characteristic.On, true);
         newHarness.prepareCreationMocks();
         
         newHarness.callCreators(deviceExposes);
@@ -140,12 +140,12 @@ describe('Switch', () => {
 
     test('Status update is handled: On', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"state":"ON"}', hap.Characteristic.On, true);
+      harness.checkSingleUpdateState('{"state":"ON"}', hap.Service.Switch, hap.Characteristic.On, true);
     });
 
     test('Status update is handled: Off', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"state":"OFF"}', hap.Characteristic.On, false);
+      harness.checkSingleUpdateState('{"state":"OFF"}', hap.Service.Switch, hap.Characteristic.On, false);
     });
 
     test('Status update is handled: Toggle', () => {
@@ -155,12 +155,12 @@ describe('Switch', () => {
 
     test('HomeKit: Turn On', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('state', true, 'ON');
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Switch, 'state', true, 'ON');
     });
 
     test('HomeKit: Turn Off', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('state', false, 'OFF');
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Switch, 'state', false, 'OFF');
     });
   });
 });

@@ -3,7 +3,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { ServiceHandlerTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
 
 describe('Light', () => {
   beforeEach(() => {
@@ -11,8 +11,7 @@ describe('Light', () => {
   });
 
   describe('Hue White and color ambiance Play Lightbar', () => {
-    const deviceModelJson = `
-{
+    const deviceModelJson = `{
   "date_code": "20191218",
   "definition": {
     "description": "Hue White and color ambiance Play Lightbar",
@@ -154,7 +153,7 @@ describe('Light', () => {
 
     // Shared "state"
     let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlerTestHarness;
+    let harness : ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -164,13 +163,14 @@ describe('Light', () => {
         deviceExposes = device?.definition?.exposes ?? [];
 
         // Check service creation
-        const newHarness = new ServiceHandlerTestHarness(hap.Service.Lightbulb);
-        newHarness.addExpectedCharacteristic('state', hap.Characteristic.On, true);
-        newHarness.addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true);
-        newHarness.addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
-        newHarness.addExpectedPropertyCheck('color');
-        newHarness.addExpectedCharacteristic('hue', hap.Characteristic.Hue, true, undefined, false);
-        newHarness.addExpectedCharacteristic('saturation', hap.Characteristic.Saturation, true, undefined, false);
+        const newHarness = new ServiceHandlersTestHarness();
+        newHarness.getOrAddHandler(hap.Service.Lightbulb)
+          .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+          .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
+          .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true)
+          .addExpectedPropertyCheck('color')
+          .addExpectedCharacteristic('hue', hap.Characteristic.Hue, true, undefined, false)
+          .addExpectedCharacteristic('saturation', hap.Characteristic.Saturation, true, undefined, false);
         newHarness.prepareCreationMocks();
         
         newHarness.callCreators(deviceExposes);
@@ -182,7 +182,7 @@ describe('Light', () => {
       }
 
       harness?.clearMocks();
-      const brightnessCharacteristicMock = harness?.getCharacteristicMock('brightness');
+      const brightnessCharacteristicMock = harness?.getOrAddHandler(hap.Service.Lightbulb).getCharacteristicMock('brightness');
       if (brightnessCharacteristicMock !== undefined) {
         brightnessCharacteristicMock.props.minValue = 0;
         brightnessCharacteristicMock.props.maxValue = 100;
@@ -196,12 +196,12 @@ describe('Light', () => {
 
     test('Status update is handled: State On', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"state":"ON"}', hap.Characteristic.On, true);
+      harness.checkSingleUpdateState('{"state":"ON"}', hap.Service.Lightbulb, hap.Characteristic.On, true);
     });
 
     test('Status update is handled: State Off', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"state":"OFF"}', hap.Characteristic.On, false);
+      harness.checkSingleUpdateState('{"state":"OFF"}', hap.Service.Lightbulb, hap.Characteristic.On, false);
     });
 
     test('Status update is handled: State Toggle', () => {
@@ -211,29 +211,27 @@ describe('Light', () => {
 
     test('Status update is handled: Brightness 0%', () => {
       expect(harness).toBeDefined();
-      harness.prepareGetCharacteristicMock('brightness');
-      harness.checkSingleUpdateState('{"brightness":0}',
-        hap.Characteristic.Brightness, 0);
+      harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+      harness.checkSingleUpdateState('{"brightness":0}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 0);
     });
 
     test('Status update is handled: Brightness 50%', () => {
       expect(harness).toBeDefined();
-      harness.prepareGetCharacteristicMock('brightness');
-      harness.checkSingleUpdateState('{"brightness":127}',
-        hap.Characteristic.Brightness, 50);
+      harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+      harness.checkSingleUpdateState('{"brightness":127}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 50);
     });
 
     test('Status update is handled: Brightness 100%', () => {
       expect(harness).toBeDefined();
-      harness.prepareGetCharacteristicMock('brightness');
-      harness.checkSingleUpdateState('{"brightness":254}',
-        hap.Characteristic.Brightness, 100);
+      harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+      harness.checkSingleUpdateState('{"brightness":254}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 100);
     });
 
     test('Status update is handled: Color changed to yellow', () => {
       expect(harness).toBeDefined();
       harness.checkUpdateState(
         '{"color":{"x":0.44416,"y":0.51657}}',
+        hap.Service.Lightbulb, 
         new Map([
           [hap.Characteristic.Hue, 60],
           [hap.Characteristic.Saturation, 100],
@@ -243,61 +241,66 @@ describe('Light', () => {
 
     test('HomeKit: Turn On', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('state', true, 'ON');
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'state', true, 'ON');
     });
 
     test('HomeKit: Turn Off', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('state', false, 'OFF');
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'state', false, 'OFF');
     });
 
     test('HomeKit: Brightness to 50%', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('brightness', 50, 127);
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'brightness', 50, 127);
     });
 
     test('HomeKit: Brightness to 0%', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('brightness', 0, 0);
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'brightness', 0, 0);
     });
 
     test('HomeKit: Brightness to 100%', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('brightness', 100, 254);
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'brightness', 100, 254);
     });
 
     test('HomeKit: Change color to red', () => {
       expect(harness).toBeDefined();
-      harness.callAndCheckHomeKitSetCallback('hue', 0);
-      harness.callAndCheckHomeKitSetCallback('saturation', 100);
+      harness.getOrAddHandler(hap.Service.Lightbulb)
+        .callAndCheckHomeKitSetCallback('hue', 0)
+        .callAndCheckHomeKitSetCallback('saturation', 100);
       harness.checkSetDataQueued({color: {x: 0.70061, y: 0.2993}});
     });
 
     test('HomeKit: Change color to green', () => {
       expect(harness).toBeDefined();
-      harness.callAndCheckHomeKitSetCallback('hue', 120);
-      harness.callAndCheckHomeKitSetCallback('saturation', 100);
+      harness.getOrAddHandler(hap.Service.Lightbulb)
+        .callAndCheckHomeKitSetCallback('hue', 120)
+        .callAndCheckHomeKitSetCallback('saturation', 100);
       harness.checkSetDataQueued({color: {x: 0.17242, y: 0.7468}});
     });
 
     test('HomeKit: Change color to blue', () => {
       expect(harness).toBeDefined();
-      harness.callAndCheckHomeKitSetCallback('hue', 240);
-      harness.callAndCheckHomeKitSetCallback('saturation', 100);
+      harness.getOrAddHandler(hap.Service.Lightbulb)
+        .callAndCheckHomeKitSetCallback('hue', 240)
+        .callAndCheckHomeKitSetCallback('saturation', 100);
       harness.checkSetDataQueued({color: {x: 0.1355, y: 0.03988}});
     });
 
     test('HomeKit: Change color to pink', () => {
       expect(harness).toBeDefined();
-      harness.callAndCheckHomeKitSetCallback('hue', 300);
-      harness.callAndCheckHomeKitSetCallback('saturation', 100);
+      harness.getOrAddHandler(hap.Service.Lightbulb)
+        .callAndCheckHomeKitSetCallback('hue', 300)
+        .callAndCheckHomeKitSetCallback('saturation', 100);
       harness.checkSetDataQueued({color: {x: 0.38547, y: 0.15463}});
     });
 
     test('HomeKit: Change color to yellow', () => {
       expect(harness).toBeDefined();
-      harness.callAndCheckHomeKitSetCallback('hue', 60);
-      harness.callAndCheckHomeKitSetCallback('saturation', 100);
+      harness.getOrAddHandler(hap.Service.Lightbulb)
+        .callAndCheckHomeKitSetCallback('hue', 60)
+        .callAndCheckHomeKitSetCallback('saturation', 100);
       harness.checkSetDataQueued({color: {x: 0.44416, y: 0.51657}});
     });
   });
@@ -413,7 +416,7 @@ describe('Light', () => {
 
     // Shared "state"
     let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlerTestHarness;
+    let harness : ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -423,9 +426,10 @@ describe('Light', () => {
         deviceExposes = device?.definition?.exposes ?? [];
 
         // Check service creation
-        const newHarness = new ServiceHandlerTestHarness(hap.Service.Lightbulb);
-        newHarness.addExpectedCharacteristic('state', hap.Characteristic.On, true);
-        newHarness.addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true);
+        const newHarness = new ServiceHandlersTestHarness();
+        newHarness.getOrAddHandler(hap.Service.Lightbulb)
+          .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+          .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true);
         newHarness.prepareCreationMocks();
         
         newHarness.callCreators(deviceExposes);
@@ -437,7 +441,7 @@ describe('Light', () => {
       }
 
       harness?.clearMocks();
-      const brightnessCharacteristicMock = harness?.getCharacteristicMock('brightness');
+      const brightnessCharacteristicMock = harness?.getOrAddHandler(hap.Service.Lightbulb).getCharacteristicMock('brightness');
       if (brightnessCharacteristicMock !== undefined) {
         brightnessCharacteristicMock.props.minValue = 0;
         brightnessCharacteristicMock.props.maxValue = 100;
@@ -451,12 +455,12 @@ describe('Light', () => {
 
     test('Status update is handled: State On', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"state":"ON"}', hap.Characteristic.On, true);
+      harness.checkSingleUpdateState('{"state":"ON"}', hap.Service.Lightbulb, hap.Characteristic.On, true);
     });
 
     test('Status update is handled: State Off', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"state":"OFF"}', hap.Characteristic.On, false);
+      harness.checkSingleUpdateState('{"state":"OFF"}', hap.Service.Lightbulb, hap.Characteristic.On, false);
     });
 
     test('Status update is handled: State Toggle', () => {
@@ -466,48 +470,45 @@ describe('Light', () => {
 
     test('Status update is handled: Brightness 0%', () => {
       expect(harness).toBeDefined();
-      harness.prepareGetCharacteristicMock('brightness');
-      harness.checkSingleUpdateState('{"brightness":0}',
-        hap.Characteristic.Brightness, 0);
+      harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+      harness.checkSingleUpdateState('{"brightness":0}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 0);
     });
 
     test('Status update is handled: Brightness 50%', () => {
       expect(harness).toBeDefined();
-      harness.prepareGetCharacteristicMock('brightness');
-      harness.checkSingleUpdateState('{"brightness":127}',
-        hap.Characteristic.Brightness, 50);
+      harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+      harness.checkSingleUpdateState('{"brightness":127}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 50);
     });
 
     test('Status update is handled: Brightness 100%', () => {
       expect(harness).toBeDefined();
-      harness.prepareGetCharacteristicMock('brightness');
-      harness.checkSingleUpdateState('{"brightness":254}',
-        hap.Characteristic.Brightness, 100);
+      harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+      harness.checkSingleUpdateState('{"brightness":254}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 100);
     });
 
     test('HomeKit: Turn On', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('state', true, 'ON');
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'state', true, 'ON');
     });
 
     test('HomeKit: Turn Off', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('state', false, 'OFF');
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'state', false, 'OFF');
     });
 
     test('HomeKit: Brightness to 50%', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('brightness', 50, 127);
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'brightness', 50, 127);
     });
 
     test('HomeKit: Brightness to 0%', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('brightness', 0, 0);
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'brightness', 0, 0);
     });
 
     test('HomeKit: Brightness to 100%', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue('brightness', 100, 254);
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'brightness', 100, 254);
     });
   });
 });

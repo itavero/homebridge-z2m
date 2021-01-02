@@ -5,10 +5,11 @@ import { hap } from './hap';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
 import { BasicAccessory, ServiceHandler } from './converters/interfaces';
 import { deviceListEntriesAreEqual, DeviceListEntry, isDeviceDefinition, isDeviceListEntry } from './z2mModels';
+import { DeviceConfiguration } from './configModels';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;
-  private readonly additionalConfig: Record<string, unknown>;
+  private readonly additionalConfig: DeviceConfiguration;
   private readonly exposeConverterManager: ServiceCreatorManager;
   private readonly serviceHandlers = new Map<string, ServiceHandler>();
   private readonly serviceIds = new Set<string>();
@@ -30,7 +31,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   constructor(
     private readonly platform: Zigbee2mqttPlatform,
     public readonly accessory: PlatformAccessory,
-    additionalConfig: Record<string, unknown> | undefined,
+    additionalConfig: DeviceConfiguration | undefined,
     serviceCreatorManager: ServiceCreatorManager = BasicServiceCreatorManager.getInstance(),
   ) {
     // Store ServiceCreatorManager
@@ -50,7 +51,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
     // Store additional config
     if (additionalConfig === undefined) {
-      this.additionalConfig = {};
+      this.additionalConfig = { id: '' };
     } else {
       this.additionalConfig = additionalConfig;
     }
@@ -84,10 +85,43 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       // This is accepted so all exposes models can easily be checked.
       return false;
     }
-    if (Array.isArray(this.additionalConfig?.excluded_keys)) {
-      return this.additionalConfig.excluded_keys.includes(property);
+
+    return this.additionalConfig.excluded_keys?.includes(property) ?? false;
+  }
+
+  isValueAllowedForProperty(property: string, value: string): boolean {
+    const config = this.additionalConfig.values?.find(c => c.property === property);
+    if (config) {
+      if (config.include && config.include.length > 0) {
+        if (config.include.findIndex(p => this.doesValueMatchPattern(value, p)) < 0) {
+          // Value doesn't match any of the include patterns
+          return false;
+        }
+      }
+      if (config.exclude && config.exclude.length > 0) {
+        if (config.exclude.findIndex(p => this.doesValueMatchPattern(value, p)) >= 0) {
+          // Value matches one of the exclude patterns
+          return false;
+        }
+      }
     }
-    return false;
+    return true;
+  }
+
+  private doesValueMatchPattern(value: string, pattern: string) {
+    if (pattern.length === 0) {
+      return false;
+    }
+    if (pattern.length >= 2) {
+      // Need at least 2 characters for the wildcard to work
+      if (pattern.startsWith('*')) {
+        return value.endsWith(pattern.substr(1));
+      }
+      if (pattern.endsWith('*')) {
+        return value.startsWith(pattern.substr(0, pattern.length - 1));
+      }
+    }
+    return value === pattern;
   }
 
   private queueAllKeysForGet(): void {

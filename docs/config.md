@@ -1,4 +1,6 @@
 # Plugin configuration ⚙️
+The plugin can also be configured via the web interface provided by [Homebridge Config UI X](https://github.com/oznu/homebridge-config-ui-x#readme).
+
 A (rather minimal) configuration looks like this:
 ```json
 {
@@ -16,6 +18,29 @@ A (rather minimal) configuration looks like this:
          "id": "0xabcdef1234567890",
          "excluded_keys": [
             "battery"
+         ]
+      },
+      {
+         "id": "0xabcd1234abcd1234",
+         "values": [
+            {
+                  "property": "action",
+                  "exclude": [
+                     "*_triple"
+                  ]
+            }
+         ]
+      },
+      {
+         "id": "0x1234abcd1234abcd",
+         "values": [
+            {
+                  "property": "action",
+                  "include": [
+                     "toggle",
+                     "recall_scene_*"
+                  ]
+            }
          ]
       }
    ]
@@ -40,4 +65,5 @@ Within the `mqtt` object, you can add pretty much all the configuration options 
 Within the `devices` array, you can set options for specific devices, based on their IEEE addresses (`0x1234567890abcdef`) or the `friendly_name`.
 Currently the following options are available:
 * `exclude`: if set to `true` this device will not be fully ignored.
-* `excluded_keys`: an array of keys (known as the `property` in the exposes information) that should be ignored/excluded for this device.
+* `excluded_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be ignored/excluded for this device.
+* `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterix (`*`) as a wildcard. This is currently only applied in the [Stateless Programmable Switch](action.md).

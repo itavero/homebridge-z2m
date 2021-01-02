@@ -6,6 +6,10 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+### Added
+
+- Remote control/push button support (devices that expose `action` will have a Stateless Programmable Switch service now).
+
 ### Changed
 
 - Report an error in the logs if the zigbee2mqtt version is too old. Also check the legacy `bridge/config` topic for this.
@@ -15,6 +19,7 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
   get recreated. This caused all of the automations, room assignments etc. in HomeKit to get lost. With this version the migration from
   pre-v1.0.0 versions of this plugin should be smoother, although there still probably will be some services/accessories for which this
   information gets lost.
+- Plugin configuration is now (partially) validated on start up. An incorrect configuration will cause Homebridge to stop.
 
 ## [1.0.2][] - 2020-12-30
 ### Changed

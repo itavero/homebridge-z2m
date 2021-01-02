@@ -93,12 +93,46 @@
                      "required": false
                   },
                   "excluded_keys": {
-                     "title": "Excluded keys",
+                     "title": "Excluded properties (keys)",
                      "type": "array",
                      "required": false,
                      "items": {
                         "type": "string",
                         "minLength": 1
+                     }
+                  },
+                  "values": {
+                     "title": "Include/exclude values",
+                     "type": "array",
+                     "required": false,
+                     "items": {
+                        "type": "object",
+                        "properties": {
+                           "property": {
+                              "title": "Property (key)",
+                              "type": "string",
+                              "required": true,
+                              "minLength": 3
+                           },
+                           "include": {
+                              "title": "Included values",
+                              "type": "array",
+                              "required": false,
+                              "items": {
+                                 "type": "string",
+                                 "minLength": 1
+                              }
+                           },
+                           "exclude": {
+                              "title": "Excluded values",
+                              "type": "array",
+                              "required": false,
+                              "items": {
+                                 "type": "string",
+                                 "minLength": 1
+                              }
+                           }
+                        }
                      }
                   }
                }

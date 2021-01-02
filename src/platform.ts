@@ -7,6 +7,7 @@ import { MqttConfiguration } from './configModels';
 import * as mqtt from 'mqtt';
 import * as fs from 'fs';
 import { DeviceListEntry, isDeviceListEntry } from './z2mModels';
+import * as semver from 'semver';
 
 /**
  * HomebridgePlatform
@@ -17,6 +18,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   public readonly Service: typeof Service = this.api.hap.Service;
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
   private readonly MqttClient: mqtt.MqttClient;
+  private static readonly MIN_Z2M_VERSION = '1.17.0';
+  private static readonly TOPIC_BRIDGE = 'bridge/';
 
   // this is used to track restored cached accessories
   private readonly accessories: Zigbee2mqttAccessory[] = [];
@@ -91,41 +94,45 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     return this.config.mqtt as MqttConfiguration;
   }
 
+  private checkZigbee2MqttVersion(version: string, topic: string) {
+    this.log.info(`Using zigbee2mqtt v${version} (identified via ${topic})`);
+    if (semver.lt(version, Zigbee2mqttPlatform.MIN_Z2M_VERSION)) {
+      this.log.error('!!! UPDATE OF ZIGBEE2MQTT REQUIRED !!! \n' + 
+      `zigbee2mqtt v${version} is TOO OLD. The minimum required version is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION}. \n` + 
+      `This means that ${PLUGIN_NAME} MIGHT NOT WORK AS EXPECTED!`);
+    }
+  }
+
   private onMessage(topic: string, payload: Buffer) {
+    const fullTopic = topic;
     try {
-      if (!topic.startsWith(`${this.mqttConfig.base_topic}/`)) {
+      const baseTopic = `${this.mqttConfig.base_topic}/`;
+      if (!topic.startsWith(baseTopic)) {
         this.log.debug('Ignore message, because topic is unexpected.', topic);
         return;
       }
 
-      topic = topic.substr(this.mqttConfig.base_topic.length + 1);
+      topic = topic.substr(baseTopic.length);
 
-      if (topic.startsWith('bridge/')) {
-        if (topic === 'bridge/info') {
-          // Peek at the configuration
-          const info = JSON.parse(payload.toString());
-          let z2m_version = 'unknown';
-          if ('version' in info) {
-            z2m_version = info['version'];
-            this.log.info(`zigbee2mqtt has version ${z2m_version}.`);
-          }
-          if (info.config?.advanced?.legacy_api !== undefined) {
-            // Check if bridge info contains legacy_api configuration option.
-            // If this is present we can safely assume that the new api is available in this version.
-            this.log.debug('Bridge info contains config option for legacy_api, so assuming new API is available.');
-          } else {
-            this.log.error('It seems that the version of zigbee2mqtt you are running is too old. ' + 
-          'Are you sure you are running zigbee2mqtt v1.16.0 or newer?');
-          }
-        } else if (topic === 'bridge/devices') {
+      if (topic.startsWith(Zigbee2mqttPlatform.TOPIC_BRIDGE)) {
+        topic = topic.substr(Zigbee2mqttPlatform.TOPIC_BRIDGE.length);
+        if (topic === 'devices') {
           // Update accessories
           const devices: DeviceListEntry[] = JSON.parse(payload.toString());
           this.handleReceivedDevices(devices);
-        } else if (topic === 'bridge/state') {
+        } else if (topic === 'state') {
           const state = payload.toString();
           if (state === 'offline') {
             this.log.error('zigbee2mqtt is OFFLINE!');
             // TODO Mark accessories as offline somehow.
+          }
+        } else if (topic === 'info' || topic === 'config') {
+          // New topic (bridge/info) and legacy topic (bridge/config) should both contain the version number.
+          const info = JSON.parse(payload.toString());
+          if ('version' in info) {
+            this.checkZigbee2MqttVersion(info['version'], fullTopic);
+          } else {
+            this.log.error(`No version found in message on '${fullTopic}'.`);
           }
         }
       } else if (!topic.endsWith('/get') && !topic.endsWith('/set')) {
@@ -133,7 +140,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         this.handleDeviceUpdate(topic, payload.toString());
       }
     } catch (Error) {
-      this.log.error('Failed to process MQTT message. (Maybe check the MQTT version?)');
+      this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
       this.log.error(Error);
     }
   }

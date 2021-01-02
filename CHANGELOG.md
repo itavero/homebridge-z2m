@@ -6,6 +6,10 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+### Changed
+
+- Report an error in the logs if the zigbee2mqtt version is too old. Also check the legacy `bridge/config` topic for this.
+- Bumped the minimum zigbee2mqtt version to the first official release with the new API, version 1.17.0.
 
 ## [1.0.2][] - 2020-12-30
 ### Changed

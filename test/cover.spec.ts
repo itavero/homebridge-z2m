@@ -3,7 +3,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { ServiceHandlerTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
 
 jest.useFakeTimers();
 
@@ -115,7 +115,7 @@ describe('Cover', () => {
 
     // Shared "state"
     let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlerTestHarness;
+    let harness : ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -124,21 +124,22 @@ describe('Cover', () => {
         const device = testJsonDeviceListEntry(deviceModelJson);
         deviceExposes = device?.definition?.exposes ?? [];
         expect(deviceExposes?.length).toBeGreaterThan(0);
-        const newHarness = new ServiceHandlerTestHarness(hap.Service.WindowCovering);
+        const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
-        newHarness.addExpectedCharacteristic('position', hap.Characteristic.CurrentPosition, false);
-        newHarness.addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true, undefined, false);
-        newHarness.addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false, undefined, false);
+        const windowCovering = newHarness.getOrAddHandler(hap.Service.WindowCovering)
+          .addExpectedCharacteristic('position', hap.Characteristic.CurrentPosition, false)
+          .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true, undefined, false)
+          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false, undefined, false);
         newHarness.prepareCreationMocks();
 
-        const positionCharacteristicMock = newHarness.getCharacteristicMock('position');
+        const positionCharacteristicMock = windowCovering.getCharacteristicMock('position');
         if (positionCharacteristicMock !== undefined) {
           positionCharacteristicMock.props.minValue = 0;
           positionCharacteristicMock.props.maxValue = 100;
         }
 
-        const targetPositionCharacteristicMock = newHarness.getCharacteristicMock('target_position');
+        const targetPositionCharacteristicMock = windowCovering.getCharacteristicMock('target_position');
         if (targetPositionCharacteristicMock !== undefined) {
           targetPositionCharacteristicMock.props.minValue = 0;
           targetPositionCharacteristicMock.props.maxValue = 100;
@@ -162,28 +163,28 @@ describe('Cover', () => {
       expect(harness).toBeDefined();
 
       // First update (previous state is unknown, so)
-      harness.checkUpdateState('{"position":100}', new Map([
+      harness.checkUpdateState('{"position":100}', hap.Service.WindowCovering, new Map([
         [hap.Characteristic.CurrentPosition, 100],
         [hap.Characteristic.PositionState, expect.anything()],
       ]));
       harness.clearMocks();
 
       // Second update (lower position -> state considered decreasing)
-      harness.checkUpdateState('{"position":88}', new Map([
+      harness.checkUpdateState('{"position":88}', hap.Service.WindowCovering, new Map([
         [hap.Characteristic.CurrentPosition, 88],
         [hap.Characteristic.PositionState, hap.Characteristic.PositionState.DECREASING],
       ]));
       harness.clearMocks();
 
       // Third update (higher position -> state considered increasing)
-      harness.checkUpdateState('{"position":89}', new Map([
+      harness.checkUpdateState('{"position":89}', hap.Service.WindowCovering, new Map([
         [hap.Characteristic.CurrentPosition, 89],
         [hap.Characteristic.PositionState, hap.Characteristic.PositionState.INCREASING],
       ]));
       harness.clearMocks();
 
       // Fourth update (same position -> state considered stopped)
-      harness.checkUpdateState('{"position":89}', new Map([
+      harness.checkUpdateState('{"position":89}', hap.Service.WindowCovering, new Map([
         [hap.Characteristic.CurrentPosition, 89],
         [hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED],
       ]));
@@ -193,15 +194,15 @@ describe('Cover', () => {
       expect(harness).toBeDefined();
 
       // Set current position to a known value, to check assumed position state
-      harness.checkUpdateState('{"position":50}', new Map([
+      harness.checkUpdateState('{"position":50}', hap.Service.WindowCovering, new Map([
         [hap.Characteristic.CurrentPosition, 50],
         [hap.Characteristic.PositionState, expect.anything()],
       ]));
       harness.clearMocks();
 
       // Check changing the position to a higher value
-      harness.checkHomeKitUpdate('target_position', 51, { position: 51 });
-      harness.checkCharacteristicUpdates(new Map([
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'target_position', 51, { position: 51 });
+      const windowCovering = harness.getOrAddHandler(hap.Service.WindowCovering).checkCharacteristicUpdates(new Map([
         [hap.Characteristic.PositionState, hap.Characteristic.PositionState.INCREASING],
       ]));
       harness.clearMocks();
@@ -213,36 +214,36 @@ describe('Cover', () => {
 
       // Check timer - should update state to stopped and stop timer
       jest.runOnlyPendingTimers();
-      harness.checkCharacteristicUpdates(new Map([
+      windowCovering.checkCharacteristicUpdates(new Map([
         [hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED],
       ]));
       harness.clearMocks();
 
       // Trigger timers again: should not do anything
       jest.runOnlyPendingTimers();
-      harness.checkNoCharacteristicUpdates();
+      windowCovering.checkNoCharacteristicUpdates();
       harness.checkNoGetKeysQueued();
 
       // Check changing the position to a lower value
-      harness.checkHomeKitUpdate('target_position', 49, { position: 49 });
-      harness.checkCharacteristicUpdates(new Map([
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'target_position', 49, { position: 49 });
+      windowCovering.checkCharacteristicUpdates(new Map([
         [hap.Characteristic.PositionState, hap.Characteristic.PositionState.DECREASING],
       ]));
       harness.clearMocks();
 
       // Check timer - should request position
       jest.runOnlyPendingTimers();
-      harness.checkNoCharacteristicUpdates();
+      windowCovering.checkNoCharacteristicUpdates();
       harness.checkGetKeysQueued('position');
       harness.clearMocks();
 
       // Send two updates - should stop timer
-      harness.checkUpdateState('{"position":49}', new Map([
+      harness.checkUpdateState('{"position":49}', hap.Service.WindowCovering, new Map([
         [hap.Characteristic.CurrentPosition, 49],
         [hap.Characteristic.PositionState, hap.Characteristic.PositionState.DECREASING],
       ]));
       harness.clearMocks();
-      harness.checkUpdateState('{"position":49}', new Map([
+      harness.checkUpdateState('{"position":49}', hap.Service.WindowCovering, new Map([
         [hap.Characteristic.CurrentPosition, 49],
         [hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED],
       ]));
@@ -250,12 +251,12 @@ describe('Cover', () => {
 
       // Check timer - should request position
       jest.runOnlyPendingTimers();
-      harness.checkNoCharacteristicUpdates();
+      windowCovering.checkNoCharacteristicUpdates();
       harness.checkNoGetKeysQueued();
 
       // Check changing the position to the same value as was last received
-      harness.checkHomeKitUpdate('target_position', 49, { position: 49 });
-      harness.checkCharacteristicUpdates(new Map([
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'target_position', 49, { position: 49 });
+      windowCovering.checkCharacteristicUpdates(new Map([
         [hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED],
       ]));
       harness.clearMocks();

@@ -14,6 +14,8 @@ export interface BasicAccessory {
 
     isPropertyExcluded(property: string | undefined): boolean;
 
+    isValueAllowedForProperty(property: string, value: string): boolean;
+
     registerServiceHandler(handler: ServiceHandler): void;
 
     isServiceHandlerIdKnown(identifier: string): boolean;

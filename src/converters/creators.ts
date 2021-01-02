@@ -6,6 +6,7 @@ import { CoverCreator } from './cover';
 import { LightCreator } from './light';
 import { LockCreator } from './lock';
 import { SwitchCreator } from './switch';
+import { StatelessProgrammableSwitchCreator } from './action';
 
 export interface ServiceCreatorManager {
    createHomeKitEntitiesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]) : void;
@@ -22,6 +23,7 @@ export class BasicServiceCreatorManager implements ServiceCreatorManager {
     CoverCreator,
     LockCreator,
     BasicSensorCreator,
+    StatelessProgrammableSwitchCreator,
     BatteryCreator,
   ];
 

@@ -1,8 +1,8 @@
-import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
+import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig } from 'homebridge';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { Zigbee2mqttAccessory } from './platformAccessory';
-import { MqttConfiguration } from './configModels';
+import { DeviceConfiguration, isPluginConfiguration, MqttConfiguration, PluginConfiguration } from './configModels';
 
 import * as mqtt from 'mqtt';
 import * as fs from 'fs';
@@ -15,8 +15,7 @@ import * as semver from 'semver';
  * parse the user config and discover/register accessories with Homebridge.
  */
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
-  public readonly Service: typeof Service = this.api.hap.Service;
-  public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
+  public readonly config: PluginConfiguration;
   private readonly MqttClient: mqtt.MqttClient;
   private static readonly MIN_Z2M_VERSION = '1.17.0';
   private static readonly TOPIC_BRIDGE = 'bridge/';
@@ -27,9 +26,16 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   constructor(
     public readonly log: Logger,
-    public readonly config: PlatformConfig,
+    config: PlatformConfig,
     public readonly api: API,
   ) {
+    // Validate configuration
+    if (isPluginConfiguration(config, log)) {
+      this.config = config;
+    } else {
+      throw new Error(`Invalid configuration for ${PLUGIN_NAME}`);
+    }
+
     this.onMessage = this.onMessage.bind(this);
     this.didReceiveDevices = false;
 
@@ -99,7 +105,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   get mqttConfig(): MqttConfiguration {
-    return this.config.mqtt as MqttConfiguration;
+    return this.config.mqtt;
   }
 
   private checkZigbee2MqttVersion(version: string, topic: string) {
@@ -201,8 +207,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private getAdditionalConfigForDevice(device: any): Record<string, unknown> | undefined {
-    if (Array.isArray(this.config?.devices)) {
+  private getAdditionalConfigForDevice(device: any): DeviceConfiguration | undefined {
+    if (this.config.devices !== undefined) {
       const identifiers: string[] = [];
       if (typeof device === 'string') {
         identifiers.push(device.toLocaleLowerCase());
@@ -216,17 +222,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       }
     
       for (const devConfig of this.config.devices) {
-        if ('id' in devConfig) {
-          try {
-            if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
-              return devConfig;
-            }
-          } catch (error) {
-            this.log.error(`Unable to process device configuration for '${devConfig.id}'.`);
-            this.log.error(error);
-          }
-        } else {
-          this.log.error('Configuration contains a device without the required id field.');
+        if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
+          return devConfig;
         }
       }
     }
@@ -235,7 +232,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   private isDeviceExcluded(device: DeviceListEntry | string): boolean {
     const additionalConfig = this.getAdditionalConfigForDevice(device);
-    if (additionalConfig !== undefined && additionalConfig.exclude) {
+    if (additionalConfig?.exclude) {
       this.log.debug(`Device is excluded: ${additionalConfig.id}`);
       return true;
     }

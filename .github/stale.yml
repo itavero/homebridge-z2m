@@ -1,0 +1,24 @@
+exemptLabels:
+  - pinned
+  - security
+staleLabel: stale
+unmarkComment: false
+closeComment: false
+
+pulls:
+  daysUntilStale: 84
+  daysUntilClose: 24
+  markComment: >
+    It appears this PR hasn't had any activity for a long time.
+    Please check if it is still applicable and if it can be merged without any issues.
+    If there isn't any activity in the next four weeks, this PR will be closed automatically. 
+
+issues:
+  daysUntilStale: 42
+  daysUntilClose: 14
+  exemptAssignees: true
+  markComment: >
+    It appears that this issue did not have an update in quite some time.
+    Please check if you can provide any additional information to help resolve this issue.
+    If there isn't any activity in the next two weeks, this issue will be closed automatically.
+    Thank you for your contributions!

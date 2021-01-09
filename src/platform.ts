@@ -108,8 +108,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       this.log.error('!!! UPDATE OF ZIGBEE2MQTT REQUIRED !!! \n' + 
       `zigbee2mqtt v${version} is TOO OLD. The minimum required version is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION}. \n` + 
       `This means that ${PLUGIN_NAME} MIGHT NOT WORK AS EXPECTED!`);
-      throw new Error(`The installed version of ${PLUGIN_NAME} does not work with zigbee2mqtt v${version}. `
-      + `It requires zigbee2mqtt v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
+      throw new IncompatibleZigbee2mqttVersionError(version, Zigbee2mqttPlatform.MIN_Z2M_VERSION);
     }
   }
 
@@ -150,8 +149,13 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         this.handleDeviceUpdate(topic, payload.toString());
       }
     } catch (Error) {
-      this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
-      this.log.error(Error);
+      if (Error instanceof IncompatibleZigbee2mqttVersionError) {
+        // Rethrow error as we can't continue working with this zigbee2mqtt version
+        throw Error;
+      } else {
+        this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
+        this.log.error(Error);
+      }
     }
   }
 
@@ -304,5 +308,15 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     return new Promise<void>((resolve) => {
       this.MqttClient.publish(topic, payload, options, () => resolve());
     });
+  }
+}
+
+class IncompatibleZigbee2mqttVersionError extends Error {
+  constructor(actualVersion:string, minimumVersion: string) {
+    super(`The installed version of ${PLUGIN_NAME} does not work with zigbee2mqtt v${actualVersion}. It requires zigbee2mqtt v`
+      + minimumVersion + ' or newer.');
+    // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
+    Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+    this.name = IncompatibleZigbee2mqttVersionError.name; // stack traces display correctly now 
   }
 }

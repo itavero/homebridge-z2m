@@ -6,6 +6,8 @@ As soon as the project reaches a mature and stable state, the first major versio
 and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][]
+
+## [1.1.0-beta.0][] - 2021-01-10
 ### Added
 
 - Remote control/push button support (devices that expose `action` will have a Stateless Programmable Switch service now).
@@ -134,7 +136,8 @@ and after the project will apply [Semantic Versioning](https://semver.org/spec/v
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.0...HEAD
+[1.1.0-beta.0]: https://github.com/itavero/homebridge-z2m/compare/v1.0.2...v1.1.0-beta.0
 [1.0.2]: https://github.com/itavero/homebridge-z2m/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/itavero/homebridge-z2m/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/itavero/homebridge-z2m/compare/v0.0.10...v1.0.0

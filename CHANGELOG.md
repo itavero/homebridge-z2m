@@ -5,6 +5,8 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased][]
+
+## [1.1.0-beta.1][] - 2021-01-16
 ### Changed
 - Zigbee2MQTT minimal version check ignores the `-dev` suffix, so that the newer development build is also accepted.
 - Updated Name characteristic of the Accessory Information service with the `friendly_name` received from Zigbee2MQTT. 
@@ -140,7 +142,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.0...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.1...HEAD
+[1.1.0-beta.1]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.0...v1.1.0-beta.1
 [1.1.0-beta.0]: https://github.com/itavero/homebridge-z2m/compare/v1.0.2...v1.1.0-beta.0
 [1.0.2]: https://github.com/itavero/homebridge-z2m/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/itavero/homebridge-z2m/compare/v1.0.0...v1.0.1

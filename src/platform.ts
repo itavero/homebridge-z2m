@@ -88,7 +88,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       setTimeout(() => {
         if (!this.didReceiveDevices) {
           this.log.error('DID NOT RECEIVE ANY DEVICES AFTER BEING CONNECTED FOR TWO MINUTES.\n'
-          + `Please verify that zigbee2mqtt is running and that it is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
+          + `Please verify that Zigbee2MQTT is running and that it is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
         }
       }, 120000);
     });
@@ -109,10 +109,15 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private checkZigbee2MqttVersion(version: string, topic: string) {
-    this.log.info(`Using zigbee2mqtt v${version} (identified via ${topic})`);
-    if (semver.lt(version, Zigbee2mqttPlatform.MIN_Z2M_VERSION)) {
+    this.log.info(`Using Zigbee2MQTT v${version} (identified via ${topic})`);
+
+    // Ignore -dev suffix if present, because Zigbee2MQTT appends this to the latest released version
+    // for the future development build (instead of applying semantic versioning).
+    const strippedVersion = version.replace(/-dev$/, '');
+    
+    if (semver.lt(strippedVersion, Zigbee2mqttPlatform.MIN_Z2M_VERSION)) {
       this.log.error('!!! UPDATE OF ZIGBEE2MQTT REQUIRED !!! \n' + 
-      `zigbee2mqtt v${version} is TOO OLD. The minimum required version is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION}. \n` + 
+      `Zigbee2MQTT v${version} is TOO OLD. The minimum required version is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION}. \n` + 
       `This means that ${PLUGIN_NAME} MIGHT NOT WORK AS EXPECTED!`);
       throw new IncompatibleZigbee2mqttVersionError(version, Zigbee2mqttPlatform.MIN_Z2M_VERSION);
     }
@@ -138,7 +143,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         } else if (topic === 'state') {
           const state = payload.toString();
           if (state === 'offline') {
-            this.log.error('zigbee2mqtt is OFFLINE!');
+            this.log.error('Zigbee2MQTT is OFFLINE!');
             // TODO Mark accessories as offline somehow.
           }
         } else if (topic === 'info' || topic === 'config') {
@@ -156,7 +161,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       }
     } catch (Error) {
       if (Error instanceof IncompatibleZigbee2mqttVersionError) {
-        // Rethrow error as we can't continue working with this zigbee2mqtt version
+        // Rethrow error as we can't continue working with this Zigbee2MQTT version
         throw Error;
       } else {
         this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
@@ -257,7 +262,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
     if (!isDeviceListEntry(accessory.context.device)) {
       this.log.warn(`Restoring old (pre v1.0.0) accessory ${accessory.context.device.friendly_name} (${ieee_address}). This accessory ` + 
-        `will not work until updated device information is received from zigbee2mqtt v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
+        `will not work until updated device information is received from Zigbee2MQTT v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
     }
 
     if (this.accessories.findIndex((acc) => acc.UUID === accessory.UUID) < 0) {
@@ -310,7 +315,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
 class IncompatibleZigbee2mqttVersionError extends Error {
   constructor(actualVersion:string, minimumVersion: string) {
-    super(`The installed version of ${PLUGIN_NAME} does not work with zigbee2mqtt v${actualVersion}. It requires zigbee2mqtt v`
+    super(`The installed version of ${PLUGIN_NAME} does not work with Zigbee2MQTT v${actualVersion}. It requires Zigbee2MQTT v`
       + minimumVersion + ' or newer.');
     // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
     Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain

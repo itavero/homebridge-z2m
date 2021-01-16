@@ -2,10 +2,14 @@
 All notable changes to this project will be documented in this file.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-As soon as the project reaches a mature and stable state, the first major version (1.0.0) will be made
-and after the project will apply [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased][]
+### Changed
+- Zigbee2MQTT minimal version check ignores the `-dev` suffix, so that the newer development build is also accepted.
+- Updated Name characteristic of the Accessory Information service with the `friendly_name` received from Zigbee2MQTT. 
+- Fixed some typo's, both in code and documentation.
+- Changed casing of Zigbee2MQTT in logs and such.
 
 ## [1.1.0-beta.0][] - 2021-01-10
 ### Added

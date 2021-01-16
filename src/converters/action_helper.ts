@@ -257,7 +257,7 @@ export class SwitchActionHelper {
        }
      }
 
-     // Filter out unvalid mappings and sort them
+     // Filter out invalid mappings and sort them
      const sortedMappings = this.sortMappingsByIdentifier([...groupedMappings.values()].filter(m => m.hasValidValues()));
 
      // Determine labels

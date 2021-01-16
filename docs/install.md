@@ -1,9 +1,9 @@
 # Plugin installation
 
 ## Requirements
-* [zigbee2mqtt](https://www.zigbee2mqtt.io), version v1.17.0 or newer (because of the new API that provides [Exposes](https://www.zigbee2mqtt.io/information/exposes) information).
+* [Zigbee2MQTT](https://www.zigbee2mqtt.io), version v1.17.0 or newer (because of the new API that provides [Exposes](https://www.zigbee2mqtt.io/information/exposes) information).
 * [Homebridge](https://homebridge.io), version v1.1.0 or newer should work.
-* Some MQTT broker to exchange messages between this plugin and zigbee2mqtt.
+* Some MQTT broker to exchange messages between this plugin and Zigbee2MQTT.
 * Not required, but useful: [Homebridge Config UI X](https://www.npmjs.com/package/homebridge-config-ui-x) plugin for Homebridge.
 
 ## Installation steps

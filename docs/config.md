@@ -48,7 +48,7 @@ A (rather minimal) configuration looks like this:
 ```
 
 ## MQTT
-Within the `mqtt` object, you can add pretty much all the configuration options that zigbee2mqtt also has, with the same keys as in the zigbee2mqtt configuration YAML file. Please refer to the [zigbee2mqtt documentation](https://www.zigbee2mqtt.io/information/configuration.html) for more information on the MQTT options. The keys that can be used are:
+Within the `mqtt` object, you can add pretty much all the configuration options that Zigbee2MQTT also has, with the same keys as in the Zigbee2MQTT configuration YAML file. Please refer to the [Zigbee2MQTT documentation](https://www.zigbee2mqtt.io/information/configuration.html) for more information on the MQTT options. The keys that can be used are:
 * `base_topic`
 * `server`
 * `ca`
@@ -66,4 +66,4 @@ Within the `devices` array, you can set options for specific devices, based on t
 Currently the following options are available:
 * `exclude`: if set to `true` this device will not be fully ignored.
 * `excluded_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be ignored/excluded for this device.
-* `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterix (`*`) as a wildcard. This is currently only applied in the [Stateless Programmable Switch](action.md).
+* `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard. This is currently only applied in the [Stateless Programmable Switch](action.md).

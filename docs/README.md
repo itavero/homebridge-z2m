@@ -7,7 +7,7 @@
 
 # Documentation
 
-This is the documentation section of the Homebridge plugin that integrates zigbee2mqtt in your home automation setup.
+This is the documentation section of the Homebridge plugin that integrates Zigbee2MQTT in your home automation setup.
 
 * [Installation](install.md)
 * [Configuration](config.md)

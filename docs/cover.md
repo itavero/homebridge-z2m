@@ -1,5 +1,5 @@
 # Window Cover
-If the device definition from zigbee2mqtt contains one or more `exposes` entries of type `cover` that at least have a feature named `position`, a [Window Covering](https://developers.homebridge.io/#/service/WindowCovering) service will be created.
+If the device definition from Zigbee2MQTT contains one or more `exposes` entries of type `cover` that at least have a feature named `position`, a [Window Covering](https://developers.homebridge.io/#/service/WindowCovering) service will be created.
 The table below shows how the different features within this `exposes` entry are mapped to characteristics.
 
 | Name | Required access | Characteristic | Remarks |

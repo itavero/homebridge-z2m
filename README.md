@@ -7,7 +7,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/itavero/homebridge-z2m/badge?style=flat-square)](https://www.codefactor.io/repository/github/itavero/homebridge-z2m)
 [![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=itavero_homebridge-z2m&metric=alert_status)](https://sonarcloud.io/dashboard?id=itavero_homebridge-z2m)
 
-Expose your Zigbee devices to HomeKit with ease, by integrating 🐝 [zigbee2mqtt](https://www.zigbee2mqtt.io/) with 🏠 [Homebridge](https://homebridge.io/) (via an MQTT message broker).
+Expose your Zigbee devices to HomeKit with ease, by integrating 🐝 [Zigbee2MQTT](https://www.zigbee2mqtt.io/) with 🏠 [Homebridge](https://homebridge.io/) (via an MQTT message broker).
 
 For more information, please check the [documentation](https://arno.dev/homebridge-z2m/).
 

@@ -1,5 +1,5 @@
 # Basic Sensors
-HomeKit and zigbee2mqtt support a lot of "basic" sensors, that expose one or more types of sensor measurements.
+HomeKit and Zigbee2MQTT support a lot of "basic" sensors, that expose one or more types of sensor measurements.
 Because the handling of these sensors is vary similar and most of them have the same optional characteristics in HomeKit (being [Status Tampered](https://developers.homebridge.io/#/characteristic/StatusTampered) and [Status Low Battery](https://developers.homebridge.io/#/characteristic/StatusLowBattery)), a large part of the code handling these sensors is shared.
 
 For all the sensors on this page, the following mapping applies for the aforementioned characteristics.

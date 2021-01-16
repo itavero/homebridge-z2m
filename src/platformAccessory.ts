@@ -58,7 +58,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
     this.updateDeviceInformation(accessory.context.device, true);
 
-    // Ask Zigbee2mqtt for a status update at least once every 4 hours.
+    // Ask Zigbee2MQTT for a status update at least once every 4 hours.
     this.updateTimer = new ExtendedTimer(() => {
       this.queueAllKeysForGet();
     }, (4 * 60 * 60 * 1000));
@@ -233,7 +233,8 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         // Update accessory info
         // Not getOrAddService is used so that the service is known in this.serviceIds and will not get filtered out.
         this.getOrAddService(new hap.Service.AccessoryInformation())
-          .updateCharacteristic(hap.Characteristic.Manufacturer, info.definition.vendor ?? 'zigbee2mqtt')
+          .updateCharacteristic(hap.Characteristic.Name, info.friendly_name)
+          .updateCharacteristic(hap.Characteristic.Manufacturer, info.definition.vendor ?? 'Zigbee2MQTT')
           .updateCharacteristic(hap.Characteristic.Model, info.definition.model ?? 'unknown')
           .updateCharacteristic(hap.Characteristic.SerialNumber, info.ieee_address)
           .updateCharacteristic(hap.Characteristic.HardwareRevision, info.date_code ?? '?')

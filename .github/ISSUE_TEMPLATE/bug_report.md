@@ -33,5 +33,5 @@ If possible (and applicable), please provide the following:
 Please provide the version of the following pieces of software:
  - This plugin
  - Homebridge
- - Zigbee2mqtt (can be found in MQTT topic `zigbee2mqtt/bridge/info`)
+ - Zigbee2MQTT (can be found in MQTT topic `zigbee2mqtt/bridge/info`)
  - Homebridge Config UI X (if applicable)

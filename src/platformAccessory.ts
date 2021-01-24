@@ -1,9 +1,9 @@
-import { PlatformAccessory, Logger, Service } from 'homebridge';
+import { PlatformAccessory, Service } from 'homebridge';
 import { Zigbee2mqttPlatform } from './platform';
 import { ExtendedTimer } from './timer';
 import { hap } from './hap';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
-import { BasicAccessory, ServiceHandler } from './converters/interfaces';
+import { BasicAccessory, BasicLogger, ServiceHandler } from './converters/interfaces';
 import { deviceListEntriesAreEqual, DeviceListEntry, isDeviceDefinition, isDeviceListEntry } from './z2mModels';
 import { DeviceConfiguration } from './configModels';
 
@@ -20,7 +20,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly pendingGetKeys: Set<string>;
   private getIsScheduled: boolean;
 
-  get log(): Logger {
+  get log(): BasicLogger {
     return this.platform.log;
   }
 

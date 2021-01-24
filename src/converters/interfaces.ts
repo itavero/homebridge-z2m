@@ -1,8 +1,8 @@
-import { Logger, Service } from 'homebridge';
+import { Service } from 'homebridge';
 import { ExposesEntry } from '../z2mModels';
 
 export interface BasicAccessory {
-    log: Logger;
+    log: BasicLogger;
 
     displayName: string;
 
@@ -29,4 +29,11 @@ export interface ServiceHandler {
 
 export interface ServiceCreator {
     createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
+}
+
+export interface BasicLogger {
+    info(message: string, ...parameters: unknown[]): void;
+    warn(message: string, ...parameters: unknown[]): void;
+    error(message: string, ...parameters: unknown[]): void;
+    debug(message: string, ...parameters: unknown[]): void;
 }

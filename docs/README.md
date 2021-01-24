@@ -12,4 +12,5 @@ This is the documentation section of the Homebridge plugin that integrates Zigbe
 * [Installation](install.md)
 * [Configuration](config.md)
 * [How it works](howitworks.md)
-* [Supported services/devices](converters.md)
+* [Service Handlers](converters.md)
+* [Device support](devices/index.md) (automatically generated)

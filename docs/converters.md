@@ -1,5 +1,5 @@
-# Converters
-The plugin currently includes converters for the following types of devices/services:
+# Service Handlers
+The plugin currently includes handlers for the following types of devices/services:
 
 * [Light](light.md)
 * [Switch](switch.md)

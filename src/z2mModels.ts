@@ -44,7 +44,7 @@ export const isExposesEntry = (x: any): x is ExposesEntry => {
     || x.values !== undefined
     || (x.value_off !== undefined && x.value_on !== undefined)
     || (x.value_min !== undefined && x.value_max !== undefined)
-    || x.features);
+    || Array.isArray(x.features));
 };
 
 export interface ExposesEntryWithFeatures extends ExposesEntry {

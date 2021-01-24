@@ -5,6 +5,10 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased][]
+### Added
+
+- Device documentation is now available on the website and generated based on information from the zigbee-herdsman-converters package,
+  which is also used by Zigbee2MQTT.
 
 ## [1.1.0-beta.1][] - 2021-01-16
 ### Changed

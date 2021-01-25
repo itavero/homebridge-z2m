@@ -18,6 +18,12 @@ the eCozy 1TST-EU
   * BatteryLevel
   * ChargingState
   * StatusLowBattery
+* [Thermostat](../../climate.md)
+  * CurrentHeatingCoolingState
+  * CurrentTemperature
+  * TargetHeatingCoolingState
+  * TargetTemperature
+  * TemperatureDisplayUnits
 
 
 # Related

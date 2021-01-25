@@ -1,7 +1,7 @@
 import { Characteristic, CharacteristicEventTypes, CharacteristicProps, CharacteristicSetCallback, CharacteristicValue, Logger, Service,
   SessionIdentifier, WithUUID } from 'homebridge';
 import { BasicAccessory, ServiceHandler } from '../src/converters/interfaces';
-import { DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry } from '../src/z2mModels';
+import { DeviceDefinition, DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry } from '../src/z2mModels';
 import { mock, mockClear, MockProxy } from 'jest-mock-extended';
 import { when } from 'jest-when';
 import 'jest-chain';
@@ -27,6 +27,17 @@ export const testJsonDeviceListEntry = (json: string): DeviceListEntry | undefin
   return undefined;
 };
 
+export const testJsonDeviceDefinition = (json: string): DeviceDefinition | undefined => {
+  const output = JSON.parse(json);
+  expect(isDeviceDefinition(output)).toBeTruthy();
+
+  if (isDeviceDefinition(output)) {
+    expect(output.exposes.length).toBeGreaterThan(0);
+    return output;
+  }
+  return undefined;
+};
+
 class TestCharacteristic {
   setFunction? : HomebridgeCharacteristicSetCallback;
   public readonly mock : MockProxy<Characteristic> & Characteristic | undefined;
@@ -48,7 +59,7 @@ export declare type ServiceIdentifier = string | WithUUID<{new (): Service}>;
 export interface ServiceHandlerContainer {
   addExpectedPropertyCheck(property: string) : ServiceHandlerContainer;
   addExpectedCharacteristic(identifier: string, characteristic: WithUUID<{new (): Characteristic}>, doExpectSet? : boolean,
-    property? : string, doExpectCheckPropertyExcluded?) : ServiceHandlerContainer;
+    property? : string, doExpectCheckPropertyExcluded? : boolean) : ServiceHandlerContainer;
   
   checkCharacteristicPropertiesHaveBeenSet(identifier: string, props: Partial<CharacteristicProps>) : ServiceHandlerContainer;
 
@@ -292,6 +303,11 @@ export class ServiceHandlersTestHarness {
           when(data.serviceMock.addCharacteristic)
             .calledWith(mapping.characteristic)
             .mockReturnValue(mapping.mock);
+    
+          if (mapping.mock !== undefined) {
+            mapping.mock.on.mockReturnThis();
+            mapping.mock.setProps.mockReturnThis();
+          }
         }
       }
     }

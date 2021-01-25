@@ -9,6 +9,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Device documentation is now available on the website and generated based on information from the zigbee-herdsman-converters package,
   which is also used by Zigbee2MQTT.
+- Support for `climate` devices added (like thermostats and TRVs). (see [#40](https://github.com/itavero/homebridge-z2m/issues/40))
 
 ### Changed
 

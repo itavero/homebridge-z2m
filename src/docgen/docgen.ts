@@ -73,6 +73,7 @@ const serviceNameMapping = new Map<string, ServiceInfo>([
   addServiceMapping(hapNodeJs.Service.BatteryService, 'battery.md'),
   addServiceMapping(hapNodeJs.Service.LockMechanism, 'lock.md'),
   addServiceMapping(hapNodeJs.Service.Switch, 'switch.md'),
+  addServiceMapping(hapNodeJs.Service.Thermostat, 'climate.md'),
   addServiceMapping(hapNodeJs.Service.HumiditySensor, 'sensors.md'),
   addServiceMapping(hapNodeJs.Service.TemperatureSensor, 'sensors.md'),
   addServiceMapping(hapNodeJs.Service.LightSensor, 'sensors.md'),

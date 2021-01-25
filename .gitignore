@@ -133,3 +133,4 @@ inspectionProfiles/
 
 # Other things
 _*.json
+**/_*.ts

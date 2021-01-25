@@ -4,9 +4,11 @@ export interface ExposesEntry {
   endpoint?: string;
   access?: number;
   property?: string;
+  unit?: string;
   values?: string[];
   value_off?: string | boolean | number;
   value_on?: string | boolean | number;
+  value_step?: number;
   value_min?: number;
   value_max?: number;
 }

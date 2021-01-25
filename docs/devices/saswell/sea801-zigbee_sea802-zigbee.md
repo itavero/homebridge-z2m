@@ -23,6 +23,12 @@ these devices
   * StatusLowBattery
 * [Switch](../../switch.md)
   * On
+* [Thermostat](../../climate.md)
+  * CurrentHeatingCoolingState
+  * CurrentTemperature
+  * TargetHeatingCoolingState
+  * TargetTemperature
+  * TemperatureDisplayUnits
 
 
 # Related

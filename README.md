@@ -9,7 +9,7 @@
 
 Expose your Zigbee devices to HomeKit with ease, by integrating 🐝 [Zigbee2MQTT](https://www.zigbee2mqtt.io/) with 🏠 [Homebridge](https://homebridge.io/) (via an MQTT message broker).
 
-For more information, please check the [documentation](https://arno.dev/homebridge-z2m/).
+For more information, please check the [documentation](https://z2m.dev).
 
 ## Contribute
 I'm open to [contributions](https://opensource.guide/how-to-contribute/), but please be nice and follow the [etiquette](https://github.com/kossnocorp/etiquette/blob/master/README.md).

@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
-## [Unreleased][]
+## [Unreleased]
 ### Added
 
 - Device documentation is now available on the website and generated based on information from the zigbee-herdsman-converters package,

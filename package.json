@@ -31,11 +31,12 @@
     "watch:test": "jest --watch",
     "lint": "eslint '**/*.ts' --fix --max-warnings=0",
     "build": "rimraf ./dist && tsc",
-    "prepublishOnly": "npm run build && npm run test",
-    "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md",
-    "postversion": "git push && git push --tags",
     "start": "npm run build && npm link && homebridge -I -D",
-    "generate-docs": "ts-node src/docgen/docgen.ts"
+    "generate-docs": "ts-node src/docgen/docgen.ts",
+    "check-release": "release-it --dry-run -VV",
+    "release": "release-it",
+    "check-pre-release": "release-it --dry-run -VV --npm.tag=next",
+    "pre-release": "release-it --npm.tag=next"
   },
   "keywords": [
     "homebridge-plugin",
@@ -61,25 +62,25 @@
     "semver": "^7.3.2"
   },
   "devDependencies": {
+    "@release-it/keep-a-changelog": "^2.2.2",
     "@types/color-convert": "^1.9.0",
     "@types/jest": "^26.0.19",
-    "@types/node": "^14.11.8",
+    "@types/node": "^14.14.22",
     "@types/semver": "^7.3.4",
-    "@typescript-eslint/eslint-plugin": "^4.4.1",
-    "@typescript-eslint/parser": "^4.4.1",
-    "changelog-verify": "^1.1.2",
-    "eslint": "^7.11.0",
-    "homebridge": "^1.2.2",
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/parser": "^4.14.1",
+    "eslint": "^7.18.0",
+    "homebridge": "^1.2.5",
     "jest": "^26.6.3",
     "jest-chain": "^1.1.5",
     "jest-mock-extended": "^1.0.10",
     "jest-when": "^3.0.1",
-    "nodemon": "^2.0.5",
+    "nodemon": "^2.0.7",
+    "release-it": "^14.2.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.4.4",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.3",
-    "version-changelog": "^3.1.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3",
     "zigbee-herdsman-converters": "14.0.3"
   }
 }

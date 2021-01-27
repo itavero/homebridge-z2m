@@ -1,0 +1,18 @@
+github:
+  release: true
+
+git:
+  requireCommits: true
+  requireCleanWorkingDir: true
+  requireBranch: master
+
+hooks:
+  "before:init":
+    - "npm ci"
+    - "npm run build"
+    - "npm run test"
+
+plugins:
+  "@release-it/keep-a-changelog":
+    addVersionUrl: true
+    addUnreleased: true

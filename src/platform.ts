@@ -9,14 +9,9 @@ import * as fs from 'fs';
 import { DeviceListEntry, isDeviceListEntry } from './z2mModels';
 import * as semver from 'semver';
 
-/**
- * HomebridgePlatform
- * This class is the main constructor for your plugin, this is where you should
- * parse the user config and discover/register accessories with Homebridge.
- */
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
-  public readonly config: PluginConfiguration;
-  private readonly MqttClient: mqtt.MqttClient;
+  public readonly config?: PluginConfiguration;
+  private readonly mqttClient?: mqtt.MqttClient;
   private static readonly MIN_Z2M_VERSION = '1.17.0';
   private static readonly TOPIC_BRIDGE = 'bridge/';
 
@@ -29,83 +24,81 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     config: PlatformConfig,
     public readonly api: API,
   ) {
+    // Prepare internal states, variables and such
+    this.onMessage = this.onMessage.bind(this);
+    this.didReceiveDevices = false;
+
     // Validate configuration
     if (isPluginConfiguration(config, log)) {
       this.config = config;
     } else {
-      throw new Error(`Invalid configuration for ${PLUGIN_NAME}`);
+      log.error(`INVALID CONFIGURATION FOR PLUGIN: ${PLUGIN_NAME}\nThis plugin will NOT WORK until this problem is resolved.`);
+      return;
     }
 
-    this.onMessage = this.onMessage.bind(this);
-    this.didReceiveDevices = false;
+    if (this.config !== undefined) {
+      if (!this.config.mqtt.server || !this.config.mqtt.base_topic) {
+        this.log.error('No MQTT server and/or base_topic defined!');
+      }
+      this.log.info(`Connecting to MQTT server at ${this.config.mqtt.server}`);
 
-    if (!this.mqttConfig.server || !this.mqttConfig.base_topic) {
-      this.log.error('No MQTT server and/or base_topic defined!');
-    }
-    this.log.info(`Connecting to MQTT server at ${this.mqttConfig.server}`);
+      const options: mqtt.IClientOptions = {};
 
-    const options: mqtt.IClientOptions = {};
+      if (this.config.mqtt.version) {
+        options.protocolVersion = this.config.mqtt.version;
+      }
 
-    if (this.mqttConfig.version) {
-      options.protocolVersion = this.mqttConfig.version;
-    }
+      if (this.config.mqtt.keepalive) {
+        this.log.debug(`Using MQTT keepalive: ${this.config.mqtt.keepalive}`);
+        options.keepalive = this.config.mqtt.keepalive;
+      }
 
-    if (this.mqttConfig.keepalive) {
-      this.log.debug(`Using MQTT keepalive: ${this.mqttConfig.keepalive}`);
-      options.keepalive = this.mqttConfig.keepalive;
-    }
+      if (this.config.mqtt.ca) {
+        this.log.debug(`MQTT SSL/TLS: Path to CA certificate = ${this.config.mqtt.ca}`);
+        options.ca = fs.readFileSync(this.config.mqtt.ca);
+      }
 
-    if (this.mqttConfig.ca) {
-      this.log.debug(`MQTT SSL/TLS: Path to CA certificate = ${this.mqttConfig.ca}`);
-      options.ca = fs.readFileSync(this.mqttConfig.ca);
-    }
+      if (this.config.mqtt.key && this.config.mqtt.cert) {
+        this.log.debug(`MQTT SSL/TLS: Path to client key = ${this.config.mqtt.key}`);
+        this.log.debug(`MQTT SSL/TLS: Path to client certificate = ${this.config.mqtt.cert}`);
+        options.key = fs.readFileSync(this.config.mqtt.key);
+        options.cert = fs.readFileSync(this.config.mqtt.cert);
+      }
 
-    if (this.mqttConfig.key && this.mqttConfig.cert) {
-      this.log.debug(`MQTT SSL/TLS: Path to client key = ${this.mqttConfig.key}`);
-      this.log.debug(`MQTT SSL/TLS: Path to client certificate = ${this.mqttConfig.cert}`);
-      options.key = fs.readFileSync(this.mqttConfig.key);
-      options.cert = fs.readFileSync(this.mqttConfig.cert);
-    }
+      if (this.config.mqtt.user && this.config.mqtt.password) {
+        options.username = this.config.mqtt.user;
+        options.password = this.config.mqtt.password;
+      }
 
-    if (this.mqttConfig.user && this.mqttConfig.password) {
-      options.username = this.mqttConfig.user;
-      options.password = this.mqttConfig.password;
-    }
+      if (this.config.mqtt.client_id) {
+        this.log.debug(`Using MQTT client ID: '${this.config.mqtt.client_id}'`);
+        options.clientId = this.config.mqtt.client_id;
+      }
 
-    if (this.mqttConfig.client_id) {
-      this.log.debug(`Using MQTT client ID: '${this.mqttConfig.client_id}'`);
-      options.clientId = this.mqttConfig.client_id;
-    }
+      if (this.config.mqtt.reject_unauthorized !== undefined && !this.config.mqtt.reject_unauthorized) {
+        this.log.debug('MQTT reject_unauthorized set false, ignoring certificate warnings.');
+        options.rejectUnauthorized = false;
+      }
 
-    if ('reject_unauthorized' in this.mqttConfig && !this.mqttConfig.reject_unauthorized) {
-      this.log.debug('MQTT reject_unauthorized set false, ignoring certificate warnings.');
-      options.rejectUnauthorized = false;
-    }
-
-    this.MqttClient = mqtt.connect(this.mqttConfig.server, options);
-    this.MqttClient.on('connect', () => {
-      this.log.info('Connected to MQTT server');
-      setTimeout(() => {
-        if (!this.didReceiveDevices) {
-          this.log.error('DID NOT RECEIVE ANY DEVICES AFTER BEING CONNECTED FOR TWO MINUTES.\n'
+      this.mqttClient = mqtt.connect(this.config.mqtt.server, options);
+      this.mqttClient.on('connect', () => {
+        this.log.info('Connected to MQTT server');
+        setTimeout(() => {
+          if (!this.didReceiveDevices) {
+            this.log.error('DID NOT RECEIVE ANY DEVICES AFTER BEING CONNECTED FOR TWO MINUTES.\n'
           + `Please verify that Zigbee2MQTT is running and that it is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
+          }
+        }, 120000);
+      });
+
+      this.api.on('didFinishLaunching', () => {
+        if (this.config !== undefined) {
+          // Setup MQTT callbacks and subscription
+          this.mqttClient?.on('message', this.onMessage);
+          this.mqttClient?.subscribe(this.config.mqtt.base_topic + '/#');
         }
-      }, 120000);
-    });
-
-    // When this event is fired it means Homebridge has restored all cached accessories from disk.
-    // Dynamic Platform plugins should only register new accessories after this event was fired,
-    // in order to ensure they weren't added to homebridge already. This event can also be used
-    // to start discovery of new accessories.
-    this.api.on('didFinishLaunching', () => {
-      // Setup MQTT callbacks and subscription
-      this.MqttClient.on('message', this.onMessage);
-      this.MqttClient.subscribe(this.mqttConfig.base_topic + '/#');
-    });
-  }
-
-  get mqttConfig(): MqttConfiguration {
-    return this.config.mqtt;
+      });
+    }
   }
 
   private checkZigbee2MqttVersion(version: string, topic: string) {
@@ -119,14 +112,13 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       this.log.error('!!! UPDATE OF ZIGBEE2MQTT REQUIRED !!! \n' + 
       `Zigbee2MQTT v${version} is TOO OLD. The minimum required version is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION}. \n` + 
       `This means that ${PLUGIN_NAME} MIGHT NOT WORK AS EXPECTED!`);
-      throw new IncompatibleZigbee2mqttVersionError(version, Zigbee2mqttPlatform.MIN_Z2M_VERSION);
     }
   }
 
   private onMessage(topic: string, payload: Buffer) {
     const fullTopic = topic;
     try {
-      const baseTopic = `${this.mqttConfig.base_topic}/`;
+      const baseTopic = `${this.config?.mqtt.base_topic}/`;
       if (!topic.startsWith(baseTopic)) {
         this.log.debug('Ignore message, because topic is unexpected.', topic);
         return;
@@ -160,13 +152,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         this.handleDeviceUpdate(topic, payload.toString());
       }
     } catch (Error) {
-      if (Error instanceof IncompatibleZigbee2mqttVersionError) {
-        // Rethrow error as we can't continue working with this Zigbee2MQTT version
-        throw Error;
-      } else {
-        this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
-        this.log.error(Error);
-      }
+      this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
+      this.log.error(Error);
     }
   }
 
@@ -213,7 +200,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getAdditionalConfigForDevice(device: any): DeviceConfiguration | undefined {
-    if (this.config.devices !== undefined) {
+    if (this.config?.devices !== undefined) {
       const identifiers: string[] = [];
       if (typeof device === 'string') {
         identifiers.push(device.toLocaleLowerCase());
@@ -293,32 +280,24 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   isConnected(): boolean {
-    return this.MqttClient && !this.MqttClient.reconnecting;
+    return this.mqttClient !== undefined && !this.mqttClient.reconnecting;
   }
 
   async publishMessage(topic: string, payload: string, options: mqtt.IClientPublishOptions) {
-    topic = `${this.mqttConfig.base_topic}/${topic}`;
-    options = { qos: 0, retain: false, ...options };
-    if (!this.isConnected) {
-      this.log.error('Not connected to MQTT server!');
-      this.log.error(`Cannot send message to '${topic}': '${payload}`);
-      return;
+    if (this.config !== undefined) {
+      topic = `${this.config.mqtt.base_topic}/${topic}`;
+      options = { qos: 0, retain: false, ...options };
+      if (!this.isConnected) {
+        this.log.error('Not connected to MQTT server!');
+        this.log.error(`Cannot send message to '${topic}': '${payload}`);
+        return;
+      }
+
+      this.log.info(`Publish to '${topic}': '${payload}'`);
+
+      return new Promise<void>((resolve) => {
+        this.mqttClient?.publish(topic, payload, options, () => resolve());
+      });
     }
-
-    this.log.info(`Publish to '${topic}': '${payload}'`);
-
-    return new Promise<void>((resolve) => {
-      this.MqttClient.publish(topic, payload, options, () => resolve());
-    });
-  }
-}
-
-class IncompatibleZigbee2mqttVersionError extends Error {
-  constructor(actualVersion:string, minimumVersion: string) {
-    super(`The installed version of ${PLUGIN_NAME} does not work with Zigbee2MQTT v${actualVersion}. It requires Zigbee2MQTT v`
-      + minimumVersion + ' or newer.');
-    // see: typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html
-    Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
-    this.name = IncompatibleZigbee2mqttVersionError.name; // stack traces display correctly now 
   }
 }

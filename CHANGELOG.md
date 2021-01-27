@@ -10,6 +10,11 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 - Device documentation is now available on the website and generated based on information from the zigbee-herdsman-converters package,
   which is also used by Zigbee2MQTT.
 
+### Changed
+
+- Removed unhandled exceptions to prevent Homebridge from crashing. If the plugin does not work as expected, please investigate the
+  Homebridge logs up on startup to see if there is anything wrong with your plugin configuration or any of the dependencies.
+
 ## [1.1.0-beta.1][] - 2021-01-16
 ### Changed
 - Zigbee2MQTT minimal version check ignores the `-dev` suffix, so that the newer development build is also accepted.

@@ -257,20 +257,24 @@ class LightHandler implements ServiceHandler {
   }
 
   private convertAndPublishHueAndSaturationAsXY() {
-    if (this.received_hue && this.received_saturation) {
-      this.received_hue = false;
-      this.received_saturation = false;
-      if (this.colorExpose?.name === 'color_xy'
-        && this.colorExpose?.property !== undefined
-        && this.colorComponentAExpose !== undefined
-        && this.colorComponentBExpose !== undefined) {
-        const data = {};
-        const xy = convertHueSatToXy(this.cached_hue, this.cached_saturation);
-        data[this.colorExpose.property] = {};
-        data[this.colorExpose.property][this.colorComponentAExpose.property] = xy[0];
-        data[this.colorExpose.property][this.colorComponentBExpose.property] = xy[1];
-        this.accessory.queueDataForSetAction(data);
+    try {
+      if (this.received_hue && this.received_saturation) {
+        this.received_hue = false;
+        this.received_saturation = false;
+        if (this.colorExpose?.name === 'color_xy'
+          && this.colorExpose?.property !== undefined
+          && this.colorComponentAExpose !== undefined
+          && this.colorComponentBExpose !== undefined) {
+          const data = {};
+          const xy = convertHueSatToXy(this.cached_hue, this.cached_saturation);
+          data[this.colorExpose.property] = {};
+          data[this.colorExpose.property][this.colorComponentAExpose.property] = xy[0];
+          data[this.colorExpose.property][this.colorComponentBExpose.property] = xy[1];
+          this.accessory.queueDataForSetAction(data);
+        }
       }
+    } catch (error) {
+      this.accessory.log.error(`Failed to handle hue/saturation update for ${this.accessory.displayName}: ${error}`);
     }
   }
 

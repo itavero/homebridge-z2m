@@ -10,7 +10,7 @@ import { DeviceConfiguration } from './configModels';
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;
   private readonly additionalConfig: DeviceConfiguration;
-  private readonly exposeConverterManager: ServiceCreatorManager;
+  private readonly serviceCreatorManager: ServiceCreatorManager;
   private readonly serviceHandlers = new Map<string, ServiceHandler>();
   private readonly serviceIds = new Set<string>();
 
@@ -32,13 +32,13 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     private readonly platform: Zigbee2mqttPlatform,
     public readonly accessory: PlatformAccessory,
     additionalConfig: DeviceConfiguration | undefined,
-    serviceCreatorManager: ServiceCreatorManager = BasicServiceCreatorManager.getInstance(),
+    serviceCreatorManager?: ServiceCreatorManager,
   ) {
     // Store ServiceCreatorManager
     if (serviceCreatorManager === undefined) {
-      throw new Error('ServiceCreatorManager is required');
+      this.serviceCreatorManager = BasicServiceCreatorManager.getInstance();
     } else {
-      this.exposeConverterManager = serviceCreatorManager;
+      this.serviceCreatorManager = serviceCreatorManager;
     }
 
     // Setup delayed publishing
@@ -70,9 +70,10 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   registerServiceHandler(handler: ServiceHandler): void {
     const key = handler.identifier;
     if (this.serviceHandlers.has(key)) {
-      throw new Error(`ServiceHandler with identifier ${key} already added to accessory ${this.displayName}.`);
+      this.log.error(`DUPLICATE SERVICE HANDLER with identifier ${key} for accessory ${this.displayName}. New one will not stored.`);
+    } else {
+      this.serviceHandlers.set(key, handler);
     }
-    this.serviceHandlers.set(key, handler);
   }
 
   isServiceHandlerIdKnown(identifier: string): boolean {
@@ -240,7 +241,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
           .updateCharacteristic(hap.Characteristic.HardwareRevision, info.date_code ?? '?')
           .updateCharacteristic(hap.Characteristic.FirmwareRevision, info.software_build_id ?? '?');
         // Create (new) services
-        this.exposeConverterManager.createHomeKitEntitiesFromExposes(this, info.definition.exposes);
+        this.serviceCreatorManager.createHomeKitEntitiesFromExposes(this, info.definition.exposes);
       }
 
       // Remove all services of which identifier is not known

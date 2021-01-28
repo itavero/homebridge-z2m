@@ -2,7 +2,7 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig }
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { Zigbee2mqttAccessory } from './platformAccessory';
-import { DeviceConfiguration, isPluginConfiguration, MqttConfiguration, PluginConfiguration } from './configModels';
+import { DeviceConfiguration, isPluginConfiguration, PluginConfiguration } from './configModels';
 
 import * as mqtt from 'mqtt';
 import * as fs from 'fs';

@@ -10,6 +10,7 @@ import { ExposesEntry } from '../z2mModels';
 import * as hapNodeJs from 'hap-nodejs';
 import { setHap } from '../hap';
 import { Service, WithUUID } from 'hap-nodejs';
+import { version_herdsman_converters, version_zigbee2mqtt } from './versions';
 
 const base = path.join(__dirname, '..', '..', 'docs', 'devices');
 setHap(hapNodeJs);
@@ -218,7 +219,7 @@ ${serviceInfoToMarkdown(services)}
   fs.writeFileSync(fileName, devicePage);
 }
 
-// Add whitelabel devices
+// Add white label devices
 const allDevices = herdsman.devices;
 for (const device of allDevices) {
   if (device.whiteLabel) {
@@ -305,7 +306,7 @@ span.vendor {
 </style>
 
 # Device support
-This page lists the devices currently supported by Zigbee2MQTT.
+This page lists the devices currently supported by Zigbee2MQTT v${version_zigbee2mqtt} (which depends on zigbee-herdsman-converters v${version_herdsman_converters}).
 Using an automated script, we have checked which HomeKit Services (and Characteristics) would be created for each of these devices.
 That way you have some kind of idea of what kind of devices are supported.
 

@@ -32,7 +32,6 @@
     "lint": "eslint '**/*.ts' --fix --max-warnings=0",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && npm link && homebridge -I -D",
-    "generate-docs": "ts-node src/docgen/docgen.ts",
     "check-release": "release-it --dry-run -VV",
     "release": "release-it",
     "check-pre-release": "release-it --dry-run -VV --npm.tag=next",
@@ -80,7 +79,6 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.1.1",
-    "typescript": "^4.1.3",
-    "zigbee-herdsman-converters": "14.0.3"
+    "typescript": "^4.1.3"
   }
 }

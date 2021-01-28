@@ -23,6 +23,7 @@
     "src/"
   ],
   "exclude": [
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "src/docgen/"
   ]
 }

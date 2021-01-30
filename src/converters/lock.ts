@@ -87,7 +87,7 @@ class LockHandler implements ServiceHandler {
         lockStateMapping.set(value, hap.Characteristic.LockCurrentState.UNKNOWN);
       }
     }
-    this.monitors.push(new MappingCharacteristicMonitor(this.stateExpose.property, service, hap.Characteristic.LockCurrentState,
+    this.monitors.push(new MappingCharacteristicMonitor(this.lockStateExpose.property, service, hap.Characteristic.LockCurrentState,
       lockStateMapping));
   }
 

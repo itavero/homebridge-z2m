@@ -5,6 +5,9 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Fixed
+
+- `LockCurrentState` wasn't updated because the monitor was not initialized properly. (fix for [#46](https://github.com/itavero/homebridge-z2m/issues/46))
 
 ## [1.1.0-beta.2] - 2021-01-30
 ### Added

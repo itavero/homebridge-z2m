@@ -5,6 +5,8 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+
+## [1.1.0-beta.3] - 2021-01-30
 ### Fixed
 
 - `LockCurrentState` wasn't updated because the monitor was not initialized properly. (fix for [#46](https://github.com/itavero/homebridge-z2m/issues/46))
@@ -157,7 +159,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.2...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.3...HEAD
+[1.1.0-beta.3]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.2...v1.1.0-beta.3
 [1.1.0-beta.2]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.1...v1.1.0-beta.2
 [1.1.0-beta.1]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.0...v1.1.0-beta.1
 [1.1.0-beta.0]: https://github.com/itavero/homebridge-z2m/compare/v1.0.2...v1.1.0-beta.0

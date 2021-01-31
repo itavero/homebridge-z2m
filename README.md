@@ -1,3 +1,7 @@
+<p align="center">
+  <img alt="Homebridge x Zigbee2MQTT" src="https://raw.githubusercontent.com/itavero/homebridge-z2m/master/docs/branding/Homebridge_x_Zigbee2MQTT.svg?sanitize=true" width="500px">
+</p>
+
 # homebridge-z2m
 
 [![NPM Latest version](https://flat.badgen.net/npm/v/homebridge-z2m/latest?icon=npm&label=%40latest&color=blue)](https://www.npmjs.com/package/homebridge-z2m/v/latest)

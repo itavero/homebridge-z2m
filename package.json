@@ -16,10 +16,16 @@
   "bugs": {
     "url": "https://github.com/itavero/homebridge-z2m/issues"
   },
-  "funding": {
+  "funding": [
+    {
+    "type": "github",
+    "url": "https://github.com/sponsors/itavero"
+    },
+    {
     "type": "paypal",
     "url": "https://paypal.me/arnom/EUR"
-  },
+    }
+  ],
   "engines": {
     "node": ">=10.17.0",
     "homebridge": ">=1.0.0"

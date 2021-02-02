@@ -22,6 +22,8 @@ the Xiaomi RTCGQ11LM
   * CurrentAmbientLightLevel
 * [OccupancySensor](../../sensors.md)
   * OccupancyDetected
+* [TemperatureSensor](../../sensors.md)
+  * CurrentTemperature
 
 
 # Related

@@ -22,7 +22,7 @@ If it doesn't exist yet, you can [open a new request](https://github.com/itavero
     "type": "numeric",
     "name": "power",
     "property": "power",
-    "access": 5,
+    "access": 1,
     "unit": "W",
     "description": "Instantaneous measured power"
   },
@@ -30,7 +30,7 @@ If it doesn't exist yet, you can [open a new request](https://github.com/itavero
     "type": "numeric",
     "name": "energy",
     "property": "energy",
-    "access": 5,
+    "access": 1,
     "unit": "kWh",
     "description": "Sum of consumed energy"
   },
@@ -38,7 +38,7 @@ If it doesn't exist yet, you can [open a new request](https://github.com/itavero
     "type": "numeric",
     "name": "current",
     "property": "current",
-    "access": 5,
+    "access": 1,
     "unit": "A",
     "description": "Instantaneous measured electrical current"
   },
@@ -46,7 +46,7 @@ If it doesn't exist yet, you can [open a new request](https://github.com/itavero
     "type": "numeric",
     "name": "voltage",
     "property": "voltage",
-    "access": 5,
+    "access": 1,
     "unit": "V",
     "description": "Measured electrical potential value"
   },
@@ -54,7 +54,7 @@ If it doesn't exist yet, you can [open a new request](https://github.com/itavero
     "type": "numeric",
     "name": "current_phase_b",
     "property": "current_phase_b",
-    "access": 5,
+    "access": 1,
     "unit": "A",
     "description": "Instantaneous measured electrical current on phase B"
   },
@@ -70,7 +70,7 @@ If it doesn't exist yet, you can [open a new request](https://github.com/itavero
     "type": "numeric",
     "name": "current_phase_c",
     "property": "current_phase_c",
-    "access": 5,
+    "access": 1,
     "unit": "A",
     "description": "Instantaneous measured electrical current on phase C"
   },

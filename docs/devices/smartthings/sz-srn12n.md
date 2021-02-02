@@ -19,6 +19,59 @@ If it doesn't exist yet, you can [open a new request](https://github.com/itavero
 ```json
 [
   {
+    "type": "composite",
+    "property": "warning",
+    "name": "warning",
+    "features": [
+      {
+        "type": "enum",
+        "name": "mode",
+        "property": "mode",
+        "access": 2,
+        "values": [
+          "stop",
+          "burglar",
+          "fire",
+          "emergency",
+          "police_panic",
+          "fire_panic",
+          "emergency_panic"
+        ],
+        "description": "Mode of the warning (sound effect)"
+      },
+      {
+        "type": "enum",
+        "name": "level",
+        "property": "level",
+        "access": 2,
+        "values": [
+          "low",
+          "medium",
+          "high",
+          "very_high"
+        ],
+        "description": "Sound level"
+      },
+      {
+        "type": "binary",
+        "name": "strobe",
+        "property": "strobe",
+        "access": 2,
+        "value_on": true,
+        "value_off": false,
+        "description": "Turn on/off the strobe (light) during warning"
+      },
+      {
+        "type": "numeric",
+        "name": "duration",
+        "property": "duration",
+        "access": 2,
+        "unit": "s",
+        "description": "Duration in seconds of the alarm"
+      }
+    ]
+  },
+  {
     "type": "numeric",
     "name": "linkquality",
     "property": "linkquality",

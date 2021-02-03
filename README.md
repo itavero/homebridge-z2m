@@ -13,20 +13,22 @@
 
 Expose your Zigbee devices to HomeKit with ease, by integrating 🐝 [Zigbee2MQTT](https://www.zigbee2mqtt.io/) with 🏠 [Homebridge](https://homebridge.io/) (via an MQTT message broker).
 
-For more information, please check the [documentation](https://z2m.dev).
+It can be installed using `npm install homebridge-z2m` or via the [Homebridge Config UI X](https://www.npmjs.com/package/homebridge-config-ui-x) plugin.
+
+The bare minimum configuration for this plugin only has to contain the MQTT server information:
+```json
+{
+   "platform": "zigbee2mqtt",
+   "mqtt": {
+      "base_topic": "zigbee2mqtt",
+      "server": "mqtt://localhost:1883"
+   }
+}
+```
+
+After adding this to your configuration and restarting Homebridge, it should automatically retrieve all the required information about the devices from Zigbee2MQTT (via the configured MQTT server).
+
+For more information on installing, configuring and using the plugin, please check the [documentation on the plugin website](https://z2m.dev).
 
 ## Contribute
-I'm open to [contributions](https://opensource.guide/how-to-contribute/), but please be nice and follow the [etiquette](https://github.com/kossnocorp/etiquette/blob/master/README.md).
-
-If you have any suggestions, feedback, noticed a bug or improvement, let me know via the [issues section](http://github.com/itavero/homebridge-z2m/issues).
-
-Please do a search in [open issues and PRs](https://github.com/itavero/homebridge-z2m/issues?q=is%3Aopen) to see if the issue or feature request has already been filed.
-
-If you find your issue already exists, make relevant comments and add your [reaction](https://github.com/blog/2119-add-reactions-to-pull-requests-issues-and-comments). Use a reaction, instead of a "+1" / comment, like this:
-
-👍 - upvote
-
-👎 - downvote
-
-If you cannot find an existing issue that describes your bug or feature, feel free to submit an new issue.
-Please try to provide enough (background) information.
+This project is open to contributions. Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for more information.

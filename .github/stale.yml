@@ -6,15 +6,15 @@ unmarkComment: false
 closeComment: false
 
 pulls:
-  daysUntilStale: 84
-  daysUntilClose: 24
+  daysUntilStale: 61
+  daysUntilClose: 21
   markComment: >
     It appears this PR hasn't had any activity for a long time.
     Please check if it is still applicable and if it can be merged without any issues.
-    If there isn't any activity in the next four weeks, this PR will be closed automatically. 
+    If there isn't any activity in the next three weeks, this PR will be closed automatically. 
 
 issues:
-  daysUntilStale: 42
+  daysUntilStale: 35
   daysUntilClose: 14
   exemptAssignees: true
   markComment: >

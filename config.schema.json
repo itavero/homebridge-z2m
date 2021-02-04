@@ -137,6 +137,16 @@
                   }
                }
             }
+         },
+         "excluded_devices": {
+            "title": "Excluded devices",
+            "type": "array",
+            "required": false,
+            "items": {
+               "title": "Friendly name",
+               "type": "string",
+               "minLength": 1
+            }
          }
       }
    }

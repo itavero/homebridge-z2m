@@ -3,6 +3,7 @@ import { PlatformConfig, Logger } from 'homebridge';
 export interface PluginConfiguration extends PlatformConfig {
    mqtt: MqttConfiguration;
    devices?: DeviceConfiguration[];
+   excluded_devices?: string[];
 }
 export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefined = undefined): x is PluginConfiguration => {
   if (x.mqtt === undefined || !isMqttConfiguration(x.mqtt)) {

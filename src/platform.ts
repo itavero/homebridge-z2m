@@ -224,11 +224,16 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   private isDeviceExcluded(device: DeviceListEntry | string): boolean {
     const additionalConfig = this.getAdditionalConfigForDevice(device);
-    if (additionalConfig?.exclude) {
-      this.log.debug(`Device is excluded: ${additionalConfig.id}`);
-      return true;
+    let excluded = additionalConfig?.exclude || false;
+    if (typeof device !== 'string') {
+      excluded = (this.config?.excluded_devices || []).includes(device.friendly_name);
     }
-    return false;
+
+    if (excluded) {
+      this.log.debug(`Device is excluded: ${additionalConfig?.id}`);
+    }
+
+    return excluded;
   }
 
   private addAccessory(accessory: PlatformAccessory) {

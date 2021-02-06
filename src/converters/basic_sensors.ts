@@ -181,8 +181,11 @@ class TemperatureSensorHandler extends BasicSensorHandler {
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(accessory, expose, allExposes, TemperatureSensorHandler.generateIdentifier, (n, t) => new hap.Service.TemperatureSensor(n, t));
     accessory.log.debug(`Configuring TemperatureSensor for ${this.serviceName}`);
-
-    getOrAddCharacteristic(this.service, hap.Characteristic.CurrentTemperature);
+    getOrAddCharacteristic(this.service, hap.Characteristic.CurrentTemperature)
+      .setProps({
+        minValue: -100,
+        maxValue: 100,
+      });
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentTemperature));
   }
 

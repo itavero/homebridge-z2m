@@ -2,6 +2,8 @@
    "pluginAlias": "zigbee2mqtt",
    "pluginType": "platform",
    "singular": true,
+   "headerDisplay": "Please use the same MQTT configuration as you have used for your Zigbee2MQTT installation. Device configurations are optional.",
+   "footerDisplay": "For more information about the [configuration options](https://z2m.dev/config.html), please refer to the [plugin website](https://z2m.dev/).",
    "schema": {
       "type": "object",
       "properties": {
@@ -14,13 +16,15 @@
                   "title": "Base topic",
                   "type": "string",
                   "required": true,
-                  "default": "zigbee2mqtt"
+                  "default": "zigbee2mqtt",
+                  "placeholder": "zigbee2mqtt"
                },
                "server": {
                   "title": "Server",
                   "type": "string",
                   "required": true,
-                  "default": "mqtt://localhost:1883"
+                  "default": "mqtt://localhost:1883",
+                  "placeholder": "mqtt://localhost:1883"
                },
                "ca": {
                   "title": "SSL/TLS certificate of CA",
@@ -85,7 +89,8 @@
                      "title": "Zigbee Identifier / Friendly name",
                      "type": "string",
                      "required": true,
-                     "minLength": 3
+                     "minLength": 3,
+                     "placeholder": "0x1234567890abcdef"
                   },
                   "exclude": {
                      "title": "Exclude entire device",
@@ -99,12 +104,18 @@
                      "items": {
                         "type": "string",
                         "minLength": 1
+                     },
+                     "condition": {
+                        "functionBody": "return !model.devices[arrayIndices].exclude;"
                      }
                   },
                   "values": {
                      "title": "Include/exclude values",
                      "type": "array",
                      "required": false,
+                     "condition": {
+                        "functionBody": "return !model.devices[arrayIndices].exclude;"
+                     },
                      "items": {
                         "type": "object",
                         "properties": {

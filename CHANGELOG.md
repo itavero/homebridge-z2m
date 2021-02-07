@@ -5,6 +5,16 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Changed
+
+- Improved `config.schema.json` to improve the plugin configuration screen a bit.
+
+### Most important changes since v0.0.10
+
+- Requires Zigbee2MQTT v1.17.0 or newer
+- Uses device information provided by new API in Zigbee2MQTT, so all supported devices should work immediately.
+- Added support for remote controls (`action`) and thermostats / radiator valves (`climate`).
+- > ⚠️ **IMPORTANT**: Because of this major change, it might be that you have to reconfigure some of your accessories in your HomeKit setup, if you are coming from v0.0.10 or earlier, as names/identifiers of certain services might have changed. This should be a one time action only, because of this new major version.
 
 ## [1.1.0-beta.4] - 2021-02-07
 ### Fixed

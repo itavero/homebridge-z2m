@@ -13,7 +13,7 @@
 
 Expose your Zigbee devices to HomeKit with ease, by integrating 🐝 [Zigbee2MQTT](https://www.zigbee2mqtt.io/) with 🏠 [Homebridge](https://homebridge.io/) (via an MQTT message broker).
 
-It can be installed using `npm install homebridge-z2m` or via the [Homebridge Config UI X](https://www.npmjs.com/package/homebridge-config-ui-x) plugin.
+This Homebridge plugin can be installed using `npm install homebridge-z2m` or via the [Homebridge Config UI X](https://www.npmjs.com/package/homebridge-config-ui-x) plugin.
 
 The bare minimum configuration for this plugin only has to contain the MQTT server information:
 ```json

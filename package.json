@@ -1,7 +1,7 @@
 {
   "displayName": "Homebridge Zigbee2MQTT",
   "name": "homebridge-z2m",
-  "version": "1.1.0-beta.3",
+  "version": "1.1.0-beta.4",
   "description": "Expose your Zigbee devices to HomeKit with ease, by integrating Zigbee2MQTT with Homebridge.",
   "license": "Apache-2.0",
   "homepage": "https://z2m.dev",
@@ -18,12 +18,12 @@
   },
   "funding": [
     {
-    "type": "github",
-    "url": "https://github.com/sponsors/itavero"
+      "type": "github",
+      "url": "https://github.com/sponsors/itavero"
     },
     {
-    "type": "paypal",
-    "url": "https://paypal.me/arnom/EUR"
+      "type": "paypal",
+      "url": "https://paypal.me/arnom/EUR"
     }
   ],
   "engines": {

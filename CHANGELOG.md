@@ -5,6 +5,8 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+
+## [1.1.0] - 2021-02-07
 ### Changed
 
 - Improved `config.schema.json` to improve the plugin configuration screen a bit.
@@ -174,7 +176,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.4...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.4...v1.1.0
 [1.1.0-beta.4]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.3...v1.1.0-beta.4
 [1.1.0-beta.3]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.2...v1.1.0-beta.3
 [1.1.0-beta.2]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.1...v1.1.0-beta.2

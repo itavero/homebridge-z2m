@@ -5,6 +5,9 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Fixed
+
+- Temperature sensors showed up as unavailable if the temperature dropped below 0°C, because the default range in HomeKit is 0 to 100°C (see [#49](https://github.com/itavero/homebridge-z2m/pull/49)).
 
 ## [1.1.0-beta.3] - 2021-01-30
 ### Fixed

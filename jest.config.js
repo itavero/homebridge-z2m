@@ -7,5 +7,9 @@ module.exports = {
     'src/**/*.ts',
     '!src/docgen/*.ts',
   ],
-  testResultsProcessor: 'jest-sonar-reporter',
+  reporters: ['default', ['jest-sonar', {
+    outputDirectory: 'reports',
+    outputName: 'tests.xml',
+    reportedFilePath: 'relative',
+  }]],
 };

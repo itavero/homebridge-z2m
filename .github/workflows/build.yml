@@ -1,11 +1,19 @@
 name: Test and Build
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - "docs/**"
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      node-version-analysis: 14.x
     strategy:
       matrix:
         # the Node.js versions to build on
@@ -22,10 +30,26 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Test the project
-        run: npm run test
-
       - name: Build the project
         run: npm run build
         env:
           CI: true
+
+      - name: Test the project
+        run: npm run test
+
+      - name: SonarCloud
+        uses: sonarsource/sonarcloud-github-action@master
+        if: ${{ matrix.node-version == env.node-version-analysis }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Publish to codecov
+        uses: codecov/codecov-action@v1
+        if: ${{ matrix.node-version == env.node-version-analysis }}
+        with:
+          files: ./coverage/clover.xml
+          flags: tests
+          name: codecov-umbrella
+          fail_ci_if_error: true

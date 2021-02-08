@@ -7,4 +7,5 @@ module.exports = {
     'src/**/*.ts',
     '!src/docgen/*.ts',
   ],
+  testResultsProcessor: 'jest-sonar-reporter',
 };

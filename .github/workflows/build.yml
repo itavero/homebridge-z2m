@@ -2,11 +2,19 @@ name: Test and Build
 
 on:
   push:
+    branches:    
+      - master
+      - main
+      - "release?/**"
+    tags:        
+      - v[0-9]+.[0-9]+.[0-9]+*
     paths-ignore:
       - "docs/**"
+      - "**.md"
   pull_request:
     paths-ignore:
       - "docs/**"
+      - "**.md"
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -21,6 +29,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        if: ${{ matrix.node-version != env.node-version-analysis }}
+
+      - uses: actions/checkout@v2
+        # Do full check out when SonarCloud action is performed later on
+        if: ${{ matrix.node-version == env.node-version-analysis }}
+        with:
+          fetch-depth: 0
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1

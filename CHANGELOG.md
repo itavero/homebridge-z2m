@@ -5,6 +5,9 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Fixed
+
+- Color change of lights using `color_hs` was not sent correctly. (fix for [#57](https://github.com/itavero/homebridge-z2m/issues/57))
 
 ## [1.1.0] - 2021-02-07
 ### Changed

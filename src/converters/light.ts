@@ -228,9 +228,7 @@ class LightHandler implements ServiceHandler {
     this.cached_hue = value as number;
     this.received_hue = true;
     if (this.colorExpose?.name === 'color_hs' && this.colorComponentAExpose !== undefined) {
-      const data = {};
-      data[this.colorComponentAExpose.property] = value;
-      this.accessory.queueDataForSetAction(data);
+      this.publishHueAndSaturation();
       callback(null);
     } else if (this.colorExpose?.name === 'color_xy') {
       this.convertAndPublishHueAndSaturationAsXY();
@@ -244,15 +242,34 @@ class LightHandler implements ServiceHandler {
     this.cached_saturation = value as number;
     this.received_saturation = true;
     if (this.colorExpose?.name === 'color_hs' && this.colorComponentBExpose !== undefined) {
-      const data = {};
-      data[this.colorComponentBExpose.property] = value;
-      this.accessory.queueDataForSetAction(data);
+      this.publishHueAndSaturation();
       callback(null);
     } else if (this.colorExpose?.name === 'color_xy') {
       this.convertAndPublishHueAndSaturationAsXY();
       callback(null);
     } else {
       callback(new Error('color not supported'));
+    }
+  }
+
+  private publishHueAndSaturation() {
+    try {
+      if (this.received_hue && this.received_saturation) {
+        this.received_hue = false;
+        this.received_saturation = false;
+        if (this.colorExpose?.name === 'color_hs'
+          && this.colorExpose?.property !== undefined
+          && this.colorComponentAExpose !== undefined
+          && this.colorComponentBExpose !== undefined) {
+          const data = {};
+          data[this.colorExpose.property] = {};
+          data[this.colorExpose.property][this.colorComponentAExpose.property] = this.cached_hue;
+          data[this.colorExpose.property][this.colorComponentBExpose.property] = this.cached_saturation;
+          this.accessory.queueDataForSetAction(data);
+        }
+      }
+    } catch (error) {
+      this.accessory.log.error(`Failed to handle hue/saturation update for ${this.accessory.displayName}: ${error}`);
     }
   }
 

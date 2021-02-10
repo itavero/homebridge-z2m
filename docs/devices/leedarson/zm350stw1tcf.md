@@ -20,6 +20,10 @@ the Leedarson ZM350STW1TCF
   * On
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Leedarson](../index.md#leedarson)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/ZM350STW1TCF.html)

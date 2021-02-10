@@ -1,11 +1,14 @@
-import { Characteristic, CharacteristicEventTypes, CharacteristicProps, CharacteristicSetCallback, CharacteristicValue, Logger, Service,
-  SessionIdentifier, WithUUID } from 'homebridge';
-import { BasicAccessory, ServiceHandler } from '../src/converters/interfaces';
+import {
+  Characteristic, CharacteristicEventTypes, CharacteristicProps, CharacteristicSetCallback, CharacteristicValue, Logger, Service,
+  SessionIdentifier, WithUUID,
+} from 'homebridge';
+import { BasicAccessory, BasicPlatform, ServiceHandler } from '../src/converters/interfaces';
 import { DeviceDefinition, DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry } from '../src/z2mModels';
 import { mock, mockClear, MockProxy } from 'jest-mock-extended';
 import { when } from 'jest-when';
 import 'jest-chain';
 import { BasicServiceCreatorManager } from '../src/converters/creators';
+import * as semver from 'semver';
 
 export interface HomebridgeCharacteristicSetCallback {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,14 +42,14 @@ export const testJsonDeviceDefinition = (json: string): DeviceDefinition | undef
 };
 
 class TestCharacteristic {
-  setFunction? : HomebridgeCharacteristicSetCallback;
-  public readonly mock : MockProxy<Characteristic> & Characteristic | undefined;
+  setFunction?: HomebridgeCharacteristicSetCallback;
+  public readonly mock: MockProxy<Characteristic> & Characteristic | undefined;
 
   constructor(
-    readonly topLevelProperty : string,
-    readonly characteristic : WithUUID<{new (): Characteristic}> | undefined,
-    readonly doExpectSet : boolean,
-    readonly doExpectCheckPropertyExcluded : boolean,
+    readonly topLevelProperty: string,
+    readonly characteristic: WithUUID<{ new(): Characteristic }> | undefined,
+    readonly doExpectSet: boolean,
+    readonly doExpectCheckPropertyExcluded: boolean,
   ) {
     if (characteristic !== undefined) {
       this.mock = mock<Characteristic>();
@@ -54,50 +57,57 @@ class TestCharacteristic {
   }
 }
 
-export declare type ServiceIdentifier = string | WithUUID<{new (): Service}>;
+export declare type ServiceIdentifier = string | WithUUID<{ new(): Service }>;
 
 export interface ServiceHandlerContainer {
-  addExpectedPropertyCheck(property: string) : ServiceHandlerContainer;
-  addExpectedCharacteristic(identifier: string, characteristic: WithUUID<{new (): Characteristic}>, doExpectSet? : boolean,
-    property? : string, doExpectCheckPropertyExcluded? : boolean) : ServiceHandlerContainer;
-  
-  checkCharacteristicPropertiesHaveBeenSet(identifier: string, props: Partial<CharacteristicProps>) : ServiceHandlerContainer;
+  addExpectedPropertyCheck(property: string): ServiceHandlerContainer;
+  addExpectedCharacteristic(identifier: string, characteristic: WithUUID<{ new(): Characteristic }>, doExpectSet?: boolean,
+    property?: string, doExpectCheckPropertyExcluded?: boolean): ServiceHandlerContainer;
 
-  checkCharacteristicUpdateValue(identifier: string, value: CharacteristicValue) : ServiceHandlerContainer;
+  checkCharacteristicPropertiesHaveBeenSet(identifier: string, props: Partial<CharacteristicProps>): ServiceHandlerContainer;
 
-  checkCharacteristicUpdateValues(expectedUpdates: Map<string, CharacteristicValue>) : ServiceHandlerContainer;
+  checkCharacteristicUpdateValue(identifier: string, value: CharacteristicValue): ServiceHandlerContainer;
 
-  checkCharacteristicUpdate(characteristic: WithUUID<{new (): Characteristic}> | string,
-    value: CharacteristicValue) : ServiceHandlerContainer;
+  checkCharacteristicUpdateValues(expectedUpdates: Map<string, CharacteristicValue>): ServiceHandlerContainer;
 
-  checkCharacteristicUpdates(expectedUpdates: Map<WithUUID<{new (): Characteristic}> | string,
-    CharacteristicValue>) : ServiceHandlerContainer;
+  checkCharacteristicUpdate(characteristic: WithUUID<{ new(): Characteristic }> | string,
+    value: CharacteristicValue): ServiceHandlerContainer;
 
-  checkNoCharacteristicUpdates() : ServiceHandlerContainer;
-  callAndCheckHomeKitSetCallback(identifier: string, setValue: CharacteristicValue) : ServiceHandlerContainer;
+  checkCharacteristicUpdates(expectedUpdates: Map<WithUUID<{ new(): Characteristic }> | string,
+    CharacteristicValue>): ServiceHandlerContainer;
 
-  getCharacteristicMock(identifier: string) : MockProxy<Characteristic> & Characteristic;
-  prepareGetCharacteristicMock(property: string) : void;
+  checkNoCharacteristicUpdates(): ServiceHandlerContainer;
+  callAndCheckHomeKitSetCallback(identifier: string, setValue: CharacteristicValue): ServiceHandlerContainer;
+
+  getCharacteristicMock(identifier: string): MockProxy<Characteristic> & Characteristic;
+  prepareGetCharacteristicMock(property: string): void;
 }
 
 class ServiceHandlerTestData implements ServiceHandlerContainer {
   serviceHandler?: ServiceHandler;
-  readonly serviceMock : MockProxy<Service> & Service;
-  readonly characteristics : Map<string, TestCharacteristic> = new Map<string, TestCharacteristic>();
+  readonly serviceMock: MockProxy<Service> & Service;
+  readonly characteristics: Map<string, TestCharacteristic> = new Map<string, TestCharacteristic>();
+  readonly addedCharacteristicUUIDs = new Set<string>();
 
   constructor(readonly serviceUuid: string, readonly subType: string | undefined, readonly serviceIdentifier: string) {
     this.serviceMock = mock<Service>();
+    this.serviceMock.testCharacteristic.mockImplementation((c) => {
+      if (typeof c === 'string') {
+        return false;
+      }
+      return this.addedCharacteristicUUIDs.has(c.UUID);
+    });
   }
 
-  addExpectedPropertyCheck(property: string) : ServiceHandlerContainer{
+  addExpectedPropertyCheck(property: string): ServiceHandlerContainer {
     expect(this.characteristics.has(property)).toBeFalsy();
     this.characteristics.set(property, new TestCharacteristic(property, undefined, false, true));
 
     return this;
   }
 
-  addExpectedCharacteristic(identifier: string, characteristic: WithUUID<{new (): Characteristic}>, doExpectSet = false,
-    property : string | undefined = undefined, doExpectCheckPropertyExcluded = true) : ServiceHandlerContainer {
+  addExpectedCharacteristic(identifier: string, characteristic: WithUUID<{ new(): Characteristic }>, doExpectSet = false,
+    property: string | undefined = undefined, doExpectCheckPropertyExcluded = true): ServiceHandlerContainer {
     if (property === undefined) {
       property = identifier;
     }
@@ -108,7 +118,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
     return this;
   }
 
-  checkCharacteristicPropertiesHaveBeenSet(identifier: string, props: Partial<CharacteristicProps>) : ServiceHandlerContainer {
+  checkCharacteristicPropertiesHaveBeenSet(identifier: string, props: Partial<CharacteristicProps>): ServiceHandlerContainer {
     const mock = this.getCharacteristicMock(identifier);
     expect(mock.setProps)
       .toBeCalledTimes(1)
@@ -117,7 +127,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
     return this;
   }
 
-  getCharacteristicMock(identifier: string) : MockProxy<Characteristic> & Characteristic {
+  getCharacteristicMock(identifier: string): MockProxy<Characteristic> & Characteristic {
     const characteristicMock = this.characteristics.get(identifier)?.mock;
     if (characteristicMock === undefined) {
       throw new Error(`Characterstic mock for identifier ${identifier} not found.`);
@@ -130,20 +140,20 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
     if (mapping === undefined) {
       throw new Error(`Unknown property ${property} passed to prepareGetCharacteristicMock`);
     }
-    
+
     when(this.serviceMock.getCharacteristic)
       .calledWith(mapping.characteristic)
       .mockReturnValue(mapping.mock);
   }
 
-  checkCharacteristicUpdate(characteristic: WithUUID<{new (): Characteristic}> | string, value: CharacteristicValue) :
+  checkCharacteristicUpdate(characteristic: WithUUID<{ new(): Characteristic }> | string, value: CharacteristicValue):
     ServiceHandlerContainer {
-    return this.checkCharacteristicUpdates(new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+    return this.checkCharacteristicUpdates(new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
       [characteristic, value],
     ]));
   }
 
-  checkCharacteristicUpdates(expectedUpdates: Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>) :
+  checkCharacteristicUpdates(expectedUpdates: Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>):
     ServiceHandlerContainer {
     expect(this.serviceMock.updateCharacteristic)
       .toBeCalledTimes(expectedUpdates.size);
@@ -155,13 +165,13 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
     return this;
   }
 
-  checkCharacteristicUpdateValue(identifier: string, value: CharacteristicValue) : ServiceHandlerContainer {
+  checkCharacteristicUpdateValue(identifier: string, value: CharacteristicValue): ServiceHandlerContainer {
     return this.checkCharacteristicUpdateValues(new Map<string, CharacteristicValue>([
       [identifier, value],
     ]));
   }
 
-  checkCharacteristicUpdateValues(expectedUpdates: Map<string, CharacteristicValue>) : ServiceHandlerContainer {
+  checkCharacteristicUpdateValues(expectedUpdates: Map<string, CharacteristicValue>): ServiceHandlerContainer {
     for (const [identifier, value] of expectedUpdates) {
       const mock = this.getCharacteristicMock(identifier);
       expect(mock.updateValue)
@@ -171,13 +181,13 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
     return this;
   }
 
-  checkNoCharacteristicUpdates() : ServiceHandlerContainer{
+  checkNoCharacteristicUpdates(): ServiceHandlerContainer {
     expect(this.serviceMock.updateCharacteristic)
       .not.toBeCalled();
     return this;
   }
 
-  callAndCheckHomeKitSetCallback(identifier: string, setValue: CharacteristicValue) : ServiceHandlerContainer {
+  callAndCheckHomeKitSetCallback(identifier: string, setValue: CharacteristicValue): ServiceHandlerContainer {
     expect(this.characteristics.has(identifier)).toBeTruthy();
     const mapping = this.characteristics.get(identifier);
     if (mapping?.setFunction === undefined) {
@@ -186,7 +196,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
 
     const callbackMock = jest.fn();
     mapping.setFunction(setValue, callbackMock);
-    
+
     expect(callbackMock)
       .toBeCalledTimes(1)
       .toBeCalledWith(null);
@@ -207,15 +217,18 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
 export class ServiceHandlersTestHarness {
   private readonly handlers = new Map<string, ServiceHandlerTestData>();
   private readonly allowedValues = new Map<string, string[]>();
-  readonly accessoryMock : MockProxy<BasicAccessory> & BasicAccessory;
+  readonly accessoryMock: MockProxy<BasicAccessory> & BasicAccessory;
+  public serverVersion = '1.1.7';
+  public numberOfExpectedControllers = 0;
 
   constructor() {
     this.accessoryMock = mock<BasicAccessory>();
     this.accessoryMock.log = mock<Logger>();
+    this.accessoryMock.platform = mock<BasicPlatform>();
 
     // Mock implementations of certain accessory functions
     this.accessoryMock.isValueAllowedForProperty
-      .mockImplementation((property: string, value: string) : boolean => {
+      .mockImplementation((property: string, value: string): boolean => {
         return this.allowedValues.get(property)?.includes(value) ?? true;
       });
 
@@ -232,14 +245,14 @@ export class ServiceHandlersTestHarness {
       });
 
     this.accessoryMock.isServiceHandlerIdKnown
-      .mockImplementation((id: string) : boolean => {
+      .mockImplementation((id: string): boolean => {
         // Ignore all identifiers that have not been registered before
         return !this.handlers.has(id);
       });
 
     this.accessoryMock.registerServiceHandler
       .mockImplementation((serviceHandler: ServiceHandler) => {
-      // Check service identifier is known and store service handler once
+        // Check service identifier is known and store service handler once
         expect(serviceHandler).toBeDefined();
         const testHandler = this.handlers.get(serviceHandler.identifier);
         expect(testHandler).toBeDefined();
@@ -248,13 +261,17 @@ export class ServiceHandlersTestHarness {
           testHandler.serviceHandler = serviceHandler;
         }
       });
+
+    // Mock implementation for certain platform functions
+    this.accessoryMock.platform.isHomebridgeServerVersionGreaterOrEqualTo
+      .mockImplementation((v: string) => semver.gte(this.serverVersion, v));
   }
 
   configureAllowedValues(property: string, values: string[]) {
     this.allowedValues.set(property, values);
   }
 
-  private extractServiceId(id: ServiceIdentifier) : string {
+  private extractServiceId(id: ServiceIdentifier): string {
     if (typeof id === 'string') {
       return id;
     }
@@ -269,14 +286,14 @@ export class ServiceHandlersTestHarness {
     return serviceIdentifier;
   }
 
-  getOrAddHandler(serviceType: WithUUID<{new (): Service}> | string, subType: string | undefined = undefined,
-    serviceIdentifier: string | undefined = undefined) : ServiceHandlerContainer {
+  getOrAddHandler(serviceType: WithUUID<{ new(): Service }> | string, subType: string | undefined = undefined,
+    serviceIdentifier: string | undefined = undefined): ServiceHandlerContainer {
     // Determine identifier
     const serviceUuid = (typeof serviceType === 'string') ? serviceType : serviceType.UUID;
     if (serviceIdentifier === undefined) {
       serviceIdentifier = this.generateServiceId(serviceType, subType);
     }
-    
+
     // Check if handler exists
     const existingHandler = this.handlers.get(serviceIdentifier);
     if (existingHandler !== undefined) {
@@ -288,12 +305,12 @@ export class ServiceHandlersTestHarness {
     return newHandler;
   }
 
-  callCreators(exposes : ExposesEntry[]) {
+  callCreators(exposes: ExposesEntry[]) {
     BasicServiceCreatorManager.getInstance().createHomeKitEntitiesFromExposes(this.accessoryMock, exposes);
   }
 
   prepareCreationMocks(): void {
-    for(const data of this.handlers.values()) {
+    for (const data of this.handlers.values()) {
       for (const mapping of data.characteristics.values()) {
         if (mapping.doExpectCheckPropertyExcluded) {
           when(this.accessoryMock.isPropertyExcluded)
@@ -304,11 +321,14 @@ export class ServiceHandlersTestHarness {
           when(data.serviceMock.getCharacteristic)
             .calledWith(mapping.characteristic)
             .mockReturnValue(undefined);
-      
+
           when(data.serviceMock.addCharacteristic)
             .calledWith(mapping.characteristic)
-            .mockReturnValue(mapping.mock);
-    
+            .mockImplementation((characteristic: Characteristic) => {
+              data.addedCharacteristicUUIDs.add(characteristic.UUID);
+              return mapping.mock;
+            });
+
           if (mapping.mock !== undefined) {
             mapping.mock.on.mockReturnThis();
             mapping.mock.setProps.mockReturnThis();
@@ -320,7 +340,7 @@ export class ServiceHandlersTestHarness {
 
   checkExpectedGetableKeys(keys: string[]) {
     // Gather all keys
-    const actualKeys = [...this.handlers.values()].map(h => h.serviceHandler?.getableKeys ?? []).reduce((a, b)=> {
+    const actualKeys = [...this.handlers.values()].map(h => h.serviceHandler?.getableKeys ?? []).reduce((a, b) => {
       return a.concat(b);
     }, []);
 
@@ -332,7 +352,10 @@ export class ServiceHandlersTestHarness {
     let expectedCallsToGetOrAddService = 0;
     let expectedCallsToRegisterServiceHandler = 0;
 
-    for(const handler of this.handlers.values()) {
+    expect(this.accessoryMock.configureController)
+      .toBeCalledTimes(this.numberOfExpectedControllers);
+
+    for (const handler of this.handlers.values()) {
       expect(this.accessoryMock.isServiceHandlerIdKnown)
         .toHaveBeenCalledWith(handler.serviceIdentifier);
 
@@ -344,10 +367,10 @@ export class ServiceHandlersTestHarness {
           characteristicCount += 1;
         }
       }
-    
+
       expect(handler.serviceMock.getCharacteristic)
         .toBeCalledTimes(characteristicCount);
-    
+
       expect(handler.serviceMock.addCharacteristic)
         .toBeCalledTimes(characteristicCount);
 
@@ -359,14 +382,14 @@ export class ServiceHandlersTestHarness {
           expect(this.accessoryMock.isPropertyExcluded)
             .toBeCalledWith(mapping.topLevelProperty);
         }
-  
+
         if (mapping.characteristic !== undefined) {
           expect(handler.serviceMock.getCharacteristic)
             .toBeCalledWith(mapping.characteristic);
-      
+
           expect(handler.serviceMock.addCharacteristic)
             .toBeCalledWith(mapping.characteristic);
-      
+
           if (mapping.doExpectSet && mapping.mock !== undefined) {
             expect(mapping.mock.on)
               .toHaveBeenCalledTimes(1)
@@ -386,15 +409,15 @@ export class ServiceHandlersTestHarness {
   }
 
   checkSingleUpdateState(json: string, serviceIdentifier: ServiceIdentifier,
-    characteristic: WithUUID<{new (): Characteristic}> | string, value: CharacteristicValue, checkOtherHandlersIgnoreThisUpdate = true) {
-    const map = new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>();
+    characteristic: WithUUID<{ new(): Characteristic }> | string, value: CharacteristicValue, checkOtherHandlersIgnoreThisUpdate = true) {
+    const map = new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>();
     map.set(characteristic, value);
     this.checkUpdateState(json, serviceIdentifier, map, checkOtherHandlersIgnoreThisUpdate);
   }
 
   checkUpdateStateIsIgnored(json: string) {
     const state = JSON.parse(json);
-    const noUpdates = new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>();
+    const noUpdates = new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>();
     for (const handler of this.handlers.values()) {
       expect(handler?.serviceHandler).toBeDefined();
       handler?.serviceHandler?.updateState(state);
@@ -403,7 +426,7 @@ export class ServiceHandlersTestHarness {
   }
 
   checkUpdateState(json: string, serviceIdentifier: ServiceIdentifier,
-    expectedUpdates: Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>, checkOtherHandlersIgnoreThisUpdate = true) {
+    expectedUpdates: Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>, checkOtherHandlersIgnoreThisUpdate = true) {
     const state = JSON.parse(json);
 
     const serviceId = this.extractServiceId(serviceIdentifier);
@@ -416,7 +439,7 @@ export class ServiceHandlersTestHarness {
     handler?.checkCharacteristicUpdates(expectedUpdates);
 
     if (checkOtherHandlersIgnoreThisUpdate) {
-      const noUpdates = new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>();
+      const noUpdates = new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>();
       for (const [id, otherHandler] of this.handlers) {
         if (id === serviceId) {
           // already verified

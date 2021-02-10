@@ -20,6 +20,10 @@ the Hive HV-GSCXZB279_HV-GSCXZB229
   * On
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Hive](../index.md#hive)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/HV-GSCXZB279_HV-GSCXZB229.html)

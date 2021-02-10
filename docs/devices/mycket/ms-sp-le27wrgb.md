@@ -22,6 +22,10 @@ the Mycket MS-SP-LE27WRGB
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Mycket](../index.md#mycket)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/MS-SP-LE27WRGB.html)

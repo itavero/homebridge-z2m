@@ -20,6 +20,10 @@ the iCasa ICZB-B1FC60/B3FC64/B2FC95/B2FC125
   * On
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from iCasa](../index.md#icasa)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/ICZB-B1FC60_B3FC64_B2FC95_B2FC125.html)

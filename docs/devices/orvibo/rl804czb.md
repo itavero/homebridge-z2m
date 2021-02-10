@@ -22,6 +22,10 @@ the Orvibo RL804CZB
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Orvibo](../index.md#orvibo)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/RL804CZB.html)

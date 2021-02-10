@@ -22,6 +22,10 @@ the Smart Home Pty HGZB-07A
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Smart Home Pty](../index.md#smart_home_pty)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/HGZB-07A.html)

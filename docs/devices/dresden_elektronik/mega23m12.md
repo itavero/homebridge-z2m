@@ -22,6 +22,10 @@ the Dresden Elektronik Mega23M12
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Dresden Elektronik](../index.md#dresden_elektronik)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/Mega23M12.html)

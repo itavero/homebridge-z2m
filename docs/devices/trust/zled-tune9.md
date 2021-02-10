@@ -20,6 +20,10 @@ the Trust ZLED-TUNE9
   * On
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Trust](../index.md#trust)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/ZLED-TUNE9.html)

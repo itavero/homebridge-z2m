@@ -22,6 +22,10 @@ the Zemismart LXZB-12A
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Zemismart](../index.md#zemismart)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/LXZB-12A.html)

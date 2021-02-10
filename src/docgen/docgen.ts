@@ -85,6 +85,17 @@ const serviceNameMapping = new Map<string, ServiceInfo>([
   ['E863F00A-079E-48FF-8F27-9C2605A29F52', new ServiceInfo('Air Pressure Sensor', 'sensors.md')],
 ]);
 
+// Controllers
+class ControllerMapping {
+  constructor(
+    readonly displayName: string,
+    readonly page: string,
+  ) { }
+}
+const controllerMapping = new Map<string, ControllerMapping>([
+  ['AdaptiveLightingController', new ControllerMapping('Adaptive Lighting', 'light.md')],
+]);
+
 
 const servicesIgnoredForDeterminingSupport = new Set<string>([
   hapNodeJs.Service.BatteryService.UUID,
@@ -148,7 +159,7 @@ function serviceInfoToMarkdown(info: Map<string, string[]>): string {
   return result;
 }
 
-function generateDevicePage(basePath: string, device: any, services: Map<string, string[]>) {
+function generateDevicePage(basePath: string, device: any, services: Map<string, string[]>, controllers: string[]) {
   if (device.whiteLabelOf) {
     // Don't generate device page for white label products.
     return;
@@ -210,7 +221,18 @@ ${device.whiteLabel ? 'these devices' : `the ${device.vendor} ${device.model}`}
 ${serviceInfoToMarkdown(services)}
 
 `;
-
+    if (controllers.length > 0) {
+      devicePage += '## Other features\n';
+      for (const controller of controllers) {
+        const mapping = controllerMapping.get(controller);
+        if (mapping === undefined) {
+          devicePage += `* ${controller}\n`;
+        } else {
+          devicePage += `* [${mapping.displayName}](../../${mapping.page})\n`;
+        }
+      }
+      devicePage += '\n\n';
+    }
   }
 
   // Add related links
@@ -240,18 +262,20 @@ for (const device of allDevices) {
 }
 
 // Check services for all non white label devices
-function checkServicesAndCharacteristics(device: any): Map<string, string[]> {
+function checkServicesAndCharacteristics(device: any): DocsAccessory {
   const exposes = device.exposes.map(e => e as ExposesEntry);
   const accessory = new DocsAccessory(`${device.vendor} ${device.model}`);
   BasicServiceCreatorManager.getInstance().createHomeKitEntitiesFromExposes(accessory, exposes);
-  return accessory.getServicesAndCharacteristics();
+  return accessory;
 }
 
 allDevices.forEach(d => {
   try {
     if (d.whiteLabelOf === undefined) {
-      const services = checkServicesAndCharacteristics(d);
-      generateDevicePage(base, d, services);
+      const accessory = checkServicesAndCharacteristics(d);
+      const services = accessory.getServicesAndCharacteristics();
+      const controllers = accessory.getControllerNames();
+      generateDevicePage(base, d, services, controllers);
     }
   } catch (Error) {
     console.log(`Problem generating device page for ${d.vendor} ${d.model}: ${Error}`);

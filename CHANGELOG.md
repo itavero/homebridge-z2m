@@ -8,6 +8,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Added
 
 - Default device options can now be set using the `defaults` key in the plugin configuration.
+- **Adaptive Lighting** is now available for all lights that expose at least a brightness feature and a color temperature feature, on Homebridge v1.3.0 and newer.
+  This feature is still considered **EXPERIMENTAL** and can probably be improved up on in several ways. Please leave your feedback on GitHub in issue [#30](https://github.com/itavero/homebridge-z2m/issues/30).
 
 ## [1.1.3] - 2021-03-08
 ### Fixed

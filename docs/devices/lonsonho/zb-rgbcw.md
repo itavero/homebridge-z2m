@@ -22,6 +22,10 @@ the Lonsonho ZB-RGBCW
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Lonsonho](../index.md#lonsonho)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/ZB-RGBCW.html)

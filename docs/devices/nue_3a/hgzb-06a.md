@@ -22,6 +22,10 @@ the Nue / 3A HGZB-06A
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Nue / 3A](../index.md#nue_3a)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/HGZB-06A.html)

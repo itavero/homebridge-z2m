@@ -22,6 +22,10 @@ the Ajax Online Aj_Zigbee_Led_Strip
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Ajax Online](../index.md#ajax_online)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/Aj_Zigbee_Led_Strip.html)

@@ -22,6 +22,10 @@ the Ajax Online AJ_ZB_GU10
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Ajax Online](../index.md#ajax_online)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/AJ_ZB_GU10.html)

@@ -1,5 +1,11 @@
-import { Service } from 'homebridge';
-import { BasicAccessory, BasicLogger, ServiceHandler } from '../converters/interfaces';
+import { Controller, ControllerServiceMap, Service } from 'homebridge';
+import { BasicAccessory, BasicLogger, BasicPlatform, ServiceHandler } from '../converters/interfaces';
+
+class DocsPlatform implements BasicPlatform {
+  isHomebridgeServerVersionGreaterOrEqualTo(version: string): boolean {
+    return version.length > 0;
+  }
+}
 
 export class DocsAccessory implements BasicAccessory {
    readonly log: BasicLogger = <BasicLogger><unknown>{
@@ -19,9 +25,19 @@ export class DocsAccessory implements BasicAccessory {
 
    private readonly services : Service[] = [];
    private readonly handlerIds = new Set<string>();
+   private readonly controllers = new Set<string>();
+   platform = new DocsPlatform();
 
    constructor(
       readonly displayName: string){}
+      
+   configureController(controller: Controller<ControllerServiceMap>): void {
+     this.controllers.add(controller.constructor.name);
+   }
+
+   getControllerNames() : string[] {
+     return [...this.controllers].sort();
+   }
 
    getServicesAndCharacteristics() : Map<string, string[]> {
      const result = new Map<string, string[]>();

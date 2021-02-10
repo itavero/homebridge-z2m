@@ -1,4 +1,4 @@
-import { PlatformAccessory, Service } from 'homebridge';
+import { Controller, PlatformAccessory, Service } from 'homebridge';
 import { Zigbee2mqttPlatform } from './platform';
 import { ExtendedTimer } from './timer';
 import { hap } from './hap';
@@ -28,7 +28,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   constructor(
-    private readonly platform: Zigbee2mqttPlatform,
+    public readonly platform: Zigbee2mqttPlatform,
     public readonly accessory: PlatformAccessory,
     private readonly additionalConfig: BaseDeviceConfiguration,
     serviceCreatorManager?: ServiceCreatorManager,
@@ -69,6 +69,10 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     } else {
       this.serviceHandlers.set(key, handler);
     }
+  }
+
+  configureController(controller: Controller) {
+    this.accessory.configureController(controller);
   }
 
   isServiceHandlerIdKnown(identifier: string): boolean {

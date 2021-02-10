@@ -20,6 +20,10 @@ the GMY Smart Bulb B07KG5KF5R
   * On
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from GMY Smart Bulb](../index.md#gmy_smart_bulb)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/B07KG5KF5R.html)

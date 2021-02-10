@@ -20,6 +20,10 @@ the Leedarson 6xy-M350ST-W1Z
   * On
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Leedarson](../index.md#leedarson)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/6xy-M350ST-W1Z.html)

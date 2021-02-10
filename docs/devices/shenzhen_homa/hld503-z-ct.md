@@ -20,6 +20,10 @@ the Shenzhen Homa HLD503-Z-CT
   * On
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Shenzhen Homa](../index.md#shenzhen_homa)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/HLD503-Z-CT.html)

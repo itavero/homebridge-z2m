@@ -22,6 +22,10 @@ the ADEO 9CZA-M350ST-Q1A
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from ADEO](../index.md#adeo)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/9CZA-M350ST-Q1A.html)

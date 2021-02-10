@@ -22,6 +22,10 @@ the Sengled E1F-N5E
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Sengled](../index.md#sengled)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/E1F-N5E.html)

@@ -22,6 +22,10 @@ the Gledopto GL-MC-001P
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Gledopto](../index.md#gledopto)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/GL-MC-001P.html)

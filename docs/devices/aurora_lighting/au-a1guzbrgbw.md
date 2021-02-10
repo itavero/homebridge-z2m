@@ -22,6 +22,10 @@ the Aurora Lighting AU-A1GUZBRGBW
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Aurora Lighting](../index.md#aurora_lighting)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/AU-A1GUZBRGBW.html)

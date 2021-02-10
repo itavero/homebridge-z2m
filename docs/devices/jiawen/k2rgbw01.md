@@ -22,6 +22,10 @@ the JIAWEN K2RGBW01
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from JIAWEN](../index.md#jiawen)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/K2RGBW01.html)

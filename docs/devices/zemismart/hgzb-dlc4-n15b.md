@@ -22,6 +22,10 @@ the Zemismart HGZB-DLC4-N15B
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Zemismart](../index.md#zemismart)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/HGZB-DLC4-N15B.html)

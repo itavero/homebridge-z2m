@@ -1,10 +1,14 @@
-import { Service } from 'homebridge';
+import { Controller, Service } from 'homebridge';
 import { ExposesEntry } from '../z2mModels';
 
 export interface BasicAccessory {
     log: BasicLogger;
 
-    displayName: string;
+    platform: BasicPlatform;
+
+    readonly displayName: string;
+
+    configureController(controller: Controller): void;
 
     getDefaultServiceDisplayName(subType: string | undefined): string;
 
@@ -21,6 +25,10 @@ export interface BasicAccessory {
     registerServiceHandler(handler: ServiceHandler): void;
 
     isServiceHandlerIdKnown(identifier: string): boolean;
+}
+
+export interface BasicPlatform {
+    isHomebridgeServerVersionGreaterOrEqualTo(version: string): boolean;
 }
 
 export interface ServiceHandler {

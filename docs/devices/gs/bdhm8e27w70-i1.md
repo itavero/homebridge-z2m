@@ -20,6 +20,10 @@ the GS BDHM8E27W70-I1
   * On
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from GS](../index.md#gs)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/BDHM8E27W70-I1.html)

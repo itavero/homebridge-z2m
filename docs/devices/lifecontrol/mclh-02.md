@@ -22,6 +22,10 @@ the LifeControl MCLH-02
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from LifeControl](../index.md#lifecontrol)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/MCLH-02.html)

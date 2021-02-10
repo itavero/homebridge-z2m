@@ -22,6 +22,10 @@ the Zipato rgbw2.zbee27
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from Zipato](../index.md#zipato)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/rgbw2.zbee27.html)

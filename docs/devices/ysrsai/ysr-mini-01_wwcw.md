@@ -22,6 +22,10 @@ the YSRSAI YSR-MINI-01_wwcw
   * Saturation
 
 
+## Other features
+* [Adaptive Lighting](../../light.md)
+
+
 # Related
 * [Other devices from YSRSAI](../index.md#ysrsai)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/YSR-MINI-01_wwcw.html)

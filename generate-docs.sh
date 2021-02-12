@@ -7,10 +7,12 @@ HERDSMAN_VERSION=$(npm view "zigbee2mqtt@$Z2M_VERSION" dependencies.zigbee-herds
 
 # Write version to file so they can be mentioned in the documentation
 DOC_VERSIONS_FILE=src/docgen/versions.ts
-echo "// This file was generated using generate-docs.sh" > $DOC_VERSIONS_FILE
-echo "const version_zigbee2mqtt = '$Z2M_VERSION';" >> $DOC_VERSIONS_FILE
-echo "const version_herdsman_converters = '$HERDSMAN_VERSION';" >> $DOC_VERSIONS_FILE
-echo "export { version_zigbee2mqtt, version_herdsman_converters };" >> $DOC_VERSIONS_FILE
+{
+   echo "// GENERATED FILE: DO NOT EDIT MANUALLY!" 
+   echo "const version_zigbee2mqtt = '$Z2M_VERSION';"
+   echo "const version_herdsman_converters = '$HERDSMAN_VERSION';"
+   echo "export { version_zigbee2mqtt, version_herdsman_converters };"
+} > $DOC_VERSIONS_FILE
 
 # Install the new version
 npm i --no-save zigbee-herdsman-converters@${HERDSMAN_VERSION}

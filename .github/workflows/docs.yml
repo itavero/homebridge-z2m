@@ -45,7 +45,7 @@ jobs:
 
       - name: Generate documentation
         if: ${{ steps.version.outputs.updated == 1 }}
-        run: ts-node src/docgen/docgen.ts
+        run: node_modules/.bin/ts-node src/docgen/docgen.ts
 
       - name: Open/update PR
         if: ${{ steps.changed.outputs.changed == 1 }}

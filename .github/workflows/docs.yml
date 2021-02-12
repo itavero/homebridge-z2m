@@ -1,0 +1,68 @@
+name: Update generated documentation
+
+on:
+  schedule:
+    - cron: '0 16 * * * *'
+  workflow_dispatch:
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    env:
+      versions_file: src/docgen/versions.ts
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Determine Zigbee2MQTT version
+        id: version
+        run: |
+          echo "::set-output name=updated::0"
+          Z2M_VERSION=$(npm view zigbee2mqtt@latest version)
+          echo "::set-output name=z2m::$Z2M_VERSION"
+          HERDSMAN_VERSION=$(npm view "zigbee2mqtt@$Z2M_VERSION" dependencies.zigbee-herdsman-converters)
+          echo "::set-output name=herdsman::$HERDSMAN_VERSION"
+          {
+            echo "// GENERATED FILE: DO NOT EDIT MANUALLY!" 
+            echo "const version_zigbee2mqtt = '$Z2M_VERSION';"
+            echo "const version_herdsman_converters = '$HERDSMAN_VERSION';"
+            echo "export { version_zigbee2mqtt, version_herdsman_converters };"
+          } > ${{ env.versions_file }}
+          git diff --exit-code -s ${{ env.versions_file }} || echo "::set-output name=updated::1"
+
+      - name: Install regular dependencies
+        if: ${{ steps.version.outputs.updated == 1 }}
+        run: npm ci
+
+      - name: Install zigbee-herdsman-converters
+        if: ${{ steps.version.outputs.updated == 1 }}
+        run: npm i --no-save zigbee-herdsman-converters@${{ steps.version.outputs.herdsman }}
+
+      - name: Generate documentation
+        if: ${{ steps.version.outputs.updated == 1 }}
+        run: ts-node src/docgen/docgen.ts
+
+      - name: Open/update PR
+        if: ${{ steps.changed.outputs.changed == 1 }}
+        uses: peter-evans/create-pull-request@v3
+        with:
+          assignees: itavero
+          author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          commit-message: "Docs generated based on zigbee-herdsman-converters v${{ steps.version.outputs.herdsman }}"
+          branch: update-device-docs
+          delete-branch: true
+          title: "Update device documentation (zigbee-herdsman-converters ${{ steps.version.outputs.herdsman }})"
+          body: |-
+            Documentation has been automatically regenerated, because a new version of :bee: Zigbee2MQTT and/or zigbee-herdsman-converters
+            was detected.
+            
+            Based on:
+            - Zigbee2MQTT **v${{ steps.version.outputs.z2m }}**
+            - zigbee-herdsman-converters **v${{ steps.version.outputs.herdsman }}**
+            
+            :robot: *I am a bot. This action was performed automatically.*

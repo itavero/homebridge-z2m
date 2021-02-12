@@ -48,7 +48,7 @@ jobs:
         run: node_modules/.bin/ts-node src/docgen/docgen.ts
 
       - name: Open/update PR
-        if: ${{ steps.changed.outputs.changed == 1 }}
+        if: ${{ steps.version.outputs.updated == 1 }}
         uses: peter-evans/create-pull-request@v3
         with:
           assignees: itavero

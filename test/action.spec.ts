@@ -10,6 +10,199 @@ describe('Action', () => {
     setHap(hapNodeJs);
   });
 
+  describe('Xiaomi WXKG07LM', () => {
+    const deviceModelJson = `{
+      "definition": {
+        "description": "Aqara D1 double key wireless wall switch",
+        "exposes": [
+          {
+            "access": 1,
+            "description": "Remaining battery in %",
+            "name": "battery",
+            "property": "battery",
+            "type": "numeric",
+            "unit": "%",
+            "value_max": 100,
+            "value_min": 0
+          },
+          {
+            "access": 1,
+            "description": "Triggered action (e.g. a button click)",
+            "name": "action",
+            "property": "action",
+            "type": "enum",
+            "values": [
+              "left",
+              "right",
+              "both",
+              "left_double",
+              "right_double",
+              "both_double",
+              "left_long",
+              "right_long",
+              "both_long"
+            ]
+          },
+          {
+            "access": 1,
+            "description": "Link quality (signal strength)",
+            "name": "linkquality",
+            "property": "linkquality",
+            "type": "numeric",
+            "unit": "lqi",
+            "value_max": 255,
+            "value_min": 0
+          }
+        ],
+        "model": "WXKG07LM",
+        "supports_ota": false,
+        "vendor": "Xiaomi"
+      },
+      "endpoints": {
+        "1": {
+          "bindings": [],
+          "clusters": {
+            "input": [
+              "genBasic",
+              "genIdentify",
+              "genOta",
+              "genMultistateInput"
+            ],
+            "output": [
+              "genBasic",
+              "genGroups",
+              "genIdentify",
+              "genScenes",
+              "genOta",
+              "genMultistateInput"
+            ]
+          },
+          "configured_reportings": []
+        },
+        "2": {
+          "bindings": [],
+          "clusters": {
+            "input": [],
+            "output": []
+          },
+          "configured_reportings": []
+        },
+        "3": {
+          "bindings": [],
+          "clusters": {
+            "input": [],
+            "output": []
+          },
+          "configured_reportings": []
+        }
+      },
+      "friendly_name": "kitchen double rocker",
+      "ieee_address": "0x00158d000651a32d",
+      "interview_completed": false,
+      "interviewing": false,
+      "model_id": "lumi.remote.b286acn02",
+      "network_address": 64135,
+      "power_source": "Battery",
+      "supported": true,
+      "type": "EndDevice"
+    }`;
+
+    // Shared "state"
+    const actionProperty = 'action';
+    const serviceLabelCharacteristic = 'label';
+    let serviceIdLeft = '';
+    let serviceIdRight = '';
+    let serviceIdBoth = '';
+    let deviceExposes : ExposesEntry[] = [];
+    let harness : ServiceHandlersTestHarness;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Test JSON Device List entry
+        const device = testJsonDeviceListEntry(deviceModelJson);
+        deviceExposes = device?.definition?.exposes ?? [];
+        expect(deviceExposes?.length).toBeGreaterThan(0);
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Expect 3 services (one for each value)
+        serviceIdLeft = `${hap.Service.StatelessProgrammableSwitch.UUID}#left`;
+        const leftService = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'left', serviceIdLeft)
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+
+        serviceIdRight = `${hap.Service.StatelessProgrammableSwitch.UUID}#right`;
+        const rightService = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'right', serviceIdRight)
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty, false)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+
+        serviceIdBoth = `${hap.Service.StatelessProgrammableSwitch.UUID}#both`;
+        const bothService = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'both', serviceIdBoth)
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty, false)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+
+        newHarness.prepareCreationMocks();
+        
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkExpectedGetableKeys([]);
+
+        // Expect the correct event types to be enabled
+        const expectedCharacteristicProps = {
+          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS, 
+          maxValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS, 
+          validValues: [
+            hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+            hap.Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS,
+            hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS,
+          ],
+        };
+        leftService.checkCharacteristicPropertiesHaveBeenSet(actionProperty, expectedCharacteristicProps);
+        rightService.checkCharacteristicPropertiesHaveBeenSet(actionProperty, expectedCharacteristicProps);
+        bothService.checkCharacteristicPropertiesHaveBeenSet(actionProperty, expectedCharacteristicProps);
+
+        // Expect the correct service label indexes to be set
+        bothService.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 1);
+        leftService.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 2);
+        rightService.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 3);
+          
+        // Store harness for future use
+        harness = newHarness;
+      }
+      harness?.clearMocks();
+    });
+
+    afterEach(() => {
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
+    });
+
+    test('Status update is handled: Left single', () => {
+      expect(harness).toBeDefined();
+      if (harness !== undefined) {
+        harness.checkSingleUpdateState('{"action":"left"}', serviceIdLeft,
+          hap.Characteristic.ProgrammableSwitchEvent, hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS);
+      }
+    });
+
+    test('Status update is handled: Right double', () => {
+      expect(harness).toBeDefined();
+      if (harness !== undefined) {
+        harness.checkSingleUpdateState('{"action":"right_double"}', serviceIdRight,
+          hap.Characteristic.ProgrammableSwitchEvent, hap.Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS);
+      }
+    });
+
+    test('Status update is handled: Both long', () => {
+      expect(harness).toBeDefined();
+      if (harness !== undefined) {
+        harness.checkSingleUpdateState('{"action":"both_long"}', serviceIdBoth,
+          hap.Characteristic.ProgrammableSwitchEvent, hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS);
+      }
+    });
+  });
+
   describe('IKEA TRADFRI open/close remote', () => {
     const deviceModelJson = `{
         "date_code": "20190311",

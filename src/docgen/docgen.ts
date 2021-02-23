@@ -70,7 +70,7 @@ const serviceNameMapping = new Map<string, ServiceInfo>([
   addServiceMapping(hapNodeJs.Service.Lightbulb, 'light.md'),
   addServiceMapping(hapNodeJs.Service.StatelessProgrammableSwitch, 'action.md'),
   addServiceMapping(hapNodeJs.Service.WindowCovering, 'cover.md'),
-  addServiceMapping(hapNodeJs.Service.BatteryService, 'battery.md'),
+  addServiceMapping(hapNodeJs.Service.Battery, 'battery.md'),
   addServiceMapping(hapNodeJs.Service.LockMechanism, 'lock.md'),
   addServiceMapping(hapNodeJs.Service.Switch, 'switch.md'),
   addServiceMapping(hapNodeJs.Service.Thermostat, 'climate.md'),

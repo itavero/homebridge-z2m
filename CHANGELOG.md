@@ -5,6 +5,9 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Changed
+
+- Use `Service.Battery` instead of `Service.BatteryService` which is deprecated in Homebridge 1.3.0. This change will require users to have a recent version of Homebridge installed.
 
 ## [1.1.1] - 2021-02-09
 ### Fixed

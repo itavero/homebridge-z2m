@@ -368,7 +368,7 @@ export class ServiceHandlersTestHarness {
               .toHaveBeenCalledWith(CharacteristicEventTypes.SET, expect.anything());
 
             // Store set callback for future tests
-            mapping.setFunction = mapping.mock.on.mock.calls[0][1] as HomebridgeCharacteristicSetCallback;
+            mapping.setFunction = (mapping.mock.on.mock.calls[0][1] as unknown) as HomebridgeCharacteristicSetCallback;
           }
         }
       }

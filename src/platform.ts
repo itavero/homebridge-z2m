@@ -158,6 +158,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private async handleDeviceUpdate(topic: string, statePayload: string) {
+    if (statePayload === '') {
+      this.log.debug('Ignore update, because payload is empty.', topic);
+      return;
+    }
+
     const accessory = this.accessories.find((acc) => acc.matchesIdentifier(topic));
     if (accessory) {
       try {
@@ -166,6 +171,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       } catch (Error) {
         this.log.error('Failed to process status update.');
         this.log.error(Error);
+        this.log.info(`Payload: ${statePayload}`);
       }
     } else {
       this.log.debug(`Unhandled message on topic: ${topic}`);

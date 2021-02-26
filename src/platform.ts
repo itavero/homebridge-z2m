@@ -171,7 +171,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       } catch (Error) {
         this.log.error('Failed to process status update.');
         this.log.error(Error);
-        this.log.info(`Payload: ${statePayload}`);
+        this.log.error(`Payload: ${statePayload}`);
       }
     } else {
       this.log.debug(`Unhandled message on topic: ${topic}`);

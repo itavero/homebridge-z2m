@@ -67,25 +67,14 @@ jobs:
             coverage/clover.xml
             reports/tests.xml
 
-  publish:
-    name: Publish results
+  publish_push:
+    name: Publish results (others)
     runs-on: ubuntu-latest
     needs: build
-    if: |
-      github.event_name == 'push' ||
-      (github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name == github.repository) ||
-      (github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name, 'run-checks'))
+    if: github.event_name != 'pull_request_target'
     steps:
-      - name: Checkout PR
+      - name: Checkout
         uses: actions/checkout@v2
-        if: github.event_name == 'pull_request_target'
-        with:
-          fetch-depth: 0
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
-
-      - name: Checkout (others)
-        uses: actions/checkout@v2
-        if: github.event_name != 'pull_request_target'
         with:
           fetch-depth: 0
 
@@ -94,16 +83,57 @@ jobs:
         with:
           name: reports
 
-      - name: Run SonarCloud
+      - name: SonarCloud
         uses: SonarSource/sonarcloud-github-action@v1.5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Publish Code Coverage
+      - name: Publish Code Coverage (other)
         uses: codecov/codecov-action@v1
         with:
           files: ./coverage/clover.xml
           flags: tests
-          name: codecov-umbrella
+          fail_ci_if_error: true
+
+  publish_pr:
+    name: Publish results (PR)
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request_target' &&
+      ( github.event.pull_request.head.repo.full_name == github.repository || contains(github.event.pull_request.labels.*.name, 'run-checks') )
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+
+      - name: Get reports
+        uses: actions/download-artifact@v2
+        with:
+          name: reports
+
+      - name: SonarCloud
+        uses: SonarSource/sonarcloud-github-action@v1.5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.pullrequest.provider=github
+            -Dsonar.pullrequest.github.repository=${{ github.repository }}
+            -Dsonar.pullrequest.github.token.secured=${{ secrets.GITHUB_TOKEN }}
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
+            -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+
+      - name: Publish Code Coverage
+        uses: codecov/codecov-action@v1
+        if: github.event_name == 'pull_request_target'
+        with:
+          override_pr: ${{ github.event.number }}
+          override_sha: ${{ github.event.pull_request.head.sha }}
+          files: ./coverage/clover.xml
+          flags: tests
           fail_ci_if_error: true

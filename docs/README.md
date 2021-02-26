@@ -10,7 +10,7 @@
 
 This is the documentation website of the Homebridge plugin that integrates [Zigbee2MQTT](https://www.zigbee2mqtt.io) in your home automation setup.
 
-* [Installation](install.md)
+* [Getting Started](install.md) (how to install the plugin)
 * [Configuration](config.md)
 * [How it works](howitworks.md)
 * [Service Handlers](converters.md)

@@ -5,6 +5,10 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Changed
+
+- Improved logging when handling a (potential) device update fails. (PR [#78](https://github.com/itavero/homebridge-z2m/pull/78))
+- Ignore empty device updates. (PR [#78](https://github.com/itavero/homebridge-z2m/pull/78))
 
 ## [1.1.1] - 2021-02-09
 ### Fixed

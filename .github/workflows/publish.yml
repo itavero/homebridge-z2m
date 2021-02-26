@@ -15,7 +15,8 @@ jobs:
       - name: Full Checkout
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
+          repository: ${{github.event.workflow_run.head_repository.full_name}}
+          ref: ${{ github.event.workflow_run.head_ref }}
           fetch-depth: 0
 
       - name: Fetch reports

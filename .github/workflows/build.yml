@@ -32,13 +32,13 @@ jobs:
     steps:
       - name: Checkout PR
         uses: actions/checkout@v2
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         with:
           ref: refs/pull/${{ github.event.pull_request.number }}/merge
 
       - name: Checkout (others)
         uses: actions/checkout@v2
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request_target'
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -73,19 +73,19 @@ jobs:
     needs: build
     if: |
       github.event_name == 'push' ||
-      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'run-checks'))
+      (github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name, 'run-checks'))
     steps:
       - name: Checkout PR
         uses: actions/checkout@v2
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         with:
           fetch-depth: 0
           ref: refs/pull/${{ github.event.pull_request.number }}/merge
 
       - name: Checkout (others)
         uses: actions/checkout@v2
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request_target'
         with:
           fetch-depth: 0
 

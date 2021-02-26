@@ -28,16 +28,8 @@ jobs:
         node-version: [10.x, 12.x, 13.x, 14.x]
 
     steps:
-      - name: Shallow Checkout
+      - name: Checkout
         uses: actions/checkout@v2
-        if: ${{ matrix.node-version != env.node-version-analysis }}
-
-      - name: Full Checkout
-        uses: actions/checkout@v2
-        # Do full check out when SonarCloud action is performed later on
-        if: ${{ matrix.node-version == env.node-version-analysis }}
-        with:
-          fetch-depth: 0
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -55,18 +47,13 @@ jobs:
       - name: Test the project
         run: npm run test
 
-      - name: Run SonarCloud
-        uses: sonarsource/sonarcloud-github-action@master
+      - name: Archive reports
         if: ${{ matrix.node-version == env.node-version-analysis }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Publish Code Coverage
-        uses: codecov/codecov-action@v1
-        if: ${{ matrix.node-version == env.node-version-analysis }}
+        uses: actions/upload-artifact@v2
         with:
-          files: ./coverage/clover.xml
-          flags: tests
-          name: codecov-umbrella
-          fail_ci_if_error: true
+          name: reports
+          retention-days: 7
+          path: |
+            coverage/lcov.info
+            coverage/clover.xml
+            reports/tests.xml

@@ -1,35 +1,44 @@
-name: Test and Build
+name: Verification
 
 on:
   push:
-    branches:    
+    branches:
       - master
       - main
       - "release?/**"
-    tags:        
+    tags:
       - v[0-9]+.[0-9]+.[0-9]+*
     paths-ignore:
       - "docs/**"
       - "**.md"
-  pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "**.md"
-    types: [opened, synchronize, reopened]
+
+  pull_request_target:
+    paths:
+      - "**/*.ts"
+    types: [labeled, opened, synchronize, reopened]
 
 jobs:
   build:
+    name: Tests
     runs-on: ubuntu-latest
     env:
       node-version-analysis: 14.x
+
     strategy:
       matrix:
         # the Node.js versions to build on
         node-version: [10.x, 12.x, 13.x, 14.x]
 
     steps:
-      - name: Checkout
+      - name: Checkout PR
         uses: actions/checkout@v2
+        if: github.event_name == 'pull_request'
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+
+      - name: Checkout (others)
+        uses: actions/checkout@v2
+        if: github.event_name != 'pull_request'
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -57,3 +66,44 @@ jobs:
             coverage/lcov.info
             coverage/clover.xml
             reports/tests.xml
+
+  publish:
+    name: Publish results
+    runs-on: ubuntu-latest
+    needs: build
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'run-checks'))
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v2
+        if: github.event_name == 'pull_request'
+        with:
+          fetch-depth: 0
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+
+      - name: Checkout (others)
+        uses: actions/checkout@v2
+        if: github.event_name != 'pull_request'
+        with:
+          fetch-depth: 0
+
+      - name: Get reports
+        uses: actions/download-artifact@v2
+        with:
+          name: reports
+
+      - name: Run SonarCloud
+        uses: SonarSource/sonarcloud-github-action@v1.5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Publish Code Coverage
+        uses: codecov/codecov-action@v1
+        with:
+          files: ./coverage/clover.xml
+          flags: tests
+          name: codecov-umbrella
+          fail_ci_if_error: true

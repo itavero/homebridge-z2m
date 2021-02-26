@@ -1,0 +1,4 @@
+# PRs that are considered "safe"
+run-checks:
+- any: ['**/*.ts']
+  all: ['!.github/*', '!.github/**', '!*.js*', '!sonar-project.properties', '!.*']

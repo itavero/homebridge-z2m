@@ -16,7 +16,7 @@ the KMPCIL KMPCIL_RES005
 
 * [Air Pressure Sensor](../../sensors.md)
   * Air Pressure
-* [BatteryService](../../battery.md)
+* [Battery](../../battery.md)
   * BatteryLevel
   * ChargingState
   * StatusLowBattery

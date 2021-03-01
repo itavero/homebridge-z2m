@@ -16,7 +16,7 @@ the Xiaomi WSDCGQ11LM
 
 * [Air Pressure Sensor](../../sensors.md)
   * Air Pressure
-* [BatteryService](../../battery.md)
+* [Battery](../../battery.md)
   * BatteryLevel
   * ChargingState
   * StatusLowBattery

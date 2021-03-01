@@ -20,6 +20,14 @@ If it doesn't exist yet, you can [open a new request](https://github.com/itavero
 [
   {
     "type": "numeric",
+    "name": "device_temperature",
+    "property": "device_temperature",
+    "access": 1,
+    "unit": "°C",
+    "description": "Temperature of the device"
+  },
+  {
+    "type": "numeric",
     "name": "linkquality",
     "property": "linkquality",
     "access": 1,

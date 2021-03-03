@@ -165,6 +165,15 @@ class LightHandler implements ServiceHandler {
       && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
     if (this.colorTempExpose !== undefined) {
       const characteristic = getOrAddCharacteristic(service, hap.Characteristic.ColorTemperature);
+      characteristic.setProps({
+        minValue: this.colorTempExpose.value_min,
+        maxValue: this.colorTempExpose.value_max,
+        minStep: 1,
+      });
+
+      // Set default value
+      characteristic.value = this.colorTempExpose.value_min;
+      
       characteristic.on('set', this.handleSetColorTemperature.bind(this));
       this.monitors.push(new PassthroughCharacteristicMonitor(this.colorTempExpose.property, service,
         hap.Characteristic.ColorTemperature));

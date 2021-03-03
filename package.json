@@ -1,7 +1,7 @@
 {
   "displayName": "Homebridge Zigbee2MQTT",
   "name": "homebridge-z2m",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Expose your Zigbee devices to HomeKit with ease, by integrating Zigbee2MQTT with Homebridge.",
   "license": "Apache-2.0",
   "homepage": "https://z2m.dev",

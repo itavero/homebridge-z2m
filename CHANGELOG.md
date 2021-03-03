@@ -5,6 +5,8 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+
+## [1.1.2] - 2021-03-03
 ### Fixed
 
 - Set range for Color Temperature characteristic of Lightbulb to improve control experience. (see [#88](https://github.com/itavero/homebridge-z2m/issues/88))
@@ -189,7 +191,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/itavero/homebridge-z2m/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.4...v1.1.0
 [1.1.0-beta.4]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0-beta.3...v1.1.0-beta.4

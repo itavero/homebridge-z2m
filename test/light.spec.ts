@@ -164,7 +164,7 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
-        newHarness.getOrAddHandler(hap.Service.Lightbulb)
+        const lightbulb = newHarness.getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
           .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
           .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true)
@@ -178,6 +178,13 @@ describe('Light', () => {
         newHarness.checkCreationExpectations();
 
         newHarness.checkExpectedGetableKeys(['state', 'brightness', 'color_temp', 'color']);
+
+        // Expect range of color temperature to be configured
+        lightbulb.checkCharacteristicPropertiesHaveBeenSet('color_temp', {
+          minValue: 150, 
+          maxValue: 500,
+          minStep: 1,
+        });
         harness = newHarness;
       }
 
@@ -512,7 +519,6 @@ describe('Light', () => {
     });
   });
 
-
   describe('OSRAM Lightify LED CLA60 E27 RGBW', () => {
     const deviceModelJson = `{
       "date_code": "20140331CNWT****",
@@ -771,7 +777,7 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
-        newHarness.getOrAddHandler(hap.Service.Lightbulb)
+        const lightbulb = newHarness.getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
           .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
           .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true)
@@ -785,6 +791,13 @@ describe('Light', () => {
         newHarness.checkCreationExpectations();
 
         newHarness.checkExpectedGetableKeys(['state', 'brightness', 'color_temp', 'color']);
+
+        // Expect range of color temperature to be configured
+        lightbulb.checkCharacteristicPropertiesHaveBeenSet('color_temp', {
+          minValue: 150, 
+          maxValue: 500,
+          minStep: 1,
+        });
         harness = newHarness;
       }
 

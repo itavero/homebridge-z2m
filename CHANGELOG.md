@@ -5,6 +5,10 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Fixed
+
+- Set range for Color Temperature characteristic of Lightbulb to improve control experience. (see [#88](https://github.com/itavero/homebridge-z2m/issues/88))
+
 ### Changed
 
 - Improved logging when handling a (potential) device update fails. (PR [#78](https://github.com/itavero/homebridge-z2m/pull/78))

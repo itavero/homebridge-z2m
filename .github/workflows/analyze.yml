@@ -45,7 +45,6 @@ jobs:
       - name: Add check to PR
         uses: LouisBrunner/checks-action@v1.1.1
         with:
-          name: Analysis
           check_id: analysis
           token: ${{ secrets.GITHUB_TOKEN }}
           repo: ${{ github.repository }}
@@ -109,7 +108,6 @@ jobs:
       - name: Add result of check to PR
         uses: LouisBrunner/checks-action@v1.1.1
         with:
-          name: Analysis
           check_id: analysis
           token: ${{ secrets.GITHUB_TOKEN }}
           repo: ${{ github.repository }}

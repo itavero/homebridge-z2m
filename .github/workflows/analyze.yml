@@ -42,16 +42,6 @@ jobs:
           unzip reports.zip
           for info in pr/* ; do echo ::set-output name=$(basename $info)::$(cat $info); done
 
-      - name: Add check to PR
-        uses: LouisBrunner/checks-action@v1.1.1
-        with:
-          check_id: analysis
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repo: ${{ github.repository }}
-          sha: ${{ steps.pr.outputs.head_sha }}
-          status: in_progress
-          details_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -105,13 +95,16 @@ jobs:
           flags: tests
           fail_ci_if_error: true
 
-      - name: Add result of check to PR
-        uses: LouisBrunner/checks-action@v1.1.1
+      - name: Publish status
+        if: always()
+        uses: actions/github-script@master
         with:
-          check_id: analysis
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repo: ${{ github.repository }}
-          sha: ${{ steps.pr.outputs.head_sha }}
-          status: completed
-          conclusion: ${{ job.status }}
-          details_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          script: |
+            await github.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: "Analysis",
+              head_sha: "${{ steps.pr.outputs.head_sha }}",
+              status: "completed",
+              conclusion: "${{ job.status }}"
+            })

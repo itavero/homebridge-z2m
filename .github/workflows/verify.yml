@@ -1,0 +1,88 @@
+name: Verify
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - "release?/**"
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+*
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Verify
+    runs-on: ubuntu-latest
+    env:
+      node-version-analysis: 14.x
+
+    strategy:
+      matrix:
+        # the Node.js versions to build on
+        node-version: [10.x, 12.x, 13.x, 14.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          CI: true
+
+      - name: Test
+        run: npm run test
+
+      - name: Export PR info
+        if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/number
+          echo ${{ github.event.head.ref }} > ./pr/head_ref
+          echo ${{ github.event.head.sha }} > ./pr/head_sha
+          echo ${{ github.event.base.ref }} > ./pr/base_ref
+
+      - name: Archive reports and info (for PR)
+        if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
+        uses: actions/upload-artifact@v2
+        with:
+          name: reports
+          retention-days: 7
+          path: |
+            pr/
+            coverage/lcov.info
+            coverage/clover.xml
+            reports/tests.xml
+
+      - name: SonarCloud (on push)
+        uses: sonarsource/sonarcloud-github-action@master
+        if: github.event_name == 'push' && matrix.node-version == env.node-version-analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Code Coverage (on push)
+        uses: codecov/codecov-action@v1
+        if: github.event_name == 'push' && matrix.node-version == env.node-version-analysis
+        with:
+          files: ./coverage/clover.xml
+          flags: tests
+          name: codecov-umbrella
+          fail_ci_if_error: true

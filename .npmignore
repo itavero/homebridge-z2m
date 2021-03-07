@@ -145,3 +145,6 @@ docs/
 test/
 dist/docgen/
 jest.config.js
+reports/
+*.properties
+*.yml

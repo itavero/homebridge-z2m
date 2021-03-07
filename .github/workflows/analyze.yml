@@ -95,16 +95,24 @@ jobs:
           flags: tests
           fail_ci_if_error: true
 
-      - name: Publish status
-        if: always()
-        uses: actions/github-script@master
+      - name: Add comment to PR if job fails
+        if: ${{ failure() }}
+        uses: marocchino/sticky-pull-request-comment@v2
         with:
-          script: |
-            await github.checks.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: "Analysis",
-              head_sha: "${{ steps.pr.outputs.head_sha }}",
-              status: "completed",
-              conclusion: "${{ job.status }}"
-            })
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ steps.pr.outputs.number }}
+          recreate: true
+          message: |
+            :x: Failed to run [SonarCloud and/or code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) step.
+
+      - name: Add comment to PR if job succeeds
+        if: ${{ success() }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ steps.pr.outputs.number }}
+          recreate: true
+          message: |
+            :ok: Published [SonarCloud and code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) data.

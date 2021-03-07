@@ -15,7 +15,7 @@ jobs:
       artifact-reports: reports
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     steps:
-      - name: Get artifact
+      - name: Get PR info
         uses: actions/github-script@v3.1.0
         with:
           script: |
@@ -36,7 +36,7 @@ jobs:
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/reports.zip', Buffer.from(download.data));
 
-      - name: Extract artifact
+      - name: Extract PR info
         id: pr
         run: |
           unzip reports.zip
@@ -46,8 +46,34 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          clean: false
           ref: refs/pull/${{ steps.pr.outputs.number }}/merge
+
+      - name: Testing if ZIP still exists
+        run: ls -hal ${{github.workspace}}/*.zip
+
+      - name: Get reports
+        uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            var artifacts = await github.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{github.event.workflow_run.id }},
+            });
+            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "${{env.artifact-reports}}"
+            })[0];
+            var download = await github.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/reports.zip', Buffer.from(download.data));
+
+      - name: Extract reports
+        run: unzip reports.zip
 
       - name: SonarCloud
         uses: SonarSource/sonarcloud-github-action@v1.5

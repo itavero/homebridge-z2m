@@ -1,4 +1,4 @@
-name: Analysis
+name: Analyse PR
 
 on:
   workflow_run:
@@ -15,7 +15,7 @@ jobs:
       artifact-reports: reports
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     steps:
-      - name: Download reports
+      - name: Get artifact
         uses: actions/github-script@v3.1.0
         with:
           script: |
@@ -36,16 +36,17 @@ jobs:
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/reports.zip', Buffer.from(download.data));
 
-      - name: Get PR info
+      - name: Extract artifact
         id: pr
         run: |
           unzip reports.zip
           for info in pr/* ; do echo ::set-output name=$(basename $info)::$(cat $info); done
 
-      - name: Checkout PR
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          clean: false
           ref: refs/pull/${{ steps.pr.outputs.number }}/merge
 
       - name: SonarCloud

@@ -6,11 +6,11 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
+    open-pull-requests-limit: 10
     directory: "/"
     assignees:
       - itavero
     schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "16:30"
+      interval: "daily"
+      time: "17:00"
       timezone: "Europe/Amsterdam"

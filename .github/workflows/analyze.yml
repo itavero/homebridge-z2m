@@ -42,14 +42,22 @@ jobs:
           unzip reports.zip
           for info in pr/* ; do echo ::set-output name=$(basename $info)::$(cat $info); done
 
+      - name: Add check to PR
+        uses: LouisBrunner/checks-action@v1.1.1
+        with:
+          name: Analysis
+          check_id: analysis
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repo: ${{ github.repository }}
+          sha: ${{ steps.pr.outputs.head_sha }}
+          status: in_progress
+          details_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           ref: refs/pull/${{ steps.pr.outputs.number }}/merge
-
-      - name: Testing if ZIP still exists
-        run: ls -hal ${{github.workspace}}/*.zip
 
       - name: Get reports
         uses: actions/github-script@v3.1.0
@@ -97,3 +105,15 @@ jobs:
           files: ./coverage/clover.xml
           flags: tests
           fail_ci_if_error: true
+
+      - name: Add result of check to PR
+        uses: LouisBrunner/checks-action@v1.1.1
+        with:
+          name: Analysis
+          check_id: analysis
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repo: ${{ github.repository }}
+          sha: ${{ steps.pr.outputs.head_sha }}
+          status: completed
+          conclusion: ${{ job.status }}
+          details_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}

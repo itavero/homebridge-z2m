@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+Please use the template and fill in all the data requested below!
+
 **Device description**
 Which device would you like to be supported in this plugin?
 

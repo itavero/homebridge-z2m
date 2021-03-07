@@ -1,11 +1,13 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Report an issue to help us improve the plugin
 title: '[Bug] '
-labels: ''
+labels: 'bug'
 assignees: ''
 
 ---
+
+Please use the template and fill in all the data requested below!
 
 **Describe the bug**
 A clear and concise description of what the bug is.

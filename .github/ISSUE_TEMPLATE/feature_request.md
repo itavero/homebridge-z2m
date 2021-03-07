@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+Please use the template and fill in all the data requested below!
+
 **Problem description**
 Please describe the problem you are trying to solve/improve upon with this feature request.
 

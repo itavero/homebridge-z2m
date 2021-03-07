@@ -248,26 +248,37 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         this.serviceCreatorManager.createHomeKitEntitiesFromExposes(this, info.definition.exposes);
       }
 
-      // Remove all services of which identifier is not known
-      const staleServices = this.accessory.services.filter(s => !this.serviceIds.has(Zigbee2mqttAccessory.getUniqueIdForService(s)));
-      staleServices.forEach((s) => {
-        this.log.debug(`Clean up stale service ${s.displayName} (${s.UUID}) for accessory ${this.displayName} (${this.ieeeAddress}).`);
-        this.accessory.removeService(s);
-      });
+      this.cleanStaleServices();
 
       if (friendlyNameChanged) {
         this.platform.log.debug(`Updating service names for ${info.friendly_name} (from ${oldFriendlyName})`);
-        // Update the name of all services
-        for (const service of this.accessory.services) {
-          const nameCharacteristic = service.getCharacteristic(hap.Characteristic.Name);
-          if (nameCharacteristic !== undefined) {
-            const displayName = this.getDefaultServiceDisplayName(service.subtype);
-            nameCharacteristic.updateValue(displayName);
-          }
-        }
+        this.updateServiceNames();
       }
     }
     this.platform.api.updatePlatformAccessories([this.accessory]);
+  }
+
+  private cleanStaleServices(): void {
+    // Remove all services of which identifier is not known
+    const staleServices = this.accessory.services.filter(s => !this.serviceIds.has(Zigbee2mqttAccessory.getUniqueIdForService(s)));
+    staleServices.forEach((s) => {
+      this.log.debug(`Clean up stale service ${s.displayName} (${s.UUID}) for accessory ${this.displayName} (${this.ieeeAddress}).`);
+      this.accessory.removeService(s);
+    });
+  }
+
+  private updateServiceNames(): void {
+    // Update the name of all services
+    for (const service of this.accessory.services) {
+      if (service.UUID === hap.Service.AccessoryInformation.UUID) {
+        continue;
+      }
+      const nameCharacteristic = service.getCharacteristic(hap.Characteristic.Name);
+      if (nameCharacteristic !== undefined) {
+        const displayName = this.getDefaultServiceDisplayName(service.subtype);
+        nameCharacteristic.updateValue(displayName);
+      }
+    }
   }
 
   updateStates(state: Record<string, unknown>) {

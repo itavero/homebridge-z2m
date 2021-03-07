@@ -42,10 +42,7 @@ class SwitchHandler implements ServiceHandler {
     }
     this.stateExpose = potentialStateExpose;
 
-    let serviceName = accessory.displayName;
-    if (endpoint !== undefined) {
-      serviceName += ' ' + endpoint;
-    }
+    const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
 
     accessory.log.debug(`Configuring Switch for ${serviceName}`);
     const service = accessory.getOrAddService(new hap.Service.Switch(serviceName, endpoint));

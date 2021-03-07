@@ -155,11 +155,7 @@ class ThermostatHandler implements ServiceHandler {
     }
 
     // Setup service
-    let serviceName = accessory.displayName;
-    if (endpoint !== undefined) {
-      serviceName += ' ' + endpoint;
-    }
-
+    const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
     accessory.log.debug(`Configuring Thermostat for ${serviceName}`);
     const service = accessory.getOrAddService(new hap.Service.Thermostat(serviceName, endpoint));
 

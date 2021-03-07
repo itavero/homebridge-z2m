@@ -91,7 +91,7 @@ export class BinaryConditionCharacteristicMonitor extends BaseCharacteristicMoni
     key: string,
     service: Service,
     characteristic: string | WithUUID<new () => Characteristic>,
-    private readonly condition: BinaryConditionBasedOnValue, 
+    private readonly condition: BinaryConditionBasedOnValue,
     private readonly value_true: CharacteristicValue,
     private readonly value_false: CharacteristicValue,
   ) {
@@ -124,8 +124,8 @@ export class NumericCharacteristicMonitor extends BaseCharacteristicMonitor {
 
   transformValueFromMqtt(value: unknown): CharacteristicValue | undefined {
     const input = value as number;
-    let out_minimum : number;
-    let out_maximum : number;
+    let out_minimum: number;
+    let out_maximum: number;
 
     const actualCharacteristic = this.service.getCharacteristic(this.characteristic);
     if (this.output_min === undefined) {

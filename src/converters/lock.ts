@@ -66,10 +66,8 @@ class LockHandler implements ServiceHandler {
       throw new Error(`Property "${LockHandler.NAME_LOCK_STATE}" of Lock does not support value(s): ${missingValues.join(', ')}`);
     }
 
-    let serviceName = accessory.displayName;
-    if (endpoint !== undefined) {
-      serviceName += ' ' + endpoint;
-    }
+    const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
+
 
     accessory.log.debug(`Configuring LockMechanism for ${serviceName}`);
     const service = accessory.getOrAddService(new hap.Service.LockMechanism(serviceName, endpoint));

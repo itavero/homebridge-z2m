@@ -61,10 +61,7 @@ class LightHandler implements ServiceHandler {
     }
     this.stateExpose = potentialStateExpose;
 
-    let serviceName = accessory.displayName;
-    if (endpoint !== undefined) {
-      serviceName += ' ' + endpoint;
-    }
+    const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
 
     accessory.log.debug(`Configuring Light for ${serviceName}`);
     const service = accessory.getOrAddService(new hap.Service.Lightbulb(serviceName, endpoint));
@@ -173,7 +170,7 @@ class LightHandler implements ServiceHandler {
 
       // Set default value
       characteristic.value = this.colorTempExpose.value_min;
-      
+
       characteristic.on('set', this.handleSetColorTemperature.bind(this));
       this.monitors.push(new PassthroughCharacteristicMonitor(this.colorTempExpose.property, service,
         hap.Characteristic.ColorTemperature));

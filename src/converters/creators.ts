@@ -10,15 +10,15 @@ import { StatelessProgrammableSwitchCreator } from './action';
 import { ThermostatCreator } from './climate';
 
 export interface ServiceCreatorManager {
-   createHomeKitEntitiesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]) : void;
+  createHomeKitEntitiesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
 }
 
 interface ServiceCreatorConstructor {
-  new():ServiceCreator;
+  new(): ServiceCreator;
 }
 
 export class BasicServiceCreatorManager implements ServiceCreatorManager {
-  private static readonly constructors : ServiceCreatorConstructor[] = [
+  private static readonly constructors: ServiceCreatorConstructor[] = [
     LightCreator,
     SwitchCreator,
     CoverCreator,
@@ -29,15 +29,15 @@ export class BasicServiceCreatorManager implements ServiceCreatorManager {
     BatteryCreator,
   ];
 
-  private static instance : BasicServiceCreatorManager;
+  private static instance: BasicServiceCreatorManager;
 
-  private creators : ServiceCreator[];
+  private creators: ServiceCreator[];
 
   private constructor() {
     this.creators = BasicServiceCreatorManager.constructors.map(c => new c());
   }
 
-  public static getInstance() : BasicServiceCreatorManager {
+  public static getInstance(): BasicServiceCreatorManager {
     if (BasicServiceCreatorManager.instance === undefined) {
       BasicServiceCreatorManager.instance = new BasicServiceCreatorManager();
     }

@@ -1,4 +1,6 @@
-# PRs that are considered "safe"
-run-checks:
+code-only:
 - any: ['**/*.ts']
   all: ['!.github/*', '!.github/**', '!*.js*', '!sonar-project.properties', '!.*']
+
+docs-only:
+- all: ['**/*.md', 'src/docgen/versions.ts']

@@ -47,10 +47,6 @@ abstract class BasicSensorHandler implements ServiceHandler {
     otherExposes: ExposesEntryWithBinaryProperty[], identifierGen: IdentifierGenerator, service: ServiceConstructor,
     additionalSubType?: string | undefined) {
     const endpoint = sensorExpose.endpoint;
-    this.serviceName = accessory.displayName;
-    if (endpoint !== undefined) {
-      this.serviceName += ' ' + endpoint;
-    }
 
     let sub = endpoint;
     if (additionalSubType !== undefined) {
@@ -60,6 +56,8 @@ abstract class BasicSensorHandler implements ServiceHandler {
         sub += ' ' + additionalSubType;
       }
     }
+
+    this.serviceName = accessory.getDefaultServiceDisplayName(sub);
 
     this.identifier = identifierGen(endpoint);
     this.service = accessory.getOrAddService(service(this.serviceName, sub));
@@ -355,7 +353,7 @@ export class BasicSensorCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     const endpointMap = new Map<string | undefined, ExposesEntryWithProperty[]>();
     exposes.filter(e => exposesHasProperty(e) && !accessory.isPropertyExcluded(e.property)
-    && exposesIsPublished(e)).map(e => e as ExposesEntryWithProperty)
+      && exposesIsPublished(e)).map(e => e as ExposesEntryWithProperty)
       .forEach((item) => {
         const collection = endpointMap.get(item.endpoint);
         if (!collection) {

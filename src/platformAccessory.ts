@@ -126,7 +126,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   private queueAllKeysForGet(): void {
-    const keys = [...this.serviceHandlers.values()].map(h => h.getableKeys).reduce((a, b)=> {
+    const keys = [...this.serviceHandlers.values()].map(h => h.getableKeys).reduce((a, b) => {
       return a.concat(b);
     }, []);
     if (keys.length > 0) {
@@ -141,7 +141,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
     if (keys.length > 0) {
       const data = {};
-      for(const k of keys) {
+      for (const k of keys) {
         data[k] = 0;
       }
       // Publish using ieeeAddr, as that will never change and the friendly_name might.
@@ -219,12 +219,15 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     return (id === this.ieeeAddress || this.accessory.context.device.friendly_name === id);
   }
 
-  updateDeviceInformation(info: DeviceListEntry | undefined, force_update = true) {
+  updateDeviceInformation(info: DeviceListEntry | undefined, force_update = false) {
 
     // Only update the device if a valid device list entry is passed.
     // This is done so that old, pre-v1.0.0 accessories will only get updated when new device information is received.
     if (isDeviceListEntry(info)
-    && (force_update || !deviceListEntriesAreEqual(this.accessory.context.device, info))) {
+      && (force_update || !deviceListEntriesAreEqual(this.accessory.context.device, info))) {
+      const oldFriendlyName = this.accessory.context.device.friendly_name;
+      const friendlyNameChanged = (force_update || info.friendly_name.localeCompare(this.accessory.context.device.friendly_name) !== 0);
+
       // Device info has changed
       this.accessory.context.device = info;
 
@@ -232,7 +235,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         this.log.error(`No device definition for device ${info.friendly_name} (${this.ieeeAddress}).`);
       } else {
         // Update accessory info
-        // Not getOrAddService is used so that the service is known in this.serviceIds and will not get filtered out.
+        // Note: getOrAddService is used so that the service is known in this.serviceIds and will not get filtered out.
         this.getOrAddService(new hap.Service.AccessoryInformation())
           .updateCharacteristic(hap.Characteristic.Name, info.friendly_name)
           .updateCharacteristic(hap.Characteristic.Manufacturer, info.definition.vendor ?? 'Zigbee2MQTT')
@@ -240,18 +243,42 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
           .updateCharacteristic(hap.Characteristic.SerialNumber, info.ieee_address)
           .updateCharacteristic(hap.Characteristic.HardwareRevision, info.date_code ?? '?')
           .updateCharacteristic(hap.Characteristic.FirmwareRevision, info.software_build_id ?? '?');
+
         // Create (new) services
         this.serviceCreatorManager.createHomeKitEntitiesFromExposes(this, info.definition.exposes);
       }
 
-      // Remove all services of which identifier is not known
-      const staleServices = this.accessory.services.filter(s => !this.serviceIds.has(Zigbee2mqttAccessory.getUniqueIdForService(s)));
-      staleServices.forEach((s) => {
-        this.log.debug(`Clean up stale service ${s.displayName} (${s.UUID}) for accessory ${this.displayName} (${this.ieeeAddress}).`);
-        this.accessory.removeService(s);
-      });
+      this.cleanStaleServices();
+
+      if (friendlyNameChanged) {
+        this.platform.log.debug(`Updating service names for ${info.friendly_name} (from ${oldFriendlyName})`);
+        this.updateServiceNames();
+      }
     }
     this.platform.api.updatePlatformAccessories([this.accessory]);
+  }
+
+  private cleanStaleServices(): void {
+    // Remove all services of which identifier is not known
+    const staleServices = this.accessory.services.filter(s => !this.serviceIds.has(Zigbee2mqttAccessory.getUniqueIdForService(s)));
+    staleServices.forEach((s) => {
+      this.log.debug(`Clean up stale service ${s.displayName} (${s.UUID}) for accessory ${this.displayName} (${this.ieeeAddress}).`);
+      this.accessory.removeService(s);
+    });
+  }
+
+  private updateServiceNames(): void {
+    // Update the name of all services
+    for (const service of this.accessory.services) {
+      if (service.UUID === hap.Service.AccessoryInformation.UUID) {
+        continue;
+      }
+      const nameCharacteristic = service.getCharacteristic(hap.Characteristic.Name);
+      if (nameCharacteristic !== undefined) {
+        const displayName = this.getDefaultServiceDisplayName(service.subtype);
+        nameCharacteristic.updateValue(displayName);
+      }
+    }
   }
 
   updateStates(state: Record<string, unknown>) {
@@ -262,5 +289,13 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     for (const handler of this.serviceHandlers.values()) {
       handler.updateState(state);
     }
+  }
+
+  getDefaultServiceDisplayName(subType: string | undefined): string {
+    let name = this.displayName;
+    if (subType !== undefined) {
+      name += ` ${subType}`;
+    }
+    return name;
   }
 }

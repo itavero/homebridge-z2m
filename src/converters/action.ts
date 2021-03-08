@@ -14,14 +14,14 @@ export class StatelessProgrammableSwitchCreator implements ServiceCreator {
       && !accessory.isPropertyExcluded(e.property))
       .map(e => e as ExposesEntryWithEnumProperty);
 
-    for(const expose of actionExposes) {
+    for (const expose of actionExposes) {
       // Each action expose can map to multiple instances of a Stateless Programmable Switch,
       // depending on the values provided.
       try {
         const allowedValues = expose.values.filter(v => accessory.isValueAllowedForProperty(expose.property, v));
         const mappings = SwitchActionHelper.getInstance().valuesToNumberedMappings(allowedValues).filter(m => m.isValidMapping());
-        const logEntries :string[] = [`Mapping of property '${expose.property}' of device '${accessory.displayName}':`];
-        for(const mapping of mappings) {
+        const logEntries: string[] = [`Mapping of property '${expose.property}' of device '${accessory.displayName}':`];
+        for (const mapping of mappings) {
           try {
             const id = StatelessProgrammableSwitchHandler.generateIdentifier(expose.endpoint, mapping.subType);
             if (!accessory.isServiceHandlerIdKnown(id)) {
@@ -32,15 +32,15 @@ export class StatelessProgrammableSwitchCreator implements ServiceCreator {
             if (logEntry !== undefined) {
               logEntries.push(logEntry);
             }
-          } catch(error) {
+          } catch (error) {
             accessory.log.error(`Failed to setup stateless programmable switch for accessory ${accessory.displayName} ` +
-            `from expose "${JSON.stringify(expose)}" and mapping "${JSON.stringify(mapping)}", error: ${error}`);
+              `from expose "${JSON.stringify(expose)}" and mapping "${JSON.stringify(mapping)}", error: ${error}`);
           }
         }
         accessory.log.info(logEntries.join('\n'));
-      } catch(error) {
+      } catch (error) {
         accessory.log.error(`Failed to setup stateless programmable switch for accessory ${accessory.displayName} ` +
-        `from expose "${JSON.stringify(expose)}", error: ${error}`);
+          `from expose "${JSON.stringify(expose)}", error: ${error}`);
       }
     }
   }
@@ -52,18 +52,13 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
   private readonly monitor: CharacteristicMonitor;
 
   constructor(
-    accessory: BasicAccessory, 
-    private readonly actionExpose : ExposesEntryWithEnumProperty,
-    mapping : SwitchActionMapping,
-  ){
+    accessory: BasicAccessory,
+    private readonly actionExpose: ExposesEntryWithEnumProperty,
+    mapping: SwitchActionMapping,
+  ) {
     this.identifier = StatelessProgrammableSwitchHandler.generateIdentifier(actionExpose.endpoint, mapping.subType);
 
     // Create service
-    let serviceName = accessory.displayName;
-    if (actionExpose.endpoint !== undefined) {
-      serviceName += ' ' + actionExpose.endpoint;
-    }
-
     let subType = mapping.subType;
     if (actionExpose.endpoint !== undefined) {
       if (subType !== undefined) {
@@ -72,6 +67,8 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
         subType = actionExpose.endpoint;
       }
     }
+
+    const serviceName = accessory.getDefaultServiceDisplayName(subType);
     const service = accessory.getOrAddService(new hap.Service.StatelessProgrammableSwitch(serviceName, subType));
 
     // Setup monitor and characteristic
@@ -92,8 +89,8 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
     this.monitor = new MappingCharacteristicMonitor(actionExpose.property, service, hap.Characteristic.ProgrammableSwitchEvent, valueMap);
   }
 
-  private static generateValueConfigForProgrammableSwitchEvents(events: number[]) : Partial<CharacteristicProps> {
-    const result :Partial<CharacteristicProps> = {
+  private static generateValueConfigForProgrammableSwitchEvents(events: number[]): Partial<CharacteristicProps> {
+    const result: Partial<CharacteristicProps> = {
       validValues: events,
     };
 

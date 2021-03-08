@@ -31,10 +31,10 @@ class CoverHandler implements ServiceHandler {
   private positionCurrent = -1;
   private readonly updateTimer: ExtendedTimer;
   private waitingForUpdate: boolean;
-  private readonly target_min : number;
-  private readonly target_max : number;
-  private readonly current_min : number;
-  private readonly current_max : number;
+  private readonly target_min: number;
+  private readonly target_max: number;
+  private readonly current_min: number;
+  private readonly current_max: number;
 
   constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
     const endpoint = expose.endpoint;
@@ -47,10 +47,7 @@ class CoverHandler implements ServiceHandler {
     }
     this.positionExpose = positionExpose;
 
-    let serviceName = accessory.displayName;
-    if (endpoint !== undefined) {
-      serviceName += ' ' + endpoint;
-    }
+    const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
 
     accessory.log.debug(`Configuring WindowCovering for ${serviceName}`);
     this.service = accessory.getOrAddService(new hap.Service.WindowCovering(serviceName, endpoint));

@@ -6,6 +6,8 @@ export interface BasicAccessory {
 
     displayName: string;
 
+    getDefaultServiceDisplayName(subType: string | undefined): string;
+
     getOrAddService(service: Service): Service;
 
     queueDataForSetAction(data: Record<string, unknown>): void;

@@ -52,11 +52,7 @@ class BatteryHandler implements ServiceHandler {
   constructor(endpoint: string | undefined, exposes: ExposesEntryWithProperty[], private readonly accessory: BasicAccessory) {
     this.identifier = BatteryHandler.generateIdentifier(endpoint);
 
-    let serviceName = accessory.displayName;
-    if (endpoint !== undefined) {
-      serviceName += ' ' + endpoint;
-    }
-
+    const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
     accessory.log.debug(`Configuring Battery Service for ${serviceName}`);
     const service = accessory.getOrAddService(new hap.Service.BatteryService(serviceName, endpoint));
     getOrAddCharacteristic(service, hap.Characteristic.BatteryLevel);

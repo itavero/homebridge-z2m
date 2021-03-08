@@ -5,6 +5,12 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Fixed
+
+- Names of services are correctly updated when the `friendly_name` from Zigbee2MQTT has been updated. For the updated names to show up in the
+  Home app, it might be necessary to restart Homebridge. (see [#76](https://github.com/itavero/homebridge-z2m/issues/76))
+- When a new list of devices is published to `zigbee2mqtt/bridge/devices`, only the changed accessories will be updated, instead of all of them.
+  (Wrong default value for `force_update` argument of `updateDeviceInformation` has been corrected.))
 
 ## [1.1.2] - 2021-03-03
 ### Fixed

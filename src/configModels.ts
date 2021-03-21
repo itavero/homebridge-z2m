@@ -2,13 +2,21 @@ import { PlatformConfig, Logger } from 'homebridge';
 
 export interface PluginConfiguration extends PlatformConfig {
    mqtt: MqttConfiguration;
+   defaults?: BaseDeviceConfiguration;
    devices?: DeviceConfiguration[];
 }
+
 export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefined = undefined): x is PluginConfiguration => {
   if (x.mqtt === undefined || !isMqttConfiguration(x.mqtt)) {
     logger?.error('Incorrect configuration: mqtt does not contain required fields');
     return false;
   }
+
+  if (x.defaults !== undefined && !isBaseDeviceConfiguration(x.defaults)) {
+    logger?.error('Incorrect configuration: Device defaults are incorrect: ' + JSON.stringify(x.defaults));
+    return false;
+  }
+
   if (x.devices !== undefined) {
     if (!Array.isArray(x.devices)) {
       logger?.error('Incorrect configuration: devices must be an array');
@@ -46,20 +54,18 @@ export const isMqttConfiguration = (x: any): x is MqttConfiguration => (
    && typeof x.server === 'string'
    && x.server.length > 0);
 
-export interface DeviceConfiguration extends Record<string, unknown> {
+export interface BaseDeviceConfiguration extends Record<string, unknown> {
+  exclude?: boolean;
+  excluded_keys?: string[];
+  values?: PropertyValueConfiguration[];
+}
+
+export interface DeviceConfiguration extends BaseDeviceConfiguration {
    id: string;
-   exclude?: boolean;
-   excluded_keys?: string[];
-   values?: PropertyValueConfiguration[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isDeviceConfiguration = (x: any): x is DeviceConfiguration => {
-  // Required id property
-  if (x.id === undefined || typeof x.id !== 'string' || x.id.length < 1) {
-    return false;
-  }
-
+export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration => {
   // Optional boolean exclude property
   if (x.exclude !== undefined && typeof x.exclude !== 'boolean') {
     return false;
@@ -82,6 +88,16 @@ export const isDeviceConfiguration = (x: any): x is DeviceConfiguration => {
     }
   }
   return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isDeviceConfiguration = (x: any): x is DeviceConfiguration => {
+  // Required id property
+  if (x.id === undefined || typeof x.id !== 'string' || x.id.length < 1) {
+    return false;
+  }
+
+  return isBaseDeviceConfiguration(x);
 };
 
 export interface PropertyValueConfiguration extends Record<string, unknown> {

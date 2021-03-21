@@ -5,11 +5,10 @@ import { hap } from './hap';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
 import { BasicAccessory, BasicLogger, ServiceHandler } from './converters/interfaces';
 import { deviceListEntriesAreEqual, DeviceListEntry, isDeviceDefinition, isDeviceListEntry } from './z2mModels';
-import { DeviceConfiguration } from './configModels';
+import { BaseDeviceConfiguration } from './configModels';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;
-  private readonly additionalConfig: DeviceConfiguration;
   private readonly serviceCreatorManager: ServiceCreatorManager;
   private readonly serviceHandlers = new Map<string, ServiceHandler>();
   private readonly serviceIds = new Set<string>();
@@ -31,7 +30,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   constructor(
     private readonly platform: Zigbee2mqttPlatform,
     public readonly accessory: PlatformAccessory,
-    additionalConfig: DeviceConfiguration | undefined,
+    private readonly additionalConfig: BaseDeviceConfiguration,
     serviceCreatorManager?: ServiceCreatorManager,
   ) {
     // Store ServiceCreatorManager
@@ -49,12 +48,8 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     this.pendingGetKeys = new Set<string>();
     this.getIsScheduled = false;
 
-    // Store additional config
-    if (additionalConfig === undefined) {
-      this.additionalConfig = { id: '' };
-    } else {
-      this.additionalConfig = additionalConfig;
-    }
+    // Log additional config
+    this.platform.log.debug(`Config for accessory ${this.displayName} : ${JSON.stringify(this.additionalConfig)}`);
 
     this.updateDeviceInformation(accessory.context.device, true);
 

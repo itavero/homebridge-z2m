@@ -5,6 +5,9 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Added
+
+- Default device options can now be set using the `defaults` key in the plugin configuration.
 
 ## [1.1.3] - 2021-03-08
 ### Fixed

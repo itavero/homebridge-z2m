@@ -2,7 +2,7 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig }
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { Zigbee2mqttAccessory } from './platformAccessory';
-import { DeviceConfiguration, isPluginConfiguration, PluginConfiguration } from './configModels';
+import { BaseDeviceConfiguration, DeviceConfiguration, isPluginConfiguration, PluginConfiguration } from './configModels';
 
 import * as mqtt from 'mqtt';
 import * as fs from 'fs';
@@ -11,6 +11,7 @@ import * as semver from 'semver';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   public readonly config?: PluginConfiguration;
+  private baseDeviceConfig: BaseDeviceConfiguration;
   private readonly mqttClient?: mqtt.MqttClient;
   private static readonly MIN_Z2M_VERSION = '1.17.0';
   private static readonly TOPIC_BRIDGE = 'bridge/';
@@ -28,6 +29,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     this.onMessage = this.onMessage.bind(this);
     this.didReceiveDevices = false;
 
+    // Set device defaults
+    this.baseDeviceConfig = {
+      excluded: false,
+    };
+
     // Validate configuration
     if (isPluginConfiguration(config, log)) {
       this.config = config;
@@ -36,7 +42,15 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       return;
     }
 
+    // Use configuration
     if (this.config !== undefined) {
+
+      // Merge defaults from the plugin configuration
+      if (this.config.defaults !== undefined) {
+        this.baseDeviceConfig = { ...this.baseDeviceConfig, ...this.config.defaults };
+      }
+      this.log.debug(`Default device config: ${JSON.stringify(this.baseDeviceConfig)}`);
+
       if (!this.config.mqtt.server || !this.config.mqtt.base_topic) {
         this.log.error('No MQTT server and/or base_topic defined!');
       }
@@ -210,7 +224,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private getAdditionalConfigForDevice(device: any): DeviceConfiguration | undefined {
+  private getAdditionalConfigForDevice(device: any): BaseDeviceConfiguration {
     if (this.config?.devices !== undefined) {
       const identifiers: string[] = [];
       if (typeof device === 'string') {
@@ -226,11 +240,16 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
       for (const devConfig of this.config.devices) {
         if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
-          return devConfig;
+          return this.mergeDeviceConfig(devConfig);
         }
       }
     }
-    return undefined;
+
+    return this.baseDeviceConfig;
+  }
+
+  private mergeDeviceConfig(devConfig: DeviceConfiguration): BaseDeviceConfiguration {
+    return { ...this.baseDeviceConfig, ...devConfig };
   }
 
   private isDeviceExcluded(device: DeviceListEntry | string): boolean {

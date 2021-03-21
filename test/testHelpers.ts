@@ -261,15 +261,20 @@ export class ServiceHandlersTestHarness {
     return id.UUID;
   }
 
+  generateServiceId(serviceType: WithUUID<{new (): Service}> | string, subType: string | undefined = undefined) : string {
+    let serviceIdentifier = (typeof serviceType === 'string') ? serviceType : serviceType.UUID;
+    if (subType !== undefined) {
+      serviceIdentifier += '_' + subType;
+    }
+    return serviceIdentifier;
+  }
+
   getOrAddHandler(serviceType: WithUUID<{new (): Service}> | string, subType: string | undefined = undefined,
     serviceIdentifier: string | undefined = undefined) : ServiceHandlerContainer {
     // Determine identifier
     const serviceUuid = (typeof serviceType === 'string') ? serviceType : serviceType.UUID;
     if (serviceIdentifier === undefined) {
-      serviceIdentifier = serviceUuid;
-      if (subType !== undefined) {
-        serviceIdentifier += '_' + subType;
-      }
+      serviceIdentifier = this.generateServiceId(serviceType, subType);
     }
     
     // Check if handler exists

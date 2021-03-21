@@ -1,3 +1,5 @@
+export declare type MqttValue = string | boolean | number;
+
 export interface ExposesEntry {
   type: string;
   name?: string;
@@ -6,8 +8,8 @@ export interface ExposesEntry {
   property?: string;
   unit?: string;
   values?: string[];
-  value_off?: string | boolean | number;
-  value_on?: string | boolean | number;
+  value_off?: MqttValue;
+  value_on?: MqttValue;
   value_step?: number;
   value_min?: number;
   value_max?: number;
@@ -71,8 +73,8 @@ export interface ExposesEntryWithBinaryProperty extends ExposesEntryWithProperty
   name: string;
   property: string;
   access: number;
-  value_off: string | boolean | number;
-  value_on: string | boolean | number;
+  value_off: MqttValue;
+  value_on: MqttValue;
 }
 
 export interface ExposesEntryWithEnumProperty extends ExposesEntryWithProperty {

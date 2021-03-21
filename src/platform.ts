@@ -42,43 +42,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       }
       this.log.info(`Connecting to MQTT server at ${this.config.mqtt.server}`);
 
-      const options: mqtt.IClientOptions = {};
-
-      if (this.config.mqtt.version) {
-        options.protocolVersion = this.config.mqtt.version;
-      }
-
-      if (this.config.mqtt.keepalive) {
-        this.log.debug(`Using MQTT keepalive: ${this.config.mqtt.keepalive}`);
-        options.keepalive = this.config.mqtt.keepalive;
-      }
-
-      if (this.config.mqtt.ca) {
-        this.log.debug(`MQTT SSL/TLS: Path to CA certificate = ${this.config.mqtt.ca}`);
-        options.ca = fs.readFileSync(this.config.mqtt.ca);
-      }
-
-      if (this.config.mqtt.key && this.config.mqtt.cert) {
-        this.log.debug(`MQTT SSL/TLS: Path to client key = ${this.config.mqtt.key}`);
-        this.log.debug(`MQTT SSL/TLS: Path to client certificate = ${this.config.mqtt.cert}`);
-        options.key = fs.readFileSync(this.config.mqtt.key);
-        options.cert = fs.readFileSync(this.config.mqtt.cert);
-      }
-
-      if (this.config.mqtt.user && this.config.mqtt.password) {
-        options.username = this.config.mqtt.user;
-        options.password = this.config.mqtt.password;
-      }
-
-      if (this.config.mqtt.client_id) {
-        this.log.debug(`Using MQTT client ID: '${this.config.mqtt.client_id}'`);
-        options.clientId = this.config.mqtt.client_id;
-      }
-
-      if (this.config.mqtt.reject_unauthorized !== undefined && !this.config.mqtt.reject_unauthorized) {
-        this.log.debug('MQTT reject_unauthorized set false, ignoring certificate warnings.');
-        options.rejectUnauthorized = false;
-      }
+      const options: mqtt.IClientOptions = Zigbee2mqttPlatform.createMqttOptions(this.log, this.config);
 
       this.mqttClient = mqtt.connect(this.config.mqtt.server, options);
       this.mqttClient.on('connect', () => {
@@ -86,7 +50,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         setTimeout(() => {
           if (!this.didReceiveDevices) {
             this.log.error('DID NOT RECEIVE ANY DEVICES AFTER BEING CONNECTED FOR TWO MINUTES.\n'
-          + `Please verify that Zigbee2MQTT is running and that it is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
+              + `Please verify that Zigbee2MQTT is running and that it is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
           }
         }, 120000);
       });
@@ -101,17 +65,58 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
   }
 
+  private static createMqttOptions(log: Logger, config: PluginConfiguration): mqtt.IClientOptions {
+    const options: mqtt.IClientOptions = {};
+    if (config.mqtt.version) {
+      options.protocolVersion = config.mqtt.version;
+    }
+
+    if (config.mqtt.keepalive) {
+      log.debug(`Using MQTT keepalive: ${config.mqtt.keepalive}`);
+      options.keepalive = config.mqtt.keepalive;
+    }
+
+    if (config.mqtt.ca) {
+      log.debug(`MQTT SSL/TLS: Path to CA certificate = ${config.mqtt.ca}`);
+      options.ca = fs.readFileSync(config.mqtt.ca);
+    }
+
+    if (config.mqtt.key && config.mqtt.cert) {
+      log.debug(`MQTT SSL/TLS: Path to client key = ${config.mqtt.key}`);
+      log.debug(`MQTT SSL/TLS: Path to client certificate = ${config.mqtt.cert}`);
+      options.key = fs.readFileSync(config.mqtt.key);
+      options.cert = fs.readFileSync(config.mqtt.cert);
+    }
+
+    if (config.mqtt.user && config.mqtt.password) {
+      options.username = config.mqtt.user;
+      options.password = config.mqtt.password;
+    }
+
+    if (config.mqtt.client_id) {
+      log.debug(`Using MQTT client ID: '${config.mqtt.client_id}'`);
+      options.clientId = config.mqtt.client_id;
+    }
+
+    if (config.mqtt.reject_unauthorized !== undefined && !config.mqtt.reject_unauthorized) {
+      log.debug('MQTT reject_unauthorized set false, ignoring certificate warnings.');
+      options.rejectUnauthorized = false;
+    }
+
+    return options;
+  }
+
   private checkZigbee2MqttVersion(version: string, topic: string) {
     this.log.info(`Using Zigbee2MQTT v${version} (identified via ${topic})`);
 
     // Ignore -dev suffix if present, because Zigbee2MQTT appends this to the latest released version
     // for the future development build (instead of applying semantic versioning).
     const strippedVersion = version.replace(/-dev$/, '');
-    
+
     if (semver.lt(strippedVersion, Zigbee2mqttPlatform.MIN_Z2M_VERSION)) {
-      this.log.error('!!! UPDATE OF ZIGBEE2MQTT REQUIRED !!! \n' + 
-      `Zigbee2MQTT v${version} is TOO OLD. The minimum required version is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION}. \n` + 
-      `This means that ${PLUGIN_NAME} MIGHT NOT WORK AS EXPECTED!`);
+      this.log.error('!!! UPDATE OF ZIGBEE2MQTT REQUIRED !!! \n' +
+        `Zigbee2MQTT v${version} is TOO OLD. The minimum required version is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION}. \n` +
+        `This means that ${PLUGIN_NAME} MIGHT NOT WORK AS EXPECTED!`);
     }
   }
 
@@ -181,8 +186,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private handleReceivedDevices(devices: DeviceListEntry[]) {
     this.log.debug('Received devices...');
     this.didReceiveDevices = true;
-    devices.filter(d => d.supported 
-      && d.definition !== undefined 
+    devices.filter(d => d.supported
+      && d.definition !== undefined
       && !this.isDeviceExcluded(d)).forEach(d => this.createOrUpdateAccessory(d));
 
     // Remove devices that are no longer present
@@ -218,7 +223,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
           identifiers.push(device.friendly_name.toLocaleLowerCase());
         }
       }
-    
+
       for (const devConfig of this.config.devices) {
         if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
           return devConfig;
@@ -254,7 +259,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
 
     if (!isDeviceListEntry(accessory.context.device)) {
-      this.log.warn(`Restoring old (pre v1.0.0) accessory ${accessory.context.device.friendly_name} (${ieee_address}). This accessory ` + 
+      this.log.warn(`Restoring old (pre v1.0.0) accessory ${accessory.context.device.friendly_name} (${ieee_address}). This accessory ` +
         `will not work until updated device information is received from Zigbee2MQTT v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
     }
 

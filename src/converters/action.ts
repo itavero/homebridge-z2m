@@ -1,8 +1,7 @@
 import { hap } from '../hap';
-import { exposesCanBeGet, ExposesEntry, ExposesEntryWithEnumProperty } from '../z2mModels';
+import { exposesHasEnumProperty, exposesIsPublished, exposesCanBeGet, ExposesEntry, ExposesEntryWithEnumProperty } from '../z2mModels';
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 
-import { exposesHasEnumProperty, exposesIsPublished } from '../z2mModels';
 import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
 import { CharacteristicProps, CharacteristicValue } from 'homebridge';
 import { getOrAddCharacteristic } from '../helpers';

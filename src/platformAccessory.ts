@@ -190,7 +190,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
   queueDataForSetAction(data: Record<string, unknown>): void {
     this.pendingPublishData = { ...this.pendingPublishData, ...data };
-    this.log.debug(`Pending data: ${JSON.stringify(this.pendingPublishData)}`);
+    this.log.debug(`Pending data for ${this.displayName}: ${JSON.stringify(this.pendingPublishData)}`);
 
     if (!this.publishIsScheduled) {
       this.publishIsScheduled = true;

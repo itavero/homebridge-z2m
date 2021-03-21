@@ -141,16 +141,12 @@ class LightHandler implements ServiceHandler {
       return;
     }
 
-    this.adaptiveLighting = new hap.AdaptiveLightingController(service).on('disable', () => {
-      // Adaptive lighting has been disabled
-      this.accessory.log.debug(`Adaptive Lighting: Disabled by user for ${this.accessory.displayName}.`);
-      this.lastAdaptiveLightingTemperature = undefined;
-    });
+    this.adaptiveLighting = new hap.AdaptiveLightingController(service).on('disable', this.resetAdaptiveLightingTemperature.bind(this));
     this.accessory.configureController(this.adaptiveLighting);
+  }
 
-    // Add monitor to disable adaptive lighting when a deviating color temperature is received.
-    this.monitors.push(new DisableAdaptiveLightingMonitor(this.colorTempExpose.property, this.accessory, this.adaptiveLighting,
-      this.accessory.getAdaptiveLightingMinimumColorTemperatureChange(), () => this.lastAdaptiveLightingTemperature));
+  private resetAdaptiveLightingTemperature(): void {
+    this.lastAdaptiveLightingTemperature = undefined;
   }
 
   private tryCreateColor(expose: ExposesEntryWithFeatures, service: Service) {
@@ -257,6 +253,40 @@ class LightHandler implements ServiceHandler {
     }
   }
 
+  private handleAdaptiveLighting(value: number, data: Record<string, unknown>): boolean {
+    // Adaptive Lighting active?
+    if (this.adaptiveLighting !== undefined && this.adaptiveLighting.isAdaptiveLightingActive()) {
+      if (this.lastAdaptiveLightingTemperature === undefined) {
+        this.lastAdaptiveLightingTemperature = value;
+      } else {
+        const minChange = this.accessory.getAdaptiveLightingMinimumColorTemperatureChange();
+        const change = Math.abs(this.lastAdaptiveLightingTemperature - value);
+        if (change < minChange) {
+          this.accessory.log.debug(`Adaptive Lighting: Color temperature ${value} skipped for ${this.accessory.displayName}. ` +
+            `Previous: ${this.lastAdaptiveLightingTemperature}`);
+          return false;
+        }
+
+        const transition = this.accessory.getAdaptiveLightingTransitionTime();
+        if (transition > 0) {
+          data[LightHandler.MQTT_PROPERTY_TRANSITION] = transition;
+        }
+      }
+    } else {
+      this.resetAdaptiveLightingTemperature();
+    }
+
+    return true;
+  }
+
+  private updateHueAndSaturationBasedOnColorTemperature(value: number): void {
+    if (this.isRecentHomebridgeVersion && this.colorHueCharacteristic !== undefined && this.colorSaturationCharacteristic !== undefined) {
+      const color = hap.ColorUtils.colorTemperatureToHueAndSaturation(value, true);
+      this.colorHueCharacteristic.updateValue(color.hue);
+      this.colorSaturationCharacteristic.updateValue(color.saturation);
+    }
+  }
+
   private handleSetColorTemperature(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     if (this.colorTempExpose !== undefined && typeof value === 'number') {
       const data = {};
@@ -269,40 +299,8 @@ class LightHandler implements ServiceHandler {
       }
 
       data[this.colorTempExpose.property] = value;
-
-      let skipPublish = false;
-
-      // Update Hue/Saturation
-      if (this.isRecentHomebridgeVersion && this.colorHueCharacteristic !== undefined && this.colorSaturationCharacteristic !== undefined) {
-        const color = hap.ColorUtils.colorTemperatureToHueAndSaturation(value, true);
-        this.colorHueCharacteristic.updateValue(color.hue);
-        this.colorSaturationCharacteristic.updateValue(color.saturation);
-
-        // Adaptive Lighting active?
-        if (this.adaptiveLighting !== undefined && this.adaptiveLighting.isAdaptiveLightingActive()) {
-
-          if (this.lastAdaptiveLightingTemperature === undefined) {
-            this.lastAdaptiveLightingTemperature = value;
-          } else {
-            const minChange = this.accessory.getAdaptiveLightingMinimumColorTemperatureChange();
-            const change = Math.abs(this.lastAdaptiveLightingTemperature - value);
-            if (change < minChange) {
-              this.accessory.log.debug(`Adaptive Lighting: Color temperature ${value} skipped for ${this.accessory.displayName}. ` +
-                `Previous: ${this.lastAdaptiveLightingTemperature}`);
-              skipPublish = true;
-            }
-
-            const transition = this.accessory.getAdaptiveLightingTransitionTime();
-            if (transition > 0) {
-              data[LightHandler.MQTT_PROPERTY_TRANSITION] = transition;
-            }
-          }
-        } else {
-          this.lastAdaptiveLightingTemperature = undefined;
-        }
-      }
-
-      if (!skipPublish) {
+      
+      if (this.handleAdaptiveLighting(value, data)) {
         this.accessory.queueDataForSetAction(data);
       }
       callback(null);
@@ -409,50 +407,6 @@ class ColorXyCharacteristicMonitor implements CharacteristicMonitor {
         const hueSat = convertXyToHueSat(value_x, value_y);
         this.service.updateCharacteristic(hap.Characteristic.Hue, hueSat[0]);
         this.service.updateCharacteristic(hap.Characteristic.Saturation, hueSat[1]);
-      }
-    }
-  }
-}
-
-class DisableAdaptiveLightingMonitor implements CharacteristicMonitor {
-  // TODO: Improve the logic to disable the adaptive lighting feature if changes come in from Zigbee2MQTT for some reason.
-  private counter: number;
-
-  constructor(
-    private readonly key: string,
-    private readonly accessory: BasicAccessory,
-    private readonly controller: AdaptiveLightingControl,
-    private readonly acceptedDelta: number,
-    private readonly getLastPublishedValue: () => number | undefined,
-  ) {
-    this.counter = 0;
-  }
-
-  callback(state: Record<string, unknown>): void {
-    if (this.key in state && typeof state[this.key] === 'number') {
-      if (!this.controller.isAdaptiveLightingActive()) {
-        // Not active at the moment
-        this.counter = 0;
-        return;
-      }
-
-      const lastKnownValue = this.getLastPublishedValue();
-      if (lastKnownValue === undefined) {
-        // Just started so it seems. Do not disable.
-        this.counter = 0;
-        return;
-      }
-
-      const updatedValue = state[this.key] as number;
-      const delta = Math.abs(updatedValue - lastKnownValue);
-      if (delta > this.acceptedDelta) {
-        ++this.counter;
-        if (this.counter >= 2) {
-          this.counter = 0;
-          this.accessory.log.debug(`Adaptive Lighting: Disabled for ${this.accessory.displayName} due to Color Temperature `
-            + `(${updatedValue}) received via MQTT (versus ${lastKnownValue}).`);
-          this.controller.disableAdaptiveLighting();
-        }
       }
     }
   }

@@ -25,6 +25,12 @@ export interface BasicAccessory {
     registerServiceHandler(handler: ServiceHandler): void;
 
     isServiceHandlerIdKnown(identifier: string): boolean;
+
+    isAdaptiveLightingEnabled(): boolean;
+
+    getAdaptiveLightingMinimumColorTemperatureChange(): number;
+
+    getAdaptiveLightingTransitionTime(): number;
 }
 
 export interface BasicPlatform {

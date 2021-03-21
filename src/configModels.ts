@@ -1,9 +1,9 @@
 import { PlatformConfig, Logger } from 'homebridge';
 
 export interface PluginConfiguration extends PlatformConfig {
-   mqtt: MqttConfiguration;
-   defaults?: BaseDeviceConfiguration;
-   devices?: DeviceConfiguration[];
+  mqtt: MqttConfiguration;
+  defaults?: BaseDeviceConfiguration;
+  devices?: DeviceConfiguration[];
 }
 
 export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefined = undefined): x is PluginConfiguration => {
@@ -33,35 +33,71 @@ export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefi
 };
 
 export interface MqttConfiguration extends Record<string, unknown> {
-   base_topic : string;
-   server: string;
-   ca?: string;
-   key?: string;
-   cert?: string;
-   user?: string;
-   password?: string;
-   client_id?: string;
-   reject_unauthorized?: boolean;
-   keepalive?: number;
-   version?: number;
+  base_topic: string;
+  server: string;
+  ca?: string;
+  key?: string;
+  cert?: string;
+  user?: string;
+  password?: string;
+  client_id?: string;
+  reject_unauthorized?: boolean;
+  keepalive?: number;
+  version?: number;
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isMqttConfiguration = (x: any): x is MqttConfiguration => (
   x.base_topic !== undefined
-   && typeof x.base_topic === 'string'
-   && x.base_topic.length > 0
-   && x.server !== undefined
-   && typeof x.server === 'string'
-   && x.server.length > 0);
+  && typeof x.base_topic === 'string'
+  && x.base_topic.length > 0
+  && x.server !== undefined
+  && typeof x.server === 'string'
+  && x.server.length > 0);
+
+export interface AdaptiveLightingConfiguration extends Record<string, unknown> {
+  enabled?: boolean;
+  min_ct_change?: number;
+  transition?: number;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isAdaptiveLightingConfiguration = (x: any): x is AdaptiveLightingConfiguration => {
+  if (x.enabled !== undefined && typeof x.enabled !== 'boolean') {
+    return false;
+  }
+
+  if (x.min_ct_change !== undefined) {
+    if (typeof x.min_ct_change !== 'number') {
+      return false;
+    }
+
+    if (x.min_ct_change < 0) {
+      return false;
+    }
+  }
+
+  if (x.transition !== undefined) {
+    if (typeof x.transition !== 'number') {
+      return false;
+    }
+
+    if (x.transition < 0 || x.transition > 300) {
+      return false;
+    }
+  }
+
+  return true;
+};
 
 export interface BaseDeviceConfiguration extends Record<string, unknown> {
   exclude?: boolean;
   excluded_keys?: string[];
   values?: PropertyValueConfiguration[];
+  adaptive_lighting?: AdaptiveLightingConfiguration;
 }
 
 export interface DeviceConfiguration extends BaseDeviceConfiguration {
-   id: string;
+  id: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,6 +109,11 @@ export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration 
 
   // Optional excluded_keys which must be an array of strings if present
   if (x.excluded_keys !== undefined && !isStringArray(x.excluded_keys)) {
+    return false;
+  }
+
+  // Optional adaptive lighting options
+  if (x.adaptive_lighting !== undefined && !isAdaptiveLightingConfiguration(x.adaptive_lighting)) {
     return false;
   }
 
@@ -101,9 +142,9 @@ export const isDeviceConfiguration = (x: any): x is DeviceConfiguration => {
 };
 
 export interface PropertyValueConfiguration extends Record<string, unknown> {
-   property: string;
-   include?: string[];
-   exclude?: string[];
+  property: string;
+  include?: string[];
+  exclude?: string[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -112,12 +153,12 @@ export const isPropertyValueConfiguration = (x: any): x is PropertyValueConfigur
   if (x.property === undefined || typeof x.property !== 'string' || x.property.length < 1) {
     return false;
   }
- 
+
   // Optional include property
   if (x.include !== undefined && !isStringArray(x.include)) {
     return false;
   }
- 
+
   // Optional exclude property
   if (x.exclude !== undefined && !isStringArray(x.exclude)) {
     return false;

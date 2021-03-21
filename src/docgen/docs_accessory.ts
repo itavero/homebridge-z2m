@@ -30,7 +30,27 @@ export class DocsAccessory implements BasicAccessory {
 
    constructor(
       readonly displayName: string){}
-      
+
+   getDefaultServiceDisplayName(subType: string | undefined): string {
+     let name = 'Documentation Accessory';
+     if (subType !== undefined) {
+       name += ` ${subType}`;
+     }
+     return name;
+   }
+
+   isAdaptiveLightingEnabled(): boolean {
+     return true;
+   }
+
+   getAdaptiveLightingMinimumColorTemperatureChange(): number {
+     return 0;
+   }
+
+   getAdaptiveLightingTransitionTime(): number {
+     return 0;
+   }
+
    configureController(controller: Controller<ControllerServiceMap>): void {
      this.controllers.add(controller.constructor.name);
    }

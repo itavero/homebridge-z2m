@@ -297,4 +297,16 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     }
     return name;
   }
+
+  isAdaptiveLightingEnabled(): boolean {
+    return this.additionalConfig.adaptive_lighting?.enabled ?? true;
+  }
+
+  getAdaptiveLightingMinimumColorTemperatureChange(): number {
+    return this.additionalConfig.adaptive_lighting?.min_ct_change ?? 0;
+  }
+
+  getAdaptiveLightingTransitionTime(): number {
+    return this.additionalConfig.adaptive_lighting?.transition ?? 0;
+  }
 }

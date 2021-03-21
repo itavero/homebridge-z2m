@@ -64,6 +64,31 @@ export class PassthroughCharacteristicMonitor extends BaseCharacteristicMonitor 
   }
 }
 
+export class NumericPassthroughCharacteristicMonitor extends BaseCharacteristicMonitor {
+  constructor(
+    key: string,
+    service: Service,
+    characteristic: string | WithUUID<new () => Characteristic>,
+    private readonly minimum?: number | undefined,
+    private readonly maximum?: number | undefined,
+  ) {
+    super(key, service, characteristic);
+  }
+
+  transformValueFromMqtt(value: unknown): CharacteristicValue | undefined {
+    if (typeof value === 'number') {
+      if (this.minimum !== undefined && value < this.minimum) {
+        return this.minimum;
+      }
+      if (this.maximum !== undefined && value > this.maximum) {
+        return this.maximum;
+      }
+      return value;
+    }
+    return undefined;
+  }
+}
+
 export class MappingCharacteristicMonitor extends BaseCharacteristicMonitor {
   constructor(
     key: string,

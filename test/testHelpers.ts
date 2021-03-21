@@ -4,6 +4,7 @@ import {
 } from 'homebridge';
 import { BasicAccessory, BasicPlatform, ServiceHandler } from '../src/converters/interfaces';
 import { DeviceDefinition, DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry } from '../src/z2mModels';
+import { AdaptiveLightingConfiguration } from '../src/configModels';
 import { mock, mockClear, MockProxy } from 'jest-mock-extended';
 import { when } from 'jest-when';
 import 'jest-chain';
@@ -219,6 +220,12 @@ export class ServiceHandlersTestHarness {
   private readonly allowedValues = new Map<string, string[]>();
   readonly accessoryMock: MockProxy<BasicAccessory> & BasicAccessory;
   public serverVersion = '1.1.7';
+  public adaptiveLighting: AdaptiveLightingConfiguration = {
+    enabled: true,
+    min_ct_change: 0,
+    transition: 0,
+  };
+
   public numberOfExpectedControllers = 0;
 
   constructor() {
@@ -265,6 +272,11 @@ export class ServiceHandlersTestHarness {
     // Mock implementation for certain platform functions
     this.accessoryMock.platform.isHomebridgeServerVersionGreaterOrEqualTo
       .mockImplementation((v: string) => semver.gte(this.serverVersion, v));
+
+    // Mock implementation for adaptive lighting functions
+    this.accessoryMock.isAdaptiveLightingEnabled.mockImplementation(() => this.adaptiveLighting.enabled ?? true);
+    this.accessoryMock.getAdaptiveLightingMinimumColorTemperatureChange.mockImplementation(() => this.adaptiveLighting.min_ct_change ?? 0);
+    this.accessoryMock.getAdaptiveLightingTransitionTime.mockImplementation(() => this.adaptiveLighting.transition ?? 0);
   }
 
   configureAllowedValues(property: string, values: string[]) {
@@ -278,7 +290,7 @@ export class ServiceHandlersTestHarness {
     return id.UUID;
   }
 
-  generateServiceId(serviceType: WithUUID<{new (): Service}> | string, subType: string | undefined = undefined) : string {
+  generateServiceId(serviceType: WithUUID<{ new(): Service }> | string, subType: string | undefined = undefined): string {
     let serviceIdentifier = (typeof serviceType === 'string') ? serviceType : serviceType.UUID;
     if (subType !== undefined) {
       serviceIdentifier += '_' + subType;

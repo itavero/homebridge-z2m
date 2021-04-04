@@ -23,6 +23,14 @@ export class DocsAccessory implements BasicAccessory {
    constructor(
       readonly displayName: string){}
 
+   getDefaultServiceDisplayName(subType: string): string {
+     let name = 'Dummy';
+     if (subType !== undefined) {
+       name += ` ${subType}`;
+     }
+     return name;
+   }
+
    getServicesAndCharacteristics() : Map<string, string[]> {
      const result = new Map<string, string[]>();
      for (const srv of this.services) {

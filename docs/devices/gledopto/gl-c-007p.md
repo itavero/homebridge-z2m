@@ -16,6 +16,7 @@ the Gledopto GL-C-007P
 
 * [Lightbulb](../../light.md)
   * Brightness
+  * ColorTemperature
   * Hue
   * On
   * Saturation

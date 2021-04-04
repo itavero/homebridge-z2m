@@ -20,11 +20,9 @@ the SmartThings STS-IRM-250
   * StatusLowBattery
 * [OccupancySensor](../../sensors.md)
   * OccupancyDetected
-  * StatusLowBattery
   * StatusTampered
 * [TemperatureSensor](../../sensors.md)
   * CurrentTemperature
-  * StatusLowBattery
   * StatusTampered
 
 

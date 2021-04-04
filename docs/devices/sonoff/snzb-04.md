@@ -24,7 +24,6 @@ these devices
 * [ContactSensor](../../sensors.md)
   * ContactSensorState
   * StatusLowBattery
-  * StatusTampered
 
 
 # Related

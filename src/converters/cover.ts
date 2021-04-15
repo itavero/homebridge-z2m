@@ -27,6 +27,7 @@ export class CoverCreator implements ServiceCreator {
 
 class CoverHandler implements ServiceHandler {
   private readonly positionExpose: ExposesEntryWithNumericRangeProperty;
+  private readonly tiltExpose: ExposesEntryWithNumericRangeProperty;
   private readonly service: Service;
   private positionCurrent = -1;
   private readonly updateTimer: ExtendedTimer;
@@ -69,6 +70,14 @@ class CoverHandler implements ServiceHandler {
     this.target_max = target.props.maxValue;
     target.on('set', this.handleSetTargetPosition.bind(this));
 
+    // Tilt
+    const tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property) && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
+    this.tiltExpose = tiltExpose;
+
+    getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle)
+    // getOrAddCharacteristic(this.service, hap.Characteristic.TargetHorizontalTiltAngle)
+    // TODO: target.on('set', this.handleSetTargetTilt.bind(this)
+
     this.updateTimer = new ExtendedTimer(this.requestPositionUpdate.bind(this), 2000);
     this.waitingForUpdate = false;
   }
@@ -78,6 +87,9 @@ class CoverHandler implements ServiceHandler {
     const keys: string[] = [];
     if (exposesCanBeGet(this.positionExpose)) {
       keys.push(this.positionExpose.property);
+    }
+    if (exposesCanBeGet(this.tiltExpose)) {
+      keys.push(this.tiltExpose.property);
     }
     return keys;
   }
@@ -103,6 +115,9 @@ class CoverHandler implements ServiceHandler {
       this.service.updateCharacteristic(hap.Characteristic.PositionState, positionState);
       this.positionCurrent = latestPosition;
       this.scaleAndUpdateCurrentPosition(this.positionCurrent);
+    }
+    if (this.tiltExpose.property in state) {
+      this.scaleAndUpdateCurrentTilt(state[this.tiltExpose.property] as number);
     }
   }
 
@@ -137,6 +152,12 @@ class CoverHandler implements ServiceHandler {
       this.current_min, this.current_max);
 
     this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
+  }
+
+  private scaleAndUpdateCurrentTilt(value: number): void {
+    // map angles to percentages
+    const characteristicValue = -90 + (value / 100) * 180
+    this.service.updateCharacteristic(hap.Characteristic.CurrentHorizontalTiltAngle, characteristicValue);
   }
 
   private handleSetTargetPosition(value: CharacteristicValue, callback: CharacteristicSetCallback): void {

@@ -71,10 +71,11 @@ class CoverHandler implements ServiceHandler {
     target.on('set', this.handleSetTargetPosition.bind(this));
 
     // Tilt
-    const tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property) && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
+    const tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property) 
+      && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
     this.tiltExpose = tiltExpose;
 
-    getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle)
+    getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle);
     // getOrAddCharacteristic(this.service, hap.Characteristic.TargetHorizontalTiltAngle)
     // TODO: target.on('set', this.handleSetTargetTilt.bind(this)
 
@@ -156,7 +157,7 @@ class CoverHandler implements ServiceHandler {
 
   private scaleAndUpdateCurrentTilt(value: number): void {
     // map angles to percentages
-    const characteristicValue = -90 + (value / 100) * 180
+    const characteristicValue = -90 + (value / 100) * 180;
     this.service.updateCharacteristic(hap.Characteristic.CurrentHorizontalTiltAngle, characteristicValue);
   }
 

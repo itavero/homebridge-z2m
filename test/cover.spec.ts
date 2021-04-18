@@ -435,6 +435,67 @@ describe('Cover', () => {
       "type": "Router"
     }`;
 
-    // TODO: mocks and tests
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Test JSON Device List entry
+        const device = testJsonDeviceListEntry(deviceModelJson);
+        deviceExposes = device?.definition?.exposes ?? [];
+        expect(deviceExposes?.length).toBeGreaterThan(0);
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Check service creation
+        const windowCovering = newHarness.getOrAddHandler(hap.Service.WindowCovering)
+          .addExpectedCharacteristic('position', hap.Characteristic.CurrentPosition, false)
+          .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true, undefined, false)
+          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false, undefined, false)
+          .addExpectedCharacteristic('tilt', hap.Characteristic.CurrentVerticalTiltAngle, false)
+          .addExpectedCharacteristic('target_tilt', hap.Characteristic.TargetVerticalTiltAngle, true, undefined, false);
+        newHarness.prepareCreationMocks();
+
+        const positionCharacteristicMock = windowCovering.getCharacteristicMock('position');
+        if (positionCharacteristicMock !== undefined) {
+          positionCharacteristicMock.props.minValue = 0;
+          positionCharacteristicMock.props.maxValue = 100;
+        }
+
+        const targetPositionCharacteristicMock = windowCovering.getCharacteristicMock('target_position');
+        if (targetPositionCharacteristicMock !== undefined) {
+          targetPositionCharacteristicMock.props.minValue = 0;
+          targetPositionCharacteristicMock.props.maxValue = 100;
+        }
+
+        // const tiltCharacteristicMock = windowCovering.getCharacteristicMock('tilt');
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkExpectedGetableKeys(['position']);
+        harness = newHarness;
+      }
+      harness?.clearMocks();
+    });
+
+    afterEach(() => {
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
+    });
+
+    test('Check new changed Tilt', () => {
+      expect(harness).toBeDefined();
+
+      // External tilt update
+      harness.checkUpdateState('{"position":100, "tilt":100}', hap.Service.WindowCovering, new Map([
+        [hap.Characteristic.CurrentPosition, 100],
+        [hap.Characteristic.CurrentVerticalTiltAngle, 100],
+        [hap.Characteristic.PositionState, expect.anything()],
+      ]));
+    });
+
+    // TODO: write target tests
   });
 });

@@ -5,6 +5,7 @@ The table below shows how the different features within this `exposes` entry are
 | Name | Required access | Characteristic | Remarks |
 |-|-|-|-|
 | `position` | published, set | [Current Position](https://developers.homebridge.io/#/characteristic/CurrentPosition) (for the value from MQTT),<br>[Target Position](https://developers.homebridge.io/#/characteristic/TargetPosition) (for the value set from HomeKit) | Required |
+| `tilt` | published, set | [Current Vertical Tilt Angle](https://developers.homebridge.io/#/characteristic/CurrentVerticalTiltAngle) (for the value from MQTT)| Optional |
 
 The required [Position State](https://developers.homebridge.io/#/characteristic/PositionState) characteristic is determined by comparing consecutive received positions.
 

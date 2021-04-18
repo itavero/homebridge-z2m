@@ -28,6 +28,7 @@ export class CoverCreator implements ServiceCreator {
 class CoverHandler implements ServiceHandler {
   private readonly positionExpose: ExposesEntryWithNumericRangeProperty;
   private readonly tiltExpose: ExposesEntryWithNumericRangeProperty;
+  private hasTilt = false;
   private readonly service: Service;
   private positionCurrent = -1;
   private readonly updateTimer: ExtendedTimer;
@@ -71,13 +72,20 @@ class CoverHandler implements ServiceHandler {
     target.on('set', this.handleSetTargetPosition.bind(this));
 
     // Tilt
-    const tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property) 
+    const tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
       && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
     this.tiltExpose = tiltExpose;
+    if (tiltExpose === undefined) {
+      accessory.log.debug('WindowCovering has no tilt expose, skipping characteristic setup.');
+    } else {
+      this.hasTilt = true;
+      accessory.log.debug('WindowCovering has tilt expose, adding CurrentVerticalTiltAngle and TargetVerticalTiltAngle characteristics.');
 
-    getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle);
-    // getOrAddCharacteristic(this.service, hap.Characteristic.TargetHorizontalTiltAngle)
-    // TODO: target.on('set', this.handleSetTargetTilt.bind(this)
+      getOrAddCharacteristic(this.service, hap.Characteristic.CurrentVerticalTiltAngle);
+      getOrAddCharacteristic(this.service, hap.Characteristic.TargetVerticalTiltAngle);
+      target.on('set', this.handleSetTargetVerticalTilt.bind(this));
+    }
+
 
     this.updateTimer = new ExtendedTimer(this.requestPositionUpdate.bind(this), 2000);
     this.waitingForUpdate = false;
@@ -89,7 +97,7 @@ class CoverHandler implements ServiceHandler {
     if (exposesCanBeGet(this.positionExpose)) {
       keys.push(this.positionExpose.property);
     }
-    if (exposesCanBeGet(this.tiltExpose)) {
+    if (this.hasTilt && exposesCanBeGet(this.tiltExpose)) {
       keys.push(this.tiltExpose.property);
     }
     return keys;
@@ -117,8 +125,10 @@ class CoverHandler implements ServiceHandler {
       this.positionCurrent = latestPosition;
       this.scaleAndUpdateCurrentPosition(this.positionCurrent);
     }
-    if (this.tiltExpose.property in state) {
-      this.scaleAndUpdateCurrentTilt(state[this.tiltExpose.property] as number);
+    if (this.hasTilt) {
+      if (this.tiltExpose.property in state) {
+        this.scaleAndUpdateCurrentTilt(state[this.tiltExpose.property] as number);
+      }
     }
   }
 
@@ -156,9 +166,9 @@ class CoverHandler implements ServiceHandler {
   }
 
   private scaleAndUpdateCurrentTilt(value: number): void {
-    // map angles to percentages
+    // map value: percentages to characteristicValue: angle
     const characteristicValue = -90 + (value / 100) * 180;
-    this.service.updateCharacteristic(hap.Characteristic.CurrentHorizontalTiltAngle, characteristicValue);
+    this.service.updateCharacteristic(hap.Characteristic.CurrentVerticalTiltAngle, characteristicValue);
   }
 
   private handleSetTargetPosition(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
@@ -181,6 +191,21 @@ class CoverHandler implements ServiceHandler {
 
     // Start requesting frequent updates.
     this.updateTimer.start();
+
+    callback(null);
+  }
+
+  private handleSetTargetVerticalTilt(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
+    // map value: angle back to target: percentage
+    const target = (value as number + 90) / 180 * 100;
+    this.accessory.log.warn('tilt characteristic target value: ' + (value as number).toString());
+    this.accessory.log.warn('tilt target percentage: ' + target.toString());
+
+    const data = {};
+    data[this.tiltExpose.property] = target;
+    this.accessory.queueDataForSetAction(data);
+
+    // TODO: does CurrentVerticalTiltAngle or TargetVerticalTiltAngle need to be updated here manually?
 
     callback(null);
   }

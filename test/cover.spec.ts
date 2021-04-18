@@ -114,8 +114,8 @@ describe('Cover', () => {
     }`;
 
     // Shared "state"
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -144,7 +144,7 @@ describe('Cover', () => {
           targetPositionCharacteristicMock.props.minValue = 0;
           targetPositionCharacteristicMock.props.maxValue = 100;
         }
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -266,5 +266,175 @@ describe('Cover', () => {
       harness.checkGetKeysQueued('position');
       harness.clearMocks();
     });
+  });
+
+  describe('NEXENTRO Blinds Actuator', () => {
+    const deviceModelJson = `{
+      "date_code": "",
+      "definition": {
+        "description": "Blinds actor with Lift/Tilt Calibration & with inputs for wall switches",
+        "exposes": [
+          {
+            "features": [
+              {
+                "access": 3,
+                "name": "state",
+                "property": "state",
+                "type": "binary",
+                "value_off": "CLOSE",
+                "value_on": "OPEN"
+              },
+              {
+                "access": 7,
+                "description": "Position of this cover",
+                "name": "position",
+                "property": "position",
+                "type": "numeric",
+                "value_max": 100,
+                "value_min": 0
+              },
+              {
+                "access": 7,
+                "description": "Tilt of this cover",
+                "name": "tilt",
+                "property": "tilt",
+                "type": "numeric",
+                "value_max": 100,
+                "value_min": 0
+              }
+            ],
+            "type": "cover"
+          },
+          {
+            "access": 1,
+            "description": "Link quality (signal strength)",
+            "name": "linkquality",
+            "property": "linkquality",
+            "type": "numeric",
+            "unit": "lqi",
+            "value_max": 255,
+            "value_min": 0
+          }
+        ],
+        "model": "57008000",
+        "supports_ota": false,
+        "vendor": "Insta GmbH"
+      },
+      "endpoints": {
+        "6": {
+          "bindings": [
+            {
+              "cluster": "genOta",
+              "target": {
+                "endpoint": 1,
+                "ieee_address": "0x00212effff06eebd",
+                "type": "endpoint"
+              }
+            },
+            {
+              "cluster": "closuresWindowCovering",
+              "target": {
+                "endpoint": 1,
+                "ieee_address": "0x00212effff06eebd",
+                "type": "endpoint"
+              }
+            },
+            {
+              "cluster": "genBasic",
+              "target": {
+                "endpoint": 1,
+                "ieee_address": "0x00212effff06eebd",
+                "type": "endpoint"
+              }
+            },
+            {
+              "cluster": "genOnOff",
+              "target": {
+                "endpoint": 1,
+                "ieee_address": "0x00212effff06eebd",
+                "type": "endpoint"
+              }
+            }
+          ],
+          "clusters": {
+            "input": [
+              "genBasic",
+              "genIdentify",
+              "genGroups",
+              "genScenes",
+              "closuresWindowCovering"
+            ],
+            "output": [
+              "genIdentify",
+              "genOta"
+            ]
+          },
+          "configured_reportings": [
+            {
+              "attribute": "currentPositionLiftPercentage",
+              "cluster": "closuresWindowCovering",
+              "maximum_report_interval": 62000,
+              "minimum_report_interval": 1,
+              "reportable_change": 1
+            }
+          ]
+        },
+        "7": {
+          "bindings": [
+            {
+              "cluster": "genBasic",
+              "target": {
+                "endpoint": 1,
+                "ieee_address": "0x00212effff06eebd",
+                "type": "endpoint"
+              }
+            },
+            {
+              "cluster": "closuresWindowCovering",
+              "target": {
+                "endpoint": 1,
+                "ieee_address": "0x00212effff06eebd",
+                "type": "endpoint"
+              }
+            }
+          ],
+          "clusters": {
+            "input": [
+              "genBasic",
+              "genIdentify"
+            ],
+            "output": [
+              "genIdentify",
+              "genGroups",
+              "genOta",
+              "closuresWindowCovering"
+            ]
+          },
+          "configured_reportings": []
+        },
+        "242": {
+          "bindings": [],
+          "clusters": {
+            "input": [],
+            "output": [
+              "greenPower"
+            ]
+          },
+          "configured_reportings": []
+        }
+      },
+      "friendly_name": "Rollo",
+      "ieee_address": "0x842e14fffea1cd5f",
+      "interview_completed": true,
+      "interviewing": false,
+      "model_id": "Generic UP Device",
+      "network_address": 22147,
+      "power_source": "Mains (single phase)",
+      "software_build_id": "00.47.00",
+      "supported": true,
+      "type": "Router"
+    }`;
+
+    // TODO: mocks and tests
   });
 });

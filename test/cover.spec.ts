@@ -268,7 +268,7 @@ describe('Cover', () => {
     });
   });
 
-  describe('NEXENTRO Blinds Actuator', () => {
+  describe('Insta Flush-Mount Blinds Actuator', () => {
     const deviceModelJson = `{
       "date_code": "",
       "definition": {
@@ -453,8 +453,8 @@ describe('Cover', () => {
           .addExpectedCharacteristic('position', hap.Characteristic.CurrentPosition, false)
           .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true, undefined, false)
           .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false, undefined, false)
-          .addExpectedCharacteristic('tilt', hap.Characteristic.CurrentVerticalTiltAngle, false)
-          .addExpectedCharacteristic('target_tilt', hap.Characteristic.TargetVerticalTiltAngle, true, undefined, false);
+          .addExpectedCharacteristic('tilt', hap.Characteristic.CurrentHorizontalTiltAngle, false)
+          .addExpectedCharacteristic('target_tilt', hap.Characteristic.TargetHorizontalTiltAngle, true, undefined, false);
         newHarness.prepareCreationMocks();
 
         const positionCharacteristicMock = windowCovering.getCharacteristicMock('position');
@@ -470,11 +470,12 @@ describe('Cover', () => {
         }
 
         // const tiltCharacteristicMock = windowCovering.getCharacteristicMock('tilt');
+        // const targetTiltCharacteristicMock = windowCovering.getCharacteristicMock('target_tilt');
 
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
-        newHarness.checkExpectedGetableKeys(['position']);
+        newHarness.checkExpectedGetableKeys(['position', 'tilt']);
         harness = newHarness;
       }
       harness?.clearMocks();
@@ -488,10 +489,26 @@ describe('Cover', () => {
     test('Check new changed Tilt', () => {
       expect(harness).toBeDefined();
 
-      // External tilt update
+      // External tilt update 100%
       harness.checkUpdateState('{"position":100, "tilt":100}', hap.Service.WindowCovering, new Map([
         [hap.Characteristic.CurrentPosition, 100],
-        [hap.Characteristic.CurrentVerticalTiltAngle, 100],
+        [hap.Characteristic.CurrentHorizontalTiltAngle, 90],
+        [hap.Characteristic.PositionState, expect.anything()],
+      ]));
+      harness.clearMocks();
+
+      // External tilt update 50%
+      harness.checkUpdateState('{"position":100, "tilt":50}', hap.Service.WindowCovering, new Map([
+        [hap.Characteristic.CurrentPosition, 100],
+        [hap.Characteristic.CurrentHorizontalTiltAngle, 0],
+        [hap.Characteristic.PositionState, expect.anything()],
+      ]));
+      harness.clearMocks();
+
+      // External tilt update 0%
+      harness.checkUpdateState('{"position":100, "tilt":0}', hap.Service.WindowCovering, new Map([
+        [hap.Characteristic.CurrentPosition, 100],
+        [hap.Characteristic.CurrentHorizontalTiltAngle, -90],
         [hap.Characteristic.PositionState, expect.anything()],
       ]));
     });

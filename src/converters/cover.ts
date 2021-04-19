@@ -79,11 +79,11 @@ class CoverHandler implements ServiceHandler {
       accessory.log.debug('WindowCovering has no tilt expose, skipping characteristic setup.');
     } else {
       this.hasTilt = true;
-      accessory.log.debug('WindowCovering has tilt expose, adding CurrentVerticalTiltAngle and TargetVerticalTiltAngle characteristics.');
+      accessory.log.debug('WindowCovering has tilt expose, adding CurrentHorizontalTiltAngle & TargetHorizontalTiltAngle characteristics.');
 
-      getOrAddCharacteristic(this.service, hap.Characteristic.CurrentVerticalTiltAngle);
-      getOrAddCharacteristic(this.service, hap.Characteristic.TargetVerticalTiltAngle);
-      target.on('set', this.handleSetTargetVerticalTilt.bind(this));
+      getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle);
+      const tilt_target = getOrAddCharacteristic(this.service, hap.Characteristic.TargetHorizontalTiltAngle);
+      tilt_target.on('set', this.handleSetTargetHorizontalTilt.bind(this));
     }
 
 
@@ -168,7 +168,7 @@ class CoverHandler implements ServiceHandler {
   private scaleAndUpdateCurrentTilt(value: number): void {
     // map value: percentages to characteristicValue: angle
     const characteristicValue = -90 + (value / 100) * 180;
-    this.service.updateCharacteristic(hap.Characteristic.CurrentVerticalTiltAngle, characteristicValue);
+    this.service.updateCharacteristic(hap.Characteristic.CurrentHorizontalTiltAngle, characteristicValue);
   }
 
   private handleSetTargetPosition(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
@@ -195,9 +195,9 @@ class CoverHandler implements ServiceHandler {
     callback(null);
   }
 
-  private handleSetTargetVerticalTilt(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
+  private handleSetTargetHorizontalTilt(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     // map value: angle back to target: percentage
-    const target = (value as number + 90) / 180 * 100;
+    const target = Math.round((value as number + 90) / 180 * 100);
     this.accessory.log.warn('tilt characteristic target value: ' + (value as number).toString());
     this.accessory.log.warn('tilt target percentage: ' + target.toString());
 
@@ -205,7 +205,7 @@ class CoverHandler implements ServiceHandler {
     data[this.tiltExpose.property] = target;
     this.accessory.queueDataForSetAction(data);
 
-    // TODO: does CurrentVerticalTiltAngle or TargetVerticalTiltAngle need to be updated here manually?
+    // TODO: does CurrentHorizontalTiltAngle or TargetHorizontalTiltAngle need to be updated here manually?
 
     callback(null);
   }

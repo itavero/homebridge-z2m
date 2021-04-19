@@ -205,8 +205,6 @@ class CoverHandler implements ServiceHandler {
     data[this.tiltExpose.property] = target;
     this.accessory.queueDataForSetAction(data);
 
-    // TODO: does CurrentHorizontalTiltAngle or TargetHorizontalTiltAngle need to be updated here manually?
-
     callback(null);
   }
 

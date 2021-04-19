@@ -513,6 +513,20 @@ describe('Cover', () => {
       ]));
     });
 
-    // TODO: write target tests
+    test('HomeKit: Change target tilt', () => {
+      expect(harness).toBeDefined();
+
+      // Check changing the tilt to -90°
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'target_tilt', -90, { tilt: 0 });
+      harness.clearMocks();
+
+      // Check changing the tilt to -90°
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'target_tilt', 0, { tilt: 50 });
+      harness.clearMocks();
+
+      // Check changing the tilt to -90°
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'target_tilt', 90, { tilt: 100 });
+      harness.clearMocks();
+    });
   });
 });

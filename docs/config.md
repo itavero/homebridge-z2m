@@ -66,6 +66,10 @@ Within the `mqtt` object, you can add pretty much all the configuration options 
 * `keepalive`
 * `version`
 
+### Disable MQTT QoS
+Some MQTT Broker doesn't support QoS Level. The plugin option `disable_qos` allow forcing QoS level to 0. If `disable_qos` is empty or equal to false, default QoS level is use.
+You don't have to set `disable_qos` option, if you use local mqtt broker like mosquitto.
+
 ## Devices
 Within the `devices` array, you can set options for specific devices, based on their IEEE addresses (`0x1234567890abcdef`) or the `friendly_name`.
 This identifier should be put in the `id` property.

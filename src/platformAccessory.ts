@@ -6,6 +6,7 @@ import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/
 import { BasicAccessory, BasicLogger, ServiceHandler } from './converters/interfaces';
 import { deviceListEntriesAreEqual, DeviceListEntry, isDeviceDefinition, isDeviceListEntry } from './z2mModels';
 import { BaseDeviceConfiguration } from './configModels';
+import { QoS } from 'mqtt';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;
@@ -139,9 +140,10 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       for (const k of keys) {
         data[k] = 0;
       }
+
       // Publish using ieeeAddr, as that will never change and the friendly_name might.
       this.platform.publishMessage(`${this.accessory.context.device.ieee_address}/get`,
-        JSON.stringify(data), { qos: 1 });
+        JSON.stringify(data), { qos: this.getMqttQosLevel(1) });
     }
   }
 
@@ -197,7 +199,8 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   private publishPendingSetData() {
-    this.platform.publishMessage(`${this.accessory.context.device.ieee_address}/set`, JSON.stringify(this.pendingPublishData), { qos: 2 });
+    const topic = `${this.accessory.context.device.ieee_address}/set`;
+    this.platform.publishMessage(topic, JSON.stringify(this.pendingPublishData), { qos: this.getMqttQosLevel(2) });
     this.publishIsScheduled = false;
     this.pendingPublishData = {};
   }
@@ -274,6 +277,13 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         nameCharacteristic.updateValue(displayName);
       }
     }
+  }
+
+  //Get QoS level, if disable_qos option is set QoS equal to 0 level (best effort)
+  private getMqttQosLevel(defaultQoS: QoS): QoS {
+    let mqttQos: QoS;
+    this.platform.config?.mqtt.force_disable_retain ? mqttQos = 0 : mqttQos = defaultQoS;
+    return mqttQos;
   }
 
   updateStates(state: Record<string, unknown>) {

@@ -20,8 +20,10 @@ the Develco HMSZB-110
   * StatusLowBattery
 * [HumiditySensor](../../sensors.md)
   * CurrentRelativeHumidity
+  * StatusLowBattery
 * [TemperatureSensor](../../sensors.md)
   * CurrentTemperature
+  * StatusLowBattery
 
 
 # Related

@@ -182,10 +182,19 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       return;
     }
 
-    const accessory = this.accessories.find((acc) => acc.matchesIdentifier(topic));
-    if (accessory) {
+    const paths = topic.split("/");
+    const deviceName = paths[0];
+    const updateType = paths.length === 2 ? "individual" : paths.length === 1 ? "json" : undefined;
+    
+    const accessory = this.accessories.find((acc) => acc.matchesIdentifier(deviceName));
+    if (accessory && updateType) {
       try {
-        const state = JSON.parse(statePayload);
+        let state: Record<string, unknown>;
+        if (updateType === "individual") {
+          state = {[paths[1]]: statePayload};
+        } else {
+          state = JSON.parse(statePayload);
+        }
         accessory.updateStates(state);
         this.log.debug(`Handled device update for ${topic}: ${statePayload}`);
       } catch (Error) {

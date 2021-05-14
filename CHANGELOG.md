@@ -5,6 +5,8 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+
+## [1.2.0] - 2021-05-14
 ### Added
 
 - Default device options can now be set using the `defaults` key in the plugin configuration.
@@ -204,7 +206,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.1.3...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/itavero/homebridge-z2m/compare/v1.1.3...v1.2.0
 [1.1.3]: https://github.com/itavero/homebridge-z2m/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/itavero/homebridge-z2m/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/itavero/homebridge-z2m/compare/v1.1.0...v1.1.1

@@ -206,7 +206,7 @@ Unfortunately there are still 64 devices that are not yet supported by this plug
 <span class="vendor">[Matcall](index.md#matcall)</span>
 <span class="vendor">[Meazon](index.md#meazon)</span>
 <span class="vendor">[Moes](index.md#moes)</span>
-<span class="vendor">[Müller Licht](index.md#müller_licht)</span>
+<span class="vendor">[Müller Licht](index.md#muller_licht)</span>
 <span class="vendor">[Mycket](index.md#mycket)</span>
 <div style="clear:both" />
 
@@ -1807,25 +1807,25 @@ Unfortunately there are still 64 devices that are not yet supported by this plug
 | [ZTS-EU_3gang](moes/zts-eu_3gang.md) | Moes Wall touch light switch (3 gang) |
 
 
-# Müller Licht {#müller_licht}
+# Müller Licht {#muller_licht}
 
 | Model | Description |
 | ----- | ----------- |
-| [404000/404005/404012](müller_licht/404000_404005_404012.md) | Müller Licht Tint LED bulb GU10/E14/E27 350/470/806 lumen, dimmable, color, opal white |
-| [404001](müller_licht/404001.md) | Müller Licht LED bulb E27 806 lumen, dimmable |
-| [404002](müller_licht/404002.md) | Müller Licht Tint dim remote control |
-| [404006/404008/404004](müller_licht/404006_404008_404004.md) | Müller Licht Tint LED bulb GU10/E14/E27 350/470/806 lumen, dimmable, opal white |
-| [404017](müller_licht/404017.md) | Müller Licht Smart power strip |
-| [404021](müller_licht/404021.md) | Müller Licht Tint smart switch |
-| [404022](müller_licht/404022.md) | Müller Licht Tint dim remote control |
-| [404023](müller_licht/404023.md) | Müller Licht LED bulb E27 470 lumen, dimmable, clear |
-| [404024](müller_licht/404024.md) | Müller Licht Tint retro LED bulb GU10, dimmable |
-| [404028](müller_licht/404028.md) | Müller Licht Tint LED Panel, color, opal white |
-| [404031](müller_licht/404031.md) | Müller Licht Tint Armaro |
-| [404036](müller_licht/404036.md) | Müller Licht Tint LED-globeform white+color |
-| [404037](müller_licht/404037.md) | Müller Licht Tint retro filament LED-bulb E27, Edison bulb gold, white+ambiance (1800-6500K), dimmable, 5,5W |
-| [44435](müller_licht/44435.md) | Müller Licht Tint LED Stripe, color, opal white |
-| [MLI-404011](müller_licht/mli-404011.md) | Müller Licht Tint remote control |
+| [404000/404005/404012](muller_licht/404000_404005_404012.md) | Müller Licht Tint LED bulb GU10/E14/E27 350/470/806 lumen, dimmable, color, opal white |
+| [404001](muller_licht/404001.md) | Müller Licht LED bulb E27 806 lumen, dimmable |
+| [404002](muller_licht/404002.md) | Müller Licht Tint dim remote control |
+| [404006/404008/404004](muller_licht/404006_404008_404004.md) | Müller Licht Tint LED bulb GU10/E14/E27 350/470/806 lumen, dimmable, opal white |
+| [404017](muller_licht/404017.md) | Müller Licht Smart power strip |
+| [404021](muller_licht/404021.md) | Müller Licht Tint smart switch |
+| [404022](muller_licht/404022.md) | Müller Licht Tint dim remote control |
+| [404023](muller_licht/404023.md) | Müller Licht LED bulb E27 470 lumen, dimmable, clear |
+| [404024](muller_licht/404024.md) | Müller Licht Tint retro LED bulb GU10, dimmable |
+| [404028](muller_licht/404028.md) | Müller Licht Tint LED Panel, color, opal white |
+| [404031](muller_licht/404031.md) | Müller Licht Tint Armaro |
+| [404036](muller_licht/404036.md) | Müller Licht Tint LED-globeform white+color |
+| [404037](muller_licht/404037.md) | Müller Licht Tint retro filament LED-bulb E27, Edison bulb gold, white+ambiance (1800-6500K), dimmable, 5,5W |
+| [44435](muller_licht/44435.md) | Müller Licht Tint LED Stripe, color, opal white |
+| [MLI-404011](muller_licht/mli-404011.md) | Müller Licht Tint remote control |
 
 
 # Mycket {#mycket}

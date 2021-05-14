@@ -19,7 +19,7 @@ setHap(hapNodeJs);
 for (const file of fs.readdirSync(base, { withFileTypes: true })) {
   const p = path.join(base, file.name);
   if (file.isDirectory()) {
-    fs.rmdirSync(p, { recursive: true });
+    fs.rmSync(p, { recursive: true });
   } else if (file.isFile()) {
     fs.unlinkSync(p);
   }
@@ -28,8 +28,10 @@ for (const file of fs.readdirSync(base, { withFileTypes: true })) {
 function normalizeName(model: string): string {
   const find = '[/ :\\(\\)\\.]+';
   const re = new RegExp(find, 'g');
-  return model.replace(re, '_')
-    .replace(/_+$/, '').toLocaleLowerCase();
+  return model.normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(re, '_').replace(/_+$/, '')
+    .toLocaleLowerCase();
 }
 
 function generateZigbee2MqttLink(device: any) {

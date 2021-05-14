@@ -44,6 +44,7 @@ export interface MqttConfiguration extends Record<string, unknown> {
    reject_unauthorized?: boolean;
    keepalive?: number;
    version?: number;
+   disable_qos?: boolean;
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isMqttConfiguration = (x: any): x is MqttConfiguration => (

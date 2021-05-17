@@ -27,7 +27,7 @@ export class CoverCreator implements ServiceCreator {
 
 class CoverHandler implements ServiceHandler {
   private readonly positionExpose: ExposesEntryWithNumericRangeProperty;
-  private readonly tiltExpose: ExposesEntryWithNumericRangeProperty;
+  private readonly tiltExpose: ExposesEntryWithNumericRangeProperty | undefined;
   private hasTilt = false;
   private readonly service: Service;
   private positionCurrent = -1;

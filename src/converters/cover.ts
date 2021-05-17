@@ -73,7 +73,7 @@ class CoverHandler implements ServiceHandler {
 
     // Tilt
     const tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
-      && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
+      && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
     this.tiltExpose = tiltExpose;
     if (tiltExpose === undefined) {
       accessory.log.debug('WindowCovering has no tilt expose, skipping characteristic setup.');

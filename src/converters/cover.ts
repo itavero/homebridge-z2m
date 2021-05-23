@@ -28,7 +28,6 @@ export class CoverCreator implements ServiceCreator {
 class CoverHandler implements ServiceHandler {
   private readonly positionExpose: ExposesEntryWithNumericRangeProperty;
   private readonly tiltExpose: ExposesEntryWithNumericRangeProperty | undefined;
-  private hasTilt = false;
   private readonly service: Service;
   private positionCurrent = -1;
   private readonly updateTimer: ExtendedTimer;
@@ -72,15 +71,9 @@ class CoverHandler implements ServiceHandler {
     target.on('set', this.handleSetTargetPosition.bind(this));
 
     // Tilt
-    const tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
+    this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
       && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
-    this.tiltExpose = tiltExpose;
-    if (tiltExpose === undefined) {
-      accessory.log.debug('WindowCovering has no tilt expose, skipping characteristic setup.');
-    } else {
-      this.hasTilt = true;
-      accessory.log.debug('WindowCovering has tilt expose, adding CurrentHorizontalTiltAngle & TargetHorizontalTiltAngle characteristics.');
-
+    if (this.tiltExpose !== undefined) {
       getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle);
       const tilt_target = getOrAddCharacteristic(this.service, hap.Characteristic.TargetHorizontalTiltAngle);
       tilt_target.on('set', this.handleSetTargetHorizontalTilt.bind(this));
@@ -97,7 +90,7 @@ class CoverHandler implements ServiceHandler {
     if (exposesCanBeGet(this.positionExpose)) {
       keys.push(this.positionExpose.property);
     }
-    if (this.hasTilt && exposesCanBeGet(this.tiltExpose)) {
+    if (this.tiltExpose !== undefined && exposesCanBeGet(this.tiltExpose)) {
       keys.push(this.tiltExpose.property);
     }
     return keys;
@@ -125,10 +118,8 @@ class CoverHandler implements ServiceHandler {
       this.positionCurrent = latestPosition;
       this.scaleAndUpdateCurrentPosition(this.positionCurrent);
     }
-    if (this.hasTilt) {
-      if (this.tiltExpose.property in state) {
+    if (this.tiltExpose !== undefined && this.tiltExpose.property in state) {
         this.scaleAndUpdateCurrentTilt(state[this.tiltExpose.property] as number);
-      }
     }
   }
 
@@ -167,7 +158,7 @@ class CoverHandler implements ServiceHandler {
 
   private scaleAndUpdateCurrentTilt(value: number): void {
     // map value: percentages to characteristicValue: angle
-    const characteristicValue = -90 + (value / 100) * 180;
+    const characteristicValue = this.scaleNumber(value, 0, 100, -90, 90);
     this.service.updateCharacteristic(hap.Characteristic.CurrentHorizontalTiltAngle, characteristicValue);
   }
 
@@ -197,9 +188,8 @@ class CoverHandler implements ServiceHandler {
 
   private handleSetTargetHorizontalTilt(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     // map value: angle back to target: percentage
-    const target = Math.round((value as number + 90) / 180 * 100);
-    this.accessory.log.warn('tilt characteristic target value: ' + (value as number).toString());
-    this.accessory.log.warn('tilt target percentage: ' + target.toString());
+    // must be rounded for set action
+    const target = Math.round(this.scaleNumber(value as number, -90, 90, 0, 100));
 
     const data = {};
     data[this.tiltExpose.property] = target;

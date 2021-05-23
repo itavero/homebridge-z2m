@@ -21,11 +21,9 @@ the Develco SMSZB-120
 * [SmokeSensor](../../sensors.md)
   * SmokeDetected
   * StatusLowBattery
-  * StatusTampered
 * [TemperatureSensor](../../sensors.md)
   * CurrentTemperature
   * StatusLowBattery
-  * StatusTampered
 
 
 # Related

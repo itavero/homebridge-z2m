@@ -66,6 +66,10 @@ Within the `mqtt` object, you can add pretty much all the configuration options 
 * `keepalive`
 * `version`
 
+### Disable QoS for published MQTT messages
+Some MQTT brokers do not have support for QoS. If the QoS Levels sent by this plugin are leading to problems, you can force the plugin to disable this for all messages (i.e. set the QoS level to 0) by setting the `disable_qos` to `true`.
+By default, this option is set to `false`. Note: this option does **not** exist in Zigbee2MQTT itself.
+
 ## Devices
 Within the `devices` array, you can set options for specific devices, based on their IEEE addresses (`0x1234567890abcdef`) or the `friendly_name`.
 This identifier should be put in the `id` property.

@@ -208,7 +208,7 @@ describe('Cover', () => {
       harness.clearMocks();
 
       // Check timer - should request position
-      jest.runTimersToTime(2000);
+      jest.advanceTimersByTime(2000);
       harness.checkGetKeysQueued('position');
       harness.clearMocks();
 

@@ -469,8 +469,17 @@ describe('Cover', () => {
           targetPositionCharacteristicMock.props.maxValue = 100;
         }
 
-        // const tiltCharacteristicMock = windowCovering.getCharacteristicMock('tilt');
-        // const targetTiltCharacteristicMock = windowCovering.getCharacteristicMock('target_tilt');
+        const tiltCharacteristicMock = windowCovering.getCharacteristicMock('tilt');
+        if (tiltCharacteristicMock !== undefined) {
+          tiltCharacteristicMock.props.minValue = -90;
+          tiltCharacteristicMock.props.maxValue = 90;
+        }
+
+        const targetTiltCharacteristicMock = windowCovering.getCharacteristicMock('target_tilt');
+        if (targetTiltCharacteristicMock !== undefined) {
+          targetTiltCharacteristicMock.props.minValue = -90;
+          targetTiltCharacteristicMock.props.maxValue = 90;
+        }
 
         newHarness.callCreators(deviceExposes);
 
@@ -488,6 +497,9 @@ describe('Cover', () => {
 
     test('Check new changed Tilt', () => {
       expect(harness).toBeDefined();
+
+      // Expect CurrentHorizontalTiltAngle to be retrieved to determine range
+      harness.getOrAddHandler(hap.Service.WindowCovering).prepareGetCharacteristicMock('tilt');
 
       // External tilt update 100%
       harness.checkUpdateState('{"position":100, "tilt":100}', hap.Service.WindowCovering, new Map([

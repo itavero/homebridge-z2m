@@ -21,7 +21,6 @@ the Xiaomi SJCGQ11LM
 * [LeakSensor](../../sensors.md)
   * LeakDetected
   * StatusLowBattery
-  * StatusTampered
 
 
 # Related

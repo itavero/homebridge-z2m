@@ -9,6 +9,13 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Support for horizontal tilt of a `cover` (see [#147](https://github.com/itavero/homebridge-z2m/pull/147))
 
+### Changed
+
+For `cover` devices the following changes/fixes are in this release:
+- Update target position, when the state is assumed to be _"stopped"_, to improve Home.app UX. (see [#189](https://github.com/itavero/homebridge-z2m/issues/189))
+- Only request `position` when it is actually "gettable" and we did not receive an update recently (which should normally happen if the device supports reporting).
+- Changed how the `PositionState` is updated based on the received positions. No longer try to interpret the direction (HomeKit does this automatically so it seems).
+
 ## [1.2.0] - 2021-05-14
 ### Added
 

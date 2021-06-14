@@ -7,6 +7,7 @@ import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
 import { CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
 import { ExtendedTimer } from '../timer';
+import { CharacteristicMonitor, NumericCharacteristicMonitor } from './monitor';
 
 export class CoverCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
@@ -27,6 +28,7 @@ export class CoverCreator implements ServiceCreator {
 
 class CoverHandler implements ServiceHandler {
   private readonly positionExpose: ExposesEntryWithNumericRangeProperty;
+  private readonly tiltExpose: ExposesEntryWithNumericRangeProperty | undefined;
   private readonly service: Service;
   private positionCurrent = -1;
   private readonly updateTimer: ExtendedTimer;
@@ -35,6 +37,9 @@ class CoverHandler implements ServiceHandler {
   private readonly target_max: number;
   private readonly current_min: number;
   private readonly current_max: number;
+  private readonly target_tilt_min: number;
+  private readonly target_tilt_max: number;
+  private monitors: CharacteristicMonitor[] = [];
 
   constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
     const endpoint = expose.endpoint;
@@ -63,11 +68,31 @@ class CoverHandler implements ServiceHandler {
 
     const target = getOrAddCharacteristic(this.service, hap.Characteristic.TargetPosition);
     if (target.props.minValue === undefined || target.props.maxValue === undefined) {
-      throw new Error('TargetPosition for Cover does not hav a rang (minValue, maxValue) defined.');
+      throw new Error('TargetPosition for Cover does not have a rang (minValue, maxValue) defined.');
     }
     this.target_min = target.props.minValue;
     this.target_max = target.props.maxValue;
     target.on('set', this.handleSetTargetPosition.bind(this));
+
+    // Tilt
+    this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
+      && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
+    if (this.tiltExpose !== undefined) {
+      getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle);
+      this.monitors.push(new NumericCharacteristicMonitor(this.tiltExpose.property, this.service,
+        hap.Characteristic.CurrentHorizontalTiltAngle, this.tiltExpose.value_min, this.tiltExpose.value_max));
+
+      const target_tilt = getOrAddCharacteristic(this.service, hap.Characteristic.TargetHorizontalTiltAngle);
+      if (target_tilt.props.minValue === undefined || target_tilt.props.maxValue === undefined) {
+        throw new Error('TargetHorizontalTiltAngle for Cover does not have a rang (minValue, maxValue) defined.');
+      }
+      this.target_tilt_min = target_tilt.props.minValue;
+      this.target_tilt_max = target_tilt.props.maxValue;
+      target_tilt.on('set', this.handleSetTargetHorizontalTilt.bind(this));
+    } else {
+      this.target_tilt_min = -90;
+      this.target_tilt_max = 90;
+    }
 
     this.updateTimer = new ExtendedTimer(this.requestPositionUpdate.bind(this), 2000);
     this.waitingForUpdate = false;
@@ -79,10 +104,15 @@ class CoverHandler implements ServiceHandler {
     if (exposesCanBeGet(this.positionExpose)) {
       keys.push(this.positionExpose.property);
     }
+    if (this.tiltExpose !== undefined && exposesCanBeGet(this.tiltExpose)) {
+      keys.push(this.tiltExpose.property);
+    }
     return keys;
   }
 
   updateState(state: Record<string, unknown>): void {
+    this.monitors.forEach(m => m.callback(state));
+
     if (this.positionExpose.property in state) {
       this.waitingForUpdate = false;
 
@@ -161,6 +191,23 @@ class CoverHandler implements ServiceHandler {
     this.updateTimer.start();
 
     callback(null);
+  }
+
+  private handleSetTargetHorizontalTilt(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
+    if (this.tiltExpose) {
+      // map value: angle back to target: percentage
+      // must be rounded for set action
+      const targetTilt = Math.round(this.scaleNumber(value as number,
+        this.target_tilt_min, this.target_tilt_max,
+        this.tiltExpose.value_min, this.tiltExpose.value_max));
+
+      const data = {};
+      data[this.tiltExpose.property] = targetTilt;
+      this.accessory.queueDataForSetAction(data);
+      callback(null);
+    } else {
+      callback(new Error('tilt not supported'));
+    }
   }
 
   static generateIdentifier(endpoint: string | undefined) {

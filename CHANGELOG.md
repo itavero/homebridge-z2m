@@ -5,6 +5,9 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Added
+
+- Support for horizontal tilt of a `cover` (see [#147](https://github.com/itavero/homebridge-z2m/pull/147))
 
 ## [1.2.0] - 2021-05-14
 ### Added

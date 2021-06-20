@@ -30,9 +30,7 @@ class CoverHandler implements ServiceHandler {
   private readonly positionExpose: ExposesEntryWithNumericRangeProperty;
   private readonly tiltExpose: ExposesEntryWithNumericRangeProperty | undefined;
   private readonly service: Service;
-  private positionCurrent = -1;
-  private readonly updateTimer: ExtendedTimer;
-  private waitingForUpdate: boolean;
+  private readonly updateTimer: ExtendedTimer | undefined;
   private readonly target_min: number;
   private readonly target_max: number;
   private readonly current_min: number;
@@ -40,6 +38,10 @@ class CoverHandler implements ServiceHandler {
   private readonly target_tilt_min: number;
   private readonly target_tilt_max: number;
   private monitors: CharacteristicMonitor[] = [];
+  private waitingForUpdate: boolean;
+  private ignoreNextUpdateIfEqualToTarget: boolean;
+  private lastPositionSet = -1;
+  private positionCurrent = -1;
 
   constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
     const endpoint = expose.endpoint;
@@ -74,6 +76,10 @@ class CoverHandler implements ServiceHandler {
     this.target_max = target.props.maxValue;
     target.on('set', this.handleSetTargetPosition.bind(this));
 
+    if (this.target_min !== this.current_min || this.target_max !== this.current_max) {
+      this.accessory.log.error(accessory.displayName + ': cover: TargetPosition and CurrentPosition do not have the same range!');
+    }
+
     // Tilt
     this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
       && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
@@ -94,8 +100,11 @@ class CoverHandler implements ServiceHandler {
       this.target_tilt_max = 90;
     }
 
-    this.updateTimer = new ExtendedTimer(this.requestPositionUpdate.bind(this), 2000);
+    if (exposesCanBeGet(this.positionExpose)) {
+      this.updateTimer = new ExtendedTimer(this.requestPositionUpdate.bind(this), 4000);
+    }
     this.waitingForUpdate = false;
+    this.ignoreNextUpdateIfEqualToTarget = false;
   }
 
   identifier: string;
@@ -114,38 +123,60 @@ class CoverHandler implements ServiceHandler {
     this.monitors.forEach(m => m.callback(state));
 
     if (this.positionExpose.property in state) {
+      const latestPosition = state[this.positionExpose.property] as number;
+
+      // Received an update: Reset flag
       this.waitingForUpdate = false;
 
-      const latestPosition = state[this.positionExpose.property] as number;
-      let positionState = hap.Characteristic.PositionState.STOPPED;
+      // Ignore "first" update?
+      const doIgnoreIfEqual = this.ignoreNextUpdateIfEqualToTarget;
+      this.ignoreNextUpdateIfEqualToTarget = false;
+      if (latestPosition === this.lastPositionSet && doIgnoreIfEqual) {
+        this.accessory.log.debug(`${this.accessory.displayName}: cover: ignore position update (equal to last target)`);
+        return;
+      }
 
-      if (latestPosition === this.positionCurrent) {
-        // Stop requesting frequent updates if no change is detected.
-        this.updateTimer.stop();
-      } else if (this.positionCurrent >= 0) {
-        if (latestPosition > this.positionCurrent && latestPosition < this.positionExpose.value_max) {
-          positionState = hap.Characteristic.PositionState.INCREASING;
-        } else if (latestPosition < this.positionCurrent && latestPosition > this.positionExpose.value_min) {
-          positionState = hap.Characteristic.PositionState.DECREASING;
+      // If we cannot retrieve the position or we were not expecting an update,
+      // always assume the state is "stopped".
+      let didStop = true;
+
+      // As long as the update timer is running, we are expecting updates.
+      if (this.updateTimer !== undefined && this.updateTimer.isActive) {
+        if (latestPosition === this.positionCurrent) {
+          // Stop requesting frequent updates if no change is detected.
+          this.updateTimer.stop();
+        } else {
+          // Assume cover is still moving as the position is still changing
+          didStop = false;
+          this.startOrRestartUpdateTimer();
         }
       }
 
-      this.service.updateCharacteristic(hap.Characteristic.PositionState, positionState);
+      // Update current position
       this.positionCurrent = latestPosition;
-      this.scaleAndUpdateCurrentPosition(this.positionCurrent);
+      this.scaleAndUpdateCurrentPosition(this.positionCurrent, didStop);
+    }
+  }
+
+  private startOrRestartUpdateTimer(): void {
+    if (this.updateTimer === undefined) {
+      return;
+    }
+
+    this.waitingForUpdate = true;
+    if (this.updateTimer.isActive) {
+      this.updateTimer.restart();
+    } else {
+      this.updateTimer.start();
     }
   }
 
   private requestPositionUpdate() {
+    if (!exposesCanBeGet(this.positionExpose)) {
+      return;
+    }
     if (this.waitingForUpdate) {
-      // No update received after previous request.
-      // Assume movement has stopped
-      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
-      this.updateTimer.stop();
-      this.waitingForUpdate = false;
-    } else {
-      // Manually polling for the state, because that was needed with my Swedish blinds.
-      this.waitingForUpdate = true;
+      // Manually polling for the state, as we have not yet received an update.
       this.accessory.queueKeyForGetAction(this.positionExpose.property);
     }
   }
@@ -161,12 +192,20 @@ class CoverHandler implements ServiceHandler {
     return output_min + (percentage * (output_max - output_min));
   }
 
-  private scaleAndUpdateCurrentPosition(value: number): void {
+  private scaleAndUpdateCurrentPosition(value: number, isStopped: boolean): void {
     const characteristicValue = this.scaleNumber(value,
       this.positionExpose.value_min, this.positionExpose.value_max,
       this.current_min, this.current_max);
 
     this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
+
+    if (isStopped) {
+      // Update target position and position state
+      // This should improve the UX in the Home.app
+      this.accessory.log.debug(`${this.accessory.displayName}: cover: assume movement stopped`);
+      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
+      this.service.updateCharacteristic(hap.Characteristic.TargetPosition, characteristicValue);
+    }
   }
 
   private handleSetTargetPosition(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
@@ -187,8 +226,19 @@ class CoverHandler implements ServiceHandler {
       this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
     }
 
-    // Start requesting frequent updates.
-    this.updateTimer.start();
+    // Store last sent position for future reference
+    this.lastPositionSet = target;
+
+    // Ignore next status update if it is equal to the target position set here
+    // and the position can be get.
+    // This was needed for my Swedish blinds when reporting was enabled.
+    // (First update would contain the target position that was sent, followed by the actual position.)
+    if (exposesCanBeGet(this.positionExpose)) {
+      this.ignoreNextUpdateIfEqualToTarget = true;
+    }
+
+    // Start requesting frequent updates (if we do not receive them automatically)
+    this.startOrRestartUpdateTimer();
 
     callback(null);
   }

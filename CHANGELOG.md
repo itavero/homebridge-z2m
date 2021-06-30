@@ -5,6 +5,9 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Added
+
+- The plugin will now log an error if the output format of Zigbee2MQTT (`experimental.output`) appears to have been configured incorrectly.
 
 ## [1.3.0] - 2021-06-20
 ### Added

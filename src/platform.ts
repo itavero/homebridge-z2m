@@ -165,6 +165,19 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
           } else {
             this.log.error(`No version found in message on '${fullTopic}'.`);
           }
+
+          // Also check for potentially incorrect configurations:
+          if ('config' in info) {
+            const outputFormat = info.config.experimental?.output;
+            if (outputFormat !== undefined) {
+              if (!outputFormat.includes('json')) {
+                this.log.error('Zigbee2MQTT MUST output JSON in order for this plugin to work correctly. ' +
+                  `Currently 'experimental.output' is set to '${outputFormat}'. Please adjust your configuration.`);
+              } else {
+                this.log.debug(`Zigbee2MQTT 'experimental.output' is set to '${outputFormat}'`);
+              }
+            }
+          }
         }
       } else if (!topic.endsWith('/get') && !topic.endsWith('/set')) {
         // Probably a status update from a device

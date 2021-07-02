@@ -21,7 +21,6 @@ the HEIMAN HS3SA
 * [SmokeSensor](../../sensors.md)
   * SmokeDetected
   * StatusLowBattery
-  * StatusTampered
 
 
 # Related

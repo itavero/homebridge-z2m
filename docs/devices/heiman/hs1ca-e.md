@@ -21,7 +21,6 @@ the HEIMAN HS1CA-E
 * [CarbonMonoxideSensor](../../sensors.md)
   * CarbonMonoxideDetected
   * StatusLowBattery
-  * StatusTampered
 
 
 # Related

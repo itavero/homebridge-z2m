@@ -18,6 +18,10 @@ the Bosch RADON TriTech ZB
   * BatteryLevel
   * ChargingState
   * StatusLowBattery
+* [LightSensor](../../sensors.md)
+  * CurrentAmbientLightLevel
+  * StatusLowBattery
+  * StatusTampered
 * [OccupancySensor](../../sensors.md)
   * OccupancyDetected
   * StatusLowBattery

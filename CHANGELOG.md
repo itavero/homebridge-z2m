@@ -13,6 +13,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Take over numeric range for "passthrough" characteristics, if provided by Zigbee2MQTT.
   Set minimum value for _Ambient Light Level_ to 0, if range is not provided. (see [#235](https://github.com/itavero/homebridge-z2m/issues/235))
+- Remove (top level) items with an undefined/null value from state updates.
+  This should prevent the warnings mentioned in [#234](https://github.com/itavero/homebridge-z2m/issues/234).
 
 ## [1.3.0] - 2021-06-20
 ### Added

@@ -289,6 +289,13 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     // Restart timer
     this.updateTimer.restart();
 
+    // Filter out all properties that have a null/undefined value
+    for (const key in state) {
+      if (state[key] === null || state[key] === undefined) {
+        delete state[key];
+      }
+    }
+
     // Call updates
     for (const handler of this.serviceHandlers.values()) {
       handler.updateState(state);

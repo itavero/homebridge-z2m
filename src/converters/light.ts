@@ -13,7 +13,7 @@ import {
   CharacteristicMonitor, MappingCharacteristicMonitor, NestedCharacteristicMonitor, NumericCharacteristicMonitor,
   PassthroughCharacteristicMonitor,
 } from './monitor';
-import { convertHueSatToXy, convertXyToHueSat } from '../colorhelper';
+import { convertHueSatToXy, convertMiredColorTemperatureToHueSat, convertXyToHueSat } from '../colorhelper';
 
 export class LightCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
@@ -33,6 +33,9 @@ export class LightCreator implements ServiceCreator {
 }
 
 class LightHandler implements ServiceHandler {
+  public static readonly KEY_COLOR_MODE = 'color_mode';
+  public static readonly COLOR_MODE_TEMPERATURE = 'color_temp';
+
   private monitors: CharacteristicMonitor[] = [];
   private stateExpose: ExposesEntryWithBinaryProperty;
   private brightnessExpose: ExposesEntryWithNumericRangeProperty | undefined;
@@ -81,6 +84,13 @@ class LightHandler implements ServiceHandler {
 
     // Color: Hue/Saturation or X/Y
     this.tryCreateColor(expose, service, accessory);
+
+    // Both temperature and color?
+    if (this.colorTempExpose !== undefined && this.colorExpose !== undefined) {
+      // Add monitor to convert Color Temperature to Hue / Saturation
+      // based on the 'color_mode'
+      this.monitors.push(new ColorTemperatureToHueSatMonitor(service, this.colorTempExpose.property));
+    }
   }
 
   identifier: string;
@@ -106,6 +116,25 @@ class LightHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
+    // Use color_mode to filter out the non-active color information
+    // to prevent "incorrect" updates (leading to "glitches" in the Home.app)
+    if (LightHandler.KEY_COLOR_MODE in state) {
+      if (this.colorTempExpose !== undefined
+        && this.colorTempExpose.property in state
+        && state[LightHandler.KEY_COLOR_MODE] !== LightHandler.COLOR_MODE_TEMPERATURE) {
+        // Color mode is NOT Color Temperature. Remove color temperature information.
+        delete state[this.colorTempExpose.property];
+      }
+
+      if (this.colorExpose !== undefined
+        && this.colorExpose.property !== undefined
+        && this.colorExpose.property in state
+        && state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE) {
+        // Color mode is Color Temperature. Remove HS/XY color information.
+        delete state[this.colorExpose.property];
+      }
+    }
+
     this.monitors.forEach(m => m.callback(state));
   }
 
@@ -138,6 +167,7 @@ class LightHandler implements ServiceHandler {
       }
       if (this.colorComponentAExpose === undefined || this.colorComponentBExpose === undefined) {
         // Can't create service if not all components are present.
+        this.colorExpose = undefined;
         return;
       }
 
@@ -307,6 +337,24 @@ class LightHandler implements ServiceHandler {
       identifier += '_' + endpoint.trim();
     }
     return identifier;
+  }
+}
+
+class ColorTemperatureToHueSatMonitor implements CharacteristicMonitor {
+  constructor(
+    private readonly service: Service,
+    private readonly key_temp: string,
+  ) { }
+
+  callback(state: Record<string, unknown>): void {
+    if (this.key_temp in state
+      && LightHandler.KEY_COLOR_MODE in state
+      && state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE) {
+      const temperature = state[this.key_temp] as number;
+      const hueSat = convertMiredColorTemperatureToHueSat(temperature);
+      this.service.updateCharacteristic(hap.Characteristic.Hue, hueSat[0]);
+      this.service.updateCharacteristic(hap.Characteristic.Saturation, hueSat[1]);
+    }
   }
 }
 

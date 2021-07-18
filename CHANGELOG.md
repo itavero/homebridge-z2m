@@ -9,6 +9,11 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - The plugin will now log an error if the output format of Zigbee2MQTT (`experimental.output`) appears to have been configured incorrectly.
 
+### Changed
+
+- Take over numeric range for "passthrough" characteristics, if provided by Zigbee2MQTT.
+  Set minimum value for _Ambient Light Level_ to 0, if range is not provided. (see [#235](https://github.com/itavero/homebridge-z2m/issues/235))
+
 ## [1.3.0] - 2021-06-20
 ### Added
 

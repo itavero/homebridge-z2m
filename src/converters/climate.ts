@@ -1,13 +1,13 @@
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
   exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures, ExposesEntryWithProperty,
-  exposesHasEnumProperty, exposesHasFeatures, exposesHasNumericRangeProperty, exposesHasProperty, exposesIsPublished, ExposesKnownTypes,
+  exposesHasEnumProperty, exposesHasFeatures, exposesHasProperty, exposesIsPublished, ExposesKnownTypes,
 } from '../z2mModels';
 import { hap } from '../hap';
 import {
   CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor,
 } from './monitor';
-import { getOrAddCharacteristic } from '../helpers';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
 import { CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
 
 export class ThermostatCreator implements ServiceCreator {
@@ -160,20 +160,15 @@ class ThermostatHandler implements ServiceHandler {
     const service = accessory.getOrAddService(new hap.Service.Thermostat(serviceName, endpoint));
 
     // Monitor local temperature
-    getOrAddCharacteristic(service, hap.Characteristic.CurrentTemperature);
+    const currentTemperature = getOrAddCharacteristic(service, hap.Characteristic.CurrentTemperature);
+    copyExposesRangeToCharacteristic(this.localTemperatureExpose, currentTemperature);
     this.monitors.push(new PassthroughCharacteristicMonitor(this.localTemperatureExpose.property, service,
       hap.Characteristic.CurrentTemperature));
 
     // Setpoint
     const setpoint = getOrAddCharacteristic(service, hap.Characteristic.TargetTemperature)
       .on('set', this.handleSetSetpoint.bind(this));
-    if (exposesHasNumericRangeProperty(this.setpointExpose)) {
-      setpoint.setProps({
-        minValue: this.setpointExpose.value_min,
-        maxValue: this.setpointExpose.value_max,
-        minStep: this.setpointExpose.value_step,
-      });
-    }
+    copyExposesRangeToCharacteristic(this.setpointExpose, setpoint);
     this.monitors.push(new PassthroughCharacteristicMonitor(this.setpointExpose.property, service,
       hap.Characteristic.TargetTemperature));
 

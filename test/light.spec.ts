@@ -234,6 +234,24 @@ describe('Light', () => {
       harness.checkSingleUpdateState('{"brightness":254}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 100);
     });
 
+    test('Status update: color_mode = color_temp', () => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"color":{"hue":34,"saturation":77,"x":0.4435,"y":0.4062},"color_mode":"color_temp","color_temp":343,"linkquality":72}',
+        hap.Service.Lightbulb, hap.Characteristic.ColorTemperature, 343);
+    });
+
+    test('Status update: color_mode = xy', () => {
+      expect(harness).toBeDefined();
+      harness.checkUpdateState(
+        '{"color":{"x":0.44416,"y":0.51657},"color_mode":"xy","color_temp":169,"linkquality":75}',
+        hap.Service.Lightbulb,
+        new Map([
+          [hap.Characteristic.Hue, 60],
+          [hap.Characteristic.Saturation, 100],
+        ]));
+    });
+
     test('Status update is handled: Color changed to yellow', () => {
       expect(harness).toBeDefined();
       harness.checkUpdateState(

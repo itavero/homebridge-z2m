@@ -7,7 +7,7 @@ import {
   CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor,
 } from './monitor';
 import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
-import { getOrAddCharacteristic } from '../helpers';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
 import { hap } from '../hap';
 
 interface ExposeToHandlerFunction {
@@ -120,7 +120,8 @@ class HumiditySensorHandler extends BasicSensorHandler {
     super(accessory, expose, allExposes, HumiditySensorHandler.generateIdentifier, (n, t) => new hap.Service.HumiditySensor(n, t));
     accessory.log.debug(`Configuring HumiditySensor for ${this.serviceName}`);
 
-    getOrAddCharacteristic(this.service, hap.Characteristic.CurrentRelativeHumidity);
+    const characteristic = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentRelativeHumidity);
+    copyExposesRangeToCharacteristic(expose, characteristic);
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentRelativeHumidity));
   }
 
@@ -178,11 +179,14 @@ class TemperatureSensorHandler extends BasicSensorHandler {
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(accessory, expose, allExposes, TemperatureSensorHandler.generateIdentifier, (n, t) => new hap.Service.TemperatureSensor(n, t));
     accessory.log.debug(`Configuring TemperatureSensor for ${this.serviceName}`);
-    getOrAddCharacteristic(this.service, hap.Characteristic.CurrentTemperature)
-      .setProps({
+    const characteristic = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentTemperature);
+    if (!copyExposesRangeToCharacteristic(expose, characteristic)) {
+      // Cannot take over range from exposes entry -> Set default range
+      characteristic.setProps({
         minValue: -100,
         maxValue: 100,
       });
+    }
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentTemperature));
   }
 
@@ -200,7 +204,14 @@ class LightSensorHandler extends BasicSensorHandler {
     super(accessory, expose, allExposes, LightSensorHandler.generateIdentifier, (n, t) => new hap.Service.LightSensor(n, t));
     accessory.log.debug(`Configuring LightSensor for ${this.serviceName}`);
 
-    getOrAddCharacteristic(this.service, hap.Characteristic.CurrentAmbientLightLevel);
+    const characteristic = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentAmbientLightLevel);
+    if (!copyExposesRangeToCharacteristic(expose, characteristic)) {
+      // Cannot take over range from exposes entry -> Set default props
+      characteristic.setProps({
+        minValue: 0,
+      });
+    }
+
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentAmbientLightLevel));
   }
 

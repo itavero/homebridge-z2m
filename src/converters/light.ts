@@ -79,18 +79,11 @@ class LightHandler implements ServiceHandler {
     // Brightness characteristic
     this.tryCreateBrightness(features, service);
 
-    // Color temperature
-    this.tryCreateColorTemperature(features, service);
-
     // Color: Hue/Saturation or X/Y
     this.tryCreateColor(expose, service, accessory);
 
-    // Both temperature and color?
-    if (this.colorTempExpose !== undefined && this.colorExpose !== undefined) {
-      // Add monitor to convert Color Temperature to Hue / Saturation
-      // based on the 'color_mode'
-      this.monitors.push(new ColorTemperatureToHueSatMonitor(service, this.colorTempExpose.property));
-    }
+    // Color temperature
+    this.tryCreateColorTemperature(features, service);
   }
 
   identifier: string;
@@ -202,8 +195,16 @@ class LightHandler implements ServiceHandler {
       characteristic.value = this.colorTempExpose.value_min;
 
       characteristic.on('set', this.handleSetColorTemperature.bind(this));
+
       this.monitors.push(new PassthroughCharacteristicMonitor(this.colorTempExpose.property, service,
         hap.Characteristic.ColorTemperature));
+
+      // Also supports colors?
+      if (this.colorTempExpose !== undefined && this.colorExpose !== undefined) {
+        // Add monitor to convert Color Temperature to Hue / Saturation
+        // based on the 'color_mode'
+        this.monitors.push(new ColorTemperatureToHueSatMonitor(service, this.colorTempExpose.property));
+      }
     }
   }
 

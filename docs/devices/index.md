@@ -68,7 +68,7 @@ Unfortunately there are still 66 devices that are not yet supported by this plug
 <span class="vendor">[Calex](index.md#calex)</span>
 <span class="vendor">[CASAIA](index.md#casaia)</span>
 <span class="vendor">[Centralite](index.md#centralite)</span>
-<span class="vendor">[ClickSmart+](index.md#clicksmart+)</span>
+<span class="vendor">[ClickSmart+](index.md#clicksmart)</span>
 <span class="vendor">[Climax](index.md#climax)</span>
 <span class="vendor">[ClimaxTechnology](index.md#climaxtechnology)</span>
 <span class="vendor">[Commercial Electric](index.md#commercial_electric)</span>
@@ -620,7 +620,7 @@ Unfortunately there are still 66 devices that are not yet supported by this plug
 | [4257050-ZHAC](centralite/4257050-zhac.md) | Centralite 3-Series smart dimming outlet |
 
 
-# ClickSmart+ {#clicksmart+}
+# ClickSmart+ {#clicksmart}
 
 | Model | Description |
 | ----- | ----------- |

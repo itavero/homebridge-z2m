@@ -4,8 +4,8 @@ The table below shows how the different features within this `exposes` entry are
 
 | Name | Required access | Characteristic | Remarks |
 |-|-|-|-|
-| `position` | published, set | [Current Position](https://developers.homebridge.io/#/characteristic/CurrentPosition) (for the value from MQTT),<br>[Target Position](https://developers.homebridge.io/#/characteristic/TargetPosition) (for the value set from HomeKit) | Required |
-| `tilt` | published, set | [Current Horizontal Tilt Angle](https://developers.homebridge.io/#/characteristic/CurrentHorizontalTiltAngle) (for the value from MQTT),<br>[Target Horizontal Tilt Angle](https://developers.homebridge.io/#/characteristic/TargetHorizontalTiltAngle) (for the value set from HomeKit)| Optional |
+| `position` | published, set | [Current Position](https://developers.homebridge.io/#/characteristic/CurrentPosition) (for the value from MQTT),<br>[Target Position](https://developers.homebridge.io/#/characteristic/TargetPosition) (for the value set from HomeKit) | Required (unless `tilt` is present) |
+| `tilt` | published, set | [Current Horizontal Tilt Angle](https://developers.homebridge.io/#/characteristic/CurrentHorizontalTiltAngle) (for the value from MQTT),<br>[Target Horizontal Tilt Angle](https://developers.homebridge.io/#/characteristic/TargetHorizontalTiltAngle) (for the value set from HomeKit)| Optional. Will be used as _Current Position_ if `position` is not available. |
 
 The required [Position State](https://developers.homebridge.io/#/characteristic/PositionState) characteristic is set when the _Target Position_ is changed or when an `position` is received from MQTT (and the movement is assumed to be stopped).
 

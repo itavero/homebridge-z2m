@@ -49,12 +49,15 @@ class CoverHandler implements ServiceHandler {
 
     let positionExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
       && e.name === 'position' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
-    if (positionExpose === undefined) {
-      // Tilt only device?
-      positionExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
-        && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
+    this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
+      && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
 
-      if (positionExpose === undefined) {
+    if (positionExpose === undefined) {
+      if (this.tiltExpose !== undefined) {
+        // Tilt only device
+        positionExpose = this.tiltExpose;
+        this.tiltExpose = undefined;
+      } else {
         throw new Error('Required "position" property not found for WindowCovering and no "tilt" as backup.');
       }
     }
@@ -87,13 +90,6 @@ class CoverHandler implements ServiceHandler {
     }
 
     // Tilt
-    if (positionExpose.name === 'tilt') {
-      // Tilt already used instead of position
-      this.tiltExpose = undefined;
-    } else {
-      this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
-        && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
-    }
     if (this.tiltExpose !== undefined) {
       getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle);
       this.monitors.push(new NumericCharacteristicMonitor(this.tiltExpose.property, this.service,

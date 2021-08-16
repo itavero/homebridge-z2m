@@ -29,8 +29,8 @@ This page lists the devices currently supported by Zigbee2MQTT v1.21.0 (which de
 Using an automated script, we have checked which HomeKit Services (and Characteristics) would be created for each of these devices.
 That way you have some kind of idea of what kind of devices are supported.
 
-Currently there are **1541 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
-Unfortunately there are still 66 devices that are not yet supported by this plugin, but are supported by Zigbee2MQTT.
+Currently there are **1542 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
+Unfortunately there are still 65 devices that are not yet supported by this plugin, but are supported by Zigbee2MQTT.
 
 ## A
 <div style="clear:both" />

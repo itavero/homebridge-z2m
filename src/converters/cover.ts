@@ -47,10 +47,19 @@ class CoverHandler implements ServiceHandler {
     const endpoint = expose.endpoint;
     this.identifier = CoverHandler.generateIdentifier(endpoint);
 
-    const positionExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
+    let positionExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
       && e.name === 'position' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
+    this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
+      && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
+
     if (positionExpose === undefined) {
-      throw new Error('Required "position" property not found for WindowCovering.');
+      if (this.tiltExpose !== undefined) {
+        // Tilt only device
+        positionExpose = this.tiltExpose;
+        this.tiltExpose = undefined;
+      } else {
+        throw new Error('Required "position" property not found for WindowCovering and no "tilt" as backup.');
+      }
     }
     this.positionExpose = positionExpose;
 
@@ -81,8 +90,6 @@ class CoverHandler implements ServiceHandler {
     }
 
     // Tilt
-    this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
-      && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
     if (this.tiltExpose !== undefined) {
       getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle);
       this.monitors.push(new NumericCharacteristicMonitor(this.tiltExpose.property, this.service,

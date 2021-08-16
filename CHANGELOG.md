@@ -8,6 +8,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Added
 
 - The plugin will now log an error if the output format of Zigbee2MQTT (`experimental.output`) appears to have been configured incorrectly.
+- Support for `cover` devices that only expose `tilt` and no `position`. (see [#254](https://github.com/itavero/homebridge-z2m/issues/254))
 
 ### Changed
 

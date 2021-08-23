@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- Support for Air Quality Sensors (`voc`, `pm10`, `pm25`). (see [#241](https://github.com/itavero/homebridge-z2m/issues/241))
+
 ## [1.4.0] - 2021-08-16
 ### Added
 

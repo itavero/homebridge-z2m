@@ -94,6 +94,7 @@ const serviceNameMapping = new Map<string, ServiceInfo>([
   addServiceMapping(hapNodeJs.Service.CarbonMonoxideSensor, 'sensors.md'),
   addServiceMapping(hapNodeJs.Service.LeakSensor, 'sensors.md'),
   ['E863F00A-079E-48FF-8F27-9C2605A29F52', new ServiceInfo('Air Pressure Sensor', 'sensors.md')],
+  addServiceMapping(hapNodeJs.Service.AirQualitySensor, 'air_quality.md'),
 ]);
 
 

@@ -87,12 +87,14 @@ export interface ExposesEntryWithEnumProperty extends ExposesEntryWithProperty {
 export const exposesHasFeatures = (x: ExposesEntry): x is ExposesEntryWithFeatures => ('features' in x);
 export const exposesHasProperty = (x: ExposesEntry): x is ExposesEntryWithProperty => (x.name !== undefined
   && x.property !== undefined && x.access !== undefined);
-export const exposesHasNumericRangeProperty = (x: ExposesEntry): x is ExposesEntryWithNumericRangeProperty => (exposesHasProperty(x)
-&& x.type === ExposesKnownTypes.NUMERIC && x.value_min !== undefined && x.value_max !== undefined);
+export const exposesHasNumericProperty = (x: ExposesEntry): x is ExposesEntryWithProperty => (exposesHasProperty(x)
+  && x.type === ExposesKnownTypes.NUMERIC);
+export const exposesHasNumericRangeProperty = (x: ExposesEntry): x is ExposesEntryWithNumericRangeProperty => (exposesHasNumericProperty(x)
+  && x.value_min !== undefined && x.value_max !== undefined);
 export const exposesHasBinaryProperty = (x: ExposesEntry): x is ExposesEntryWithBinaryProperty => (exposesHasProperty(x)
-&& x.type === ExposesKnownTypes.BINARY && x.value_on !== undefined && x.value_off !== undefined);
+  && x.type === ExposesKnownTypes.BINARY && x.value_on !== undefined && x.value_off !== undefined);
 export const exposesHasEnumProperty = (x: ExposesEntry): x is ExposesEntryWithEnumProperty => (exposesHasProperty(x)
-&& x.type === ExposesKnownTypes.ENUM && x.values !== undefined && x.values.length > 0);
+  && x.type === ExposesKnownTypes.ENUM && x.values !== undefined && x.values.length > 0);
 
 export function exposesCanBeSet(entry: ExposesEntry): boolean {
   return (entry.access !== undefined) && ((entry.access & ExposesAccessLevel.SET) !== 0);

@@ -7,7 +7,7 @@ import {
   CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor,
 } from './monitor';
 import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
-import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic, groupByEndpoint } from '../helpers';
 import { hap } from '../hap';
 
 interface ExposeToHandlerFunction {
@@ -362,17 +362,8 @@ export class BasicSensorCreator implements ServiceCreator {
   ];
 
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    const endpointMap = new Map<string | undefined, ExposesEntryWithProperty[]>();
-    exposes.filter(e => exposesHasProperty(e) && !accessory.isPropertyExcluded(e.property)
-      && exposesIsPublished(e)).map(e => e as ExposesEntryWithProperty)
-      .forEach((item) => {
-        const collection = endpointMap.get(item.endpoint);
-        if (!collection) {
-          endpointMap.set(item.endpoint, [item]);
-        } else {
-          collection.push(item);
-        }
-      });
+    const endpointMap = groupByEndpoint(exposes.filter(e => exposesHasProperty(e) && !accessory.isPropertyExcluded(e.property)
+      && exposesIsPublished(e)).map(e => e as ExposesEntryWithProperty));
 
     endpointMap.forEach((value, key) => {
       const optionalProperties = value.filter(e => exposesHasBinaryProperty(e) && (e.name === 'battery_low' || e.name === 'tamper'))

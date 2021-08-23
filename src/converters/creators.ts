@@ -8,6 +8,7 @@ import { LockCreator } from './lock';
 import { SwitchCreator } from './switch';
 import { StatelessProgrammableSwitchCreator } from './action';
 import { ThermostatCreator } from './climate';
+import { AirQualitySensorCreator } from './air_quality';
 
 export interface ServiceCreatorManager {
   createHomeKitEntitiesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
@@ -24,6 +25,7 @@ export class BasicServiceCreatorManager implements ServiceCreatorManager {
     CoverCreator,
     LockCreator,
     BasicSensorCreator,
+    AirQualitySensorCreator,
     StatelessProgrammableSwitchCreator,
     ThermostatCreator,
     BatteryCreator,
@@ -46,7 +48,11 @@ export class BasicServiceCreatorManager implements ServiceCreatorManager {
 
   createHomeKitEntitiesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     for (const c of this.creators) {
-      c.createServicesFromExposes(accessory, exposes);
+      try {
+        c.createServicesFromExposes(accessory, exposes);
+      } catch (e) {
+        accessory.log.error(`Exception occurred when creating services for ${accessory.displayName}: ${e}`);
+      }
     }
   }
 }

@@ -4,7 +4,7 @@ import {
   exposesHasBinaryProperty, exposesHasNumericRangeProperty, exposesHasProperty, exposesIsPublished,
 } from '../z2mModels';
 import { hap } from '../hap';
-import { getOrAddCharacteristic } from '../helpers';
+import { getOrAddCharacteristic, groupByEndpoint } from '../helpers';
 import { CharacteristicValue } from 'homebridge';
 import {
   BinaryConditionCharacteristicMonitor,
@@ -13,19 +13,11 @@ import {
 
 export class BatteryCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    const endpointMap = new Map<string | undefined, ExposesEntryWithProperty[]>();
-    exposes.filter(e =>
+    const endpointMap = groupByEndpoint(exposes.filter(e =>
       exposesHasProperty(e) && exposesIsPublished(e) && !accessory.isPropertyExcluded(e.property) && (
         (e.name === 'battery' && exposesHasNumericRangeProperty(e))
         || (e.name === 'battery_low' && exposesHasBinaryProperty(e))
-      )).map(e => e as ExposesEntryWithProperty).forEach((item) => {
-      const collection = endpointMap.get(item.endpoint);
-      if (!collection) {
-        endpointMap.set(item.endpoint, [item]);
-      } else {
-        collection.push(item);
-      }
-    });
+      )).map(e => e as ExposesEntryWithProperty));
     endpointMap.forEach((value, key) => {
       if (!accessory.isServiceHandlerIdKnown(BatteryHandler.generateIdentifier(key))) {
         this.createService(key, value, accessory);

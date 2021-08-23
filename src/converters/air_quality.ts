@@ -3,23 +3,15 @@ import {
   exposesCanBeGet, ExposesEntry, ExposesEntryWithProperty, exposesHasNumericProperty, exposesHasProperty, exposesIsPublished,
 } from '../z2mModels';
 import { hap } from '../hap';
-import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic, groupByEndpoint } from '../helpers';
 import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
 
 export class AirQualitySensorCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    const endpointMap = new Map<string | undefined, ExposesEntryWithProperty[]>();
-    exposes.filter(e =>
+    const endpointMap = groupByEndpoint(exposes.filter(e =>
       exposesHasProperty(e) && exposesIsPublished(e) && !accessory.isPropertyExcluded(e.property) &&
       AirQualitySensorHandler.propertyFactories.find((f) => f.canUseExposesEntry(e)) !== undefined,
-    ).map(e => e as ExposesEntryWithProperty).forEach((item) => {
-      const collection = endpointMap.get(item.endpoint);
-      if (!collection) {
-        endpointMap.set(item.endpoint, [item]);
-      } else {
-        collection.push(item);
-      }
-    });
+    ).map(e => e as ExposesEntryWithProperty));
     endpointMap.forEach((value, key) => {
       if (!accessory.isServiceHandlerIdKnown(AirQualitySensorHandler.generateIdentifier(key))) {
         this.createService(key, value, accessory);
@@ -133,10 +125,10 @@ class ParticulateMatter10Property extends PassthroughAirQualityProperty {
   }
 }
 
-class ParticulateMatter2_5Property extends PassthroughAirQualityProperty {
+class ParticulateMatter2Dot5Property extends PassthroughAirQualityProperty {
   private static readonly NAME = 'pm25';
   static canUseExposesEntry(entry: ExposesEntry): boolean {
-    return exposesHasNumericProperty(entry) && entry.name === ParticulateMatter2_5Property.NAME;
+    return exposesHasNumericProperty(entry) && entry.name === ParticulateMatter2Dot5Property.NAME;
   }
 
   constructor(expose: ExposesEntryWithProperty, service: Service) {
@@ -169,7 +161,7 @@ class AirQualitySensorHandler implements ServiceHandler {
     WithExposesValidator<{ new(expose: ExposesEntryWithProperty, service: Service): AirQualityProperty }>[] = [
       VolatileOrganicCompoundsProperty,
       ParticulateMatter10Property,
-      ParticulateMatter2_5Property,
+      ParticulateMatter2Dot5Property,
     ];
 
   private readonly properties: AirQualityProperty[] = [];

@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.5.0] - 2021-08-23
+
 ### Added
 
 - Support for Air Quality Sensors (`voc`, `pm10`, `pm25`). (see [#241](https://github.com/itavero/homebridge-z2m/issues/241))
@@ -235,7 +237,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/itavero/homebridge-z2m/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/itavero/homebridge-z2m/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/itavero/homebridge-z2m/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/itavero/homebridge-z2m/compare/v1.1.3...v1.2.0

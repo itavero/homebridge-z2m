@@ -30,7 +30,7 @@ Using an automated script, we have checked which HomeKit Services (and Character
 That way you have some kind of idea of what kind of devices are supported.
 
 Currently there are **1542 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
-Unfortunately there are still 65 devices that are not yet supported by this plugin, but are supported by Zigbee2MQTT.
+Unfortunately there are still 54 devices that are not (yet) supported by this plugin, but are supported by Zigbee2MQTT (and expose more than just a _link quality_).
 
 ## A
 <div style="clear:both" />
@@ -87,7 +87,6 @@ Unfortunately there are still 65 devices that are not yet supported by this plug
 <span class="vendor">[Datek](index.md#datek)</span>
 <span class="vendor">[Dawon DNS](index.md#dawon_dns)</span>
 <span class="vendor">[Develco](index.md#develco)</span>
-<span class="vendor">[Digi](index.md#digi)</span>
 <span class="vendor">[DIYRuZ](index.md#diyruz)</span>
 <span class="vendor">[Dresden Elektronik](index.md#dresden_elektronik)</span>
 <div style="clear:both" />
@@ -690,7 +689,6 @@ Unfortunately there are still 65 devices that are not yet supported by this plug
 | Model | Description |
 | ----- | ----------- |
 | [CC2530.ROUTER](custom_devices_diy/cc2530_router.md) | Custom devices (DiY) [CC2530 router](http://ptvo.info/cc2530-based-zigbee-coordinator-and-router-112/) |
-| [CC2538.ROUTER.V1](custom_devices_diy/cc2538_router_v1.md) | Custom devices (DiY) [MODKAM stick СС2538 router](https://github.com/jethome-ru/zigbee-firmware/tree/master/ti/router/cc2538_cc2592) |
 | [CC2538.ROUTER.V2](custom_devices_diy/cc2538_router_v2.md) | Custom devices (DiY) [MODKAM stick СС2538 router with temperature sensor](https://github.com/jethome-ru/zigbee-firmware/tree/master/ti/router/cc2538_cc2592) |
 | [DNCKATSD001](custom_devices_diy/dnckatsd001.md) | Custom devices (DiY) [DNCKAT single key wired wall dimmable light switch](https://github.com/dzungpv/dnckatsw00x/) |
 | [DNCKATSW001](custom_devices_diy/dnckatsw001.md) | Custom devices (DiY) [DNCKAT single key wired wall light switch](https://github.com/dzungpv/dnckatsw00x/) |
@@ -699,7 +697,6 @@ Unfortunately there are still 65 devices that are not yet supported by this plug
 | [DNCKATSW004](custom_devices_diy/dnckatsw004.md) | Custom devices (DiY) [DNCKAT quadruple key wired wall light switch](https://github.com/dzungpv/dnckatsw00x/) |
 | [EFEKTA_PWS](custom_devices_diy/efekta_pws.md) | Custom devices (DiY) [Plant Wattering Sensor] |
 | [ptvo.switch](custom_devices_diy/ptvo_switch.md) | Custom devices (DiY) [Multi-channel relay switch](https://ptvo.info/zigbee-switch-configurable-firmware-router-199/) |
-| [ti.router](custom_devices_diy/ti_router.md) | Custom devices (DiY) Texas Instruments router |
 | [ZeeFlora](custom_devices_diy/zeeflora.md) | Custom devices (DiY) Flower sensor with rechargeable battery |
 | [ZigUP](custom_devices_diy/zigup.md) | Custom devices (DiY) [CC2530 based ZigBee relais, switch, sensor and router](https://github.com/formtapez/ZigUP/) |
 | [ZWallRemote0](custom_devices_diy/zwallremote0.md) | Custom devices (DiY) [Matts Wall Switch Remote](https://github.com/mattlokes/ZWallRemote) |
@@ -785,13 +782,6 @@ Unfortunately there are still 65 devices that are not yet supported by this plug
 | [WISZB-120](develco/wiszb-120.md) | Develco Window sensor |
 | [WISZB-121](develco/wiszb-121.md) | Develco Window sensor |
 | [ZHEMI101](develco/zhemi101.md) | Develco Energy meter |
-
-
-# Digi {#digi}
-
-| Model | Description |
-| ----- | ----------- |
-| [XBee](digi/xbee.md) | Digi Router |
 
 
 # DIYRuZ {#diyruz}
@@ -1268,15 +1258,10 @@ Unfortunately there are still 65 devices that are not yet supported by this plug
 | [HV-GSCXZB279_HV-GSCXZB229_HV-GSCXZB229K](hive/hv-gscxzb279_hv-gscxzb229_hv-gscxzb229k.md) | Hive Active light, warm to cool white (E27 & B22) |
 | [HV-GUCXZB5](hive/hv-gucxzb5.md) | Hive Active light, warm to cool white (GU10) |
 | [MOT003](hive/mot003.md) | Hive Motion sensor |
-| [SLB2](hive/slb2.md) | Hive Signal booster |
 | [SLR1b](hive/slr1b.md) | Hive Heating thermostat |
 | [SLR2](hive/slr2.md) | Hive Dual channel heating and hot water thermostat |
 | [SLR2b](hive/slr2b.md) | Hive Dual channel heating and hot water thermostat |
-| [SLT2](hive/slt2.md) | Hive Heating thermostat remote control |
-| [SLT3](hive/slt3.md) | Hive Heating thermostat remote control |
-| [SLT3B](hive/slt3b.md) | Hive Heating thermostat remote control |
 | [UK7004240](hive/uk7004240.md) | Hive Radiator valve based on Danfos Ally |
-| [WPT1](hive/wpt1.md) | Hive Heating thermostat remote control |
 
 
 # HKGK {#hkgk}
@@ -1364,7 +1349,6 @@ Unfortunately there are still 65 devices that are not yet supported by this plug
 | [E1603/E1702/E1708](ikea/e1603_e1702_e1708.md) | IKEA TRADFRI control outlet |
 | [E1743](ikea/e1743.md) | IKEA TRADFRI ON/OFF switch |
 | [E1744](ikea/e1744.md) | IKEA SYMFONISK sound controller |
-| [E1746](ikea/e1746.md) | IKEA TRADFRI signal repeater |
 | [E1757](ikea/e1757.md) | IKEA FYRTUR roller blind |
 | [E1766](ikea/e1766.md) | IKEA TRADFRI open/close remote |
 | [E1812](ikea/e1812.md) | IKEA TRADFRI shortcut button |
@@ -2584,7 +2568,6 @@ Unfortunately there are still 65 devices that are not yet supported by this plug
 | Model | Description |
 | ----- | ----------- |
 | [OS600](salus_controls/os600.md) | Salus Controls Door or window contact sensor |
-| [RE600](salus_controls/re600.md) | Salus Controls Router Zigbee |
 | [SP600](salus_controls/sp600.md) | Salus Controls Smart plug (UK socket) |
 | [SPE600](salus_controls/spe600.md) | Salus Controls Smart plug (EU socket) |
 | [SR600](salus_controls/sr600.md) | Salus Controls Relay switch |
@@ -3024,7 +3007,6 @@ Unfortunately there are still 65 devices that are not yet supported by this plug
 | [TS0201](tuya/ts0201.md) | TuYa Temperature & humidity sensor with display |
 | [TS0202](tuya/ts0202.md) | TuYa Motion sensor |
 | [TS0203](tuya/ts0203.md) | TuYa Door sensor |
-| [TS0207_repeater](tuya/ts0207_repeater.md) | TuYa Repeater |
 | [TS0210](tuya/ts0210.md) | TuYa Vibration sensor |
 | [TS0215A_remote](tuya/ts0215a_remote.md) | TuYa Security remote control |
 | [TS0215A_sos](tuya/ts0215a_sos.md) | TuYa SOS button |

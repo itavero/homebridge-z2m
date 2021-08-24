@@ -20,6 +20,61 @@ the HEIMAN HS1VS-EF
   * StatusLowBattery
 
 
+
+## Exposes
+
+```json
+[
+  {
+    "type": "binary",
+    "name": "vibration",
+    "property": "vibration",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether the device detected vibration"
+  },
+  {
+    "type": "binary",
+    "name": "battery_low",
+    "property": "battery_low",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates if the battery of this device is almost empty"
+  },
+  {
+    "type": "binary",
+    "name": "tamper",
+    "property": "tamper",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether the device is tampered"
+  },
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]
+```
+
 # Related
 * [Other devices from HEIMAN](../index.md#heiman)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/HS1VS-EF.html)

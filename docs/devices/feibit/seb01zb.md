@@ -20,6 +20,61 @@ the Feibit SEB01ZB
   * StatusLowBattery
 
 
+
+## Exposes
+
+```json
+[
+  {
+    "type": "binary",
+    "name": "sos",
+    "property": "sos",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "SOS alarm"
+  },
+  {
+    "type": "binary",
+    "name": "battery_low",
+    "property": "battery_low",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates if the battery of this device is almost empty"
+  },
+  {
+    "type": "binary",
+    "name": "tamper",
+    "property": "tamper",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether the device is tampered"
+  },
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]
+```
+
 # Related
 * [Other devices from Feibit](../index.md#feibit)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/SEB01ZB.html)

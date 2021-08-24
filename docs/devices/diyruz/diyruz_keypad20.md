@@ -20,6 +20,34 @@ the DIYRuZ DIYRuZ_KEYPAD20
   * StatusLowBattery
 
 
+
+## Exposes
+
+```json
+[
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]
+```
+
 # Related
 * [Other devices from DIYRuZ](../index.md#diyruz)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/DIYRuZ_KEYPAD20.html)

@@ -20,6 +20,110 @@ the DIYRuZ DIYRuZ_Zintercom
   * StatusLowBattery
 
 
+
+## Exposes
+
+```json
+[
+  {
+    "type": "enum",
+    "name": "state",
+    "property": "state",
+    "access": 1,
+    "values": [
+      "idle",
+      "ring",
+      "talk",
+      "open",
+      "drop"
+    ],
+    "description": "Current state"
+  },
+  {
+    "type": "enum",
+    "name": "mode",
+    "property": "mode",
+    "access": 7,
+    "values": [
+      "never",
+      "once",
+      "always",
+      "drop"
+    ],
+    "description": "Select open mode"
+  },
+  {
+    "type": "binary",
+    "name": "sound",
+    "property": "sound",
+    "access": 7,
+    "value_on": "ON",
+    "value_off": "OFF",
+    "description": "Enable or disable sound"
+  },
+  {
+    "type": "numeric",
+    "name": "time_ring",
+    "property": "time_ring",
+    "access": 7,
+    "unit": "sec",
+    "description": "Time to ring before answer"
+  },
+  {
+    "type": "numeric",
+    "name": "time_talk",
+    "property": "time_talk",
+    "access": 7,
+    "unit": "sec",
+    "description": "Time to hold before open"
+  },
+  {
+    "type": "numeric",
+    "name": "time_open",
+    "property": "time_open",
+    "access": 7,
+    "unit": "sec",
+    "description": "Time to open before end"
+  },
+  {
+    "type": "numeric",
+    "name": "time_bell",
+    "property": "time_bell",
+    "access": 7,
+    "unit": "sec",
+    "description": "Time after last bell to finish ring"
+  },
+  {
+    "type": "numeric",
+    "name": "time_report",
+    "property": "time_report",
+    "access": 7,
+    "unit": "min",
+    "description": "Reporting interval"
+  },
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]
+```
+
 # Related
 * [Other devices from DIYRuZ](../index.md#diyruz)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/DIYRuZ_Zintercom.html)

@@ -20,6 +20,49 @@ the iCasa ICZB-KPD18S
   * StatusLowBattery
 
 
+
+## Exposes
+
+```json
+[
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "enum",
+    "name": "action",
+    "property": "action",
+    "access": 1,
+    "values": [
+      "on",
+      "recall_*",
+      "off",
+      "brightness_stop",
+      "brightness_move_up",
+      "brightness_move_down"
+    ],
+    "description": "Triggered action (e.g. a button click)"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]
+```
+
 # Related
 * [Other devices from iCasa](../index.md#icasa)
 * [Zigbee2MQTT documentation for this device](https://www.zigbee2mqtt.io/devices/ICZB-KPD18S.html)

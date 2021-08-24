@@ -3,7 +3,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { ServiceHandlersTestHarness, testJsonDeviceListEntry, testJsonExposes } from './testHelpers';
 import { Characteristic, CharacteristicValue, WithUUID } from 'homebridge';
 
 describe('Basic Sensors', () => {
@@ -96,8 +96,8 @@ describe('Basic Sensors', () => {
 
     // Shared "state"
     const airPressureServiceId = 'E863F00A-079E-48FF-8F27-9C2605A29F52';
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -116,7 +116,7 @@ describe('Basic Sensors', () => {
         newHarness.getOrAddHandler(airPressureServiceId);
 
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -266,8 +266,8 @@ describe('Basic Sensors', () => {
     }`;
 
     // Shared "state"
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -285,7 +285,7 @@ describe('Basic Sensors', () => {
           .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
 
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -304,7 +304,7 @@ describe('Basic Sensors', () => {
       expect(harness).toBeDefined();
       harness.checkUpdateState('{"battery_low":false,"smoke":false,"tamper":false}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
@@ -312,7 +312,7 @@ describe('Basic Sensors', () => {
       harness.clearMocks();
       harness.checkUpdateState('{"battery_low":true,"smoke":false,"tamper":false}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
@@ -320,7 +320,7 @@ describe('Basic Sensors', () => {
       harness.clearMocks();
       harness.checkUpdateState('{"battery_low":false,"smoke":true,"tamper":false}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
@@ -328,7 +328,7 @@ describe('Basic Sensors', () => {
       harness.clearMocks();
       harness.checkUpdateState('{"battery_low":false,"smoke":false,"tamper":true}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
@@ -424,8 +424,8 @@ describe('Basic Sensors', () => {
    }`;
 
     // Shared "state"
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -443,7 +443,7 @@ describe('Basic Sensors', () => {
           .addExpectedCharacteristic('illuminance', hap.Characteristic.CurrentAmbientLightLevel);
 
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -546,8 +546,8 @@ describe('Basic Sensors', () => {
     }`;
 
     // Shared "state"
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -562,7 +562,7 @@ describe('Basic Sensors', () => {
         newHarness.getOrAddHandler(hap.Service.ContactSensor)
           .addExpectedCharacteristic('contact', hap.Characteristic.ContactSensorState);
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -663,8 +663,8 @@ describe('Basic Sensors', () => {
 
     // Shared "state"
     let waterLeakSensorId = '';
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -682,7 +682,7 @@ describe('Basic Sensors', () => {
           .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
           .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -700,28 +700,28 @@ describe('Basic Sensors', () => {
     test('Update state', (): void => {
       expect(harness).toBeDefined();
       harness.checkUpdateState('{"battery_low":false,"water_leak":false,"tamper":false}', waterLeakSensorId,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
         ]));
       harness.clearMocks();
       harness.checkUpdateState('{"battery_low":true,"water_leak":false,"tamper":false}', waterLeakSensorId,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
         ]));
       harness.clearMocks();
       harness.checkUpdateState('{"battery_low":false,"water_leak":true,"tamper":false}', waterLeakSensorId,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
         ]));
       harness.clearMocks();
       harness.checkUpdateState('{"battery_low":false,"water_leak":false,"tamper":true}', waterLeakSensorId,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
@@ -813,8 +813,8 @@ describe('Basic Sensors', () => {
 
     // Shared "state"
     let gasLeakSensorId = '';
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -836,7 +836,7 @@ describe('Basic Sensors', () => {
           .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
           .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -853,34 +853,34 @@ describe('Basic Sensors', () => {
     test('Update battery and tamper', (): void => {
       expect(harness).toBeDefined();
       harness.checkUpdateState('{"battery_low":true,"tamper":false}', gasLeakSensorId,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
         ]), false);
       harness.checkUpdateState('{"battery_low":true,"tamper":false}', hap.Service.CarbonMonoxideSensor,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
         ]), false);
       harness.clearMocks();
       harness.checkUpdateState('{"battery_low":false,"tamper":true}', gasLeakSensorId,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
         ]), false);
       harness.checkUpdateState('{"battery_low":false,"tamper":true}', hap.Service.CarbonMonoxideSensor,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
         ]), false);
       harness.clearMocks();
       harness.checkUpdateState('{"battery_low":true,"tamper":true}', gasLeakSensorId,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
         ]), false);
       harness.checkUpdateState('{"battery_low":true,"tamper":true}', hap.Service.CarbonMonoxideSensor,
-        new Map<WithUUID<{new (): Characteristic}> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
         ]), false);
@@ -901,6 +901,178 @@ describe('Basic Sensors', () => {
       harness.clearMocks();
       harness.checkSingleUpdateState('{"carbon_monoxide":true}', hap.Service.CarbonMonoxideSensor,
         hap.Characteristic.CarbonMonoxideDetected, hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_ABNORMAL);
+    });
+  });
+
+  describe('HEIMAN HS1VS-N', () => {
+    const deviceExposesJson = `[
+      {
+        "type": "binary",
+        "name": "vibration",
+        "property": "vibration",
+        "access": 1,
+        "value_on": true,
+        "value_off": false,
+        "description": "Indicates whether the device detected vibration"
+      },
+      {
+        "type": "binary",
+        "name": "battery_low",
+        "property": "battery_low",
+        "access": 1,
+        "value_on": true,
+        "value_off": false,
+        "description": "Indicates if the battery of this device is almost empty"
+      },
+      {
+        "type": "binary",
+        "name": "tamper",
+        "property": "tamper",
+        "access": 1,
+        "value_on": true,
+        "value_off": false,
+        "description": "Indicates whether the device is tampered"
+      },
+      {
+        "type": "numeric",
+        "name": "battery",
+        "property": "battery",
+        "access": 1,
+        "unit": "%",
+        "description": "Remaining battery in %",
+        "value_min": 0,
+        "value_max": 100
+      },
+      {
+        "type": "numeric",
+        "name": "linkquality",
+        "property": "linkquality",
+        "access": 1,
+        "unit": "lqi",
+        "description": "Link quality (signal strength)",
+        "value_min": 0,
+        "value_max": 255
+      }
+    ]`;
+
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+    let vibrationSensorId: string;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Test JSON Device List entry
+        deviceExposes = testJsonExposes(deviceExposesJson) ?? [];
+        expect(deviceExposes?.length).toBeGreaterThan(0);
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Check service creation
+        vibrationSensorId = 'vibration_' + hap.Service.MotionSensor.UUID;
+        newHarness.getOrAddHandler(hap.Service.MotionSensor, 'vibration', vibrationSensorId)
+          .addExpectedCharacteristic('vibration', hap.Characteristic.MotionDetected)
+          .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
+          .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
+        newHarness.prepareCreationMocks();
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkExpectedGetableKeys([]);
+        harness = newHarness;
+      }
+      harness?.clearMocks();
+    });
+
+    afterEach(() => {
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
+    });
+
+    test('Update vibration', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"vibration":false}', vibrationSensorId,
+        hap.Characteristic.MotionDetected, false);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"vibration":true}', vibrationSensorId,
+        hap.Characteristic.MotionDetected, true);
+    });
+  });
+
+  describe('SmartThings STSS-PRES-001', () => {
+    const deviceExposesJson = `[
+      {
+        "type": "numeric",
+        "name": "battery",
+        "property": "battery",
+        "access": 1,
+        "unit": "%",
+        "description": "Remaining battery in %",
+        "value_min": 0,
+        "value_max": 100
+      },
+      {
+        "type": "binary",
+        "name": "presence",
+        "property": "presence",
+        "access": 1,
+        "value_on": true,
+        "value_off": false,
+        "description": "Indicates whether the device detected presence"
+      },
+      {
+        "type": "numeric",
+        "name": "linkquality",
+        "property": "linkquality",
+        "access": 1,
+        "unit": "lqi",
+        "description": "Link quality (signal strength)",
+        "value_min": 0,
+        "value_max": 255
+      }
+    ]`;
+
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+    let presenceSensorId: string;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Test JSON Device List entry
+        deviceExposes = testJsonExposes(deviceExposesJson) ?? [];
+        expect(deviceExposes?.length).toBeGreaterThan(0);
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Check service creation
+        presenceSensorId = 'presence_' + hap.Service.OccupancySensor.UUID;
+        newHarness.getOrAddHandler(hap.Service.OccupancySensor, 'presence', presenceSensorId)
+          .addExpectedCharacteristic('presence', hap.Characteristic.OccupancyDetected);
+        newHarness.prepareCreationMocks();
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkExpectedGetableKeys([]);
+        harness = newHarness;
+      }
+      harness?.clearMocks();
+    });
+
+    afterEach(() => {
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
+    });
+
+    test('Update presence', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"presence":false}', presenceSensorId,
+        hap.Characteristic.OccupancyDetected, hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"presence":true}', presenceSensorId,
+        hap.Characteristic.OccupancyDetected, hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED);
     });
   });
 });

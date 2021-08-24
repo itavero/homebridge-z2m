@@ -37,7 +37,7 @@ export enum ExposesKnownTypes {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isExposesEntry = (x: any): x is ExposesEntry => {
-  if (x.type !== undefined) {
+  if (x === undefined || x.type === undefined) {
     return false;
   }
 

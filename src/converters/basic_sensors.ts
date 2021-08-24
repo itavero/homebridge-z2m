@@ -273,6 +273,44 @@ class OccupancySensorHandler extends BinarySensorHandler {
   }
 }
 
+class PresenceSensorHandler extends BinarySensorHandler {
+  public static readonly NAME = 'presence';
+
+  constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
+    super(accessory, expose as ExposesEntryWithBinaryProperty, otherExposes, PresenceSensorHandler.generateIdentifier,
+      'Occupancy Sensor (presence)',
+      (n, t) => new hap.Service.OccupancySensor(n, (PresenceSensorHandler.NAME + ' ' + (t ?? '')).trim()),
+      hap.Characteristic.OccupancyDetected,
+      hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED, hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
+  }
+
+  static generateIdentifier(endpoint: string | undefined) {
+    let identifier = PresenceSensorHandler.NAME + '_' + hap.Service.OccupancySensor.UUID;
+    if (endpoint !== undefined) {
+      identifier += '_' + endpoint.trim();
+    }
+    return identifier;
+  }
+}
+
+class VibrationSensorHandler extends BinarySensorHandler {
+  public static readonly NAME = 'vibration';
+
+  constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
+    super(accessory, expose as ExposesEntryWithBinaryProperty, otherExposes, VibrationSensorHandler.generateIdentifier,
+      'Motion Sensor (vibration)', (n, t) => new hap.Service.MotionSensor(n, (VibrationSensorHandler.NAME + ' ' + (t ?? '')).trim()),
+      hap.Characteristic.MotionDetected, true, false);
+  }
+
+  static generateIdentifier(endpoint: string | undefined) {
+    let identifier = VibrationSensorHandler.NAME + '_' + hap.Service.MotionSensor.UUID;
+    if (endpoint !== undefined) {
+      identifier += '_' + endpoint.trim();
+    }
+    return identifier;
+  }
+}
+
 class SmokeSensorHandler extends BinarySensorHandler {
   constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(accessory, expose as ExposesEntryWithBinaryProperty, otherExposes, SmokeSensorHandler.generateIdentifier, 'SmokeSensor',
@@ -355,6 +393,8 @@ export class BasicSensorCreator implements ServiceCreator {
     new BasicSensorMapping('pressure', ExposesKnownTypes.NUMERIC, AirPressureSensorHandler),
     new BasicSensorMapping('contact', ExposesKnownTypes.BINARY, ContactSensorHandler),
     new BasicSensorMapping('occupancy', ExposesKnownTypes.BINARY, OccupancySensorHandler),
+    new BasicSensorMapping(PresenceSensorHandler.NAME, ExposesKnownTypes.BINARY, PresenceSensorHandler),
+    new BasicSensorMapping(VibrationSensorHandler.NAME, ExposesKnownTypes.BINARY, VibrationSensorHandler),
     new BasicSensorMapping('smoke', ExposesKnownTypes.BINARY, SmokeSensorHandler),
     new BasicSensorMapping('carbon_monoxide', ExposesKnownTypes.BINARY, CarbonMonoxideSensorHandler),
     new BasicSensorMapping('water_leak', ExposesKnownTypes.BINARY, WaterLeakSensorHandler),

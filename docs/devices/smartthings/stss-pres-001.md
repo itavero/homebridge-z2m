@@ -18,44 +18,9 @@ the SmartThings STSS-PRES-001
   * BatteryLevel
   * ChargingState
   * StatusLowBattery
+* [OccupancySensor](../../sensors.md)
+  * OccupancyDetected
 
-
-
-## Exposes
-
-```json
-[
-  {
-    "type": "numeric",
-    "name": "battery",
-    "property": "battery",
-    "access": 1,
-    "unit": "%",
-    "description": "Remaining battery in %",
-    "value_min": 0,
-    "value_max": 100
-  },
-  {
-    "type": "binary",
-    "name": "presence",
-    "property": "presence",
-    "access": 1,
-    "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether the device detected presence"
-  },
-  {
-    "type": "numeric",
-    "name": "linkquality",
-    "property": "linkquality",
-    "access": 1,
-    "unit": "lqi",
-    "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
-  }
-]
-```
 
 # Related
 * [Other devices from SmartThings](../index.md#smartthings)

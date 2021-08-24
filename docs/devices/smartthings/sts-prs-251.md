@@ -18,6 +18,8 @@ the SmartThings STS-PRS-251
   * BatteryLevel
   * ChargingState
   * StatusLowBattery
+* [OccupancySensor](../../sensors.md)
+  * OccupancyDetected
 * [StatelessProgrammableSwitch](../../action.md)
   * ProgrammableSwitchEvent
   * ServiceLabelIndex

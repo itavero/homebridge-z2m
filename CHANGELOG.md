@@ -6,6 +6,11 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- Vibration sensors are now supported and exposed as Motion sensors.
+- Presence sensors are now supported and exposed as Occupancy sensors.
+
 ## [1.5.0] - 2021-08-23
 
 ### Added

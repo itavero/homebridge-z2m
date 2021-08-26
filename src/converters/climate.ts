@@ -99,7 +99,7 @@ class ThermostatHandler implements ServiceHandler {
     // If both are not present, we'll assume a Heat only device, which is always in heating mode.
     let feature = e.features.find(ThermostatHandler.PREDICATE_TARGET_MODE);
     const hasTargetMode = feature !== undefined && !accessory.isPropertyExcluded(feature.property);
-    feature = e.features.find(ThermostatHandler.PREDICATE_TARGET_MODE);
+    feature = e.features.find(ThermostatHandler.PREDICATE_CURRENT_STATE);
     const hasCurrentStateMode = feature !== undefined && !accessory.isPropertyExcluded(feature.property);
     if (hasTargetMode || hasCurrentStateMode) {
       if (!hasTargetMode || !hasCurrentStateMode) {

@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Fixed
+
+- Typo causing same predicate to be used twice when checking for system_mode and running_state prooperties in climate converter.
+
 ## [1.6.0] - 2021-08-24
 
 ### Added

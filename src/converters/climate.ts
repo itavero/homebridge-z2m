@@ -95,19 +95,7 @@ class ThermostatHandler implements ServiceHandler {
       return false;
     }
 
-    // If system_mode is present, running_state must also be present.
-    // If both are not present, we'll assume a Heat only device, which is always in heating mode.
-    let feature = e.features.find(ThermostatHandler.PREDICATE_TARGET_MODE);
-    const hasTargetMode = feature !== undefined && !accessory.isPropertyExcluded(feature.property);
-    feature = e.features.find(ThermostatHandler.PREDICATE_CURRENT_STATE);
-    const hasCurrentStateMode = feature !== undefined && !accessory.isPropertyExcluded(feature.property);
-    if (hasTargetMode || hasCurrentStateMode) {
-      if (!hasTargetMode || !hasCurrentStateMode) {
-        return false;
-      }
-    }
-
-    feature = e.features.find(ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE);
+    let feature = e.features.find(ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE);
     if (feature === undefined || accessory.isPropertyExcluded(feature.property)) {
       return false;
     }
@@ -149,6 +137,12 @@ class ThermostatHandler implements ServiceHandler {
       this.currentStateExpose = undefined;
     }
     if (this.targetModeExpose === undefined || this.currentStateExpose === undefined) {
+      if (this.targetModeExpose !== undefined) {
+        this.accessory.log.debug(`${accessory.displayName}: ignore ${this.targetModeExpose.property}; no current state exposed.`);
+      }
+      if (this.currentStateExpose !== undefined) {
+        this.accessory.log.debug(`${accessory.displayName}: ignore ${this.currentStateExpose.property}; no current state exposed.`);
+      }
       // If one of them is undefined, ignore the other one
       this.targetModeExpose = undefined;
       this.currentStateExpose = undefined;

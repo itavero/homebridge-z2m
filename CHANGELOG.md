@@ -8,7 +8,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Fixed
 
-- Typo causing same predicate to be used twice when checking for system_mode and running_state properties in climate converter.
+- Removed unnecessary code from climate service.
 
 ## [1.6.0] - 2021-08-24
 

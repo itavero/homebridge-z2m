@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Fixed
+
+- Removed unnecessary code from climate service.
+
 ## [1.6.0] - 2021-08-24
 
 ### Added

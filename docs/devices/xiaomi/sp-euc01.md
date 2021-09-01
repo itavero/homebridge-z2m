@@ -16,8 +16,6 @@ the Xiaomi SP-EUC01
 
 * [Switch](../../switch.md)
   * On
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
 
 
 # Related

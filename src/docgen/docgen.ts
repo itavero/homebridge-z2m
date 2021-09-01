@@ -104,6 +104,11 @@ const servicesIgnoredForDeterminingSupport = new Set<string>([
   hapNodeJs.Service.BatteryService.UUID,
 ]);
 
+const ignoredExposesNames = new Set<string>([
+  'linkquality',
+  'battery',
+]);
+
 let supportedDeviceCounter = 0;
 let unsupportedDeviceCounter = 0;
 
@@ -213,7 +218,8 @@ ${JSON.stringify(device.exposes, null, 2)}
   } else {
     // Should we consider this device to be supported?
     const isSupported = ([...services.keys()].findIndex(s => !servicesIgnoredForDeterminingSupport.has(s)) >= 0);
-    if (isSupported) {
+    const hasPropertiesThatAreNotIgnored = (device.exposes.findIndex(e => !ignoredExposesNames.has(e.name)) >= 0);
+    if (isSupported || !hasPropertiesThatAreNotIgnored) {
       supportedDeviceCounter += 1 + whiteLabelCount;
     } else {
       unsupportedDeviceCounter += 1 + whiteLabelCount;
@@ -228,7 +234,7 @@ ${serviceInfoToMarkdown(services)}
 
 `;
 
-    if (!isSupported) {
+    if (!isSupported && hasPropertiesThatAreNotIgnored) {
       // Also add exposes information for these devices
       devicePage += `
 ## Exposes

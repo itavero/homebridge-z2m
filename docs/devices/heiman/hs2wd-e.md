@@ -70,6 +70,19 @@ the HEIMAN HS2WD-E
         "description": "Sound level"
       },
       {
+        "type": "enum",
+        "name": "strobe_level",
+        "property": "strobe_level",
+        "access": 2,
+        "values": [
+          "low",
+          "medium",
+          "high",
+          "very_high"
+        ],
+        "description": "Intensity of the strobe"
+      },
+      {
         "type": "binary",
         "name": "strobe",
         "property": "strobe",
@@ -77,6 +90,15 @@ the HEIMAN HS2WD-E
         "value_on": true,
         "value_off": false,
         "description": "Turn on/off the strobe (light) during warning"
+      },
+      {
+        "type": "numeric",
+        "name": "strobe_duty_cycle",
+        "property": "strobe_duty_cycle",
+        "access": 2,
+        "value_max": 10,
+        "value_min": 0,
+        "description": "Length of the flash cycle"
       },
       {
         "type": "numeric",

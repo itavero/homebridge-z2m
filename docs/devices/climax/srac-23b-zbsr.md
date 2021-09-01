@@ -26,6 +26,24 @@ the Climax SRAC-23B-ZBSR
 ```json
 [
   {
+    "type": "binary",
+    "name": "battery_low",
+    "property": "battery_low",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates if the battery of this device is almost empty"
+  },
+  {
+    "type": "binary",
+    "name": "tamper",
+    "property": "tamper",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether the device is tampered"
+  },
+  {
     "type": "composite",
     "property": "warning",
     "name": "warning",
@@ -60,6 +78,19 @@ the Climax SRAC-23B-ZBSR
         "description": "Sound level"
       },
       {
+        "type": "enum",
+        "name": "strobe_level",
+        "property": "strobe_level",
+        "access": 2,
+        "values": [
+          "low",
+          "medium",
+          "high",
+          "very_high"
+        ],
+        "description": "Intensity of the strobe"
+      },
+      {
         "type": "binary",
         "name": "strobe",
         "property": "strobe",
@@ -67,6 +98,15 @@ the Climax SRAC-23B-ZBSR
         "value_on": true,
         "value_off": false,
         "description": "Turn on/off the strobe (light) during warning"
+      },
+      {
+        "type": "numeric",
+        "name": "strobe_duty_cycle",
+        "property": "strobe_duty_cycle",
+        "access": 2,
+        "value_max": 10,
+        "value_min": 0,
+        "description": "Length of the flash cycle"
       },
       {
         "type": "numeric",
@@ -79,32 +119,23 @@ the Climax SRAC-23B-ZBSR
     ]
   },
   {
-    "type": "binary",
-    "name": "battery_low",
-    "property": "battery_low",
-    "access": 1,
-    "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the battery of this device is almost empty"
-  },
-  {
-    "type": "binary",
-    "name": "tamper",
-    "property": "tamper",
-    "access": 1,
-    "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether the device is tampered"
-  },
-  {
     "type": "numeric",
-    "name": "battery",
-    "property": "battery",
-    "access": 1,
-    "unit": "%",
-    "description": "Remaining battery in %",
+    "name": "max_duration",
+    "property": "max_duration",
+    "access": 7,
+    "unit": "s",
     "value_min": 0,
-    "value_max": 100
+    "value_max": 600,
+    "description": "Duration of Siren"
+  },
+  {
+    "type": "binary",
+    "name": "alarm",
+    "property": "alarm",
+    "access": 2,
+    "value_on": "ON",
+    "value_off": "OFF",
+    "description": "Manual start of siren"
   },
   {
     "type": "numeric",

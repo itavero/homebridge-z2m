@@ -8,6 +8,7 @@ import * as mqtt from 'mqtt';
 import * as fs from 'fs';
 import { DeviceListEntry, isDeviceListEntry } from './z2mModels';
 import * as semver from 'semver';
+import { errorToString } from './helpers';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   public readonly config?: PluginConfiguration;
@@ -185,7 +186,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       }
     } catch (Error) {
       this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
-      this.log.error(Error);
+      this.log.error(errorToString(Error));
     }
   }
 
@@ -203,7 +204,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         this.log.debug(`Handled device update for ${topic}: ${statePayload}`);
       } catch (Error) {
         this.log.error(`Failed to process status update with payload: ${statePayload}`);
-        this.log.error(Error);
+        this.log.error(errorToString(Error));
       }
     } else {
       this.log.debug(`Unhandled message on topic: ${topic}`);
@@ -284,7 +285,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
           this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
         } catch (error) {
           this.log.error('Failed to delete accessory.');
-          this.log.error(error);
+          this.log.error(errorToString(error));
         }
       });
       return;

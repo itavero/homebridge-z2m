@@ -1,6 +1,16 @@
 import { Characteristic, Service, WithUUID } from 'homebridge';
 import { ExposesEntry, exposesHasNumericRangeProperty } from './z2mModels';
 
+export function errorToString(e: unknown): string {
+  if (typeof e === 'string') {
+    return e;
+  }
+  if (e instanceof Error) {
+    e.message; // works, `e` narrowed to Error
+  }
+  return JSON.stringify(e);
+}
+
 export function getOrAddCharacteristic(service: Service, characteristic: WithUUID<{ new(): Characteristic }>): Characteristic {
   return service.getCharacteristic(characteristic) || service.addCharacteristic(characteristic);
 }

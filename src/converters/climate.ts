@@ -226,13 +226,15 @@ class ThermostatHandler implements ServiceHandler {
           minValue: Math.min(...stateValues),
           maxValue: Math.max(...stateValues),
           validValues: stateValues,
-        }).updateValue(hap.Characteristic.CurrentHeatingCoolingState.HEAT);
+        })
+        .updateValue(hap.Characteristic.CurrentHeatingCoolingState.HEAT);
       getOrAddCharacteristic(service, hap.Characteristic.TargetHeatingCoolingState)
         .setProps({
           minValue: Math.min(...stateValues),
           maxValue: Math.max(...stateValues),
           validValues: stateValues,
-        }).updateValue(hap.Characteristic.TargetHeatingCoolingState.HEAT);
+        })
+        .updateValue(hap.Characteristic.TargetHeatingCoolingState.HEAT);
       this.setupHeatingDemandMonitors(service);
     }
 

@@ -230,9 +230,9 @@ class ThermostatHandler implements ServiceHandler {
         .updateValue(hap.Characteristic.CurrentHeatingCoolingState.HEAT);
       getOrAddCharacteristic(service, hap.Characteristic.TargetHeatingCoolingState)
         .setProps({
-          minValue: Math.min(...stateValues),
-          maxValue: Math.max(...stateValues),
-          validValues: stateValues,
+          minValue: hap.Characteristic.TargetHeatingCoolingState.HEAT,
+          maxValue: hap.Characteristic.TargetHeatingCoolingState.HEAT,
+          validValues: [hap.Characteristic.TargetHeatingCoolingState.HEAT],
         })
         .updateValue(hap.Characteristic.TargetHeatingCoolingState.HEAT);
       this.setupHeatingDemandMonitors(service);
@@ -307,10 +307,6 @@ class ThermostatHandler implements ServiceHandler {
       this.monitors.push(new BinaryConditionCharacteristicMonitor(this.currentHeatingDemandExpose.property, service,
         hap.Characteristic.CurrentHeatingCoolingState, (value) => value as number > ThermostatHandler.THRESHOLD_HEATING_DEMAND,
         hap.Characteristic.CurrentHeatingCoolingState.HEAT, hap.Characteristic.CurrentHeatingCoolingState.OFF));
-
-      this.monitors.push(new BinaryConditionCharacteristicMonitor(this.currentHeatingDemandExpose.property, service,
-        hap.Characteristic.TargetHeatingCoolingState, (value) => value as number > ThermostatHandler.THRESHOLD_HEATING_DEMAND,
-        hap.Characteristic.TargetHeatingCoolingState.HEAT, hap.Characteristic.TargetHeatingCoolingState.OFF));
     }
   }
 }

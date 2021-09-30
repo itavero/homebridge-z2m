@@ -5,6 +5,7 @@ import {
 } from '../z2mModels';
 import { hap } from '../hap';
 import {
+  BinaryConditionCharacteristicMonitor,
   CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor,
 } from './monitor';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
@@ -42,6 +43,9 @@ class ThermostatHandler implements ServiceHandler {
   private static readonly NAME_TARGET_MODE = 'system_mode';
   private static readonly NAME_CURRENT_STATE = 'running_state';
   private static readonly NAME_LOCAL_TEMPERATURE = 'local_temperature';
+  private static readonly NAME_HEATING_DEMAND = 'pi_heating_demand';
+
+  private static readonly THRESHOLD_HEATING_DEMAND = 10;
 
   private static readonly PREDICATE_TARGET_MODE: ExposesPredicate = (f) => f.name === ThermostatHandler.NAME_TARGET_MODE
     && exposesHasEnumProperty(f) && exposesCanBeSet(f) && exposesIsPublished(f);
@@ -50,6 +54,9 @@ class ThermostatHandler implements ServiceHandler {
     && exposesHasEnumProperty(f) && exposesIsPublished(f);
 
   private static readonly PREDICATE_LOCAL_TEMPERATURE: ExposesPredicate = (f) => f.name === ThermostatHandler.NAME_LOCAL_TEMPERATURE
+    && exposesHasProperty(f) && exposesIsPublished(f);
+
+  private static readonly PREDICATE_HEATING_DEMAND: ExposesPredicate = (f) => f.name === ThermostatHandler.NAME_HEATING_DEMAND
     && exposesHasProperty(f) && exposesIsPublished(f);
 
   private static readonly PREDICATE_SETPOINT: ExposesPredicate = (f) => f.name !== undefined
@@ -121,6 +128,7 @@ class ThermostatHandler implements ServiceHandler {
   private setpointExpose: ExposesEntryWithProperty;
   private targetModeExpose?: ExposesEntryWithEnumProperty;
   private currentStateExpose?: ExposesEntryWithEnumProperty;
+  private currentHeatingDemandExpose?: ExposesEntryWithProperty;
   private targetModeFromHomeKitMapping?: Map<CharacteristicValue, string>;
 
   constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
@@ -148,6 +156,8 @@ class ThermostatHandler implements ServiceHandler {
     if (this.currentStateExpose !== undefined && accessory.isPropertyExcluded(this.currentStateExpose.property)) {
       this.currentStateExpose = undefined;
     }
+    this.currentHeatingDemandExpose = expose.features.find(ThermostatHandler.PREDICATE_HEATING_DEMAND) as ExposesEntryWithProperty;
+
     if (this.targetModeExpose === undefined || this.currentStateExpose === undefined) {
       // If one of them is undefined, ignore the other one
       this.targetModeExpose = undefined;
@@ -213,20 +223,33 @@ class ThermostatHandler implements ServiceHandler {
         hap.Characteristic.TargetHeatingCoolingState, targetMapping));
     } else {
       // Assume heat only device
+      const stateValues = [hap.Characteristic.CurrentHeatingCoolingState.HEAT];
+      if(this.currentHeatingDemandExpose!== undefined) {
+        stateValues.push(hap.Characteristic.CurrentHeatingCoolingState.OFF);
+      }
       getOrAddCharacteristic(service, hap.Characteristic.CurrentHeatingCoolingState)
         .setProps({
-          minValue: hap.Characteristic.CurrentHeatingCoolingState.HEAT,
-          maxValue: hap.Characteristic.CurrentHeatingCoolingState.HEAT,
-          validValues: [hap.Characteristic.CurrentHeatingCoolingState.HEAT],
-        })
-        .updateValue(hap.Characteristic.CurrentHeatingCoolingState.HEAT);
+          minValue: Math.min(...stateValues),
+          maxValue: Math.max(...stateValues),
+          validValues: stateValues,
+        }).updateValue(hap.Characteristic.CurrentHeatingCoolingState.HEAT);
       getOrAddCharacteristic(service, hap.Characteristic.TargetHeatingCoolingState)
         .setProps({
-          minValue: hap.Characteristic.TargetHeatingCoolingState.HEAT,
-          maxValue: hap.Characteristic.TargetHeatingCoolingState.HEAT,
-          validValues: [hap.Characteristic.TargetHeatingCoolingState.HEAT],
-        })
-        .updateValue(hap.Characteristic.TargetHeatingCoolingState.HEAT);
+          minValue: Math.min(...stateValues),
+          maxValue: Math.max(...stateValues),
+          validValues: stateValues,
+        }).updateValue(hap.Characteristic.TargetHeatingCoolingState.HEAT);
+      
+      // Monitor heatingDemand if feature is available 
+      if(this.currentHeatingDemandExpose !== undefined) {
+        this.monitors.push(new BinaryConditionCharacteristicMonitor(this.currentHeatingDemandExpose.property, service,
+          hap.Characteristic.CurrentHeatingCoolingState, (value) => value as number > ThermostatHandler.THRESHOLD_HEATING_DEMAND, 
+          hap.Characteristic.CurrentHeatingCoolingState.HEAT, hap.Characteristic.CurrentHeatingCoolingState.OFF));
+          
+        this.monitors.push(new BinaryConditionCharacteristicMonitor(this.currentHeatingDemandExpose.property, service,
+          hap.Characteristic.TargetHeatingCoolingState, (value) => value as number > ThermostatHandler.THRESHOLD_HEATING_DEMAND, 
+          hap.Characteristic.TargetHeatingCoolingState.HEAT, hap.Characteristic.TargetHeatingCoolingState.OFF));
+      }
     }
 
     // Only support degrees Celsius

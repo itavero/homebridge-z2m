@@ -9,7 +9,7 @@ import {
   CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor,
 } from './monitor';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
-import { CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
+import { CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
 
 export class ThermostatCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
@@ -224,7 +224,7 @@ class ThermostatHandler implements ServiceHandler {
     } else {
       // Assume heat only device
       const stateValues = [hap.Characteristic.CurrentHeatingCoolingState.HEAT];
-      if(this.currentHeatingDemandExpose!== undefined) {
+      if (this.currentHeatingDemandExpose !== undefined) {
         stateValues.push(hap.Characteristic.CurrentHeatingCoolingState.OFF);
       }
       getOrAddCharacteristic(service, hap.Characteristic.CurrentHeatingCoolingState)
@@ -239,17 +239,7 @@ class ThermostatHandler implements ServiceHandler {
           maxValue: Math.max(...stateValues),
           validValues: stateValues,
         }).updateValue(hap.Characteristic.TargetHeatingCoolingState.HEAT);
-      
-      // Monitor heatingDemand if feature is available 
-      if(this.currentHeatingDemandExpose !== undefined) {
-        this.monitors.push(new BinaryConditionCharacteristicMonitor(this.currentHeatingDemandExpose.property, service,
-          hap.Characteristic.CurrentHeatingCoolingState, (value) => value as number > ThermostatHandler.THRESHOLD_HEATING_DEMAND, 
-          hap.Characteristic.CurrentHeatingCoolingState.HEAT, hap.Characteristic.CurrentHeatingCoolingState.OFF));
-          
-        this.monitors.push(new BinaryConditionCharacteristicMonitor(this.currentHeatingDemandExpose.property, service,
-          hap.Characteristic.TargetHeatingCoolingState, (value) => value as number > ThermostatHandler.THRESHOLD_HEATING_DEMAND, 
-          hap.Characteristic.TargetHeatingCoolingState.HEAT, hap.Characteristic.TargetHeatingCoolingState.OFF));
-      }
+      this.setupHeatingDemandMonitors(service);
     }
 
     // Only support degrees Celsius
@@ -313,5 +303,18 @@ class ThermostatHandler implements ServiceHandler {
     data[this.setpointExpose.property] = value;
     this.accessory.queueDataForSetAction(data);
     callback(null);
+  }
+
+  private setupHeatingDemandMonitors(service: Service) {
+    // Monitor heatingDemand if feature is available 
+    if (this.currentHeatingDemandExpose !== undefined) {
+      this.monitors.push(new BinaryConditionCharacteristicMonitor(this.currentHeatingDemandExpose.property, service,
+        hap.Characteristic.CurrentHeatingCoolingState, (value) => value as number > ThermostatHandler.THRESHOLD_HEATING_DEMAND,
+        hap.Characteristic.CurrentHeatingCoolingState.HEAT, hap.Characteristic.CurrentHeatingCoolingState.OFF));
+
+      this.monitors.push(new BinaryConditionCharacteristicMonitor(this.currentHeatingDemandExpose.property, service,
+        hap.Characteristic.TargetHeatingCoolingState, (value) => value as number > ThermostatHandler.THRESHOLD_HEATING_DEMAND,
+        hap.Characteristic.TargetHeatingCoolingState.HEAT, hap.Characteristic.TargetHeatingCoolingState.OFF));
+    }
   }
 }

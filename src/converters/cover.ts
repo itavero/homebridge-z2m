@@ -132,9 +132,6 @@ class CoverHandler implements ServiceHandler {
     if (this.positionExpose.property in state) {
       const latestPosition = state[this.positionExpose.property] as number;
 
-      // Received an update: Reset flag
-      this.waitingForUpdate = false;
-
       // Ignore "first" update?
       const doIgnoreIfEqual = this.ignoreNextUpdateIfEqualToTarget;
       this.ignoreNextUpdateIfEqualToTarget = false;
@@ -142,6 +139,9 @@ class CoverHandler implements ServiceHandler {
         this.accessory.log.debug(`${this.accessory.displayName}: cover: ignore position update (equal to last target)`);
         return;
       }
+
+      // Received an update: Reset flag
+      this.waitingForUpdate = false;
 
       // If we cannot retrieve the position or we were not expecting an update,
       // always assume the state is "stopped".

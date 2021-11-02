@@ -21,6 +21,9 @@ the Xiaomi SJCGQ11LM
 * [LeakSensor](../../sensors.md)
   * LeakDetected
   * StatusLowBattery
+* [TemperatureSensor](../../sensors.md)
+  * CurrentTemperature
+  * StatusLowBattery
 
 
 # Related

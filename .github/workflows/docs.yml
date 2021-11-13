@@ -2,7 +2,7 @@ name: Update generated documentation
 
 on:
   schedule:
-    - cron: '0 16 * * *'
+    - cron: "0 16 * * *"
   workflow_dispatch:
 
 jobs:
@@ -14,10 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Use Node.js 14.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
 
       - name: Determine Zigbee2MQTT version
         id: version
@@ -60,9 +60,9 @@ jobs:
           body: |-
             Documentation has been automatically regenerated, because a new version of :bee: Zigbee2MQTT and/or zigbee-herdsman-converters
             was detected.
-            
+
             Based on:
             - Zigbee2MQTT **v${{ steps.version.outputs.z2m }}**
             - zigbee-herdsman-converters **v${{ steps.version.outputs.herdsman }}**
-            
+
             :robot: *I am a bot. This action was performed automatically.*

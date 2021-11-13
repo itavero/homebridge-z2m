@@ -23,12 +23,12 @@ jobs:
     name: Verify
     runs-on: ubuntu-latest
     env:
-      node-version-analysis: 14.x
+      node-version-analysis: 16.x
 
     strategy:
       matrix:
         # the Node.js versions to build on
-        node-version: [10.x, 12.x, 13.x, 14.x]
+        node-version: [12.x, 13.x, 14.x, 16.x],
 
     steps:
       - name: Checkout

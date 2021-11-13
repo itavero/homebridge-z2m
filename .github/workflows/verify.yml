@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         # the Node.js versions to build on
-        node-version: [12.x, 13.x, 14.x, 16.x],
+        node-version: [12.x, 13.x, 14.x, 16.x]
 
     steps:
       - name: Checkout

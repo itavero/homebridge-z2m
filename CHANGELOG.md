@@ -10,6 +10,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Removed unnecessary code from climate service.
 
+### Removed
+
+- This plugin is no longer tested against Node.js v10, as this version is no longer supported by the community.
+
 ## [1.6.0] - 2021-08-24
 
 ### Added

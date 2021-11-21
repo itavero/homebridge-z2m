@@ -9,6 +9,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Fixed
 
 - Removed unnecessary code from climate service.
+- Polling mechanism for `cover` improved. In past releases the plugin could stop requesting updates too early. (see [#292](https://github.com/itavero/homebridge-z2m/pull/292))
 
 ### Removed
 

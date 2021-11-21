@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.6.1] - 2021-11-21
+
 ### Fixed
 
 - Removed unnecessary code from climate service.
@@ -253,7 +255,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/itavero/homebridge-z2m/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/itavero/homebridge-z2m/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/itavero/homebridge-z2m/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/itavero/homebridge-z2m/compare/v1.3.0...v1.4.0

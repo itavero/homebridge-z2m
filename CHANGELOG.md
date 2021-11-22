@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Fixed
+
+- Only log Zigbee2MQTT version when it is changed (or its the first discovery). (fixes [#322](https://github.com/itavero/homebridge-z2m/issues/322))
+
 ## [1.6.1] - 2021-11-21
 
 ### Fixed

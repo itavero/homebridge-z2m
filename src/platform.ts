@@ -20,6 +20,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   // this is used to track restored cached accessories
   private readonly accessories: Zigbee2mqttAccessory[] = [];
   private didReceiveDevices: boolean;
+  private lastReceivedZigbee2MqttVersion: string | undefined;
 
   constructor(
     public readonly log: Logger,
@@ -29,6 +30,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     // Prepare internal states, variables and such
     this.onMessage = this.onMessage.bind(this);
     this.didReceiveDevices = false;
+    this.lastReceivedZigbee2MqttVersion = undefined;
 
     // Set device defaults
     this.baseDeviceConfig = {
@@ -122,7 +124,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private checkZigbee2MqttVersion(version: string, topic: string) {
-    this.log.info(`Using Zigbee2MQTT v${version} (identified via ${topic})`);
+    if (version !== this.lastReceivedZigbee2MqttVersion) {
+      // Only log the version if it is different from what we have previously received.
+      this.lastReceivedZigbee2MqttVersion = version;
+      this.log.info(`Using Zigbee2MQTT v${version} (identified via ${topic})`);
+    }
 
     // Ignore -dev suffix if present, because Zigbee2MQTT appends this to the latest released version
     // for the future development build (instead of applying semantic versioning).

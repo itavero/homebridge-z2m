@@ -16,6 +16,8 @@ the Xiaomi DLKZMK11LM
 
 * [Switch](../../switch.md)
   * On
+* [TemperatureSensor](../../sensors.md)
+  * CurrentTemperature
 
 
 # Related

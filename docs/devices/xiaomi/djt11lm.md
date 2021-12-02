@@ -18,6 +18,8 @@ the Xiaomi DJT11LM
   * BatteryLevel
   * ChargingState
   * StatusLowBattery
+* [MotionSensor](../../sensors.md)
+  * MotionDetected
 * [StatelessProgrammableSwitch](../../action.md)
   * ProgrammableSwitchEvent
   * ServiceLabelIndex

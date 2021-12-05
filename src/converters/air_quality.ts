@@ -132,7 +132,7 @@ class ParticulateMatter2Dot5Property extends PassthroughAirQualityProperty {
   }
 
   constructor(expose: ExposesEntryWithProperty, service: Service) {
-    super(expose, service, hap.Characteristic.PM10Density);
+    super(expose, service, hap.Characteristic.PM2_5Density);
   }
 
   convertToAirQuality(sensorValue: CharacteristicValue): number | undefined {

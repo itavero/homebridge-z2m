@@ -48,38 +48,59 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     // Use configuration
     if (this.config !== undefined) {
 
+      // Normalize experimental feature flags
+      if (this.config.experimental !== undefined) {
+        this.config.experimental = this.config.experimental.map((feature: string) => feature.trim().toLocaleUpperCase());
+        if (this.config.experimental.length > 0) {
+          this.log.warn(`Experimental features enabled: ${this.config.experimental.join(', ')}`);
+        }
+      }
+
       // Merge defaults from the plugin configuration
       if (this.config.defaults !== undefined) {
         this.baseDeviceConfig = { ...this.baseDeviceConfig, ...this.config.defaults };
       }
       this.log.debug(`Default device config: ${JSON.stringify(this.baseDeviceConfig)}`);
 
-      if (!this.config.mqtt.server || !this.config.mqtt.base_topic) {
-        this.log.error('No MQTT server and/or base_topic defined!');
-      }
-      this.log.info(`Connecting to MQTT server at ${this.config.mqtt.server}`);
-
-      const options: mqtt.IClientOptions = Zigbee2mqttPlatform.createMqttOptions(this.log, this.config);
-
-      this.mqttClient = mqtt.connect(this.config.mqtt.server, options);
-      this.mqttClient.on('connect', () => {
-        this.log.info('Connected to MQTT server');
-        setTimeout(() => {
-          if (!this.didReceiveDevices) {
-            this.log.error('DID NOT RECEIVE ANY DEVICES AFTER BEING CONNECTED FOR TWO MINUTES.\n'
-              + `Please verify that Zigbee2MQTT is running and that it is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
-          }
-        }, 120000);
-      });
-
-      this.api.on('didFinishLaunching', () => {
-        if (this.config !== undefined) {
-          // Setup MQTT callbacks and subscription
-          this.mqttClient?.on('message', this.onMessage);
-          this.mqttClient?.subscribe(this.config.mqtt.base_topic + '/#');
-        }
-      });
+      this.mqttClient = this.initializeMqttClient(this.config);
     }
+  }
+
+  private initializeMqttClient(config: PluginConfiguration): mqtt.MqttClient {
+    if (!config.mqtt.server || !config.mqtt.base_topic) {
+      this.log.error('No MQTT server and/or base_topic defined!');
+    }
+    this.log.info(`Connecting to MQTT server at ${config.mqtt.server}`);
+
+    const options: mqtt.IClientOptions = Zigbee2mqttPlatform.createMqttOptions(this.log, config);
+
+    const mqttClient = mqtt.connect(config.mqtt.server, options);
+    mqttClient.on('connect', () => {
+      this.log.info('Connected to MQTT server');
+      setTimeout(() => {
+        if (!this.didReceiveDevices) {
+          this.log.error('DID NOT RECEIVE ANY DEVICES AFTER BEING CONNECTED FOR TWO MINUTES.\n'
+            + `Please verify that Zigbee2MQTT is running and that it is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
+        }
+      }, 120000);
+    });
+
+    this.api.on('didFinishLaunching', () => {
+      if (this.config !== undefined) {
+        // Setup MQTT callbacks and subscription
+        this.mqttClient?.on('message', this.onMessage);
+        this.mqttClient?.subscribe(this.config.mqtt.base_topic + '/#');
+      }
+    });
+
+    return mqttClient;
+  }
+
+  public isExperimentalFeatureEnabled(feature: string): boolean {
+    if (this.config?.experimental === undefined) {
+      return false;
+    }
+    return this.config.experimental.includes(feature.trim().toLocaleUpperCase());
   }
 
   private static createMqttOptions(log: Logger, config: PluginConfiguration): mqtt.IClientOptions {
@@ -269,7 +290,12 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private mergeDeviceConfig(devConfig: DeviceConfiguration): BaseDeviceConfiguration {
-    return { ...this.baseDeviceConfig, ...devConfig };
+    const result = { ...this.baseDeviceConfig, ...devConfig };
+    if (result.experimental !== undefined) {
+      // Normalize experimental feature flags
+      result.experimental = result.experimental.map((feature: string) => feature.trim().toLocaleUpperCase());
+    }
+    return result;
   }
 
   private isDeviceExcluded(device: DeviceListEntry | string): boolean {

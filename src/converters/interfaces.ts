@@ -21,6 +21,8 @@ export interface BasicAccessory {
     registerServiceHandler(handler: ServiceHandler): void;
 
     isServiceHandlerIdKnown(identifier: string): boolean;
+
+    isExperimentalFeatureEnabled(feature: string): boolean;
 }
 
 export interface ServiceHandler {

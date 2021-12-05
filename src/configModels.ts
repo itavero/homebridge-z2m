@@ -1,9 +1,10 @@
 import { PlatformConfig, Logger } from 'homebridge';
 
 export interface PluginConfiguration extends PlatformConfig {
-   mqtt: MqttConfiguration;
-   defaults?: BaseDeviceConfiguration;
-   devices?: DeviceConfiguration[];
+  mqtt: MqttConfiguration;
+  defaults?: BaseDeviceConfiguration;
+  experimental?: string[];
+  devices?: DeviceConfiguration[];
 }
 
 export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefined = undefined): x is PluginConfiguration => {
@@ -14,6 +15,11 @@ export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefi
 
   if (x.defaults !== undefined && !isBaseDeviceConfiguration(x.defaults)) {
     logger?.error('Incorrect configuration: Device defaults are incorrect: ' + JSON.stringify(x.defaults));
+    return false;
+  }
+
+  if (x.experimental !== undefined && !isStringArray(x.experimental)) {
+    logger?.error('Incorrect configuration: Experimental flags are incorrect ' + JSON.stringify(x.experimental));
     return false;
   }
 
@@ -33,36 +39,37 @@ export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefi
 };
 
 export interface MqttConfiguration extends Record<string, unknown> {
-   base_topic : string;
-   server: string;
-   ca?: string;
-   key?: string;
-   cert?: string;
-   user?: string;
-   password?: string;
-   client_id?: string;
-   reject_unauthorized?: boolean;
-   keepalive?: number;
-   version?: number;
-   disable_qos?: boolean;
+  base_topic: string;
+  server: string;
+  ca?: string;
+  key?: string;
+  cert?: string;
+  user?: string;
+  password?: string;
+  client_id?: string;
+  reject_unauthorized?: boolean;
+  keepalive?: number;
+  version?: number;
+  disable_qos?: boolean;
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isMqttConfiguration = (x: any): x is MqttConfiguration => (
   x.base_topic !== undefined
-   && typeof x.base_topic === 'string'
-   && x.base_topic.length > 0
-   && x.server !== undefined
-   && typeof x.server === 'string'
-   && x.server.length > 0);
+  && typeof x.base_topic === 'string'
+  && x.base_topic.length > 0
+  && x.server !== undefined
+  && typeof x.server === 'string'
+  && x.server.length > 0);
 
 export interface BaseDeviceConfiguration extends Record<string, unknown> {
   exclude?: boolean;
   excluded_keys?: string[];
   values?: PropertyValueConfiguration[];
+  experimental?: string[];
 }
 
 export interface DeviceConfiguration extends BaseDeviceConfiguration {
-   id: string;
+  id: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -74,6 +81,11 @@ export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration 
 
   // Optional excluded_keys which must be an array of strings if present
   if (x.excluded_keys !== undefined && !isStringArray(x.excluded_keys)) {
+    return false;
+  }
+
+  // Optional 'experimental' which must be an array of strings if present
+  if (x.experimental !== undefined && !isStringArray(x.experimental)) {
     return false;
   }
 
@@ -102,9 +114,9 @@ export const isDeviceConfiguration = (x: any): x is DeviceConfiguration => {
 };
 
 export interface PropertyValueConfiguration extends Record<string, unknown> {
-   property: string;
-   include?: string[];
-   exclude?: string[];
+  property: string;
+  include?: string[];
+  exclude?: string[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -113,12 +125,12 @@ export const isPropertyValueConfiguration = (x: any): x is PropertyValueConfigur
   if (x.property === undefined || typeof x.property !== 'string' || x.property.length < 1) {
     return false;
   }
- 
+
   // Optional include property
   if (x.include !== undefined && !isStringArray(x.include)) {
     return false;
   }
- 
+
   // Optional exclude property
   if (x.exclude !== undefined && !isStringArray(x.exclude)) {
     return false;

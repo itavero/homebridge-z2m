@@ -63,6 +63,20 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     this.queueAllKeysForGet();
   }
 
+  isExperimentalFeatureEnabled(feature: string): boolean {
+    if (this.platform.isExperimentalFeatureEnabled(feature)) {
+      // Enabled globally
+      return true;
+    }
+
+    if (this.additionalConfig.experimental !== undefined) {
+      // Enabled for this accessory
+      return this.additionalConfig.experimental.includes(feature.trim().toLocaleUpperCase());
+    }
+
+    return false;
+  }
+
   registerServiceHandler(handler: ServiceHandler): void {
     const key = handler.identifier;
     if (this.serviceHandlers.has(key)) {

@@ -9,6 +9,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Fixed
 
 - Only log Zigbee2MQTT version when it is changed (or its the first discovery). (fixes [#322](https://github.com/itavero/homebridge-z2m/issues/322))
+- Air Quality sensor with a PM2.5 sensor were incorrectly exposed as a PM10 sensor in HomeKit.
 
 ## [1.6.1] - 2021-11-21
 

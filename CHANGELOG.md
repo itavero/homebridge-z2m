@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.6.2] - 2021-12-05
+
 ### Fixed
 
 - Only log Zigbee2MQTT version when it is changed (or its the first discovery). (fixes [#322](https://github.com/itavero/homebridge-z2m/issues/322))
@@ -260,7 +262,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.6.1...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.6.2...HEAD
+[1.6.2]: https://github.com/itavero/homebridge-z2m/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/itavero/homebridge-z2m/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/itavero/homebridge-z2m/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/itavero/homebridge-z2m/compare/v1.4.0...v1.5.0

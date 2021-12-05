@@ -208,8 +208,29 @@
                            }
                         }
                      }
+                  },
+                  "experimental": {
+                     "title": "Experimental feature flags",
+                     "type": "array",
+                     "required": false,
+                     "items": {
+                        "type": "string",
+                        "minLength": 1
+                     },
+                     "condition": {
+                        "functionBody": "return !model.devices[arrayIndices].exclude;"
+                     }
                   }
                }
+            }
+         },
+         "experimental": {
+            "title": "Experimental feature flags",
+            "type": "array",
+            "required": false,
+            "items": {
+               "type": "string",
+               "minLength": 1
             }
          }
       }

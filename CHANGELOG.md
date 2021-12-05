@@ -6,6 +6,20 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- ⚠️ **Experimental features**: Starting from this release, features/changes can be introduced as _experimental_.
+  This means that you have to enable these features/changes explicitly in your configuration and you must be aware
+  that things might break. The main reason for adding this, is so that users can try out changes/features that
+  are still being worked on and provide feedback based on their experiences. Please refer to the
+  [documentation on plugin configuration](https://z2m.dev/config.html#experimental) for more information.
+
+### Changed
+
+- Experimental `COLOR_MODE`:
+  - `light`: filter properties in state update based on `color_mode`, if provided. (see [#208](https://github.com/itavero/homebridge-z2m/issues/208))
+  - `light`: set Hue/Saturation based on Color Temperature (if `color_mode` is also received), to slightly improve the UX. Unfortunately the translation is far from perfect at the moment. (see [#208](https://github.com/itavero/homebridge-z2m/issues/208))
+
 ## [1.6.2] - 2021-12-05
 
 ### Fixed

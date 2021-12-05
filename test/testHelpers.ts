@@ -235,6 +235,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
 export class ServiceHandlersTestHarness {
   private readonly handlers = new Map<string, ServiceHandlerTestData>();
   private readonly allowedValues = new Map<string, string[]>();
+  private readonly experimentalFeatures = new Set<string>();
   readonly accessoryMock: MockProxy<BasicAccessory> & BasicAccessory;
 
   constructor() {
@@ -245,6 +246,11 @@ export class ServiceHandlersTestHarness {
     this.accessoryMock.isValueAllowedForProperty
       .mockImplementation((property: string, value: string): boolean => {
         return this.allowedValues.get(property)?.includes(value) ?? true;
+      });
+
+    this.accessoryMock.isExperimentalFeatureEnabled
+      .mockImplementation((feature: string): boolean => {
+        return this.experimentalFeatures.has(feature.trim().toLocaleUpperCase());
       });
 
     this.accessoryMock.getOrAddService
@@ -280,6 +286,14 @@ export class ServiceHandlersTestHarness {
 
   configureAllowedValues(property: string, values: string[]) {
     this.allowedValues.set(property, values);
+  }
+
+  addExperimentalFeatureFlags(feature: string): void {
+    this.experimentalFeatures.add(feature);
+  }
+
+  clearExperimentalFeatureFlags(): void {
+    this.experimentalFeatures.clear();
   }
 
   private extractServiceId(id: ServiceIdentifier): string {

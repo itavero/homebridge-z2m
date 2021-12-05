@@ -41,6 +41,11 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       this.serviceCreatorManager = serviceCreatorManager;
     }
 
+    // Log experimental features
+    if (this.additionalConfig.experimental !== undefined && this.additionalConfig.experimental.length > 0) {
+      this.log.warn(`Experimental features enabled for ${this.displayName}: ${this.additionalConfig.experimental.join(', ')}`);
+    }
+
     // Setup delayed publishing
     this.pendingPublishData = {};
     this.publishIsScheduled = false;

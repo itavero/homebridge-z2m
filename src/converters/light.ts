@@ -14,6 +14,7 @@ import {
   PassthroughCharacteristicMonitor,
 } from './monitor';
 import { convertHueSatToXy, convertMiredColorTemperatureToHueSat, convertXyToHueSat } from '../colorhelper';
+import { EXP_COLOR_MODE } from '../experimental';
 
 export class LightCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
@@ -109,22 +110,24 @@ class LightHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    // Use color_mode to filter out the non-active color information
-    // to prevent "incorrect" updates (leading to "glitches" in the Home.app)
-    if (LightHandler.KEY_COLOR_MODE in state) {
-      if (this.colorTempExpose !== undefined
-        && this.colorTempExpose.property in state
-        && state[LightHandler.KEY_COLOR_MODE] !== LightHandler.COLOR_MODE_TEMPERATURE) {
-        // Color mode is NOT Color Temperature. Remove color temperature information.
-        delete state[this.colorTempExpose.property];
-      }
+    if (this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE)) {
+      // Use color_mode to filter out the non-active color information
+      // to prevent "incorrect" updates (leading to "glitches" in the Home.app)
+      if (LightHandler.KEY_COLOR_MODE in state) {
+        if (this.colorTempExpose !== undefined
+          && this.colorTempExpose.property in state
+          && state[LightHandler.KEY_COLOR_MODE] !== LightHandler.COLOR_MODE_TEMPERATURE) {
+          // Color mode is NOT Color Temperature. Remove color temperature information.
+          delete state[this.colorTempExpose.property];
+        }
 
-      if (this.colorExpose !== undefined
-        && this.colorExpose.property !== undefined
-        && this.colorExpose.property in state
-        && state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE) {
-        // Color mode is Color Temperature. Remove HS/XY color information.
-        delete state[this.colorExpose.property];
+        if (this.colorExpose !== undefined
+          && this.colorExpose.property !== undefined
+          && this.colorExpose.property in state
+          && state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE) {
+          // Color mode is Color Temperature. Remove HS/XY color information.
+          delete state[this.colorExpose.property];
+        }
       }
     }
 
@@ -200,10 +203,12 @@ class LightHandler implements ServiceHandler {
         hap.Characteristic.ColorTemperature));
 
       // Also supports colors?
-      if (this.colorTempExpose !== undefined && this.colorExpose !== undefined) {
-        // Add monitor to convert Color Temperature to Hue / Saturation
-        // based on the 'color_mode'
-        this.monitors.push(new ColorTemperatureToHueSatMonitor(service, this.colorTempExpose.property));
+      if (this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE)) {
+        if (this.colorTempExpose !== undefined && this.colorExpose !== undefined) {
+          // Add monitor to convert Color Temperature to Hue / Saturation
+          // based on the 'color_mode'
+          this.monitors.push(new ColorTemperatureToHueSatMonitor(service, this.colorTempExpose.property));
+        }
       }
     }
   }

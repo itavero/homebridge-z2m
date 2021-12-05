@@ -14,15 +14,21 @@ A (rather minimal) configuration looks like this:
          "lqi"
       ]
    },
+   "experimental": [
+      "FEATURE_FLAG",
+   ],
    "devices": [
       {
          "id": "0x1234567890abcdef",
-         "exclude": true
+         "exclude": true,
       },
       {
          "id": "0xabcdef1234567890",
          "excluded_keys": [
             "battery"
+         ],
+         "experimental": [
+            "OTHER_FEATURE_FLAG",
          ]
       },
       {
@@ -113,3 +119,15 @@ For example, to exclude all devices, except a few you want to specifically inclu
    ]
 }
 ```
+
+## Experimental features/changes {#experimental}
+These features/changes can be enabled from the configuration, either globally or (in some cases) for specific devices.
+Experimental features must be explicitly enabled from the configuration before they can be used.
+
+> ⚠️ Experimental features are **EXPERIMENTAL**. Things might break or not behave the way you are used to.
+
+In the latest (or next) release the following features can be enabled:
+
+| Flag | Global | Device | Description |
+| ---- | ------ | ------ | ----------- |
+| `COLOR_MODE` | ✅ | ✅ | Possible workaround/fix for issue described in issue [#208](https://github.com/itavero/homebridge-z2m/issues/208) |

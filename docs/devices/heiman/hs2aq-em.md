@@ -17,6 +17,7 @@ the HEIMAN HS2AQ-EM
 * [AirQualitySensor](../../air_quality.md)
   * AirQuality
   * PM10Density
+  * PM2_5Density
   * VOCDensity
 * [Battery](../../battery.md)
   * BatteryLevel

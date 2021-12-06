@@ -17,11 +17,15 @@ export class DocsAccessory implements BasicAccessory {
     },
   };
 
-  private readonly services : Service[] = [];
+  private readonly services: Service[] = [];
   private readonly handlerIds = new Set<string>();
 
   constructor(
-      readonly displayName: string){}
+    readonly displayName: string) { }
+
+  isExperimentalFeatureEnabled(feature: string): boolean {
+    return false;
+  }
 
   getDefaultServiceDisplayName(subType: string): string {
     let name = 'Dummy';
@@ -31,7 +35,7 @@ export class DocsAccessory implements BasicAccessory {
     return name;
   }
 
-  getServicesAndCharacteristics() : Map<string, string[]> {
+  getServicesAndCharacteristics(): Map<string, string[]> {
     const result = new Map<string, string[]>();
     for (const srv of this.services) {
       const characteristics = new Set<string>(srv.characteristics.map(c => c.UUID));
@@ -43,12 +47,12 @@ export class DocsAccessory implements BasicAccessory {
     }
     return result;
   }
- 
+
   getOrAddService(service: Service): Service {
     const existingService = this.services.find(e =>
       e.UUID === service.UUID && e.subtype === service.subtype,
     );
-   
+
     if (existingService !== undefined) {
       return existingService;
     }

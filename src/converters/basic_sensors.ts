@@ -344,6 +344,22 @@ class CarbonMonoxideSensorHandler extends BinarySensorHandler {
   }
 }
 
+class FilterMaintenanceHandler extends BinarySensorHandler {
+  constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
+    super(accessory, expose as ExposesEntryWithBinaryProperty, otherExposes, FilterMaintenanceHandler.generateIdentifier,
+      'FilterMaintenance', (n, t) => new hap.Service.FilterMaintenance(n, t), hap.Characteristic.FilterChangeIndication,
+      hap.Characteristic.FilterChangeIndication.CHANGE_FILTER, hap.Characteristic.FilterChangeIndication.FILTER_OK);
+  }
+
+  static generateIdentifier(endpoint: string | undefined) {
+    let identifier = hap.Service.FilterMaintenance.UUID;
+    if (endpoint !== undefined) {
+      identifier += '_' + endpoint.trim();
+    }
+    return identifier;
+  }
+}
+
 abstract class LeakSensorHandler extends BinarySensorHandler {
   constructor(subType: string, identifierGen: IdentifierGenerator, expose: ExposesEntryWithProperty,
     otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
@@ -399,6 +415,7 @@ export class BasicSensorCreator implements ServiceCreator {
     new BasicSensorMapping('carbon_monoxide', ExposesKnownTypes.BINARY, CarbonMonoxideSensorHandler),
     new BasicSensorMapping('water_leak', ExposesKnownTypes.BINARY, WaterLeakSensorHandler),
     new BasicSensorMapping('gas', ExposesKnownTypes.BINARY, GasLeakSensorHandler),
+    new BasicSensorMapping('replace_filter', ExposesKnownTypes.BINARY, FilterMaintenanceHandler),
   ];
 
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {

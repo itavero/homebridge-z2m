@@ -8,6 +8,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Added
 
+- Exposes Filter Maintenance service for device that have a `replace_filter` indication (i.e. IKEA STARKVIND air purifier).
 - ⚠️ **Experimental features**: Starting from this release, features/changes can be introduced as _experimental_.
   This means that you have to enable these features/changes explicitly in your configuration and you must be aware
   that things might break. The main reason for adding this, is so that users can try out changes/features that

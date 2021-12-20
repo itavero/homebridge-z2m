@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.7.0-rc.1] - 2021-12-20
+
 ### Added
 
 - Exposes information for an accessory (device or group) can be overridden via the JSON configuration, using the `exposes` key in the device configuration. This is **not** part of the configuration UI and uses the same [`exposes` structure as Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/usage/exposes.html).
@@ -284,7 +286,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.6.2...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.7.0-rc.1...HEAD
+[1.7.0-rc.1]: https://github.com/itavero/homebridge-z2m/compare/v1.6.2...v1.7.0-rc.1
 [1.6.2]: https://github.com/itavero/homebridge-z2m/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/itavero/homebridge-z2m/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/itavero/homebridge-z2m/compare/v1.5.0...v1.6.0

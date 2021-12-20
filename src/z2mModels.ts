@@ -196,3 +196,7 @@ export function deviceListEntriesAreEqual(first: DeviceListEntry | undefined, se
     && first.definition.vendor === second.definition.vendor
     && exposesCollectionsAreEqual(first.definition.exposes, second.definition.exposes));
 }
+
+export interface ExposesPredicate {
+  (expose: ExposesEntry): boolean;
+}

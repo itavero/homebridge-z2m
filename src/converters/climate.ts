@@ -1,7 +1,7 @@
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
   exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures, ExposesEntryWithProperty,
-  exposesHasEnumProperty, exposesHasFeatures, exposesHasProperty, exposesIsPublished, ExposesKnownTypes,
+  exposesHasEnumProperty, exposesHasFeatures, exposesHasProperty, exposesIsPublished, ExposesKnownTypes, ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
 import {
@@ -27,10 +27,6 @@ export class ThermostatCreator implements ServiceCreator {
         + error);
     }
   }
-}
-
-interface ExposesPredicate {
-  (expose: ExposesEntry): boolean;
 }
 
 class ThermostatHandler implements ServiceHandler {

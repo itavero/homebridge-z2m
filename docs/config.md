@@ -14,6 +14,7 @@ A (rather minimal) configuration looks like this:
          "lqi"
       ]
    },
+   "exclude_grouped_devices": false,
    "experimental": [
       "FEATURE_FLAG",
    ],
@@ -84,6 +85,7 @@ Currently the following options are available:
 * `exclude`: if set to `true` this device will not be fully ignored.
 * `excluded_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be ignored/excluded for this device.
 * `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard. This is currently only applied in the [Stateless Programmable Switch](action.md).
+* `exposes`: An array of exposes information, using the [structures defined by Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/usage/exposes.html).
 
 ### Defaults
 Within the `defaults` property, you can also configure the device specific options mentioned above (except for the `id` property).
@@ -131,3 +133,4 @@ In the latest (or next) release the following features can be enabled:
 | Flag | Global | Device | Description |
 | ---- | ------ | ------ | ----------- |
 | `COLOR_MODE` | ✅ | ✅ | Possible workaround/fix for issue described in issue [#208](https://github.com/itavero/homebridge-z2m/issues/208) |
+| `GROUPS` | ✅ | ❌ | Support for controlling Zigbee2MQTT groups (see [#277](https://github.com/itavero/homebridge-z2m/issues/277)) |

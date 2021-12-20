@@ -4,8 +4,8 @@ import { ExtendedTimer } from './timer';
 import { hap } from './hap';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
 import { BasicAccessory, BasicLogger, ServiceHandler } from './converters/interfaces';
-import { deviceListEntriesAreEqual, DeviceListEntry, isDeviceDefinition, isDeviceListEntry } from './z2mModels';
-import { BaseDeviceConfiguration } from './configModels';
+import { deviceListEntriesAreEqual, DeviceListEntry, isDeviceDefinition, isDeviceListEntry, isDeviceListEntryForGroup } from './z2mModels';
+import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
 import { QoS } from 'mqtt';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
@@ -26,6 +26,27 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
   get displayName(): string {
     return this.accessory.context.device.friendly_name;
+  }
+
+  get deviceTopic(): string {
+    if (isDeviceListEntryForGroup(this.accessory.context.device) || 'group_id' in this.accessory.context.device) {
+      return this.accessory.context.device.friendly_name;
+    }
+    return this.accessory.context.device.ieee_address;
+  }
+
+  get groupId(): number | undefined {
+    if (isDeviceListEntryForGroup(this.accessory.context.device) || 'group_id' in this.accessory.context.device) {
+      return this.accessory.context.device.group_id;
+    }
+    return undefined;
+  }
+
+  get serialNumber(): string {
+    if (isDeviceListEntryForGroup(this.accessory.context.device) || 'group_id' in this.accessory.context.device) {
+      return `GROUP:${this.accessory.context.device.group_id}`;
+    }
+    return this.accessory.context.device.ieee_address;
   }
 
   constructor(
@@ -160,7 +181,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         data[k] = 0;
       }
       // Publish using ieeeAddr, as that will never change and the friendly_name might.
-      this.platform.publishMessage(`${this.accessory.context.device.ieee_address}/get`,
+      this.platform.publishMessage(`${this.deviceTopic}/get`,
         JSON.stringify(data), { qos: this.getMqttQosLevel(1) });
     }
   }
@@ -217,7 +238,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   private publishPendingSetData() {
-    this.platform.publishMessage(`${this.accessory.context.device.ieee_address}/set`, JSON.stringify(this.pendingPublishData),
+    this.platform.publishMessage(`${this.deviceTopic}/set`, JSON.stringify(this.pendingPublishData),
       { qos: this.getMqttQosLevel(2) });
     this.publishIsScheduled = false;
     this.pendingPublishData = {};
@@ -236,6 +257,14 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   updateDeviceInformation(info: DeviceListEntry | undefined, force_update = false) {
+    // Overwrite exposes information if available in configuration
+    if (info !== undefined && info.definition !== undefined && info.definition !== null) {
+      if (isDeviceConfiguration(this.additionalConfig)
+        && this.additionalConfig.exposes !== undefined
+        && this.additionalConfig.exposes.length > 0) {
+        info.definition.exposes = this.additionalConfig.exposes;
+      }
+    }
 
     // Only update the device if a valid device list entry is passed.
     // This is done so that old, pre-v1.0.0 accessories will only get updated when new device information is received.
@@ -256,7 +285,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
           .updateCharacteristic(hap.Characteristic.Name, info.friendly_name)
           .updateCharacteristic(hap.Characteristic.Manufacturer, info.definition.vendor ?? 'Zigbee2MQTT')
           .updateCharacteristic(hap.Characteristic.Model, info.definition.model ?? 'unknown')
-          .updateCharacteristic(hap.Characteristic.SerialNumber, info.ieee_address)
+          .updateCharacteristic(hap.Characteristic.SerialNumber, this.serialNumber)
           .updateCharacteristic(hap.Characteristic.HardwareRevision, info.date_code ?? '?')
           .updateCharacteristic(hap.Characteristic.FirmwareRevision, info.software_build_id ?? '?');
 

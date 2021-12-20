@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export declare type MqttValue = string | boolean | number;
 
 export interface ExposesEntry {
@@ -108,6 +109,89 @@ export function exposesIsPublished(entry: ExposesEntry): boolean {
   return (entry.access !== undefined) && ((entry.access & ExposesAccessLevel.PUBLISHED) !== 0);
 }
 
+export function exposesGetOverlap(first: ExposesEntry[], second: ExposesEntry[]): ExposesEntry[] {
+  const result: ExposesEntry[] = [];
+
+  for (const entry of first) {
+    const match = second.find((x) => x.name === entry.name && x.property === entry.property && x.type === entry.type);
+    if (match !== undefined) {
+      const merged = exposesGetMergedEntry(entry, match);
+      if (merged !== undefined) {
+        result.push(merged);
+      }
+    }
+  }
+
+  return result;
+}
+
+export function exposesGetMergedEntry(first: ExposesEntry, second: ExposesEntry): ExposesEntry | undefined {
+  const result: ExposesEntry | ExposesEntryWithFeatures = {
+    type: first.type,
+  };
+  for (const member in first) {
+    if (!Array.isArray(first[member])) {
+      if ((member in second) && (second[member] === first[member])) {
+        result[member] = first[member];
+      }
+    }
+  }
+
+  switch (first.type) {
+    case ExposesKnownTypes.NUMERIC:
+      if (first.value_min !== second.value_min) {
+        if (first.value_min === undefined) {
+          result.value_min = second.value_min;
+        } else if (second.value_min !== undefined) {
+          result.value_min = Math.min(first.value_min, second.value_min);
+        }
+      }
+      if (first.value_max !== second.value_max) {
+        if (first.value_max === undefined) {
+          result.value_max = second.value_max;
+        } else if (second.value_max !== undefined) {
+          result.value_max = Math.max(first.value_max, second.value_max);
+        }
+      }
+      break;
+    case ExposesKnownTypes.BINARY:
+      if (first.value_on !== second.value_on || first.value_off !== second.value_off) {
+        return undefined;
+      }
+      break;
+    case ExposesKnownTypes.ENUM:
+      {
+        const matches = first.values?.filter((x) => second.values?.includes(x));
+        if (matches === undefined || matches.length === 0) {
+          return undefined;
+        }
+        result.values = matches;
+      }
+      break;
+    default:
+      // no action needed
+      break;
+  }
+
+  // process features
+  if (exposesHasFeatures(first) && exposesHasFeatures(second)) {
+    result['features'] = [];
+    for (const feature of first.features) {
+      const match = second.features.find((x) => x.name === feature.name && x.property === feature.property && x.type === feature.type);
+      if (match !== undefined) {
+
+        const merged = exposesGetMergedEntry(feature, match);
+        if (merged !== undefined) {
+          result['features'].push(merged);
+        }
+      }
+    }
+  } else if ('features' in result) {
+    delete result['features'];
+  }
+  return result;
+}
+
 export function exposesAreEqual(first: ExposesEntry, second: ExposesEntry): boolean {
   if (first.type !== second.type
     || first.name !== second.name
@@ -134,7 +218,7 @@ export function exposesAreEqual(first: ExposesEntry, second: ExposesEntry): bool
       return false;
     }
 
-    exposesCollectionsAreEqual(first.features, second.features);
+    return exposesCollectionsAreEqual(first.features, second.features);
   }
 
   return true;
@@ -146,7 +230,7 @@ export function exposesCollectionsAreEqual(first: ExposesEntry[], second: Expose
   }
 
   for (const firstEntry of first) {
-    if (second.find(e => exposesAreEqual(firstEntry, e)) === undefined) {
+    if (second.findIndex(e => exposesAreEqual(firstEntry, e)) < 0) {
       return false;
     }
   }
@@ -159,7 +243,6 @@ export interface DeviceDefinition {
   exposes: ExposesEntry[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isDeviceDefinition = (x: any): x is DeviceDefinition => (x.vendor && x.model && Array.isArray(x.exposes));
 
 export interface DeviceListEntry {
@@ -171,10 +254,16 @@ export interface DeviceListEntry {
   date_code?: string;
 }
 
+export interface DeviceListEntryForGroup extends DeviceListEntry {
+  group_id: number;
+}
+
 const isNullOrUndefined = (x: unknown): x is null | undefined => (x === null || x === undefined);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isDeviceListEntry = (x: any): x is DeviceListEntry => (x.ieee_address && x.friendly_name && x.supported);
+export const isDeviceListEntryForGroup = (x: any): x is DeviceListEntryForGroup => {
+  return (isDeviceListEntry(x) && 'group_id' in x && typeof x['group_id'] === 'number');
+};
 export function deviceListEntriesAreEqual(first: DeviceListEntry | undefined, second: DeviceListEntry | undefined): boolean {
   if (first === undefined || second === undefined) {
     return (first === undefined && second === undefined);
@@ -196,3 +285,17 @@ export function deviceListEntriesAreEqual(first: DeviceListEntry | undefined, se
     && first.definition.vendor === second.definition.vendor
     && exposesCollectionsAreEqual(first.definition.exposes, second.definition.exposes));
 }
+
+export interface GroupMember {
+  ieee_address: string;
+  endpoint: number;
+}
+
+export const isGroupMember = (x: any): x is GroupMember => (x.ieee_address && x.endpoint);
+export interface GroupListEntry {
+  friendly_name: string;
+  id: number;
+  members: GroupMember[];
+}
+
+export const isGroupListEntry = (x: any): x is GroupListEntry => (x.id && x.friendly_name && x.members);

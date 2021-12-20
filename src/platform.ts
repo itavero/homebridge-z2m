@@ -2,13 +2,19 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig }
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { Zigbee2mqttAccessory } from './platformAccessory';
-import { BaseDeviceConfiguration, DeviceConfiguration, isPluginConfiguration, PluginConfiguration } from './configModels';
+import {
+  BaseDeviceConfiguration, DeviceConfiguration, isDeviceConfiguration, isPluginConfiguration,
+  PluginConfiguration,
+} from './configModels';
 
 import * as mqtt from 'mqtt';
 import * as fs from 'fs';
-import { DeviceListEntry, isDeviceListEntry } from './z2mModels';
+import {
+  DeviceListEntry, DeviceListEntryForGroup, ExposesEntry, exposesGetOverlap, GroupListEntry, isDeviceListEntry, isDeviceListEntryForGroup,
+} from './z2mModels';
 import * as semver from 'semver';
 import { errorToString } from './helpers';
+import { EXP_GROUPS } from './experimental';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   public readonly config?: PluginConfiguration;
@@ -21,6 +27,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private readonly accessories: Zigbee2mqttAccessory[] = [];
   private didReceiveDevices: boolean;
   private lastReceivedZigbee2MqttVersion: string | undefined;
+
+  private lastReceivedDevices: DeviceListEntry[] = [];
+  private lastReceivedGroups: GroupListEntry[] = [];
+  private groupUpdatePending = false;
+  private deviceUpdatePending = false;
 
   constructor(
     public readonly log: Logger,
@@ -171,14 +182,42 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         return;
       }
 
-      topic = topic.substr(baseTopic.length);
+      topic = topic.substring(baseTopic.length);
+
+      let updateGroups = false;
+      let updateDevices = false;
 
       if (topic.startsWith(Zigbee2mqttPlatform.TOPIC_BRIDGE)) {
-        topic = topic.substr(Zigbee2mqttPlatform.TOPIC_BRIDGE.length);
+        topic = topic.substring(Zigbee2mqttPlatform.TOPIC_BRIDGE.length);
         if (topic === 'devices') {
           // Update accessories
-          const devices: DeviceListEntry[] = JSON.parse(payload.toString());
-          this.handleReceivedDevices(devices);
+          this.lastReceivedDevices = JSON.parse(payload.toString());
+
+          if (this.isExperimentalFeatureEnabled(EXP_GROUPS) && this.config?.exclude_grouped_devices === true) {
+            if (this.lastReceivedGroups.length === 0) {
+              this.deviceUpdatePending = true;
+            } else {
+              updateDevices = true;
+            }
+          } else {
+            updateDevices = true;
+          }
+
+          if (this.groupUpdatePending) {
+            updateGroups = true;
+            this.groupUpdatePending = false;
+          }
+        } else if (topic === 'groups') {
+          this.lastReceivedGroups = JSON.parse(payload.toString());
+          if (this.lastReceivedDevices.length === 0) {
+            this.groupUpdatePending = true;
+          } else {
+            updateGroups = true;
+          }
+          if (this.deviceUpdatePending) {
+            updateDevices = true;
+            this.deviceUpdatePending = false;
+          }
         } else if (topic === 'state') {
           const state = payload.toString();
           if (state === 'offline') {
@@ -210,6 +249,13 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       } else if (!topic.endsWith('/get') && !topic.endsWith('/set')) {
         // Probably a status update from a device
         this.handleDeviceUpdate(topic, payload.toString());
+      }
+
+      if (updateDevices) {
+        this.handleReceivedDevices(this.lastReceivedDevices);
+      }
+      if (updateGroups) {
+        this.createGroupAccessories(this.lastReceivedGroups);
       }
     } catch (Error) {
       this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
@@ -249,8 +295,10 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     const staleAccessories: PlatformAccessory[] = [];
     for (let i = this.accessories.length - 1; i >= 0; --i) {
       const foundIndex = devices.findIndex((d) => d.ieee_address === this.accessories[i].ieeeAddress);
-      if (foundIndex < 0 || this.isDeviceExcluded(this.accessories[i].accessory.context.device)) {
+      const foundGroupIndex = this.lastReceivedGroups.findIndex((g) => g.id === this.accessories[i].groupId);
+      if (((foundIndex < 0) && (foundGroupIndex < 0)) || this.isDeviceExcluded(this.accessories[i].accessory.context.device)) {
         // Not found or excluded; remove it.
+        this.log.debug(`Removing accessory ${this.accessories[i].displayName} (${this.accessories[i].ieeeAddress})`);
         staleAccessories.push(this.accessories[i].accessory);
         this.accessories.splice(i, 1);
       }
@@ -265,19 +313,28 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private static getIdentifiersFromDevice(device: any): string[] {
+    const identifiers: string[] = [];
+    if (typeof device === 'string') {
+      identifiers.push(device.toLocaleLowerCase());
+    } else {
+      if ('ieee_address' in device) {
+        identifiers.push(device.ieee_address.toLocaleLowerCase());
+      }
+      if ('friendly_name' in device) {
+        identifiers.push(device.friendly_name.toLocaleLowerCase());
+      }
+      if ('id' in device) {
+        identifiers.push(device.id.toString().toLocaleLowerCase());
+      }
+    }
+    return identifiers;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getAdditionalConfigForDevice(device: any): BaseDeviceConfiguration {
     if (this.config?.devices !== undefined) {
-      const identifiers: string[] = [];
-      if (typeof device === 'string') {
-        identifiers.push(device.toLocaleLowerCase());
-      } else {
-        if ('ieee_address' in device) {
-          identifiers.push(device.ieee_address.toLocaleLowerCase());
-        }
-        if ('friendly_name' in device) {
-          identifiers.push(device.friendly_name.toLocaleLowerCase());
-        }
-      }
+      const identifiers = Zigbee2mqttPlatform.getIdentifiersFromDevice(device);
 
       for (const devConfig of this.config.devices) {
         if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
@@ -303,6 +360,22 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     if (additionalConfig?.exclude) {
       this.log.debug(`Device is excluded: ${additionalConfig.id}`);
       return true;
+    }
+    if (additionalConfig?.exclude === false) {
+      // Device is explicitly NOT excluded (via device config or default device config)
+      return false;
+    }
+
+    if (this.isExperimentalFeatureEnabled(EXP_GROUPS)) {
+      if (this.config?.exclude_grouped_devices === true && this.lastReceivedGroups !== undefined) {
+        const id = typeof device === 'string' ? device : device.ieee_address;
+        for (const group of this.lastReceivedGroups) {
+          if (group.members.findIndex(m => m.ieee_address === id) >= 0) {
+            this.log.debug(`Device (${id}) is excluded because it is in a group: ${group.friendly_name} (${group.id})`);
+            return true;
+          }
+        }
+      }
     }
     return false;
   }
@@ -340,7 +413,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     if (!device.supported || this.isDeviceExcluded(device)) {
       return;
     }
-    const uuid = this.api.hap.uuid.generate(device.ieee_address);
+    const uuid_input = isDeviceListEntryForGroup(device) ? `group-${device.group_id}` : device.ieee_address;
+    const uuid = this.api.hap.uuid.generate(uuid_input);
     const existingAcc = this.accessories.find((acc) => acc.UUID === uuid);
     if (existingAcc) {
       existingAcc.updateDeviceInformation(device);
@@ -375,5 +449,78 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         this.mqttClient?.publish(topic, payload, options, () => resolve());
       });
     }
+  }
+
+  private createGroupAccessories(groups: GroupListEntry[]) {
+    if (this.isExperimentalFeatureEnabled(EXP_GROUPS)) {
+      for (const group of groups) {
+        const device = this.createDeviceListEntryFromGroup(group);
+        if (device !== undefined) {
+          this.log.info(`Creating accessory for group: ${group.friendly_name} (${group.id})`);
+          this.createOrUpdateAccessory(device);
+        }
+      }
+    }
+  }
+
+  private createDeviceListEntryFromGroup(group: GroupListEntry): DeviceListEntryForGroup | undefined {
+    let exposes = this.determineExposesForGroup(group);
+    if (exposes.length === 0) {
+      // No exposes found. Check if additional config is given.
+      const config = this.getAdditionalConfigForDevice(group);
+      if (config !== undefined && (config.exclude === undefined || config.exclude === false)
+        && isDeviceConfiguration(config) && config.exposes !== undefined && config.exposes.length > 0) {
+        // Additional config is given and it is not excluded.
+        exposes = config.exposes;
+      } else {
+        // No exposes info found, so can't expose the group
+        this.log.debug(`Group ${group.friendly_name} (${group.id}) has no usable exposes information.`);
+        return undefined;
+      }
+    } else {
+      // Exposes found.
+      this.log.debug(`Group ${group.friendly_name} (${group.id}) exposes (auto-determined):\n${JSON.stringify(exposes, null, 2)}`);
+    }
+
+    const device: DeviceListEntryForGroup = {
+      friendly_name: group.friendly_name,
+      ieee_address: group.id.toString(),
+      group_id: group.id,
+      supported: true,
+      definition: {
+        vendor: 'Zigbee2MQTT',
+        model: `GROUP-${group.id}`,
+        exposes: exposes,
+      },
+    };
+
+    return device;
+  }
+
+  private determineExposesForGroup(group: GroupListEntry): ExposesEntry[] {
+    let exposes: ExposesEntry[] = [];
+    let firstEntry = true;
+    for (const member of group.members) {
+      const device = this.lastReceivedDevices.find((dev) => (dev.ieee_address === member.ieee_address));
+      if (device === undefined) {
+        this.log.warn(`Cannot find group member in devices: ${member.ieee_address}`);
+        continue;
+      }
+
+      if (device.definition?.exposes === undefined) {
+        this.log.warn(`No exposes info for group member: ${member.ieee_address}`);
+        continue;
+      }
+
+      if (firstEntry) {
+        // Exclude link quality information
+        exposes = device.definition.exposes.filter((e) => e.name !== 'linkquality');
+        firstEntry = false;
+      } else {
+        // Try to merge exposes
+        exposes = exposesGetOverlap(exposes, device.definition.exposes);
+      }
+    }
+    return exposes;
   }
 }

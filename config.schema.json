@@ -140,6 +140,12 @@
                }
             }
          },
+         "exclude_grouped_devices": {
+            "title": "Exclude devices that are part of a group",
+            "type": "boolean",
+            "default": false,
+            "required": false
+         },
          "devices": {
             "title": "Devices",
             "type": "array",

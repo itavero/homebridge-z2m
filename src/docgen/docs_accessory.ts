@@ -23,6 +23,7 @@ export class DocsAccessory implements BasicAccessory {
   constructor(
     readonly displayName: string) { }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isExperimentalFeatureEnabled(feature: string): boolean {
     return false;
   }

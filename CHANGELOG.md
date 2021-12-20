@@ -8,17 +8,25 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Added
 
+- Exposes information for an accessory (device or group) can be overridden via the JSON configuration, using the `exposes` key in the device configuration. This is **not** part of the configuration UI and uses the same [`exposes` structure as Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/usage/exposes.html).
 - ⚠️ **Experimental features**: Starting from this release, features/changes can be introduced as _experimental_.
   This means that you have to enable these features/changes explicitly in your configuration and you must be aware
   that things might break. The main reason for adding this, is so that users can try out changes/features that
   are still being worked on and provide feedback based on their experiences. Please refer to the
   [documentation on plugin configuration](https://z2m.dev/config.html#experimental) for more information.
+- Experimental `GROUPS`:
+  - Adds accessories for all the groups for which it can determine valid exposes information.
+  - Configuration option to exclude all devices that are part of a group (`exclude_grouped_devices`, default: `false`).
 
 ### Changed
 
 - Experimental `COLOR_MODE`:
   - `light`: filter properties in state update based on `color_mode`, if provided. (see [#208](https://github.com/itavero/homebridge-z2m/issues/208))
   - `light`: set Hue/Saturation based on Color Temperature (if `color_mode` is also received), to slightly improve the UX. Unfortunately the translation is far from perfect at the moment. (see [#208](https://github.com/itavero/homebridge-z2m/issues/208))
+
+### Fixed
+
+- Bug in `exposesAreEqual` causing differences in entries with `features` not to be recognized.
 
 ## [1.6.2] - 2021-12-05
 

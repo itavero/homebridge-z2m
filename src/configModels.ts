@@ -1,10 +1,12 @@
 import { PlatformConfig, Logger } from 'homebridge';
+import { ExposesEntry, isExposesEntry } from './z2mModels';
 
 export interface PluginConfiguration extends PlatformConfig {
   mqtt: MqttConfiguration;
   defaults?: BaseDeviceConfiguration;
   experimental?: string[];
   devices?: DeviceConfiguration[];
+  exclude_grouped_devices?: boolean;
 }
 
 export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefined = undefined): x is PluginConfiguration => {
@@ -20,6 +22,11 @@ export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefi
 
   if (x.experimental !== undefined && !isStringArray(x.experimental)) {
     logger?.error('Incorrect configuration: Experimental flags are incorrect ' + JSON.stringify(x.experimental));
+    return false;
+  }
+
+  if (x.exclude_grouped_devices !== undefined && typeof x.exclude_grouped_devices !== 'boolean') {
+    logger?.error('Incorrect configuration: exclude_grouped_devices must be a boolean, if defined.');
     return false;
   }
 
@@ -70,6 +77,7 @@ export interface BaseDeviceConfiguration extends Record<string, unknown> {
 
 export interface DeviceConfiguration extends BaseDeviceConfiguration {
   id: string;
+  exposes?: ExposesEntry[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -108,6 +116,18 @@ export const isDeviceConfiguration = (x: any): x is DeviceConfiguration => {
   // Required id property
   if (x.id === undefined || typeof x.id !== 'string' || x.id.length < 1) {
     return false;
+  }
+
+  // Check if exposes is an array of ExposesEntry, if configured.
+  if (x.exposes !== undefined) {
+    if (!Array.isArray(x.exposes)) {
+      return false;
+    }
+    for (const element of x.exposes) {
+      if (!isExposesEntry(element)) {
+        return false;
+      }
+    }
   }
 
   return isBaseDeviceConfiguration(x);

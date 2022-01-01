@@ -81,7 +81,9 @@ the Develco ZHEMI101
     "name": "current_summation",
     "property": "current_summation",
     "access": 2,
-    "description": "Current summation value sent to the display. e.g. 570 = 0,570 kWh"
+    "description": "Current summation value sent to the display. e.g. 570 = 0,570 kWh",
+    "value_min": 0,
+    "value_max": 10000
   },
   {
     "type": "binary",

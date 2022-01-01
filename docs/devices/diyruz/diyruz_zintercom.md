@@ -67,7 +67,9 @@ the DIYRuZ DIYRuZ_Zintercom
     "property": "time_ring",
     "access": 7,
     "unit": "sec",
-    "description": "Time to ring before answer"
+    "description": "Time to ring before answer",
+    "value_min": 0,
+    "value_max": 600
   },
   {
     "type": "numeric",
@@ -75,7 +77,9 @@ the DIYRuZ DIYRuZ_Zintercom
     "property": "time_talk",
     "access": 7,
     "unit": "sec",
-    "description": "Time to hold before open"
+    "description": "Time to hold before open",
+    "value_min": 0,
+    "value_max": 600
   },
   {
     "type": "numeric",
@@ -83,7 +87,9 @@ the DIYRuZ DIYRuZ_Zintercom
     "property": "time_open",
     "access": 7,
     "unit": "sec",
-    "description": "Time to open before end"
+    "description": "Time to open before end",
+    "value_min": 0,
+    "value_max": 600
   },
   {
     "type": "numeric",
@@ -91,7 +97,9 @@ the DIYRuZ DIYRuZ_Zintercom
     "property": "time_bell",
     "access": 7,
     "unit": "sec",
-    "description": "Time after last bell to finish ring"
+    "description": "Time after last bell to finish ring",
+    "value_min": 0,
+    "value_max": 600
   },
   {
     "type": "numeric",
@@ -99,7 +107,9 @@ the DIYRuZ DIYRuZ_Zintercom
     "property": "time_report",
     "access": 7,
     "unit": "min",
-    "description": "Reporting interval"
+    "description": "Reporting interval",
+    "value_min": 0,
+    "value_max": 1440
   },
   {
     "type": "numeric",

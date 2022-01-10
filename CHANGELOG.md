@@ -9,6 +9,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Fixed
 
 - Remove stale accessories when an updated group list is received.
+- When determining the `exposes` information for a group, the `endpoint` specific information is removed. This should allow devices
+  with multiple endpoints to be grouped as well.
 
 ## [1.7.0-rc.1] - 2021-12-20
 

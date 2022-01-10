@@ -112,14 +112,45 @@ export function exposesIsPublished(entry: ExposesEntry): boolean {
 export function exposesGetOverlap(first: ExposesEntry[], second: ExposesEntry[]): ExposesEntry[] {
   const result: ExposesEntry[] = [];
 
-  for (const entry of first) {
-    const match = second.find((x) => x.name === entry.name && x.property === entry.property && x.type === entry.type);
+  const secondNormalized = normalizeExposes(second);
+
+  for (const entry of normalizeExposes(first)) {
+    const match = secondNormalized.find((x) => x.name === entry.name && x.property === entry.property && x.type === entry.type);
     if (match !== undefined) {
       const merged = exposesGetMergedEntry(entry, match);
       if (merged !== undefined) {
         result.push(merged);
       }
     }
+  }
+
+  return result;
+}
+
+// Removes endpoint specific info and possible duplicates
+function normalizeExposes(entries: ExposesEntry[]): ExposesEntry[] {
+  const result: ExposesEntry[] = [];
+  for (const entry of entries) {
+    const normalized = exposesRemoveEndpoint(entry);
+    if (result.findIndex((x) => exposesAreEqual(normalized, x)) < 0) {
+      result.push(normalized);
+    }
+  }
+
+  return result;
+}
+
+// Remove endpoint specific info from an exposes entry.
+function exposesRemoveEndpoint(entry: ExposesEntry): ExposesEntry {
+  const result = { ...entry };
+  if (entry.endpoint !== undefined) {
+    delete result.endpoint;
+    if (entry.property !== undefined && entry.name !== undefined) {
+      result.property = entry.name;
+    }
+  }
+  if (exposesHasFeatures(entry)) {
+    result['features'] = entry.features.map(exposesRemoveEndpoint);
   }
 
   return result;

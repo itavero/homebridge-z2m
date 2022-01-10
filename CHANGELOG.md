@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Fixed
+
+- Remove stale accessories when an updated group list is received.
+
 ## [1.7.0-rc.1] - 2021-12-20
 
 ### Added

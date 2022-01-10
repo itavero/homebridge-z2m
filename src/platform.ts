@@ -257,6 +257,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       if (updateGroups) {
         this.createGroupAccessories(this.lastReceivedGroups);
       }
+      if (updateDevices || updateGroups) {
+        this.removeStaleDevices();
+      }
     } catch (Error) {
       this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
       this.log.error(errorToString(Error));
@@ -284,17 +287,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
   }
 
-  private handleReceivedDevices(devices: DeviceListEntry[]) {
-    this.log.debug('Received devices...');
-    this.didReceiveDevices = true;
-    devices.filter(d => d.supported
-      && d.definition !== undefined
-      && !this.isDeviceExcluded(d)).forEach(d => this.createOrUpdateAccessory(d));
-
+  private removeStaleDevices(): void {
     // Remove devices that are no longer present
     const staleAccessories: PlatformAccessory[] = [];
     for (let i = this.accessories.length - 1; i >= 0; --i) {
-      const foundIndex = devices.findIndex((d) => d.ieee_address === this.accessories[i].ieeeAddress);
+      const foundIndex = this.lastReceivedDevices.findIndex((d) => d.ieee_address === this.accessories[i].ieeeAddress);
       const foundGroupIndex = this.lastReceivedGroups.findIndex((g) => g.id === this.accessories[i].groupId);
       if (((foundIndex < 0) && (foundGroupIndex < 0)) || this.isDeviceExcluded(this.accessories[i].accessory.context.device)) {
         // Not found or excluded; remove it.
@@ -306,6 +303,15 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     if (staleAccessories.length > 0) {
       this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, staleAccessories);
     }
+  }
+
+  private handleReceivedDevices(devices: DeviceListEntry[]) {
+    this.log.debug('Received devices...');
+    this.didReceiveDevices = true;
+    devices.filter(d => d.supported
+      && d.definition !== undefined
+      && !this.isDeviceExcluded(d)).forEach(d => this.createOrUpdateAccessory(d));
+
   }
 
   configureAccessory(accessory: PlatformAccessory) {

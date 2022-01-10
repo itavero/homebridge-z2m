@@ -308,10 +308,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private handleReceivedDevices(devices: DeviceListEntry[]) {
     this.log.debug('Received devices...');
     this.didReceiveDevices = true;
-    devices.filter(d => d.supported
-      && d.definition !== undefined
-      && !this.isDeviceExcluded(d)).forEach(d => this.createOrUpdateAccessory(d));
-
+    devices.forEach(d => this.createOrUpdateAccessory(d));
   }
 
   configureAccessory(accessory: PlatformAccessory) {
@@ -416,7 +413,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private createOrUpdateAccessory(device: DeviceListEntry) {
-    if (!device.supported || this.isDeviceExcluded(device)) {
+    if (!device.supported || device.definition === undefined || this.isDeviceExcluded(device)) {
       return;
     }
     const uuid_input = isDeviceListEntryForGroup(device) ? `group-${device.group_id}` : device.ieee_address;
@@ -458,11 +455,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private createGroupAccessories(groups: GroupListEntry[]) {
+    this.log.debug('Received groups...');
     if (this.isExperimentalFeatureEnabled(EXP_GROUPS)) {
       for (const group of groups) {
         const device = this.createDeviceListEntryFromGroup(group);
         if (device !== undefined) {
-          this.log.info(`Creating accessory for group: ${group.friendly_name} (${group.id})`);
           this.createOrUpdateAccessory(device);
         }
       }

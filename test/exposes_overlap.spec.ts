@@ -305,6 +305,143 @@ describe('exposesGetOverlap', () => {
     }
   ]`;
 
+  const dimmerMultipleEndpoints = `[
+    {
+      "endpoint": "l1",
+      "features": [
+        {
+          "access": 7,
+          "description": "On/off state of this light",
+          "endpoint": "l1",
+          "name": "state",
+          "property": "state_l1",
+          "type": "binary",
+          "value_off": "OFF",
+          "value_on": "ON",
+          "value_toggle": "TOGGLE"
+        },
+        {
+          "access": 7,
+          "description": "Brightness of this light",
+          "endpoint": "l1",
+          "name": "brightness",
+          "property": "brightness_l1",
+          "type": "numeric",
+          "value_max": 254,
+          "value_min": 0
+        }
+      ],
+      "type": "light"
+    },
+    {
+      "endpoint": "l2",
+      "features": [
+        {
+          "access": 7,
+          "description": "On/off state of this light",
+          "endpoint": "l2",
+          "name": "state",
+          "property": "state_l2",
+          "type": "binary",
+          "value_off": "OFF",
+          "value_on": "ON",
+          "value_toggle": "TOGGLE"
+        },
+        {
+          "access": 7,
+          "description": "Brightness of this light",
+          "endpoint": "l2",
+          "name": "brightness",
+          "property": "brightness_l2",
+          "type": "numeric",
+          "value_max": 254,
+          "value_min": 0
+        }
+      ],
+      "type": "light"
+    },
+    {
+      "access": 1,
+      "description": "Link quality (signal strength)",
+      "name": "linkquality",
+      "property": "linkquality",
+      "type": "numeric",
+      "unit": "lqi",
+      "value_max": 255,
+      "value_min": 0
+    }
+  ]`;
+
+  const dimmerSingleEndpoint = `[
+  {
+    "features": [
+      {
+        "access": 7,
+        "description": "On/off state of this light",
+        "name": "state",
+        "property": "state",
+        "type": "binary",
+        "value_off": "OFF",
+        "value_on": "ON",
+        "value_toggle": "TOGGLE"
+      },
+      {
+        "access": 7,
+        "description": "Brightness of this light",
+        "name": "brightness",
+        "property": "brightness",
+        "type": "numeric",
+        "value_max": 254,
+        "value_min": 0
+      }
+    ],
+      "type": "light"
+  },
+  {
+    "access": 1,
+      "description": "Instantaneous measured power",
+        "name": "power",
+          "property": "power",
+            "type": "numeric",
+              "unit": "W"
+  },
+  {
+    "access": 1,
+      "description": "Measured electrical potential value",
+        "name": "voltage",
+          "property": "voltage",
+            "type": "numeric",
+              "unit": "V"
+  },
+  {
+    "access": 1,
+      "description": "Instantaneous measured electrical current",
+        "name": "current",
+          "property": "current",
+            "type": "numeric",
+              "unit": "A"
+  },
+  {
+    "access": 1,
+      "description": "Sum of consumed energy",
+        "name": "energy",
+          "property": "energy",
+            "type": "numeric",
+              "unit": "kWh"
+  },
+  {
+    "access": 1,
+      "description": "Link quality (signal strength)",
+        "name": "linkquality",
+          "property": "linkquality",
+            "type": "numeric",
+              "unit": "lqi",
+                "value_max": 255,
+                  "value_min": 0
+  }
+  ]`;
+
+
   test('Equal input results in equal output', () => {
     const exposesA = JSON.parse(lightA);
     const overlap = exposesGetOverlap(exposesA, exposesA);
@@ -327,6 +464,23 @@ describe('exposesGetOverlap', () => {
     const lightExpose = overlap.find(e => e.type === 'light') as ExposesEntryWithFeatures;
     expect(lightExpose).not.toBeUndefined();
     expect(lightExpose.features.length).toEqual(4);
+
+    expect(exposesCollectionsAreEqual(overlap, exposesA)).toBeFalsy();
+    expect(exposesCollectionsAreEqual(overlap, exposesB)).toBeFalsy();
+  });
+
+
+  test('Dimmer: multiple endpoints vs single endpoint', () => {
+    const exposesA = JSON.parse(dimmerMultipleEndpoints);
+    const exposesB = JSON.parse(dimmerSingleEndpoint);
+    const overlap = exposesGetOverlap(exposesA, exposesB);
+    expect(overlap).not.toBeUndefined();
+    expect(overlap.length).toBe(2);
+    expect(overlap.findIndex(e => e.name === 'linkquality')).toBeGreaterThanOrEqual(0);
+
+    const lightExpose = overlap.find(e => e.type === 'light') as ExposesEntryWithFeatures;
+    expect(lightExpose).not.toBeUndefined();
+    expect(lightExpose.features.length).toEqual(2);
 
     expect(exposesCollectionsAreEqual(overlap, exposesA)).toBeFalsy();
     expect(exposesCollectionsAreEqual(overlap, exposesB)).toBeFalsy();

@@ -137,6 +137,41 @@
                         }
                      }
                   }
+               },
+               "adaptive_lighting": {
+                  "title": "Adaptive Lighting",
+                  "type": "object",
+                  "required": false,
+                  "properties": {
+                     "enabled": {
+                        "title": "Enabled",
+                        "type": "boolean",
+                        "required": false,
+                        "default": true
+                     },
+                     "min_ct_change": {
+                        "title": "Minimum change in Color Temperature to trigger publish",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 500,
+                        "placeholder": 1,
+                        "required": false,
+                        "condition": {
+                           "functionBody": "return model.defaults.adaptive_lighting.enabled;"
+                        }
+                     },
+                     "transition": {
+                        "title": "Transition time (seconds)",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 300,
+                        "placeholder": 0,
+                        "required": false,
+                        "condition": {
+                           "functionBody": "return model.defaults.adaptive_lighting.enabled;"
+                        }
+                     }
+                  }
                }
             }
          },
@@ -215,6 +250,41 @@
                         }
                      }
                   },
+               "adaptive_lighting": {
+                  "title": "Adaptive Lighting",
+                  "type": "object",
+                  "required": false,
+                  "properties": {
+                     "enabled": {
+                        "title": "Enabled",
+                        "type": "boolean",
+                        "required": false,
+                        "default": true
+                     },
+                     "min_ct_change": {
+                        "title": "Minimum change in Color Temperature to trigger publish",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 500,
+                        "placeholder": 1,
+                        "required": false,
+                        "condition": {
+                           "functionBody": "return model.defaults.adaptive_lighting.enabled;"
+                        }
+                     },
+                     "transition": {
+                        "title": "Transition time (seconds)",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 300,
+                        "placeholder": 0,
+                        "required": false,
+                        "condition": {
+                           "functionBody": "return model.defaults.adaptive_lighting.enabled;"
+                        }
+                     }
+                  }
+               },
                   "experimental": {
                      "title": "Experimental feature flags",
                      "type": "array",

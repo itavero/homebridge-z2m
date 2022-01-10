@@ -1,4 +1,4 @@
-import { PlatformAccessory, Service } from 'homebridge';
+import { Controller, PlatformAccessory, Service } from 'homebridge';
 import { Zigbee2mqttPlatform } from './platform';
 import { ExtendedTimer } from './timer';
 import { hap } from './hap';
@@ -50,7 +50,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   constructor(
-    private readonly platform: Zigbee2mqttPlatform,
+    public readonly platform: Zigbee2mqttPlatform,
     public readonly accessory: PlatformAccessory,
     private readonly additionalConfig: BaseDeviceConfiguration,
     serviceCreatorManager?: ServiceCreatorManager,
@@ -110,6 +110,10 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     } else {
       this.serviceHandlers.set(key, handler);
     }
+  }
+
+  configureController(controller: Controller) {
+    this.accessory.configureController(controller);
   }
 
   isServiceHandlerIdKnown(identifier: string): boolean {
@@ -227,7 +231,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
   queueDataForSetAction(data: Record<string, unknown>): void {
     this.pendingPublishData = { ...this.pendingPublishData, ...data };
-    this.log.debug(`Pending data: ${JSON.stringify(this.pendingPublishData)}`);
+    this.log.debug(`Pending data for ${this.displayName}: ${JSON.stringify(this.pendingPublishData)}`);
 
     if (!this.publishIsScheduled) {
       this.publishIsScheduled = true;
@@ -356,5 +360,17 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       name += ` ${subType}`;
     }
     return name;
+  }
+
+  isAdaptiveLightingEnabled(): boolean {
+    return this.additionalConfig.adaptive_lighting?.enabled ?? true;
+  }
+
+  getAdaptiveLightingMinimumColorTemperatureChange(): number {
+    return this.additionalConfig.adaptive_lighting?.min_ct_change ?? 0;
+  }
+
+  getAdaptiveLightingTransitionTime(): number {
+    return this.additionalConfig.adaptive_lighting?.transition ?? 0;
   }
 }

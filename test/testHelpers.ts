@@ -2,12 +2,14 @@ import {
   Characteristic, CharacteristicEventTypes, CharacteristicProps, CharacteristicSetCallback, CharacteristicValue, Logger, Service,
   SessionIdentifier, WithUUID,
 } from 'homebridge';
-import { BasicAccessory, ServiceHandler } from '../src/converters/interfaces';
+import { BasicAccessory, BasicPlatform, ServiceHandler } from '../src/converters/interfaces';
 import { DeviceDefinition, DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry, isExposesEntry } from '../src/z2mModels';
+import { AdaptiveLightingConfiguration } from '../src/configModels';
 import { mock, mockClear, MockProxy } from 'jest-mock-extended';
 import { when } from 'jest-when';
 import 'jest-chain';
 import { BasicServiceCreatorManager } from '../src/converters/creators';
+import * as semver from 'semver';
 
 export interface HomebridgeCharacteristicSetCallback {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -112,9 +114,16 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
   serviceHandler?: ServiceHandler;
   readonly serviceMock: MockProxy<Service> & Service;
   readonly characteristics: Map<string, TestCharacteristic> = new Map<string, TestCharacteristic>();
+  readonly addedCharacteristicUUIDs = new Set<string>();
 
   constructor(readonly serviceUuid: string, readonly subType: string | undefined, readonly serviceIdentifier: string) {
     this.serviceMock = mock<Service>();
+    this.serviceMock.testCharacteristic.mockImplementation((c) => {
+      if (typeof c === 'string') {
+        return false;
+      }
+      return this.addedCharacteristicUUIDs.has(c.UUID);
+    });
   }
 
   addExpectedPropertyCheck(property: string): ServiceHandlerContainer {
@@ -237,10 +246,19 @@ export class ServiceHandlersTestHarness {
   private readonly allowedValues = new Map<string, string[]>();
   private readonly experimentalFeatures = new Set<string>();
   readonly accessoryMock: MockProxy<BasicAccessory> & BasicAccessory;
+  public serverVersion = '1.1.7';
+  public adaptiveLighting: AdaptiveLightingConfiguration = {
+    enabled: true,
+    min_ct_change: 0,
+    transition: 0,
+  };
+
+  public numberOfExpectedControllers = 0;
 
   constructor() {
     this.accessoryMock = mock<BasicAccessory>();
     this.accessoryMock.log = mock<Logger>();
+    this.accessoryMock.platform = mock<BasicPlatform>();
 
     // Mock implementations of certain accessory functions
     this.accessoryMock.isValueAllowedForProperty
@@ -282,6 +300,15 @@ export class ServiceHandlersTestHarness {
           testHandler.serviceHandler = serviceHandler;
         }
       });
+
+    // Mock implementation for certain platform functions
+    this.accessoryMock.platform.isHomebridgeServerVersionGreaterOrEqualTo
+      .mockImplementation((v: string) => semver.gte(this.serverVersion, v));
+
+    // Mock implementation for adaptive lighting functions
+    this.accessoryMock.isAdaptiveLightingEnabled.mockImplementation(() => this.adaptiveLighting.enabled ?? true);
+    this.accessoryMock.getAdaptiveLightingMinimumColorTemperatureChange.mockImplementation(() => this.adaptiveLighting.min_ct_change ?? 0);
+    this.accessoryMock.getAdaptiveLightingTransitionTime.mockImplementation(() => this.adaptiveLighting.transition ?? 0);
   }
 
   configureAllowedValues(property: string, values: string[]) {
@@ -349,7 +376,10 @@ export class ServiceHandlersTestHarness {
 
           when(data.serviceMock.addCharacteristic)
             .calledWith(mapping.characteristic)
-            .mockReturnValue(mapping.mock);
+            .mockImplementation((characteristic: Characteristic) => {
+              data.addedCharacteristicUUIDs.add(characteristic.UUID);
+              return mapping.mock;
+            });
 
           if (mapping.mock !== undefined) {
             mapping.mock.on.mockReturnThis();
@@ -373,6 +403,9 @@ export class ServiceHandlersTestHarness {
   checkCreationExpectations(): void {
     let expectedCallsToGetOrAddService = 0;
     let expectedCallsToRegisterServiceHandler = 0;
+
+    expect(this.accessoryMock.configureController)
+      .toBeCalledTimes(this.numberOfExpectedControllers);
 
     for (const handler of this.handlers.values()) {
       expect(this.accessoryMock.isServiceHandlerIdKnown)

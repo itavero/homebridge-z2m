@@ -15,8 +15,9 @@ import {
 import * as semver from 'semver';
 import { errorToString } from './helpers';
 import { EXP_GROUPS } from './experimental';
+import { BasicPlatform } from './converters/interfaces';
 
-export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
+export class Zigbee2mqttPlatform implements DynamicPlatformPlugin, BasicPlatform {
   public readonly config?: PluginConfiguration;
   private baseDeviceConfig: BaseDeviceConfiguration;
   private readonly mqttClient?: mqtt.MqttClient;
@@ -153,6 +154,13 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
 
     return options;
+  }
+
+  isHomebridgeServerVersionGreaterOrEqualTo(version: string): boolean {
+    if (this.api.versionGreaterOrEqual !== undefined) {
+      return this.api.versionGreaterOrEqual(version);
+    }
+    return semver.gte(this.api.serverVersion, version);
   }
 
   private checkZigbee2MqttVersion(version: string, topic: string) {

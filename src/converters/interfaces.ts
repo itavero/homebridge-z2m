@@ -1,10 +1,14 @@
-import { Service } from 'homebridge';
+import { Controller, Service } from 'homebridge';
 import { ExposesEntry } from '../z2mModels';
 
 export interface BasicAccessory {
     log: BasicLogger;
 
-    displayName: string;
+    platform: BasicPlatform;
+
+    readonly displayName: string;
+
+    configureController(controller: Controller): void;
 
     getDefaultServiceDisplayName(subType: string | undefined): string;
 
@@ -23,6 +27,16 @@ export interface BasicAccessory {
     isServiceHandlerIdKnown(identifier: string): boolean;
 
     isExperimentalFeatureEnabled(feature: string): boolean;
+
+    isAdaptiveLightingEnabled(): boolean;
+
+    getAdaptiveLightingMinimumColorTemperatureChange(): number;
+
+    getAdaptiveLightingTransitionTime(): number;
+}
+
+export interface BasicPlatform {
+    isHomebridgeServerVersionGreaterOrEqualTo(version: string): boolean;
 }
 
 export interface ServiceHandler {

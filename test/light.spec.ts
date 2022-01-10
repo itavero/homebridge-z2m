@@ -165,6 +165,11 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+
+        // Set server version to 1.3.0 so that Adaptive Lighting should be available
+        newHarness.serverVersion = '1.3.0';
+        newHarness.numberOfExpectedControllers = 1;
+
         const lightbulb = newHarness.getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
           .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
@@ -650,6 +655,11 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+
+        // Set server version to 1.3.0 so that Adaptive Lighting should be available
+        // to verify that it will not be created if the light does not support Color Temperature
+        newHarness.serverVersion = '1.3.0';
+
         newHarness.getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
           .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true);
@@ -734,7 +744,6 @@ describe('Light', () => {
       harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'brightness', 100, 254);
     });
   });
-
   describe('OSRAM Lightify LED CLA60 E27 RGBW', () => {
     const deviceModelJson = `{
       "date_code": "20140331CNWT****",

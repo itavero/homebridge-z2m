@@ -68,10 +68,46 @@ export const isMqttConfiguration = (x: any): x is MqttConfiguration => (
   && typeof x.server === 'string'
   && x.server.length > 0);
 
+export interface AdaptiveLightingConfiguration extends Record<string, unknown> {
+  enabled?: boolean;
+  min_ct_change?: number;
+  transition?: number;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isAdaptiveLightingConfiguration = (x: any): x is AdaptiveLightingConfiguration => {
+  if (x.enabled !== undefined && typeof x.enabled !== 'boolean') {
+    return false;
+  }
+
+  if (x.min_ct_change !== undefined) {
+    if (typeof x.min_ct_change !== 'number') {
+      return false;
+    }
+
+    if (x.min_ct_change < 0) {
+      return false;
+    }
+  }
+
+  if (x.transition !== undefined) {
+    if (typeof x.transition !== 'number') {
+      return false;
+    }
+
+    if (x.transition < 0 || x.transition > 300) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export interface BaseDeviceConfiguration extends Record<string, unknown> {
   exclude?: boolean;
   excluded_keys?: string[];
   values?: PropertyValueConfiguration[];
+  adaptive_lighting?: AdaptiveLightingConfiguration;
   experimental?: string[];
 }
 
@@ -89,6 +125,11 @@ export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration 
 
   // Optional excluded_keys which must be an array of strings if present
   if (x.excluded_keys !== undefined && !isStringArray(x.excluded_keys)) {
+    return false;
+  }
+
+  // Optional adaptive lighting options
+  if (x.adaptive_lighting !== undefined && !isAdaptiveLightingConfiguration(x.adaptive_lighting)) {
     return false;
   }
 

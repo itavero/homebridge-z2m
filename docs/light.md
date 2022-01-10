@@ -9,3 +9,6 @@ The table below shows how the different features within this `exposes` entry are
 | `color_temp` | published, set | [Color Temperature](https://developers.homebridge.io/#/characteristic/ColorTemperature) | |
 | `color_hs` | published, set | [Hue](https://developers.homebridge.io/#/characteristic/Hue) and [Saturation](https://developers.homebridge.io/#/characteristic/Saturation) | Requires nested features `hue` and `saturation`. Preferred over `color_xy`. |
 | `color_xy` | published, set | [Hue](https://developers.homebridge.io/#/characteristic/Hue) and [Saturation](https://developers.homebridge.io/#/characteristic/Saturation) | Requires nested features `x` and `y`. Values translated by plugin. |
+
+## Adaptive Lighting
+If a light supports both `brightness` and `color_temp`, adaptive lighting will be available as well (on Homebridge v1.3.0 and newer).

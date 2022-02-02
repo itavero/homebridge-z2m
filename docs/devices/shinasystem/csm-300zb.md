@@ -44,6 +44,18 @@ the ShinaSystem CSM-300ZB
     "description": "Voltage of the battery in millivolts"
   },
   {
+    "type": "enum",
+    "name": "status",
+    "property": "status",
+    "access": 1,
+    "values": [
+      "idle",
+      "in",
+      "out"
+    ],
+    "description": "Currently status"
+  },
+  {
     "type": "numeric",
     "name": "people",
     "property": "people",

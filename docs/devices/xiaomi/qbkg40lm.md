@@ -19,6 +19,8 @@ the Xiaomi QBKG40LM
   * ServiceLabelIndex
 * [Switch](../../switch.md)
   * On
+* [TemperatureSensor](../../sensors.md)
+  * CurrentTemperature
 
 
 # Related

@@ -17,7 +17,11 @@ the Xiaomi ZNDDMK11LM
 * [Lightbulb](../../light.md)
   * Brightness
   * ColorTemperature
+  * Hue
   * On
+  * Saturation
+* [TemperatureSensor](../../sensors.md)
+  * CurrentTemperature
 
 
 # Related

@@ -20,8 +20,6 @@ the Xiaomi MCCGQ14LM
   * StatusLowBattery
 * [ContactSensor](../../sensors.md)
   * ContactSensorState
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
 
 
 # Related

@@ -15,11 +15,11 @@ Which device would you like to be supported in this plugin?
 **Supported in Zigbee2MQTT?**
 Is this device already supported by Zigbee2MQTT / zigbee-herdsman-converters?
 If this is NOT the case, please add support for the device there first.
-Read there manual on [How to support new devices](https://www.zigbee2mqtt.io/how_tos/how_to_support_new_devices.html) for more information.
+Read there manual on [How to support new devices](https://www.zigbee2mqtt.io/advanced/support-new-devices/01_support_new_devices.html) for more information.
 If this is the case, please provide the version in which support is present/added.
 
 **Device model / Exposes information**
-Provide the device model (also known as [exposes information](https://www.zigbee2mqtt.io/information/exposes)) for this particular device, as published to `zigbee2mqtt/bridge/devices` by Zigbee2MQTT.
+Provide the device model (also known as [exposes information](https://www.zigbee2mqtt.io/guide/usage/exposes.html)) for this particular device, as published to `zigbee2mqtt/bridge/devices` by Zigbee2MQTT.
 
 ```json
 please put the device model JSON in this code block

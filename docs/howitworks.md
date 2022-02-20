@@ -11,7 +11,7 @@ For more information on which attributes are supported and how they are mapped, 
 
 > ⚠️ **Experimental feature**: This feature has to be enabled in the [Configuration](config.md#experimental).
 
-Within Zigbee2MQTT, you can [group devices](https://www.zigbee2mqtt.io/guide/usage/groups.html#configuration) so they can be controlled with a single Zigbee command.
+Within Zigbee2MQTT, you can [group devices](https://www.zigbee2mqtt.io/guide/usage/groups.html) so they can be controlled with a single Zigbee command.
 If groups are configured, homebridge-z2m will try to determine the features (a.k.a. `exposes` entries) that devices in the group have in common and create an additional HomeKit accessory based on that information.
 
 These accessories can be configured just like other devices, meaning that you can add additional configuration in the JSON config via the `friendly_name` or `id` of the group.

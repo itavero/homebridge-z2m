@@ -13,13 +13,9 @@ First of all, let's clarify a few names / terminology:
 
 If you already have a working installation of [Zigbee2MQTT]](https://www.zigbee2mqtt.io) v1.17.0 or newer, you can skip this step and continue with the next one.
 
-If you are new to Zigbee2MQTT, it is recommended to follow the [Getting Started](https://www.zigbee2mqtt.io/#getting-started) steps on their website, consisting of:
+If you are new to Zigbee2MQTT, it is recommended to follow the [Getting Started](https://www.zigbee2mqtt.io/guide/getting-started/) steps on their website.
 
-* [What do I need?](https://www.zigbee2mqtt.io/getting_started/what_do_i_need.html) - which tells you what kind of hardware you need.
-* [Running Zigbee2MQTT](https://www.zigbee2mqtt.io/getting_started/running_zigbee2mqtt.html) - which tells you how to install Zigbee2MQTT on a Linux environment and refers to some instructions for setting up an MQTT broker. Their website also has [instructions for other environments](https://www.zigbee2mqtt.io/#running-zigbee2mqtt-on-).
-* [Pairing devices](https://www.zigbee2mqtt.io/getting_started/pairing_devices.html) - which tells you how you can bind any of the [Supported devices](https://www.zigbee2mqtt.io/information/supported_devices.html).
-
-After you have finished setting up Zigbee2MQTT, I'd also suggest having a look at the integrated [Frontend](https://www.zigbee2mqtt.io/information/frontend.html). This makes maintaining/pairing devices a bit easier than manually sending MQTT messages.
+After you have finished setting up Zigbee2MQTT, I'd also suggest having a look at the integrated [Frontend](https://www.zigbee2mqtt.io/guide/configuration/frontend.html). This makes maintaining/pairing devices a bit easier than manually sending MQTT messages.
 
 ## Setup Homebridge
 

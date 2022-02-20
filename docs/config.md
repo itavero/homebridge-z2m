@@ -60,7 +60,7 @@ A (rather minimal) configuration looks like this:
 ```
 
 ## MQTT
-Within the `mqtt` object, you can add pretty much all the configuration options that Zigbee2MQTT also has, with the same keys as in the Zigbee2MQTT configuration YAML file. Please refer to the [Zigbee2MQTT documentation](https://www.zigbee2mqtt.io/information/configuration.html) for more information on the MQTT options. The keys that can be used are:
+Within the `mqtt` object, you can add pretty much all the configuration options that Zigbee2MQTT also has, with the same keys as in the Zigbee2MQTT configuration YAML file. Please refer to the [Zigbee2MQTT documentation](https://www.zigbee2mqtt.io/guide/configuration/mqtt.html) for more information on the MQTT options. The keys that can be used are:
 * `base_topic`
 * `server`
 * `ca`

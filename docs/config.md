@@ -77,7 +77,7 @@ Within the `mqtt` object, you can add pretty much all the configuration options 
 Some MQTT brokers do not have support for QoS. If the QoS Levels sent by this plugin are leading to problems, you can force the plugin to disable this for all messages (i.e. set the QoS level to 0) by setting the `disable_qos` to `true`.
 By default, this option is set to `false`. Note: this option does **not** exist in Zigbee2MQTT itself.
 
-## Devices
+## Devices {#devices}
 Within the `devices` array, you can set options for specific devices, based on their IEEE addresses (`0x1234567890abcdef`) or the `friendly_name`.
 This identifier should be put in the `id` property.
 
@@ -134,3 +134,12 @@ In the latest (or next) release the following features can be enabled:
 | ---- | ------ | ------ | ----------- |
 | `COLOR_MODE` | ✅ | ✅ | Possible workaround/fix for issue described in issue [#208](https://github.com/itavero/homebridge-z2m/issues/208) |
 | `GROUPS` | ✅ | ❌ | Support for controlling Zigbee2MQTT groups (see [#277](https://github.com/itavero/homebridge-z2m/issues/277)) |
+
+### Support for groups
+When support for groups (`GROUPS`) is enabled, you can also use the `exclude_grouped_devices` config option shown above to automatically
+exclude devices that are part of a group. That way they will only be exposed as a grouped device, and not as a singular device and a group.
+You can override `exclude_grouped_devices` by setting `exclude` to `false` for the devices that you still want to show up in HomeKit as a
+"singular" device.
+
+Using the friendly name of a group or its ID, you can set also set the [Device options](config.md#devices) shown above
+for a particular group.

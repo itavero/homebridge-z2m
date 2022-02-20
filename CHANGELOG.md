@@ -6,6 +6,11 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Changed
+
+- Ignore `exclude: false` if it is part of the `defaults` in the plugin configuration, as it may conflict with
+  `exclude_grouped_devices` (also see [#277](https://github.com/itavero/homebridge-z2m/issues/277#issuecomment-1042590683))
+
 ### Fixed
 
 - Remove stale accessories when an updated group list is received.

@@ -45,7 +45,6 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
     // Set device defaults
     this.baseDeviceConfig = {
-      excluded: false,
     };
 
     // Validate configuration
@@ -70,6 +69,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       // Merge defaults from the plugin configuration
       if (this.config.defaults !== undefined) {
         this.baseDeviceConfig = { ...this.baseDeviceConfig, ...this.config.defaults };
+      }
+      if (this.baseDeviceConfig.exclude === false) {
+        // Set to undefined; as this is already the default behavior and might conflict with exclude_grouped_devices otherwise.
+        this.log.debug('Changing default value for exclude from false to undefined.');
+        this.baseDeviceConfig.exclude = undefined;
       }
       this.log.debug(`Default device config: ${JSON.stringify(this.baseDeviceConfig)}`);
 
@@ -360,7 +364,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   private isDeviceExcluded(device: DeviceListEntry | string): boolean {
     const additionalConfig = this.getAdditionalConfigForDevice(device);
-    if (additionalConfig?.exclude) {
+    if (additionalConfig?.exclude === true) {
       this.log.debug(`Device is excluded: ${additionalConfig.id}`);
       return true;
     }

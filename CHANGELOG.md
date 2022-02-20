@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.7.0] - 2022-02-20
+
 ### Changed
 
 - Ignore `exclude: false` if it is part of the `defaults` in the plugin configuration, as it may conflict with
@@ -297,7 +299,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.7.0-rc.1...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/itavero/homebridge-z2m/compare/v1.7.0-rc.1...v1.7.0
 [1.7.0-rc.1]: https://github.com/itavero/homebridge-z2m/compare/v1.6.2...v1.7.0-rc.1
 [1.6.2]: https://github.com/itavero/homebridge-z2m/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/itavero/homebridge-z2m/compare/v1.6.0...v1.6.1

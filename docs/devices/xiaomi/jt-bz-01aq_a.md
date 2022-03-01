@@ -16,8 +16,6 @@ the Xiaomi JT-BZ-01AQ/A
 
 * [LeakSensor](../../sensors.md)
   * LeakDetected
-* [Switch](../../switch.md)
-  * On
 
 
 # Related

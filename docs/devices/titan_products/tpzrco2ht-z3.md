@@ -20,8 +20,10 @@ the Titan Products TPZRCO2HT-Z3
   * StatusLowBattery
 * [HumiditySensor](../../sensors.md)
   * CurrentRelativeHumidity
+  * StatusLowBattery
 * [TemperatureSensor](../../sensors.md)
   * CurrentTemperature
+  * StatusLowBattery
 
 
 # Related

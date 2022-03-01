@@ -270,8 +270,14 @@ function generateExposesJson(basePath: string, device: any) {
 
 // Filter out devices that only expose a `linkquality`
 // and add white label devices
-const allDevices = herdsman.definitions.filter(d => (Array.isArray(d.exposes) && d.exposes.find(e => e.name !== 'linkquality') !== undefined));
+const allDevices = herdsman.definitions.filter(d => (typeof d.exposes === 'function' || d.exposes.find(e => e.name !== 'linkquality') !== undefined));
 for (const device of allDevices) {
+  if (typeof device.exposes === 'function') {
+    // Call function to generate array of exposes information.
+    console.log(`Generating exposes array for ${device.vendor} ${device.model}`);
+    device.exposes = device.exposes();
+  }
+
   if (device.whiteLabel) {
     for (const whiteLabel of device.whiteLabel) {
       const whiteLabelDevice = {

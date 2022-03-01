@@ -29,8 +29,8 @@ This page lists the devices currently supported by Zigbee2MQTT v1.24.0 (which de
 Using an automated script, we have checked which HomeKit Services (and Characteristics) would be created for each of these devices.
 That way you have some kind of idea of what kind of devices are supported.
 
-Currently there are **2031 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
-Unfortunately there are still 60 devices that are not (yet) supported by this plugin, but are supported by Zigbee2MQTT (and expose more than just a _link quality_).
+Currently there are **2032 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
+Unfortunately there are still 61 devices that are not (yet) supported by this plugin, but are supported by Zigbee2MQTT (and expose more than just a _link quality_).
 
 ## A
 <div style="clear:both" />
@@ -232,6 +232,7 @@ Unfortunately there are still 60 devices that are not (yet) supported by this pl
 <span class="vendor">[Linkind](index.md#linkind)</span>
 <span class="vendor">[LivingWise](index.md#livingwise)</span>
 <span class="vendor">[Livolo](index.md#livolo)</span>
+<span class="vendor">[LiXee](index.md#lixee)</span>
 <span class="vendor">[Lonsonho](index.md#lonsonho)</span>
 <span class="vendor">[LoraTap](index.md#loratap)</span>
 <span class="vendor">[Lubeez](index.md#lubeez)</span>
@@ -2217,6 +2218,13 @@ Unfortunately there are still 60 devices that are not (yet) supported by this pl
 | [TI0001-switch-2gang](livolo/ti0001-switch-2gang.md) | Livolo Zigbee Switch 2 gang |
 
 
+# LiXee {#lixee}
+
+| Model | Description |
+| ----- | ----------- |
+| [ZLinky_TIC](lixee/zlinky_tic.md) | LiXee Lixee ZLinky |
+
+
 # Lonsonho {#lonsonho}
 
 | Model | Description |
@@ -3782,6 +3790,7 @@ Unfortunately there are still 60 devices that are not (yet) supported by this pl
 | [MIR-HE200-TY_fall](tuya/mir-he200-ty_fall.md) | TuYa Human presence sensor with fall function |
 | [PJ-ZGD01](tuya/pj-zgd01.md) | TuYa Garage door opener |
 | [RH3040](tuya/rh3040.md) | TuYa PIR sensor |
+| [S-LUX-ZB](tuya/s-lux-zb.md) | TuYa Light sensor |
 | [SM0201](tuya/sm0201.md) | TuYa Temperature & humidity sensor with LED screen |
 | [SNTZ007](tuya/sntz007.md) | TuYa Rechargeable Zigbee contact sensor |
 | [SNTZ009](tuya/sntz009.md) | TuYa Water leak sensor |

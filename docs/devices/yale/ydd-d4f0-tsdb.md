@@ -21,6 +21,9 @@ the Yale YDD-D4F0-TSDB
 * [LockMechanism](../../lock.md)
   * LockCurrentState
   * LockTargetState
+* [StatelessProgrammableSwitch](../../action.md)
+  * ProgrammableSwitchEvent
+  * ServiceLabelIndex
 
 
 # Related

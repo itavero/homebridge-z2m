@@ -21,6 +21,9 @@ the Yale YRD426NRSC
 * [LockMechanism](../../lock.md)
   * LockCurrentState
   * LockTargetState
+* [StatelessProgrammableSwitch](../../action.md)
+  * ProgrammableSwitchEvent
+  * ServiceLabelIndex
 
 
 # Related

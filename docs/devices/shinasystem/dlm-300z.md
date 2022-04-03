@@ -21,6 +21,9 @@ the ShinaSystem DLM-300Z
 * [LockMechanism](../../lock.md)
   * LockCurrentState
   * LockTargetState
+* [StatelessProgrammableSwitch](../../action.md)
+  * ProgrammableSwitchEvent
+  * ServiceLabelIndex
 
 
 # Related

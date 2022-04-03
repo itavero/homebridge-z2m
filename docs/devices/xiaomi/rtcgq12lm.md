@@ -20,6 +20,8 @@ the Xiaomi RTCGQ12LM
   * StatusLowBattery
 * [OccupancySensor](../../sensors.md)
   * OccupancyDetected
+* [TemperatureSensor](../../sensors.md)
+  * CurrentTemperature
 
 
 # Related

@@ -21,6 +21,9 @@ the Yale YRL226L TS
 * [LockMechanism](../../lock.md)
   * LockCurrentState
   * LockTargetState
+* [StatelessProgrammableSwitch](../../action.md)
+  * ProgrammableSwitchEvent
+  * ServiceLabelIndex
 
 
 # Related

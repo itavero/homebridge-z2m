@@ -21,6 +21,9 @@ the Yale YRD256HA20BP
 * [LockMechanism](../../lock.md)
   * LockCurrentState
   * LockTargetState
+* [StatelessProgrammableSwitch](../../action.md)
+  * ProgrammableSwitchEvent
+  * ServiceLabelIndex
 
 
 # Related

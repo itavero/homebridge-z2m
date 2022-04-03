@@ -20,7 +20,6 @@ the TuYa TS0601_smoke
   * StatusLowBattery
 * [SmokeSensor](../../sensors.md)
   * SmokeDetected
-  * StatusLowBattery
 
 
 # Related

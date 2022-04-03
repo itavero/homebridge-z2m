@@ -18,10 +18,56 @@ the EVN ZBHS4RGBW
   * BatteryLevel
   * ChargingState
   * StatusLowBattery
-* [StatelessProgrammableSwitch](../../action.md)
-  * ProgrammableSwitchEvent
-  * ServiceLabelIndex
 
+
+
+## Exposes
+
+```json
+[
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "enum",
+    "name": "action",
+    "property": "action",
+    "access": 1,
+    "values": [
+      "color_move",
+      "color_temperature_move",
+      "brightness_step_up",
+      "brightness_step_down",
+      "brightness_move_up",
+      "brightness_move_down",
+      "brightness_stop",
+      "hue_move",
+      "hue_stop",
+      "recall_*",
+      "on",
+      "off"
+    ],
+    "description": "Triggered action (e.g. a button click)"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]
+```
 
 # Related
 * [Other devices from EVN](../index.md#evn)

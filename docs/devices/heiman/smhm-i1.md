@@ -21,7 +21,6 @@ the HEIMAN SMHM-I1
 * [OccupancySensor](../../sensors.md)
   * OccupancyDetected
   * StatusLowBattery
-  * StatusTampered
 
 
 # Related

@@ -84,11 +84,12 @@ This identifier should be put in the `id` property.
 Currently the following options are available:
 * `exclude`: if set to `true` this device will not be fully ignored.
 * `excluded_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be ignored/excluded for this device.
+* `included_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be included for this device, even if they are excluded in the global default device configuration (see below).
 * `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard. This is currently only applied in the [Stateless Programmable Switch](action.md).
 * `exposes`: An array of exposes information, using the [structures defined by Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/usage/exposes.html).
 
 ### Defaults
-Within the `defaults` property, you can also configure the device specific options mentioned above (except for the `id` property).
+Within the `defaults` property, you can also configure the device specific options mentioned above (except for the `id` and `included_keys`).
 If a device does not specify a value for any of the options (properties) mentioned above, the value from the `defaults` property will be used (if any).
 
 The following defaults are set within the plugin itself:

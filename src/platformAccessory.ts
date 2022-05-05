@@ -123,6 +123,12 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       return false;
     }
 
+    if (Array.isArray(this.additionalConfig.included_keys)
+      && this.additionalConfig.included_keys.includes(property)) {
+      // Property is explicitly included
+      return false;
+    }
+
     return this.additionalConfig.excluded_keys?.includes(property) ?? false;
   }
 

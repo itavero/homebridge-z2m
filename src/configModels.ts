@@ -77,6 +77,7 @@ export interface BaseDeviceConfiguration extends Record<string, unknown> {
 
 export interface DeviceConfiguration extends BaseDeviceConfiguration {
   id: string;
+  included_keys?: string[];
   exposes?: ExposesEntry[];
 }
 
@@ -115,6 +116,11 @@ export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration 
 export const isDeviceConfiguration = (x: any): x is DeviceConfiguration => {
   // Required id property
   if (x.id === undefined || typeof x.id !== 'string' || x.id.length < 1) {
+    return false;
+  }
+
+  // Optional included_keys which must be an array of strings if present
+  if (x.included_keys !== undefined && !isStringArray(x.included_keys)) {
     return false;
   }
 

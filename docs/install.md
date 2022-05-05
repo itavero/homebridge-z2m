@@ -17,6 +17,8 @@ If you are new to Zigbee2MQTT, it is recommended to follow the [Getting Started]
 
 After you have finished setting up Zigbee2MQTT, I'd also suggest having a look at the integrated [Frontend](https://www.zigbee2mqtt.io/guide/configuration/frontend.html). This makes maintaining/pairing devices a bit easier than manually sending MQTT messages.
 
+> When using **Homebridge v1.4.0** or newer, it is currently recommended to [turn off state caching](https://www.zigbee2mqtt.io/guide/configuration/mqtt.html#mqtt-behaviour) in Zigbee2MQTT (put `cache_state: false` in the configuration). See [issue #383](https://github.com/itavero/homebridge-z2m/issues/383) for more information.
+
 ## Setup Homebridge
 
 If you haven't setup [Homebridge](https://homebridge.io) yet, please follow one of the [installation guides on their wiki](https://github.com/homebridge/homebridge/wiki).

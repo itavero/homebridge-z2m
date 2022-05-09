@@ -14,7 +14,6 @@ import {
 } from './z2mModels';
 import * as semver from 'semver';
 import { errorToString } from './helpers';
-import { EXP_GROUPS } from './experimental';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   public readonly config?: PluginConfiguration;
@@ -197,7 +196,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
           // Update accessories
           this.lastReceivedDevices = JSON.parse(payload.toString());
 
-          if (this.isExperimentalFeatureEnabled(EXP_GROUPS) && this.config?.exclude_grouped_devices === true) {
+          if (this.config?.exclude_grouped_devices === true) {
             if (this.lastReceivedGroups.length === 0) {
               this.deviceUpdatePending = true;
             } else {
@@ -373,14 +372,12 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       return false;
     }
 
-    if (this.isExperimentalFeatureEnabled(EXP_GROUPS)) {
-      if (this.config?.exclude_grouped_devices === true && this.lastReceivedGroups !== undefined) {
-        const id = typeof device === 'string' ? device : device.ieee_address;
-        for (const group of this.lastReceivedGroups) {
-          if (group.members.findIndex(m => m.ieee_address === id) >= 0) {
-            this.log.debug(`Device (${id}) is excluded because it is in a group: ${group.friendly_name} (${group.id})`);
-            return true;
-          }
+    if (this.config?.exclude_grouped_devices === true && this.lastReceivedGroups !== undefined) {
+      const id = typeof device === 'string' ? device : device.ieee_address;
+      for (const group of this.lastReceivedGroups) {
+        if (group.members.findIndex(m => m.ieee_address === id) >= 0) {
+          this.log.debug(`Device (${id}) is excluded because it is in a group: ${group.friendly_name} (${group.id})`);
+          return true;
         }
       }
     }
@@ -460,12 +457,10 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   private createGroupAccessories(groups: GroupListEntry[]) {
     this.log.debug('Received groups...');
-    if (this.isExperimentalFeatureEnabled(EXP_GROUPS)) {
-      for (const group of groups) {
-        const device = this.createDeviceListEntryFromGroup(group);
-        if (device !== undefined) {
-          this.createOrUpdateAccessory(device);
-        }
+    for (const group of groups) {
+      const device = this.createDeviceListEntryFromGroup(group);
+      if (device !== undefined) {
+        this.createOrUpdateAccessory(device);
       }
     }
   }

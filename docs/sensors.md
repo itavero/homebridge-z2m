@@ -17,6 +17,7 @@ The following table shows the possible exposes entries and the services and char
 | `temperature` | published | [Temperature Sensor](https://developers.homebridge.io/#/service/TemperatureSensor) | [Current Temperature](https://developers.homebridge.io/#/characteristic/CurrentTemperature) | |
 | `illuminance_lux` | published | [Light Sensor](https://developers.homebridge.io/#/service/LightSensor) | [Current Ambient Light Level](https://developers.homebridge.io/#/characteristic/CurrentAmbientLightLevel) | |
 | `pressure` | published | Air Pressure Sensor (custom)<br>`E863F00A-079E-48FF-8F27-9C2605A29F52` | Air Pressure (custom)<br>`E863F10F-079E-48FF-8F27-9C2605A29F52` | UUIDs are the same as the Elgato Eve Weather uses. |
+| `soil_moisture` | published | [Humidity Sensor](https://developers.homebridge.io/#/service/HumiditySensor) | [Current Relative Humidity](https://developers.homebridge.io/#/characteristic/CurrentRelativeHumidity) | |
 | `contact` | published | [Contact Sensor](https://developers.homebridge.io/#/service/ContactSensor) | [Contact Sensor State](https://developers.homebridge.io/#/characteristic/ContactSensorState) | |
 | `occupancy` | published | [Occupancy Sensor](https://developers.homebridge.io/#/service/OccupancySensor) | [Occupancy Detected](https://developers.homebridge.io/#/characteristic/OccupancyDetected) | |
 | `vibration` | published | [Motion Sensor](https://developers.homebridge.io/#/service/MotionSensor) | [Motion Detected](https://developers.homebridge.io/#/characteristic/MotionDetected) | |

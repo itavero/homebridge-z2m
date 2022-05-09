@@ -175,6 +175,27 @@ class AirPressureSensorHandler extends BasicSensorHandler {
   }
 }
 
+class SoilMoistureSensorHandler extends BasicSensorHandler {
+  public static readonly NAME = 'soil_moisture';
+
+  constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
+    super(accessory, expose, allExposes, SoilMoistureSensorHandler.generateIdentifier, (n, t) => new hap.Service.HumiditySensor(n, t), 'Soil Moisture');
+    accessory.log.debug(`Configuring SoilMoistureSensor (humidity) for ${this.serviceName}`);
+
+    const characteristic = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentRelativeHumidity);
+    copyExposesRangeToCharacteristic(expose, characteristic);
+    this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentRelativeHumidity));
+  }
+
+  static generateIdentifier(endpoint: string | undefined) {
+    let identifier = SoilMoistureSensorHandler.NAME + '_' + hap.Service.HumiditySensor.UUID;
+    if (endpoint !== undefined) {
+      identifier += '_' + endpoint.trim();
+    }
+    return identifier;
+  }
+}
+
 class TemperatureSensorHandler extends BasicSensorHandler {
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(accessory, expose, allExposes, TemperatureSensorHandler.generateIdentifier, (n, t) => new hap.Service.TemperatureSensor(n, t));
@@ -399,6 +420,7 @@ export class BasicSensorCreator implements ServiceCreator {
     new BasicSensorMapping('carbon_monoxide', ExposesKnownTypes.BINARY, CarbonMonoxideSensorHandler),
     new BasicSensorMapping('water_leak', ExposesKnownTypes.BINARY, WaterLeakSensorHandler),
     new BasicSensorMapping('gas', ExposesKnownTypes.BINARY, GasLeakSensorHandler),
+    new BasicSensorMapping(SoilMoistureSensorHandler.NAME, ExposesKnownTypes.NUMERIC, SoilMoistureSensorHandler),
   ];
 
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {

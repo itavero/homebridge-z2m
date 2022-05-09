@@ -8,6 +8,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [1.7.0] - 2022-02-20
 
+### Added
+
+- Expose `soil_moisture` as _Humidity Sensor_. (see [#423](https://github.com/itavero/homebridge-z2m/issues/423) and [#309](https://github.com/itavero/homebridge-z2m/issues/309))
+
 ### Changed
 
 - Ignore `exclude: false` if it is part of the `defaults` in the plugin configuration, as it may conflict with

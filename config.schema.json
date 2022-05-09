@@ -177,6 +177,18 @@
                         "functionBody": "return !model.devices[arrayIndices].exclude;"
                      }
                   },
+                  "included_keys": {
+                     "title": "Included properties (keys)",
+                     "type": "array",
+                     "required": false,
+                     "items": {
+                        "type": "string",
+                        "minLength": 1
+                     },
+                     "condition": {
+                        "functionBody": "return !model.devices[arrayIndices].exclude;"
+                     }
+                  },
                   "values": {
                      "title": "Include/exclude values",
                      "type": "array",

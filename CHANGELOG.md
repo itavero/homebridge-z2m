@@ -10,6 +10,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - It is now possible to include globally excluded properties for specific devices by using `included_keys` in the device configuration. (see [#406](https://github.com/itavero/homebridge-z2m/issues/406))
 
+### Changed
+
+- Support for Zigbee2MQTT Groups is now enabled by default. The experimental option `GROUPS` is therefore removed. (see [#277](https://github.com/itavero/homebridge-z2m/issues/277))
+
 ### Notes
 
 - When using **Homebridge v1.4.0** or newer, it is currently recommended to [turn off state caching](https://www.zigbee2mqtt.io/guide/configuration/mqtt.html#mqtt-behaviour) in Zigbee2MQTT (put `cache_state: false` in the configuration). See [issue #383](https://github.com/itavero/homebridge-z2m/issues/383) for more information.

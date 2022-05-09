@@ -123,6 +123,16 @@ For example, to exclude all devices, except a few you want to specifically inclu
 }
 ```
 
+## Support for groups
+Groups defined in Zigbee2MQTT will automatically be exposed as a single accessory, so they can be controlled as if they were a single device.
+Using the friendly name of a group or its ID, you can set also set the [Device options](config.md#devices) shown above
+for a particular group. Overriding the `exposes` information, might be of use if homebridge-z2m is not able to determine the correct information on its own.
+
+You can use the `exclude_grouped_devices` config option shown above to automatically
+exclude devices that are part of a group. That way they will only be exposed as a grouped device, and not as a singular device plus a group.
+You can override `exclude_grouped_devices` by setting `exclude` to `false` for the devices that you still want to show up in HomeKit as a
+"singular" device.
+
 ## Experimental features/changes {#experimental}
 These features/changes can be enabled from the configuration, either globally or (in some cases) for specific devices.
 Experimental features must be explicitly enabled from the configuration before they can be used.
@@ -134,13 +144,3 @@ In the latest (or next) release the following features can be enabled:
 | Flag | Global | Device | Description |
 | ---- | ------ | ------ | ----------- |
 | `COLOR_MODE` | ✅ | ✅ | Possible workaround/fix for issue described in issue [#208](https://github.com/itavero/homebridge-z2m/issues/208) |
-| `GROUPS` | ✅ | ❌ | Support for controlling Zigbee2MQTT groups (see [#277](https://github.com/itavero/homebridge-z2m/issues/277)) |
-
-### Support for groups
-When support for groups (`GROUPS`) is enabled, you can also use the `exclude_grouped_devices` config option shown above to automatically
-exclude devices that are part of a group. That way they will only be exposed as a grouped device, and not as a singular device and a group.
-You can override `exclude_grouped_devices` by setting `exclude` to `false` for the devices that you still want to show up in HomeKit as a
-"singular" device.
-
-Using the friendly name of a group or its ID, you can set also set the [Device options](config.md#devices) shown above
-for a particular group.

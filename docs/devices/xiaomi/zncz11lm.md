@@ -16,8 +16,8 @@ the Xiaomi ZNCZ11LM
 
 * [Switch](../../switch.md)
   * On
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

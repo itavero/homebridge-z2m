@@ -16,7 +16,7 @@ the Gledopto GL-B-003P
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

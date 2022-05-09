@@ -16,7 +16,7 @@ the JIAWEN K2RGBW01
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

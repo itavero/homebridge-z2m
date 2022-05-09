@@ -16,7 +16,7 @@ the YSRSAI YSR-MINI-01_wwcw
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

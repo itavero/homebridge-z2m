@@ -16,7 +16,7 @@ the Nue / 3A HGZB-06A
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

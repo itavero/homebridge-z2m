@@ -16,7 +16,7 @@ the GIDEALED ZC05M
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

@@ -16,7 +16,7 @@ the Trust ZLED-TUNE9
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

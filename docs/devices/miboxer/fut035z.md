@@ -16,7 +16,7 @@ the Miboxer FUT035Z
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

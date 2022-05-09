@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the Feibit SCA01ZB
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [CarbonMonoxideSensor](../../sensors.md)
-  * CarbonMonoxideDetected
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Carbon Monoxide Sensor](../../sensors.md)
+  * Carbon Monoxide Detected
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

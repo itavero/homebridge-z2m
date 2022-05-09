@@ -16,7 +16,7 @@ the ADEO IG-CDZOTAAG014RA-MAN
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

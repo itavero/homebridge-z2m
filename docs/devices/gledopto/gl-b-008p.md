@@ -16,7 +16,7 @@ the Gledopto GL-B-008P
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

@@ -16,7 +16,7 @@ the Paul Neuhaus NLG-RGB-TW light
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

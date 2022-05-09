@@ -15,11 +15,11 @@ The following HomeKit Services and Characteristics are exposed by
 the IT Commander ITCMDR_Contact
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [ContactSensor](../../sensors.md)
-  * ContactSensorState
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Contact Sensor](../../sensors.md)
+  * Contact Sensor State
 
 
 # Related

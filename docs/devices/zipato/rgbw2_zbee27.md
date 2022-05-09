@@ -16,7 +16,7 @@ the Zipato rgbw2.zbee27
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

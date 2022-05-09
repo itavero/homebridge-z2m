@@ -15,12 +15,12 @@ The following HomeKit Services and Characteristics are exposed by
 the HEIMAN HS1CA-E
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [CarbonMonoxideSensor](../../sensors.md)
-  * CarbonMonoxideDetected
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Carbon Monoxide Sensor](../../sensors.md)
+  * Carbon Monoxide Detected
+  * Status Low Battery
 
 
 # Related

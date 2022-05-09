@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the TuYa JM-TRH-ZGB-V1
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [HumiditySensor](../../sensors.md)
-  * CurrentRelativeHumidity
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

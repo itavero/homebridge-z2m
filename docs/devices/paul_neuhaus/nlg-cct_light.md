@@ -16,7 +16,7 @@ the Paul Neuhaus NLG-CCT light
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

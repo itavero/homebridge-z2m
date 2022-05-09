@@ -17,19 +17,19 @@ the KMPCIL KMPCIL_RES005
 * [Air Pressure Sensor](../../sensors.md)
   * Air Pressure
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [HumiditySensor](../../sensors.md)
-  * CurrentRelativeHumidity
-* [LightSensor](../../sensors.md)
-  * CurrentAmbientLightLevel
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
 * [Switch](../../switch.md)
   * On
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

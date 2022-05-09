@@ -16,7 +16,7 @@ the Leedarson ZM350STW1TCF
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

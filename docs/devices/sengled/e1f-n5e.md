@@ -16,7 +16,7 @@ the Sengled E1F-N5E
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

@@ -15,15 +15,15 @@ The following HomeKit Services and Characteristics are exposed by
 the Yale YRD256HA20BP
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [LockMechanism](../../lock.md)
-  * LockCurrentState
-  * LockTargetState
-* [StatelessProgrammableSwitch](../../action.md)
-  * ProgrammableSwitchEvent
-  * ServiceLabelIndex
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Lock Mechanism](../../lock.md)
+  * Lock Current State
+  * Lock Target State
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 
 
 # Related

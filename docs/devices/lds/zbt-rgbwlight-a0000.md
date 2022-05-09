@@ -16,7 +16,7 @@ the LDS ZBT-RGBWLight-A0000
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

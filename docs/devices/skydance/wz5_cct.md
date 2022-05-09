@@ -16,7 +16,7 @@ the Skydance WZ5_cct
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

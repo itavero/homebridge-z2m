@@ -16,8 +16,8 @@ the DIYRuZ DIYRuZ_RT
 
 * [Switch](../../switch.md)
   * On
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

@@ -16,7 +16,7 @@ the Ajax Online AJ_ZB_GU10
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

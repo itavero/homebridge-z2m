@@ -16,7 +16,7 @@ the LifeControl MCLH-02
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

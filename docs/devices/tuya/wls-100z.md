@@ -15,11 +15,11 @@ The following HomeKit Services and Characteristics are exposed by
 the TuYa WLS-100z
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [LeakSensor](../../sensors.md)
-  * LeakDetected
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Leak Sensor](../../sensors.md)
+  * Leak Detected
 
 
 # Related

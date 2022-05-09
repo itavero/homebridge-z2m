@@ -16,7 +16,7 @@ the LEDVANCE GPDRPLOP401100CE
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

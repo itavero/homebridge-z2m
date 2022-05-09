@@ -16,7 +16,7 @@ the Xiaomi ZNTGMK11LM
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

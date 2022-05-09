@@ -16,7 +16,7 @@ the Innr RCL 240 T
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

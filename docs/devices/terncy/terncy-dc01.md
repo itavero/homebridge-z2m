@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the TERNCY TERNCY-DC01
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [ContactSensor](../../sensors.md)
-  * ContactSensorState
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Contact Sensor](../../sensors.md)
+  * Contact Sensor State
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

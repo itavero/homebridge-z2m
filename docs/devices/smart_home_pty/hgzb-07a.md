@@ -16,7 +16,7 @@ the Smart Home Pty HGZB-07A
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

@@ -15,14 +15,14 @@ The following HomeKit Services and Characteristics are exposed by
 the Xiaomi DJT11LM
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [MotionSensor](../../sensors.md)
-  * MotionDetected
-* [StatelessProgrammableSwitch](../../action.md)
-  * ProgrammableSwitchEvent
-  * ServiceLabelIndex
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Motion Sensor](../../sensors.md)
+  * Motion Detected
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 
 
 # Related

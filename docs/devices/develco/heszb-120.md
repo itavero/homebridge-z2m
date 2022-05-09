@@ -15,15 +15,15 @@ The following HomeKit Services and Characteristics are exposed by
 the Develco HESZB-120
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [SmokeSensor](../../sensors.md)
-  * SmokeDetected
-  * StatusLowBattery
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Smoke Sensor](../../sensors.md)
+  * Smoke Detected
+  * Status Low Battery
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
 
 
 # Related

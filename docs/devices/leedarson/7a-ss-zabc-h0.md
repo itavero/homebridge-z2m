@@ -15,17 +15,17 @@ The following HomeKit Services and Characteristics are exposed by
 the Leedarson 7A-SS-ZABC-H0
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [HumiditySensor](../../sensors.md)
-  * CurrentRelativeHumidity
-* [LightSensor](../../sensors.md)
-  * CurrentAmbientLightLevel
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

@@ -16,7 +16,7 @@ the Orvibo RL804CZB
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

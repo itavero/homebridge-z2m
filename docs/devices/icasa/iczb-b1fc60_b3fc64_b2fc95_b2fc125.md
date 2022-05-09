@@ -16,7 +16,7 @@ the iCasa ICZB-B1FC60/B3FC64/B2FC95/B2FC125
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

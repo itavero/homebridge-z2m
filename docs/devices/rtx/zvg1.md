@@ -15,9 +15,9 @@ The following HomeKit Services and Characteristics are exposed by
 the RTX ZVG1
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
 * [Switch](../../switch.md)
   * On
 

@@ -16,7 +16,7 @@ the Alchemy AL8TC13W-AP
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

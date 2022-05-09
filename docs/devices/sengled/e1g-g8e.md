@@ -16,7 +16,7 @@ the Sengled E1G-G8E
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

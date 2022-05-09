@@ -16,7 +16,7 @@ the Hive HV-CE14CXZB6
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

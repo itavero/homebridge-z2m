@@ -15,12 +15,12 @@ The following HomeKit Services and Characteristics are exposed by
 the Third Reality 3RWS18BZ
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [LeakSensor](../../sensors.md)
-  * LeakDetected
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Leak Sensor](../../sensors.md)
+  * Leak Detected
+  * Status Low Battery
 
 
 # Related

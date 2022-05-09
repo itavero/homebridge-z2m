@@ -15,24 +15,24 @@ The following HomeKit Services and Characteristics are exposed by
 the Technicolor XHK1-TC
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [ContactSensor](../../sensors.md)
-  * ContactSensorState
-  * StatusLowBattery
-  * StatusTampered
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
-  * StatusLowBattery
-  * StatusTampered
-* [StatelessProgrammableSwitch](../../action.md)
-  * ProgrammableSwitchEvent
-  * ServiceLabelIndex
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Contact Sensor](../../sensors.md)
+  * Contact Sensor State
+  * Status Low Battery
+  * Status Tampered
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
+  * Status Low Battery
+  * Status Tampered
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

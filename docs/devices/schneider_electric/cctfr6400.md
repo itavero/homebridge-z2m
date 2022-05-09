@@ -15,14 +15,14 @@ The following HomeKit Services and Characteristics are exposed by
 the Schneider Electric CCTFR6400
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [HumiditySensor](../../sensors.md)
-  * CurrentRelativeHumidity
-* [StatelessProgrammableSwitch](../../action.md)
-  * ProgrammableSwitchEvent
-  * ServiceLabelIndex
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 
 
 # Related

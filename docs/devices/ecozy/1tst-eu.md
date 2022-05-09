@@ -15,15 +15,15 @@ The following HomeKit Services and Characteristics are exposed by
 the eCozy 1TST-EU
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
 * [Thermostat](../../climate.md)
-  * CurrentHeatingCoolingState
-  * CurrentTemperature
-  * TargetHeatingCoolingState
-  * TargetTemperature
-  * TemperatureDisplayUnits
+  * Current Heating Cooling State
+  * Current Temperature
+  * Target Heating Cooling State
+  * Target Temperature
+  * Temperature Display Units
 
 
 # Related

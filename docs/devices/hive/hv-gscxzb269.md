@@ -16,7 +16,7 @@ the Hive HV-GSCXZB269
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

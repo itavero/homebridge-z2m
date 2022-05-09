@@ -15,17 +15,17 @@ The following HomeKit Services and Characteristics are exposed by
 the Aurora Lighting AU-A1ZBPIRS
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [LightSensor](../../sensors.md)
-  * CurrentAmbientLightLevel
-  * StatusLowBattery
-  * StatusTampered
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
+  * Status Low Battery
+  * Status Tampered
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

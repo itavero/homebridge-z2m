@@ -15,12 +15,12 @@ The following HomeKit Services and Characteristics are exposed by
 the TuYa S-LUX-ZB
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [LightSensor](../../sensors.md)
-  * CurrentAmbientLightLevel
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
+  * Status Low Battery
 
 
 # Related

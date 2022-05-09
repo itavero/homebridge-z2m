@@ -16,7 +16,7 @@ the EcoSmart A9A19A60WESDZ02
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

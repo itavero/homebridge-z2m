@@ -15,11 +15,11 @@ The following HomeKit Services and Characteristics are exposed by
 the OWON THS317-ET
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

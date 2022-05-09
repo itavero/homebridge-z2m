@@ -15,14 +15,14 @@ The following HomeKit Services and Characteristics are exposed by
 the SmartThings STS-PRS-251
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
-* [StatelessProgrammableSwitch](../../action.md)
-  * ProgrammableSwitchEvent
-  * ServiceLabelIndex
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 
 
 # Related

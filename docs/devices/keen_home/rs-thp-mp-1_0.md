@@ -17,13 +17,13 @@ the Keen Home RS-THP-MP-1.0
 * [Air Pressure Sensor](../../sensors.md)
   * Air Pressure
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [HumiditySensor](../../sensors.md)
-  * CurrentRelativeHumidity
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

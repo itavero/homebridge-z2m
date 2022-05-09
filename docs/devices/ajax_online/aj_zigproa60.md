@@ -16,7 +16,7 @@ the Ajax Online AJ_ZIGPROA60
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

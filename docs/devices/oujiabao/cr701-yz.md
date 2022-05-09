@@ -15,17 +15,17 @@ The following HomeKit Services and Characteristics are exposed by
 the Oujiabao CR701-YZ
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [CarbonMonoxideSensor](../../sensors.md)
-  * CarbonMonoxideDetected
-  * StatusLowBattery
-  * StatusTampered
-* [LeakSensor](../../sensors.md)
-  * LeakDetected
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Carbon Monoxide Sensor](../../sensors.md)
+  * Carbon Monoxide Detected
+  * Status Low Battery
+  * Status Tampered
+* [Leak Sensor](../../sensors.md)
+  * Leak Detected
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

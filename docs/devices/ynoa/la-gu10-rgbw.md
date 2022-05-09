@@ -16,7 +16,7 @@ the Ynoa LA-GU10-RGBW
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

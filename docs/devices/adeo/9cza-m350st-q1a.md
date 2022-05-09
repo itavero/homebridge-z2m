@@ -16,7 +16,7 @@ the ADEO 9CZA-M350ST-Q1A
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

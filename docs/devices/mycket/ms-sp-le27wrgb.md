@@ -16,7 +16,7 @@ the Mycket MS-SP-LE27WRGB
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

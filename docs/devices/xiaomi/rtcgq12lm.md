@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the Xiaomi RTCGQ12LM
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

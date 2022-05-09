@@ -15,15 +15,15 @@ The following HomeKit Services and Characteristics are exposed by
 the Moes ZSS-ZK-THL
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [HumiditySensor](../../sensors.md)
-  * CurrentRelativeHumidity
-* [LightSensor](../../sensors.md)
-  * CurrentAmbientLightLevel
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

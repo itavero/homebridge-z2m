@@ -16,7 +16,7 @@ the Nue / 3A WL-SD001-9W
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

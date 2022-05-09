@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the Swann SWO-WDS1PA
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [ContactSensor](../../sensors.md)
-  * ContactSensorState
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Contact Sensor](../../sensors.md)
+  * Contact Sensor State
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

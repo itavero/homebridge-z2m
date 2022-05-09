@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the Feibit SSA01ZB
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [SmokeSensor](../../sensors.md)
-  * SmokeDetected
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Smoke Sensor](../../sensors.md)
+  * Smoke Detected
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

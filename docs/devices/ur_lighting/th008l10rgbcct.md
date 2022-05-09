@@ -16,7 +16,7 @@ the UR Lighting TH008L10RGBCCT
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

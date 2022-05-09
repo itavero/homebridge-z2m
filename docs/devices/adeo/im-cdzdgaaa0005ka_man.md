@@ -16,7 +16,7 @@ the ADEO IM-CDZDGAAA0005KA_MAN
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

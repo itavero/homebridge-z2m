@@ -15,15 +15,15 @@ The following HomeKit Services and Characteristics are exposed by
 the SmartThings STS-IRM-250
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
-  * StatusTampered
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
+  * Status Tampered
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Tampered
 
 
 # Related

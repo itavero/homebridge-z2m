@@ -16,7 +16,7 @@ the Dresden Elektronik XVV-Mega23M12
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

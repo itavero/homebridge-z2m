@@ -16,7 +16,7 @@ the Xiaomi ZNXDD01LM
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

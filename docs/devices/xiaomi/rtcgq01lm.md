@@ -15,11 +15,11 @@ The following HomeKit Services and Characteristics are exposed by
 the Xiaomi RTCGQ01LM
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
 
 
 # Related

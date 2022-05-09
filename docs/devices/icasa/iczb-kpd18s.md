@@ -15,9 +15,9 @@ The following HomeKit Services and Characteristics are exposed by
 the iCasa ICZB-KPD18S
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
 
 
 

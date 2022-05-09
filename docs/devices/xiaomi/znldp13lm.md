@@ -16,7 +16,7 @@ the Xiaomi ZNLDP13LM
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

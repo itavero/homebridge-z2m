@@ -16,7 +16,7 @@ the Trust ZLED-RGB9
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the Xiaomi JY-GZ-01AQ
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [SmokeSensor](../../sensors.md)
-  * SmokeDetected
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Smoke Sensor](../../sensors.md)
+  * Smoke Detected
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

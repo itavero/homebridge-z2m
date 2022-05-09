@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the Xiaomi ZNCLDJ12LM
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [WindowCovering](../../cover.md)
-  * CurrentPosition
-  * PositionState
-  * TargetPosition
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Window Covering](../../cover.md)
+  * Current Position
+  * Position State
+  * Target Position
 
 
 # Related

@@ -15,11 +15,11 @@ The following HomeKit Services and Characteristics are exposed by
 the FireAngel W2-Module
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [CarbonMonoxideSensor](../../sensors.md)
-  * CarbonMonoxideDetected
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Carbon Monoxide Sensor](../../sensors.md)
+  * Carbon Monoxide Detected
 
 
 # Related

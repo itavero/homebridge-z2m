@@ -15,9 +15,9 @@ The following HomeKit Services and Characteristics are exposed by
 the Dawon DNS SG-V100-ZB
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
 * [Switch](../../switch.md)
   * On
 

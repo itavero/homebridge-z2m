@@ -15,25 +15,25 @@ The following HomeKit Services and Characteristics are exposed by
 the OWON PIR313-E
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [HumiditySensor](../../sensors.md)
-  * CurrentRelativeHumidity
-  * StatusLowBattery
-  * StatusTampered
-* [LightSensor](../../sensors.md)
-  * CurrentAmbientLightLevel
-  * StatusLowBattery
-  * StatusTampered
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
-  * StatusLowBattery
-  * StatusTampered
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+  * Status Low Battery
+  * Status Tampered
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
+  * Status Low Battery
+  * Status Tampered
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
+  * Status Low Battery
+  * Status Tampered
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

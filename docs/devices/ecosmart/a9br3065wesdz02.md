@@ -16,7 +16,7 @@ the EcoSmart A9BR3065WESDZ02
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

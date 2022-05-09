@@ -19,9 +19,9 @@ the Siglis ZFU-1D-CH
   * Hue
   * On
   * Saturation
-* [StatelessProgrammableSwitch](../../action.md)
-  * ProgrammableSwitchEvent
-  * ServiceLabelIndex
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 * [Switch](../../switch.md)
   * On
 

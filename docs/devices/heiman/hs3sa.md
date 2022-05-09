@@ -15,12 +15,12 @@ The following HomeKit Services and Characteristics are exposed by
 the HEIMAN HS3SA
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [SmokeSensor](../../sensors.md)
-  * SmokeDetected
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Smoke Sensor](../../sensors.md)
+  * Smoke Detected
+  * Status Low Battery
 
 
 # Related

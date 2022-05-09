@@ -15,12 +15,12 @@ The following HomeKit Services and Characteristics are exposed by
 the Home Control AS HC-SLM-1
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [LockMechanism](../../lock.md)
-  * LockCurrentState
-  * LockTargetState
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Lock Mechanism](../../lock.md)
+  * Lock Current State
+  * Lock Target State
 
 
 # Related

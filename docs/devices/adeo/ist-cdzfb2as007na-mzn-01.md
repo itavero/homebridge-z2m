@@ -16,7 +16,7 @@ the ADEO IST-CDZFB2AS007NA-MZN-01
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

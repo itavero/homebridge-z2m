@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the Xiaomi JTQJ-BF-01LM/BW
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [LeakSensor](../../sensors.md)
-  * LeakDetected
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Leak Sensor](../../sensors.md)
+  * Leak Detected
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

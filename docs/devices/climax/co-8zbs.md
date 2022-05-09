@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the Climax CO-8ZBS
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [CarbonMonoxideSensor](../../sensors.md)
-  * CarbonMonoxideDetected
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Carbon Monoxide Sensor](../../sensors.md)
+  * Carbon Monoxide Detected
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

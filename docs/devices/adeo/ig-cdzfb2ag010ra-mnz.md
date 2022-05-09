@@ -16,7 +16,7 @@ the ADEO IG-CDZFB2AG010RA-MNZ
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

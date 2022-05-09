@@ -15,21 +15,21 @@ The following HomeKit Services and Characteristics are exposed by
 the Neo NAS-PD07
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [HumiditySensor](../../sensors.md)
-  * CurrentRelativeHumidity
-  * StatusLowBattery
-  * StatusTampered
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
-  * StatusLowBattery
-  * StatusTampered
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+  * Status Low Battery
+  * Status Tampered
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
+  * Status Low Battery
+  * Status Tampered
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

@@ -16,7 +16,7 @@ the TuYa TS0505A_led
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

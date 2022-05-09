@@ -16,7 +16,7 @@ the Xiaomi XDD12LM
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

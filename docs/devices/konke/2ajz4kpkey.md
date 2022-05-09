@@ -15,12 +15,12 @@ The following HomeKit Services and Characteristics are exposed by
 the Konke 2AJZ4KPKEY
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [StatelessProgrammableSwitch](../../action.md)
-  * ProgrammableSwitchEvent
-  * ServiceLabelIndex
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 
 
 # Related

@@ -15,15 +15,15 @@ The following HomeKit Services and Characteristics are exposed by
 the SmartThings F-ADT-WTR-1
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [LeakSensor](../../sensors.md)
-  * LeakDetected
-  * StatusLowBattery
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Leak Sensor](../../sensors.md)
+  * Leak Detected
+  * Status Low Battery
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
 
 
 # Related

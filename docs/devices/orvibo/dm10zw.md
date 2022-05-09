@@ -16,7 +16,7 @@ the ORVIBO DM10ZW
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

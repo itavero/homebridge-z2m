@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the HEIMAN HS1VS-EF
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [MotionSensor](../../sensors.md)
-  * MotionDetected
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Motion Sensor](../../sensors.md)
+  * Motion Detected
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

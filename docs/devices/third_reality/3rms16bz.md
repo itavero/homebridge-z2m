@@ -15,12 +15,12 @@ The following HomeKit Services and Characteristics are exposed by
 the Third Reality 3RMS16BZ
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
+  * Status Low Battery
 
 
 # Related

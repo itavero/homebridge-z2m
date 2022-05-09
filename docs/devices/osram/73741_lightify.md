@@ -16,7 +16,7 @@ the OSRAM 73741_LIGHTIFY
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

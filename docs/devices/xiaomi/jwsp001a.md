@@ -16,7 +16,7 @@ the Xiaomi JWSP001A
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

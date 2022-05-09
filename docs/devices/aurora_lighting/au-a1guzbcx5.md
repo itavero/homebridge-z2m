@@ -16,7 +16,7 @@ the Aurora Lighting AU-A1GUZBCX5
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

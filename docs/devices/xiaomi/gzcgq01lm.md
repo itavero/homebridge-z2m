@@ -15,11 +15,11 @@ The following HomeKit Services and Characteristics are exposed by
 the Xiaomi GZCGQ01LM
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [LightSensor](../../sensors.md)
-  * CurrentAmbientLightLevel
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
 
 
 # Related

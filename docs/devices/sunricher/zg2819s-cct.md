@@ -15,9 +15,9 @@ The following HomeKit Services and Characteristics are exposed by
 the Sunricher ZG2819S-CCT
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
 
 
 

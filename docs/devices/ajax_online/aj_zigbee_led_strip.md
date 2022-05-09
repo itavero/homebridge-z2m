@@ -16,7 +16,7 @@ the Ajax Online Aj_Zigbee_Led_Strip
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

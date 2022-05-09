@@ -16,7 +16,7 @@ the Sengled E21-N1EA
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

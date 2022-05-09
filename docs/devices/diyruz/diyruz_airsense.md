@@ -16,10 +16,10 @@ the DIYRuZ DIYRuZ_AirSense
 
 * [Air Pressure Sensor](../../sensors.md)
   * Air Pressure
-* [HumiditySensor](../../sensors.md)
-  * CurrentRelativeHumidity
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

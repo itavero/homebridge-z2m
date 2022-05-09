@@ -16,7 +16,7 @@ the Hive HV-GUCXZB5
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

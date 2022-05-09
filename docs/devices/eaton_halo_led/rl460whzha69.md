@@ -16,7 +16,7 @@ the Eaton/Halo LED RL460WHZHA69
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

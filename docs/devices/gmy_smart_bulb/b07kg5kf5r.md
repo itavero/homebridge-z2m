@@ -16,7 +16,7 @@ the GMY Smart Bulb B07KG5KF5R
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

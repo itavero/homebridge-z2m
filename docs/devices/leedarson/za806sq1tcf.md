@@ -16,7 +16,7 @@ the Leedarson ZA806SQ1TCF
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

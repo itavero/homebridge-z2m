@@ -16,7 +16,7 @@ the Shenzhen Homa HLD503-Z-CT
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

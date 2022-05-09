@@ -15,15 +15,15 @@ The following HomeKit Services and Characteristics are exposed by
 the Develco HMSZB-110
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [HumiditySensor](../../sensors.md)
-  * CurrentRelativeHumidity
-  * StatusLowBattery
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+  * Status Low Battery
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
 
 
 # Related

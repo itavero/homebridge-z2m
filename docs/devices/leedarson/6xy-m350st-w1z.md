@@ -16,7 +16,7 @@ the Leedarson 6xy-M350ST-W1Z
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

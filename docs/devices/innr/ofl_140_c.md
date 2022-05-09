@@ -16,7 +16,7 @@ the Innr OFL 140 C
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

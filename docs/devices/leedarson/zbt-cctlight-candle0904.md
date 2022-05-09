@@ -16,7 +16,7 @@ the Leedarson ZBT-CCTLight-Candle0904
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

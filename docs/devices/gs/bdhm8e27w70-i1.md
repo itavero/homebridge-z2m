@@ -16,7 +16,7 @@ the GS BDHM8E27W70-I1
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

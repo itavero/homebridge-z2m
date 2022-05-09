@@ -15,11 +15,11 @@ The following HomeKit Services and Characteristics are exposed by
 the DIYRuZ DIYRuZ_magnet
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [ContactSensor](../../sensors.md)
-  * ContactSensorState
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Contact Sensor](../../sensors.md)
+  * Contact Sensor State
 
 
 # Related

@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the TuYa TS0601_vibration_sensor
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [ContactSensor](../../sensors.md)
-  * ContactSensorState
-* [MotionSensor](../../sensors.md)
-  * MotionDetected
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Contact Sensor](../../sensors.md)
+  * Contact Sensor State
+* [Motion Sensor](../../sensors.md)
+  * Motion Detected
 
 
 # Related

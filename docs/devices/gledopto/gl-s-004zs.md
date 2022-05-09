@@ -16,7 +16,7 @@ the Gledopto GL-S-004ZS
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

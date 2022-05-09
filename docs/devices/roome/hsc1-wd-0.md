@@ -15,13 +15,13 @@ The following HomeKit Services and Characteristics are exposed by
 the ROOME HSC1-WD-0
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [ContactSensor](../../sensors.md)
-  * ContactSensorState
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Contact Sensor](../../sensors.md)
+  * Contact Sensor State
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

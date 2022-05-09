@@ -15,9 +15,9 @@ The following HomeKit Services and Characteristics are exposed by
 the Custom devices (DiY) EFEKTA_miniPWS
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
 
 
 

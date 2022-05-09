@@ -16,7 +16,7 @@ the Ajax Online ZB_A60_RGBCW
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

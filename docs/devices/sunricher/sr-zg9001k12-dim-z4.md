@@ -18,9 +18,9 @@ The following HomeKit Services and Characteristics are exposed by
 these devices
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
 
 
 

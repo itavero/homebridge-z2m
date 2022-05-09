@@ -16,7 +16,7 @@ the Sunricher HK-ZD-CCT-A
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * On
 
 

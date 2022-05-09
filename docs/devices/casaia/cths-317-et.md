@@ -15,12 +15,12 @@ The following HomeKit Services and Characteristics are exposed by
 the CASAIA CTHS-317-ET
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
-  * StatusLowBattery
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
 
 
 # Related

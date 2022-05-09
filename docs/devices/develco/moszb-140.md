@@ -15,21 +15,21 @@ The following HomeKit Services and Characteristics are exposed by
 the Develco MOSZB-140
 
 * [Battery](../../battery.md)
-  * BatteryLevel
-  * ChargingState
-  * StatusLowBattery
-* [LightSensor](../../sensors.md)
-  * CurrentAmbientLightLevel
-  * StatusLowBattery
-  * StatusTampered
-* [OccupancySensor](../../sensors.md)
-  * OccupancyDetected
-  * StatusLowBattery
-  * StatusTampered
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
-  * StatusLowBattery
-  * StatusTampered
+  * Battery Level
+  * Charging State
+  * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
+  * Status Low Battery
+  * Status Tampered
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
+  * Status Low Battery
+  * Status Tampered
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

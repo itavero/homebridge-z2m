@@ -16,8 +16,8 @@ the Xiaomi SSM-U01
 
 * [Switch](../../switch.md)
   * On
-* [TemperatureSensor](../../sensors.md)
-  * CurrentTemperature
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

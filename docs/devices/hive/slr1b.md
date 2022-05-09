@@ -15,11 +15,11 @@ The following HomeKit Services and Characteristics are exposed by
 the Hive SLR1b
 
 * [Thermostat](../../climate.md)
-  * CurrentHeatingCoolingState
-  * CurrentTemperature
-  * TargetHeatingCoolingState
-  * TargetTemperature
-  * TemperatureDisplayUnits
+  * Current Heating Cooling State
+  * Current Temperature
+  * Target Heating Cooling State
+  * Target Temperature
+  * Temperature Display Units
 
 
 # Related

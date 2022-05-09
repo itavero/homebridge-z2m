@@ -16,7 +16,7 @@ the Zemismart HGZB-DLC4-N15B
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

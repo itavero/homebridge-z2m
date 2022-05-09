@@ -16,7 +16,7 @@ the ADEO IP-CDZOTAAP005JA-MAN
 
 * [Lightbulb](../../light.md)
   * Brightness
-  * ColorTemperature
+  * Color Temperature
   * Hue
   * On
   * Saturation

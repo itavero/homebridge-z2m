@@ -66,16 +66,16 @@ function addServiceMapping(service: WithUUID<{ new(): Service }>, page?: string)
   try {
     const s = new service();
     for (const char of s.characteristics) {
-      characteristicNameMapping.set(char.UUID, char.constructor.name);
+      characteristicNameMapping.set(char.UUID, char.constructor.name.replace(/([A-Z])/g, ' $1').trim());
     }
     for (const char of s.optionalCharacteristics) {
-      characteristicNameMapping.set(char.UUID, char.constructor.name);
+      characteristicNameMapping.set(char.UUID, char.constructor.name.replace(/([A-Z])/g, ' $1').trim());
     }
   } catch (err) {
     // ignore
   }
 
-  return [service.UUID, new ServiceInfo(service.name ?? 'DOCGEN FAILURE', page)];
+  return [service.UUID, new ServiceInfo(service.name.replace(/([A-Z])/g, ' $1').trim() ?? 'DOCGEN FAILURE', page)];
 }
 
 const serviceNameMapping = new Map<string, ServiceInfo>([

@@ -19,8 +19,6 @@ the Xiaomi WS-EUK04
   * Service Label Index
 * [Switch](../../switch.md)
   * On
-* [Temperature Sensor](../../sensors.md)
-  * Current Temperature
 
 
 # Related

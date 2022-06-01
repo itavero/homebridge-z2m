@@ -21,6 +21,7 @@ the HEIMAN SMHM-I1
 * [Occupancy Sensor](../../sensors.md)
   * Occupancy Detected
   * Status Low Battery
+  * Status Tampered
 
 
 # Related

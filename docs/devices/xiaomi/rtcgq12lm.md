@@ -18,10 +18,10 @@ the Xiaomi RTCGQ12LM
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
 * [Occupancy Sensor](../../sensors.md)
   * Occupancy Detected
-* [Temperature Sensor](../../sensors.md)
-  * Current Temperature
 
 
 # Related

@@ -20,8 +20,6 @@ the Xiaomi ZNDDMK11LM
   * Hue
   * On
   * Saturation
-* [Temperature Sensor](../../sensors.md)
-  * Current Temperature
 
 
 # Related

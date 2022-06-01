@@ -20,8 +20,6 @@ the Xiaomi MCCGQ11LM
   * Status Low Battery
 * [Contact Sensor](../../sensors.md)
   * Contact Sensor State
-* [Temperature Sensor](../../sensors.md)
-  * Current Temperature
 
 
 # Related

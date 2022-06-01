@@ -17,6 +17,10 @@ the LifeControl MCLH-08
 * [Air Quality Sensor](../../air_quality.md)
   * Air Quality
   * V O C Density
+* [Battery](../../battery.md)
+  * Battery Level
+  * Charging State
+  * Status Low Battery
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
 * [Temperature Sensor](../../sensors.md)

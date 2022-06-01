@@ -19,8 +19,6 @@ the Xiaomi QBKG20LM
   * Service Label Index
 * [Switch](../../switch.md)
   * On
-* [Temperature Sensor](../../sensors.md)
-  * Current Temperature
 
 
 # Related

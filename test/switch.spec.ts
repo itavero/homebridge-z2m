@@ -107,60 +107,121 @@ describe('Switch', () => {
       "type": "Router"
     }`;
 
-    // Shared "state"
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    describe('as Switch', () => {
+      // Shared "state"
+      let deviceExposes: ExposesEntry[] = [];
+      let harness: ServiceHandlersTestHarness;
 
-    beforeEach(() => {
-      // Only test service creation for first test case and reuse harness afterwards
-      if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
-        const newHarness = new ServiceHandlersTestHarness();
+      beforeEach(() => {
+        // Only test service creation for first test case and reuse harness afterwards
+        if (deviceExposes.length === 0 && harness === undefined) {
+          // Test JSON Device List entry
+          const device = testJsonDeviceListEntry(deviceModelJson);
+          deviceExposes = device?.definition?.exposes ?? [];
+          expect(deviceExposes?.length).toBeGreaterThan(0);
+          const newHarness = new ServiceHandlersTestHarness();
 
-        // Check service creation
-        newHarness.getOrAddHandler(hap.Service.Switch).addExpectedCharacteristic('state', hap.Characteristic.On, true);
-        newHarness.prepareCreationMocks();
-        
-        newHarness.callCreators(deviceExposes);
+          // Check service creation
+          newHarness.getOrAddHandler(hap.Service.Switch).addExpectedCharacteristic('state', hap.Characteristic.On, true);
+          newHarness.prepareCreationMocks();
 
-        newHarness.checkCreationExpectations();
-        newHarness.checkExpectedGetableKeys(['state']);
-        harness = newHarness;
-      }
-      harness?.clearMocks();
+          newHarness.callCreators(deviceExposes);
+
+          newHarness.checkCreationExpectations();
+          newHarness.checkExpectedGetableKeys(['state']);
+          harness = newHarness;
+        }
+        harness?.clearMocks();
+      });
+
+      afterEach(() => {
+        verifyAllWhenMocksCalled();
+        resetAllWhenMocks();
+      });
+
+      test('Status update is handled: On', () => {
+        expect(harness).toBeDefined();
+        harness.checkSingleUpdateState('{"state":"ON"}', hap.Service.Switch, hap.Characteristic.On, true);
+      });
+
+      test('Status update is handled: Off', () => {
+        expect(harness).toBeDefined();
+        harness.checkSingleUpdateState('{"state":"OFF"}', hap.Service.Switch, hap.Characteristic.On, false);
+      });
+
+      test('Status update is handled: Toggle', () => {
+        expect(harness).toBeDefined();
+        harness.checkUpdateStateIsIgnored('{"state":"TOGGLE"}');
+      });
+
+      test('HomeKit: Turn On', () => {
+        expect(harness).toBeDefined();
+        harness.checkHomeKitUpdateWithSingleValue(hap.Service.Switch, 'state', true, 'ON');
+      });
+
+      test('HomeKit: Turn Off', () => {
+        expect(harness).toBeDefined();
+        harness.checkHomeKitUpdateWithSingleValue(hap.Service.Switch, 'state', false, 'OFF');
+      });
     });
 
-    afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
-    });
+    describe('as Outlet', () => {
+      // Shared "state"
+      let deviceExposes: ExposesEntry[] = [];
+      let harness: ServiceHandlersTestHarness;
 
-    test('Status update is handled: On', () => {
-      expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"state":"ON"}', hap.Service.Switch, hap.Characteristic.On, true);
-    });
+      beforeEach(() => {
+        // Only test service creation for first test case and reuse harness afterwards
+        if (deviceExposes.length === 0 && harness === undefined) {
+          // Test JSON Device List entry
+          const device = testJsonDeviceListEntry(deviceModelJson);
+          deviceExposes = device?.definition?.exposes ?? [];
+          expect(deviceExposes?.length).toBeGreaterThan(0);
+          const newHarness = new ServiceHandlersTestHarness();
 
-    test('Status update is handled: Off', () => {
-      expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"state":"OFF"}', hap.Service.Switch, hap.Characteristic.On, false);
-    });
+          // Check service creation
+          newHarness.addServiceConfiguration('switch', { type: 'outlet' });
+          newHarness.getOrAddHandler(hap.Service.Outlet).addExpectedCharacteristic('state', hap.Characteristic.On, true);
+          newHarness.prepareCreationMocks();
 
-    test('Status update is handled: Toggle', () => {
-      expect(harness).toBeDefined();
-      harness.checkUpdateStateIsIgnored('{"state":"TOGGLE"}');
-    });
+          newHarness.callCreators(deviceExposes);
 
-    test('HomeKit: Turn On', () => {
-      expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Switch, 'state', true, 'ON');
-    });
+          newHarness.checkCreationExpectations();
+          newHarness.checkExpectedGetableKeys(['state']);
+          harness = newHarness;
+        }
+        harness?.clearMocks();
+      });
 
-    test('HomeKit: Turn Off', () => {
-      expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Switch, 'state', false, 'OFF');
+      afterEach(() => {
+        verifyAllWhenMocksCalled();
+        resetAllWhenMocks();
+      });
+
+      test('Status update is handled: On', () => {
+        expect(harness).toBeDefined();
+        harness.checkSingleUpdateState('{"state":"ON"}', hap.Service.Outlet, hap.Characteristic.On, true);
+      });
+
+      test('Status update is handled: Off', () => {
+        expect(harness).toBeDefined();
+        harness.checkSingleUpdateState('{"state":"OFF"}', hap.Service.Outlet, hap.Characteristic.On, false);
+      });
+
+      test('Status update is handled: Toggle', () => {
+        expect(harness).toBeDefined();
+        harness.checkUpdateStateIsIgnored('{"state":"TOGGLE"}');
+      });
+
+      test('HomeKit: Turn On', () => {
+        expect(harness).toBeDefined();
+        harness.checkHomeKitUpdateWithSingleValue(hap.Service.Outlet, 'state', true, 'ON');
+      });
+
+      test('HomeKit: Turn Off', () => {
+        expect(harness).toBeDefined();
+        harness.checkHomeKitUpdateWithSingleValue(hap.Service.Outlet, 'state', false, 'OFF');
+      });
     });
   });
 
@@ -440,8 +501,8 @@ describe('Switch', () => {
 
 
     // Shared "state"
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -456,7 +517,7 @@ describe('Switch', () => {
         newHarness.getOrAddHandler(hap.Service.Switch, 'l1').addExpectedCharacteristic('state_l1', hap.Characteristic.On, true);
         newHarness.getOrAddHandler(hap.Service.Switch, 'l2').addExpectedCharacteristic('state_l2', hap.Characteristic.On, true);
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -473,13 +534,13 @@ describe('Switch', () => {
 
     test('Status update is handled: On (L1)', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"state_l1":"ON"}', 
+      harness.checkSingleUpdateState('{"state_l1":"ON"}',
         harness.generateServiceId(hap.Service.Switch, 'l1'), hap.Characteristic.On, true);
     });
 
     test('Status update is handled: Off (L2)', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"state_l2":"OFF"}', 
+      harness.checkSingleUpdateState('{"state_l2":"OFF"}',
         harness.generateServiceId(hap.Service.Switch, 'l2'), hap.Characteristic.On, false);
     });
 

@@ -1,5 +1,5 @@
 import { ExposesEntry } from '../z2mModels';
-import { BasicAccessory, ServiceCreator } from './interfaces';
+import { BasicAccessory, ServiceConfigurationRegistry, ServiceConfigurationValidator, ServiceCreator } from './interfaces';
 import { BasicSensorCreator } from './basic_sensors';
 import { BatteryCreator } from './battery';
 import { CoverCreator } from './cover';
@@ -9,16 +9,21 @@ import { SwitchCreator } from './switch';
 import { StatelessProgrammableSwitchCreator } from './action';
 import { ThermostatCreator } from './climate';
 import { AirQualitySensorCreator } from './air_quality';
+import { Logger } from 'homebridge';
 
 export interface ServiceCreatorManager {
   createHomeKitEntitiesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
 }
 
-interface ServiceCreatorConstructor {
-  new(): ServiceCreator;
+export interface ServiceConfigValidatorCollection {
+  allServiceConfigurationsAreValid(configurations: object, logger: Logger | undefined): boolean;
 }
 
-export class BasicServiceCreatorManager implements ServiceCreatorManager {
+interface ServiceCreatorConstructor {
+  new(serviceConfigRegistry: ServiceConfigurationRegistry): ServiceCreator;
+}
+
+export class BasicServiceCreatorManager implements ServiceCreatorManager, ServiceConfigValidatorCollection, ServiceConfigurationRegistry {
   private static readonly constructors: ServiceCreatorConstructor[] = [
     LightCreator,
     SwitchCreator,
@@ -35,8 +40,36 @@ export class BasicServiceCreatorManager implements ServiceCreatorManager {
 
   private creators: ServiceCreator[];
 
+  private serviceConfigs: Map<string, ServiceConfigurationValidator>;
+
   private constructor() {
-    this.creators = BasicServiceCreatorManager.constructors.map(c => new c());
+    this.serviceConfigs = new Map();
+    this.creators = BasicServiceCreatorManager.constructors.map(c => new c(this));
+  }
+
+  allServiceConfigurationsAreValid(configurations: object, logger: Logger | undefined): boolean {
+    for (const key of Object.keys(configurations)) {
+      const validator = this.serviceConfigs.get(key);
+      if (validator !== undefined) {
+        if (!validator.isValidServiceConfiguration(key, configurations[key], logger)) {
+          logger?.error(`Service configuration "${key}" is not valid. Contents: ${JSON.stringify(configurations[key])}`);
+          return false;
+        }
+      } else {
+        logger?.error(`Unknown service configuration tag detected: ${key} Contents: ${JSON.stringify(configurations[key])}`);
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  registerServiceConfiguration(tag: string, validator: ServiceConfigurationValidator): void {
+    tag = tag.trim().toLocaleLowerCase();
+    if (this.serviceConfigs.has(tag)) {
+      throw new Error(`Duplicate service configuration tag detected: ${tag}`);
+    }
+    this.serviceConfigs.set(tag, validator);
   }
 
   public static getInstance(): BasicServiceCreatorManager {

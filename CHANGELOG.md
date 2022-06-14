@@ -6,6 +6,11 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- Some converters (a.k.a. services) now have some additional configuration options which allows you to select an alternative implementation:
+  - `switch` can be configured as a `switch` (default) or `outlet`
+
 ## [1.8.0] - 2022-05-09
 
 ### Added

@@ -1,4 +1,5 @@
 import { PlatformConfig, Logger } from 'homebridge';
+import { ServiceConfigValidatorCollection } from './converters/creators';
 import { ExposesEntry, isExposesEntry } from './z2mModels';
 
 export interface PluginConfiguration extends PlatformConfig {
@@ -9,16 +10,25 @@ export interface PluginConfiguration extends PlatformConfig {
   exclude_grouped_devices?: boolean;
 }
 
-export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefined = undefined): x is PluginConfiguration => {
+export const isPluginConfiguration = (x: PlatformConfig, serviceConfigValidator: ServiceConfigValidatorCollection,
+  logger: Logger | undefined = undefined): x is PluginConfiguration => {
   if (x.mqtt === undefined || !isMqttConfiguration(x.mqtt)) {
     logger?.error('Incorrect configuration: mqtt does not contain required fields');
     return false;
   }
 
-  if (x.defaults !== undefined && !isBaseDeviceConfiguration(x.defaults)) {
-    logger?.error('Incorrect configuration: Device defaults are incorrect: ' + JSON.stringify(x.defaults));
-    return false;
+  if (x.defaults !== undefined) {
+    if (isBaseDeviceConfiguration(x.defaults)) {
+      if (x.defaults.services !== undefined && !serviceConfigValidator.allServiceConfigurationsAreValid(x.defaults.services, logger)) {
+        logger?.error('Incorrect configuration: Invalid service configuration in device defaults.');
+        return false;
+      }
+    } else {
+      logger?.error('Incorrect configuration: Device defaults are incorrect: ' + JSON.stringify(x.defaults));
+      return false;
+    }
   }
+
 
   if (x.experimental !== undefined && !isStringArray(x.experimental)) {
     logger?.error('Incorrect configuration: Experimental flags are incorrect ' + JSON.stringify(x.experimental));
@@ -36,7 +46,8 @@ export const isPluginConfiguration = (x: PlatformConfig, logger: Logger | undefi
       return false;
     }
     for (const element of x.devices) {
-      if (!isDeviceConfiguration(element)) {
+      if (!isDeviceConfiguration(element)
+        || (element.services !== undefined && !serviceConfigValidator.allServiceConfigurationsAreValid(element.services, logger))) {
         logger?.error('Incorrect configuration: Entry for device is not correct: ' + JSON.stringify(element));
         return false;
       }
@@ -72,6 +83,7 @@ export interface BaseDeviceConfiguration extends Record<string, unknown> {
   exclude?: boolean;
   excluded_keys?: string[];
   values?: PropertyValueConfiguration[];
+  services?: object;
   experimental?: string[];
 }
 
@@ -95,6 +107,11 @@ export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration 
 
   // Optional 'experimental' which must be an array of strings if present
   if (x.experimental !== undefined && !isStringArray(x.experimental)) {
+    return false;
+  }
+
+  // Optional 'services' must be an object if present
+  if (x.services !== undefined && typeof x.services !== 'object') {
     return false;
   }
 

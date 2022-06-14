@@ -14,6 +14,7 @@ import {
 } from './z2mModels';
 import * as semver from 'semver';
 import { errorToString } from './helpers';
+import { BasicServiceCreatorManager } from './converters/creators';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   public readonly config?: PluginConfiguration;
@@ -47,7 +48,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     };
 
     // Validate configuration
-    if (isPluginConfiguration(config, log)) {
+    if (isPluginConfiguration(config, BasicServiceCreatorManager.getInstance(), log)) {
       this.config = config;
     } else {
       log.error(`INVALID CONFIGURATION FOR PLUGIN: ${PLUGIN_NAME}\nThis plugin will NOT WORK until this problem is resolved.`);

@@ -1,4 +1,4 @@
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 import {
   exposesCanBeGet, ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithProperty,
   exposesHasBinaryProperty, exposesHasProperty, exposesIsPublished, ExposesKnownTypes,
@@ -6,7 +6,7 @@ import {
 import {
   CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor,
 } from './monitor';
-import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
+import { Characteristic, CharacteristicValue, Logger, Service, WithUUID } from 'homebridge';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic, groupByEndpoint } from '../helpers';
 import { hap } from '../hap';
 
@@ -28,6 +28,11 @@ interface BasicSensorConstructor {
 
 declare type WithIdGenerator<T> = T & {
   generateIdentifier: IdentifierGenerator;
+};
+
+declare type WithConfigurableConverter<T> = T & {
+  converterConfigTag: string;
+  isValidConverterConfiguration(config: unknown, tag: string, logger: Logger | undefined): boolean;
 };
 
 class BasicSensorMapping {
@@ -224,20 +229,72 @@ class LightSensorHandler extends BasicSensorHandler {
   }
 }
 
-abstract class BinarySensorHandler extends BasicSensorHandler {
+class BinarySensorTypeDefinition {
+  public constructor(
+    public readonly service: ServiceConstructor,
+    public readonly characteristic: WithUUID<{ new(): Characteristic }>,
+    public readonly hapOnValue: CharacteristicValue,
+    public readonly hapOffValue: CharacteristicValue,
+    public readonly additionalSubType?: string | undefined) {
+  }
+}
+
+interface BinarySensorConfig {
+  type?: string;
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isBinarySensorConfig = (x: any): x is BinarySensorConfig => (
+  x !== undefined && (
+    x.type === undefined
+    || (typeof x.type === 'string' && x.type.length > 0)
+  ));
+
+abstract class ConfigurableBinarySensorHandler extends BasicSensorHandler {
   constructor(accessory: BasicAccessory, expose: ExposesEntryWithBinaryProperty, otherExposes: ExposesEntryWithBinaryProperty[],
-    identifierGen: IdentifierGenerator, logName: string, service: ServiceConstructor,
-    characteristic: WithUUID<{ new(): Characteristic }>,
-    hapOnValue: CharacteristicValue, hapOffValue: CharacteristicValue, additionalSubType?: string | undefined) {
-    super(accessory, expose, otherExposes, identifierGen, service, additionalSubType);
+    identifierGen: IdentifierGenerator, logName: string,
+    configTag: string | undefined, defaultType: string,
+    typeDefinitions: Map<string, BinarySensorTypeDefinition>) {
+    let definition = typeDefinitions.get(defaultType);
+    if (definition === undefined) {
+      throw new Error(`Unknown default binary sensor type ${defaultType} for ${logName}`);
+    }
+
+    if (configTag !== undefined) {
+      const converterConfig = accessory.getConverterConfiguration(configTag);
+      if (isBinarySensorConfig(converterConfig) && converterConfig.type !== undefined) {
+        const chosenDefinition = typeDefinitions.get(converterConfig.type);
+        if (chosenDefinition !== undefined) {
+          definition = chosenDefinition;
+        } else {
+          accessory.log.error(`Invalid type chosen for ${logName}: ${converterConfig.type} (${accessory.displayName})`);
+        }
+      }
+    }
+
+    super(accessory, expose, otherExposes, identifierGen, definition.service, definition.additionalSubType);
     accessory.log.debug(`Configuring ${logName} for ${this.serviceName}`);
 
-    getOrAddCharacteristic(this.service, characteristic);
+    getOrAddCharacteristic(this.service, definition.characteristic);
     const mapping = new Map<CharacteristicValue, CharacteristicValue>();
-    mapping.set(expose.value_on, hapOnValue);
-    mapping.set(expose.value_off, hapOffValue);
-    this.monitors.push(new MappingCharacteristicMonitor(expose.property, this.service, characteristic,
+    mapping.set(expose.value_on, definition.hapOnValue);
+    mapping.set(expose.value_off, definition.hapOffValue);
+    this.monitors.push(new MappingCharacteristicMonitor(expose.property, this.service, definition.characteristic,
       mapping));
+  }
+}
+
+abstract class BinarySensorHandler extends ConfigurableBinarySensorHandler {
+  constructor(accessory: BasicAccessory, expose: ExposesEntryWithBinaryProperty, otherExposes: ExposesEntryWithBinaryProperty[],
+    identifierGen: IdentifierGenerator, logName: string,
+    service: ServiceConstructor,
+    characteristic: WithUUID<{ new(): Characteristic }>,
+    hapOnValue: CharacteristicValue,
+    hapOffValue: CharacteristicValue,
+    additionalSubType?: string | undefined) {
+
+    super(accessory, expose, otherExposes, identifierGen, logName, undefined, '', new Map<string, BinarySensorTypeDefinition>([
+      ['', new BinarySensorTypeDefinition(service, characteristic, hapOnValue, hapOffValue, additionalSubType)],
+    ]));
   }
 }
 
@@ -257,11 +314,35 @@ class ContactSensorHandler extends BinarySensorHandler {
   }
 }
 
-class OccupancySensorHandler extends BinarySensorHandler {
+class OccupancySensorHandler extends ConfigurableBinarySensorHandler {
+
+  public static readonly converterConfigTag = 'occupancy';
+  private static readonly defaultType: string = 'occupancy';
+  public static isValidConverterConfiguration(config: unknown, tag: string, logger: Logger | undefined): boolean {
+    if (!isBinarySensorConfig(config)) {
+      return false;
+    }
+    if (config.type !== undefined && !this.getTypeDefinitions().has(config.type)) {
+      logger?.error(`Invalid type chosen for ${tag} converter: ${config.type}`);
+      return false;
+    }
+    return true;
+  }
+
+  private static getTypeDefinitions(): Map<string, BinarySensorTypeDefinition> {
+    return new Map<string, BinarySensorTypeDefinition>([
+      [OccupancySensorHandler.defaultType, new BinarySensorTypeDefinition((n, t) => new hap.Service.OccupancySensor(n, t),
+        hap.Characteristic.OccupancyDetected,
+        hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED, hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED)],
+      ['motion', new BinarySensorTypeDefinition((n, t) => new hap.Service.MotionSensor(n, t),
+        hap.Characteristic.MotionDetected, true, false,
+        OccupancySensorHandler.converterConfigTag)],
+    ]);
+  }
+
   constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(accessory, expose as ExposesEntryWithBinaryProperty, otherExposes, OccupancySensorHandler.generateIdentifier, 'OccupancySensor',
-      (n, t) => new hap.Service.OccupancySensor(n, t), hap.Characteristic.OccupancyDetected,
-      hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED, hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
+      OccupancySensorHandler.converterConfigTag, OccupancySensorHandler.defaultType, OccupancySensorHandler.getTypeDefinitions());
   }
 
   static generateIdentifier(endpoint: string | undefined) {
@@ -400,6 +481,16 @@ export class BasicSensorCreator implements ServiceCreator {
     new BasicSensorMapping('water_leak', ExposesKnownTypes.BINARY, WaterLeakSensorHandler),
     new BasicSensorMapping('gas', ExposesKnownTypes.BINARY, GasLeakSensorHandler),
   ];
+
+  private static configs: WithConfigurableConverter<unknown>[] = [
+    OccupancySensorHandler,
+  ];
+
+  constructor(converterConfigRegistry: ConverterConfigurationRegistry) {
+    for (const config of BasicSensorCreator.configs) {
+      converterConfigRegistry.registerConverterConfiguration(config.converterConfigTag, config.isValidConverterConfiguration);
+    }
+  }
 
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     const endpointMap = groupByEndpoint(exposes.filter(e => exposesHasProperty(e) && !accessory.isPropertyExcluded(e.property)

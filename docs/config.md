@@ -1,7 +1,7 @@
 # Plugin configuration ⚙️
 The plugin can also be configured via the web interface provided by [Homebridge Config UI X](https://github.com/oznu/homebridge-config-ui-x#readme).
 
-A (rather minimal) configuration looks like this:
+A possible configuration looks like this:
 ```json
 {
    "platform": "zigbee2mqtt",
@@ -34,14 +34,11 @@ A (rather minimal) configuration looks like this:
       },
       {
          "id": "0xabcd1234abcd1234",
-         "values": [
-            {
-                  "property": "action",
-                  "exclude": [
-                     "*_triple"
-                  ]
+         "converters": {
+            "switch": {
+               "type": "outlet"
             }
-         ]
+         }
       },
       {
          "id": "0x1234abcd1234abcd",
@@ -87,6 +84,7 @@ Currently the following options are available:
 * `included_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be included for this device, even if they are excluded in the global default device configuration (see below).
 * `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard. This is currently only applied in the [Stateless Programmable Switch](action.md).
 * `exposes`: An array of exposes information, using the [structures defined by Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/usage/exposes.html).
+* `converters`: An object to optionally provide additional configuration for specific converters. More information can be found in the documentation of the [converters](converters.md), if applicable.
 
 ### Defaults
 Within the `defaults` property, you can also configure the device specific options mentioned above (except for the `id` and `included_keys`).

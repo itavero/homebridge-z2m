@@ -89,8 +89,8 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     this.queueAllKeysForGet();
   }
 
-  getServiceConfiguration(tag: string): unknown | undefined {
-    return this.additionalConfig.services !== undefined ? this.additionalConfig.services[tag] : undefined;
+  getConverterConfiguration(tag: string): unknown | undefined {
+    return this.additionalConfig.converters !== undefined ? this.additionalConfig.converters[tag] : undefined;
   }
 
   isExperimentalFeatureEnabled(feature: string): boolean {

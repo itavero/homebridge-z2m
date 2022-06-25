@@ -236,7 +236,7 @@ export class ServiceHandlersTestHarness {
   private readonly handlers = new Map<string, ServiceHandlerTestData>();
   private readonly allowedValues = new Map<string, string[]>();
   private readonly experimentalFeatures = new Set<string>();
-  private readonly serviceConfig = new Map<string, unknown>();
+  private readonly converterConfig = new Map<string, unknown>();
   readonly accessoryMock: MockProxy<BasicAccessory> & BasicAccessory;
 
   constructor() {
@@ -254,9 +254,9 @@ export class ServiceHandlersTestHarness {
         return this.experimentalFeatures.has(feature.trim().toLocaleUpperCase());
       });
 
-    this.accessoryMock.getServiceConfiguration
+    this.accessoryMock.getConverterConfiguration
       .mockImplementation((tag: string): unknown | undefined => {
-        return this.serviceConfig.get(tag);
+        return this.converterConfig.get(tag);
       });
 
     this.accessoryMock.getOrAddService
@@ -302,12 +302,12 @@ export class ServiceHandlersTestHarness {
     this.experimentalFeatures.clear();
   }
 
-  clearServiceConfigurations(): void {
-    this.serviceConfig.clear();
+  clearConverterConfigurations(): void {
+    this.converterConfig.clear();
   }
 
-  addServiceConfiguration(tag: string, value: unknown): void {
-    this.serviceConfig.set(tag, value);
+  addConverterConfiguration(tag: string, value: unknown): void {
+    this.converterConfig.set(tag, value);
   }
 
   private extractServiceId(id: ServiceIdentifier): string {

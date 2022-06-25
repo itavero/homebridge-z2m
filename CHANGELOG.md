@@ -8,8 +8,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Added
 
-- Some converters (a.k.a. services) now have some additional configuration options which allows you to select an alternative implementation:
+- Some converters now have some additional configuration options which allows you to select an alternative implementation. (see 
+ [#458](https://github.com/itavero/homebridge-z2m/pull/458) and related issues)
   - `switch` can be configured as a `switch` (default) or `outlet`
+  - `occupancy` can be configured as `occupancy` (default) or `motion`
 
 ## [1.8.0] - 2022-05-09
 

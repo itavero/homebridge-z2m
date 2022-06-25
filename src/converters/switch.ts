@@ -1,4 +1,4 @@
-import { BasicAccessory, ServiceConfigurationRegistry, ServiceConfigurationValidator, ServiceCreator, ServiceHandler } from './interfaces';
+import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 import {
   exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithFeatures, exposesHasBinaryProperty,
   exposesHasFeatures, exposesIsPublished, ExposesKnownTypes,
@@ -21,23 +21,23 @@ export const isSwitchConfig = (x: any): x is SwitchConfig => (
       [SwitchCreator.CONFIG_TYPE_SWITCH, SwitchCreator.CONFIG_TYPE_OUTLET].includes(x.type.toLowerCase()))
   ));
 
-export class SwitchCreator implements ServiceCreator, ServiceConfigurationValidator {
+export class SwitchCreator implements ServiceCreator {
   public static readonly CONFIG_TAG = 'switch';
   public static readonly CONFIG_TYPE_SWITCH = 'switch';
   public static readonly CONFIG_TYPE_OUTLET = 'outlet';
 
-  constructor(serviceConfigRegistry: ServiceConfigurationRegistry) {
-    serviceConfigRegistry.registerServiceConfiguration(SwitchCreator.CONFIG_TAG, this);
+  constructor(converterConfigRegistry: ConverterConfigurationRegistry) {
+    converterConfigRegistry.registerConverterConfiguration(SwitchCreator.CONFIG_TAG, SwitchCreator.isValidConverterConfiguration);
   }
 
-  isValidServiceConfiguration(config: unknown): boolean {
+  private static isValidConverterConfiguration(config: unknown): boolean {
     return isSwitchConfig(config);
   }
 
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     let exposeAsOutlet = false;
-    const serviceConfig = accessory.getServiceConfiguration(SwitchCreator.CONFIG_TAG);
-    if (isSwitchConfig(serviceConfig) && serviceConfig.type === SwitchCreator.CONFIG_TYPE_OUTLET) {
+    const converterConfig = accessory.getConverterConfiguration(SwitchCreator.CONFIG_TAG);
+    if (isSwitchConfig(converterConfig) && converterConfig.type === SwitchCreator.CONFIG_TYPE_OUTLET) {
       exposeAsOutlet = true;
     }
     exposes.filter(e => e.type === ExposesKnownTypes.SWITCH && exposesHasFeatures(e)

@@ -19,7 +19,8 @@ export const isPluginConfiguration = (x: PlatformConfig, converterConfigValidato
 
   if (x.defaults !== undefined) {
     if (isBaseDeviceConfiguration(x.defaults)) {
-      if (x.defaults.converters !== undefined && !converterConfigValidator.allConverterConfigurationsAreValid(x.defaults.converters, logger)) {
+      if (x.defaults.converters !== undefined
+        && !converterConfigValidator.allConverterConfigurationsAreValid(x.defaults.converters, logger)) {
         logger?.error('Incorrect configuration: Invalid converter configuration in device defaults.');
         return false;
       }

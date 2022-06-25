@@ -24,7 +24,7 @@ export interface BasicAccessory {
 
     isExperimentalFeatureEnabled(feature: string): boolean;
 
-    getServiceConfiguration(tag: string): unknown | undefined;
+    getConverterConfiguration(tag: string): unknown | undefined;
 }
 
 export interface ServiceHandler {
@@ -33,12 +33,8 @@ export interface ServiceHandler {
     updateState(state: Record<string, unknown>): void;
 }
 
-export interface ServiceConfigurationRegistry {
-    registerServiceConfiguration(tag: string, validator: ServiceConfigurationValidator): void;
-}
-
-export interface ServiceConfigurationValidator {
-    isValidServiceConfiguration(tag: string, config: unknown, logger: Logger | undefined): boolean;
+export interface ConverterConfigurationRegistry {
+    registerConverterConfiguration(tag: string, validator: (config: unknown, tag: string, logger: Logger | undefined) => boolean): void;
 }
 
 export interface ServiceCreator {

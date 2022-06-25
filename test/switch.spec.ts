@@ -180,7 +180,7 @@ describe('Switch', () => {
           const newHarness = new ServiceHandlersTestHarness();
 
           // Check service creation
-          newHarness.addServiceConfiguration('switch', { type: 'outlet' });
+          newHarness.addConverterConfiguration('switch', { type: 'outlet' });
           newHarness.getOrAddHandler(hap.Service.Outlet).addExpectedCharacteristic('state', hap.Characteristic.On, true);
           newHarness.prepareCreationMocks();
 

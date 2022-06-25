@@ -1,5 +1,5 @@
 import { PlatformConfig, Logger } from 'homebridge';
-import { ServiceConfigValidatorCollection } from './converters/creators';
+import { ConverterConfigValidatorCollection } from './converters/creators';
 import { ExposesEntry, isExposesEntry } from './z2mModels';
 
 export interface PluginConfiguration extends PlatformConfig {
@@ -10,7 +10,7 @@ export interface PluginConfiguration extends PlatformConfig {
   exclude_grouped_devices?: boolean;
 }
 
-export const isPluginConfiguration = (x: PlatformConfig, serviceConfigValidator: ServiceConfigValidatorCollection,
+export const isPluginConfiguration = (x: PlatformConfig, converterConfigValidator: ConverterConfigValidatorCollection,
   logger: Logger | undefined = undefined): x is PluginConfiguration => {
   if (x.mqtt === undefined || !isMqttConfiguration(x.mqtt)) {
     logger?.error('Incorrect configuration: mqtt does not contain required fields');
@@ -19,8 +19,8 @@ export const isPluginConfiguration = (x: PlatformConfig, serviceConfigValidator:
 
   if (x.defaults !== undefined) {
     if (isBaseDeviceConfiguration(x.defaults)) {
-      if (x.defaults.services !== undefined && !serviceConfigValidator.allServiceConfigurationsAreValid(x.defaults.services, logger)) {
-        logger?.error('Incorrect configuration: Invalid service configuration in device defaults.');
+      if (x.defaults.converters !== undefined && !converterConfigValidator.allConverterConfigurationsAreValid(x.defaults.converters, logger)) {
+        logger?.error('Incorrect configuration: Invalid converter configuration in device defaults.');
         return false;
       }
     } else {
@@ -28,7 +28,6 @@ export const isPluginConfiguration = (x: PlatformConfig, serviceConfigValidator:
       return false;
     }
   }
-
 
   if (x.experimental !== undefined && !isStringArray(x.experimental)) {
     logger?.error('Incorrect configuration: Experimental flags are incorrect ' + JSON.stringify(x.experimental));
@@ -47,7 +46,7 @@ export const isPluginConfiguration = (x: PlatformConfig, serviceConfigValidator:
     }
     for (const element of x.devices) {
       if (!isDeviceConfiguration(element)
-        || (element.services !== undefined && !serviceConfigValidator.allServiceConfigurationsAreValid(element.services, logger))) {
+        || (element.converters !== undefined && !converterConfigValidator.allConverterConfigurationsAreValid(element.converters, logger))) {
         logger?.error('Incorrect configuration: Entry for device is not correct: ' + JSON.stringify(element));
         return false;
       }
@@ -83,7 +82,7 @@ export interface BaseDeviceConfiguration extends Record<string, unknown> {
   exclude?: boolean;
   excluded_keys?: string[];
   values?: PropertyValueConfiguration[];
-  services?: object;
+  converters?: object;
   experimental?: string[];
 }
 
@@ -110,8 +109,8 @@ export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration 
     return false;
   }
 
-  // Optional 'services' must be an object if present
-  if (x.services !== undefined && typeof x.services !== 'object') {
+  // Optional 'converters' must be an object if present
+  if (x.converters !== undefined && typeof x.converters !== 'object') {
     return false;
   }
 

@@ -1,5 +1,5 @@
 import { ExposesEntry } from '../z2mModels';
-import { BasicAccessory, ServiceConfigurationRegistry, ServiceConfigurationValidator, ServiceCreator } from './interfaces';
+import { BasicAccessory, ConverterConfigurationRegistry as ConverterConfigurationRegistry, ServiceCreator } from './interfaces';
 import { BasicSensorCreator } from './basic_sensors';
 import { BatteryCreator } from './battery';
 import { CoverCreator } from './cover';
@@ -15,15 +15,16 @@ export interface ServiceCreatorManager {
   createHomeKitEntitiesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
 }
 
-export interface ServiceConfigValidatorCollection {
-  allServiceConfigurationsAreValid(configurations: object, logger: Logger | undefined): boolean;
+export interface ConverterConfigValidatorCollection {
+  allConverterConfigurationsAreValid(configurations: object, logger: Logger | undefined): boolean;
 }
 
 interface ServiceCreatorConstructor {
-  new(serviceConfigRegistry: ServiceConfigurationRegistry): ServiceCreator;
+  new(converterConfigRegistry: ConverterConfigurationRegistry): ServiceCreator;
 }
 
-export class BasicServiceCreatorManager implements ServiceCreatorManager, ServiceConfigValidatorCollection, ServiceConfigurationRegistry {
+export class BasicServiceCreatorManager implements ServiceCreatorManager, ConverterConfigValidatorCollection,
+  ConverterConfigurationRegistry {
   private static readonly constructors: ServiceCreatorConstructor[] = [
     LightCreator,
     SwitchCreator,
@@ -40,23 +41,23 @@ export class BasicServiceCreatorManager implements ServiceCreatorManager, Servic
 
   private creators: ServiceCreator[];
 
-  private serviceConfigs: Map<string, ServiceConfigurationValidator>;
+  private converterConfigs: Map<string, (config: unknown, tag: string, logger: Logger | undefined) => boolean>;
 
   private constructor() {
-    this.serviceConfigs = new Map();
+    this.converterConfigs = new Map();
     this.creators = BasicServiceCreatorManager.constructors.map(c => new c(this));
   }
 
-  allServiceConfigurationsAreValid(configurations: object, logger: Logger | undefined): boolean {
+  allConverterConfigurationsAreValid(configurations: object, logger: Logger | undefined): boolean {
     for (const key of Object.keys(configurations)) {
-      const validator = this.serviceConfigs.get(key);
+      const validator = this.converterConfigs.get(key);
       if (validator !== undefined) {
-        if (!validator.isValidServiceConfiguration(key, configurations[key], logger)) {
-          logger?.error(`Service configuration "${key}" is not valid. Contents: ${JSON.stringify(configurations[key])}`);
+        if (!validator(configurations[key], key, logger)) {
+          logger?.error(`Converter configuration "${key}" is not valid. Contents: ${JSON.stringify(configurations[key])}`);
           return false;
         }
       } else {
-        logger?.error(`Unknown service configuration tag detected: ${key} Contents: ${JSON.stringify(configurations[key])}`);
+        logger?.error(`Unknown converter configuration tag detected: ${key} Contents: ${JSON.stringify(configurations[key])}`);
         return false;
       }
     }
@@ -64,12 +65,12 @@ export class BasicServiceCreatorManager implements ServiceCreatorManager, Servic
     return true;
   }
 
-  registerServiceConfiguration(tag: string, validator: ServiceConfigurationValidator): void {
+  registerConverterConfiguration(tag: string, validator: (config: unknown, tag: string, logger: Logger | undefined) => boolean): void {
     tag = tag.trim().toLocaleLowerCase();
-    if (this.serviceConfigs.has(tag)) {
-      throw new Error(`Duplicate service configuration tag detected: ${tag}`);
+    if (this.converterConfigs.has(tag)) {
+      throw new Error(`Duplicate converter configuration tag detected: ${tag}`);
     }
-    this.serviceConfigs.set(tag, validator);
+    this.converterConfigs.set(tag, validator);
   }
 
   public static getInstance(): BasicServiceCreatorManager {

@@ -6,6 +6,112 @@
    "footerDisplay": "For more information about the [configuration options](https://z2m.dev/config.html), please refer to the [plugin website](https://z2m.dev/).",
    "schema": {
       "type": "object",
+      "definitions": {
+         "exclude": {
+            "type": "boolean",
+            "required": false,
+            "default": false
+         },
+         "excluded_keys": {
+            "title": "Excluded properties (keys)",
+            "type": "array",
+            "required": false,
+            "items": {
+               "type": "string",
+               "minLength": 1
+            }
+         },
+         "values": {
+            "title": "Include/exclude values",
+            "type": "array",
+            "required": false,
+            "items": {
+               "type": "object",
+               "properties": {
+                  "property": {
+                     "title": "Property (key)",
+                     "type": "string",
+                     "required": true,
+                     "minLength": 3,
+                     "placeholder": "action"
+                  },
+                  "include": {
+                     "title": "Included values",
+                     "type": "array",
+                     "required": false,
+                     "items": {
+                        "type": "string",
+                        "minLength": 1
+                     }
+                  },
+                  "exclude": {
+                     "title": "Excluded values",
+                     "type": "array",
+                     "required": false,
+                     "items": {
+                        "type": "string",
+                        "minLength": 1
+                     }
+                  }
+               }
+            }
+         },
+         "converters": {
+            "type": "object",
+            "properties": {
+               "switch": {
+                  "title": "Switch",
+                  "type": "object",
+                  "properties": {
+                     "type": {
+                        "title": "Type",
+                        "type": "string",
+                        "default": "switch",
+                        "oneOf": [
+                           {
+                              "title": "Switch",
+                              "enum": [
+                                 "switch"
+                              ]
+                           },
+                           {
+                              "title": "Outlet",
+                              "enum": [
+                                 "outlet"
+                              ]
+                           }
+                        ]
+                     }
+                  }
+               },
+               "occupancy": {
+                  "title": "Occupancy",
+                  "type": "object",
+                  "properties": {
+                     "type": {
+                        "title": "Type",
+                        "type": "string",
+                        "default": "occupancy",
+                        "oneOf": [
+                           {
+                              "title": "Occupancy",
+                              "enum": [
+                                 "occupancy"
+                              ]
+                           },
+                           {
+                              "title": "Motion",
+                              "enum": [
+                                 "motion"
+                              ]
+                           }
+                        ]
+                     }
+                  }
+               }
+            }
+         }
+      },
       "properties": {
          "mqtt": {
             "title": "MQTT",
@@ -90,53 +196,16 @@
             "properties": {
                "exclude": {
                   "title": "Exclude devices by default",
-                  "type": "boolean",
-                  "required": false,
-                  "default": false
+                  "$ref": "#/definitions/exclude"
                },
                "excluded_keys": {
-                  "title": "Excluded properties (keys)",
-                  "type": "array",
-                  "required": false,
-                  "items": {
-                     "type": "string",
-                     "minLength": 1
-                  }
+                  "$ref": "#/definitions/excluded_keys"
                },
                "values": {
-                  "title": "Include/exclude values",
-                  "type": "array",
-                  "required": false,
-                  "items": {
-                     "type": "object",
-                     "properties": {
-                        "property": {
-                           "title": "Property (key)",
-                           "type": "string",
-                           "required": true,
-                           "minLength": 3,
-                           "placeholder": "action"
-                        },
-                        "include": {
-                           "title": "Included values",
-                           "type": "array",
-                           "required": false,
-                           "items": {
-                              "type": "string",
-                              "minLength": 1
-                           }
-                        },
-                        "exclude": {
-                           "title": "Excluded values",
-                           "type": "array",
-                           "required": false,
-                           "items": {
-                              "type": "string",
-                              "minLength": 1
-                           }
-                        }
-                     }
-                  }
+                  "$ref": "#/definitions/values"
+               },
+               "converters": {
+                  "$ref": "#/definitions/converters"
                }
             }
          },
@@ -162,17 +231,10 @@
                   },
                   "exclude": {
                      "title": "Exclude entire device",
-                     "type": "boolean",
-                     "required": false
+                     "$ref": "#/definitions/exclude"
                   },
                   "excluded_keys": {
-                     "title": "Excluded properties (keys)",
-                     "type": "array",
-                     "required": false,
-                     "items": {
-                        "type": "string",
-                        "minLength": 1
-                     },
+                     "$ref": "#/definitions/excluded_keys",
                      "condition": {
                         "functionBody": "return !model.devices[arrayIndices].exclude;"
                      }
@@ -190,41 +252,15 @@
                      }
                   },
                   "values": {
-                     "title": "Include/exclude values",
-                     "type": "array",
-                     "required": false,
+                     "$ref": "#/definitions/values",
                      "condition": {
                         "functionBody": "return !model.devices[arrayIndices].exclude;"
-                     },
-                     "items": {
-                        "type": "object",
-                        "properties": {
-                           "property": {
-                              "title": "Property (key)",
-                              "type": "string",
-                              "required": true,
-                              "minLength": 3,
-                              "placeholder": "action"
-                           },
-                           "include": {
-                              "title": "Included values",
-                              "type": "array",
-                              "required": false,
-                              "items": {
-                                 "type": "string",
-                                 "minLength": 1
-                              }
-                           },
-                           "exclude": {
-                              "title": "Excluded values",
-                              "type": "array",
-                              "required": false,
-                              "items": {
-                                 "type": "string",
-                                 "minLength": 1
-                              }
-                           }
-                        }
+                     }
+                  },
+                  "converters": {
+                     "$ref": "#/definitions/converters",
+                     "condition": {
+                        "functionBody": "return !model.devices[arrayIndices].exclude;"
                      }
                   },
                   "experimental": {

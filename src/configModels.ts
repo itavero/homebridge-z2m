@@ -1,5 +1,6 @@
-import { PlatformConfig, Logger } from 'homebridge';
+import { PlatformConfig } from 'homebridge';
 import { ConverterConfigValidatorCollection } from './converters/creators';
+import { BasicLogger } from './logger';
 import { ExposesEntry, isExposesEntry } from './z2mModels';
 
 export interface PluginConfiguration extends PlatformConfig {
@@ -11,7 +12,7 @@ export interface PluginConfiguration extends PlatformConfig {
 }
 
 export const isPluginConfiguration = (x: PlatformConfig, converterConfigValidator: ConverterConfigValidatorCollection,
-  logger: Logger | undefined = undefined): x is PluginConfiguration => {
+  logger: BasicLogger | undefined = undefined): x is PluginConfiguration => {
   if (x.mqtt === undefined || !isMqttConfiguration(x.mqtt)) {
     logger?.error('Incorrect configuration: mqtt does not contain required fields');
     return false;

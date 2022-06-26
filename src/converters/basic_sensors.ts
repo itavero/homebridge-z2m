@@ -323,7 +323,7 @@ class OccupancySensorHandler extends ConfigurableBinarySensorHandler {
     if (!isBinarySensorConfig(config)) {
       return false;
     }
-    if (config.type !== undefined && !this.getTypeDefinitions().has(config.type)) {
+    if (config.type !== undefined && !OccupancySensorHandler.getTypeDefinitions().has(config.type)) {
       logger?.error(`Invalid type chosen for ${tag} converter: ${config.type}`);
       return false;
     }

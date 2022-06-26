@@ -7,7 +7,7 @@ import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpe
 import { Characteristic, CharacteristicValue, WithUUID } from 'homebridge';
 
 describe('Lock', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     setHap(hapNodeJs);
   });
 

@@ -13,6 +13,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
   - `switch` can be configured as a `switch` (default) or `outlet`
   - `occupancy` can be configured as `occupancy` (default) or `motion`
 
+### Changed
+
+- Refactored `basic_sensor.ts` as the file was getting way too huge. This should not change any behavior.
+
 ## [1.8.0] - 2022-05-09
 
 ### Added

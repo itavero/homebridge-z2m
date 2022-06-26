@@ -11,6 +11,29 @@ export interface PluginConfiguration extends PlatformConfig {
   exclude_grouped_devices?: boolean;
 }
 
+function hasValidConverterConfigurations(config: BaseDeviceConfiguration, converterConfigValidator: ConverterConfigValidatorCollection,
+  logger: BasicLogger | undefined): boolean {
+  return (config.converters === undefined || converterConfigValidator.allConverterConfigurationsAreValid(config.converters, logger));
+}
+
+function hasValidDeviceConfigurations(devices: unknown, converterConfigValidator: ConverterConfigValidatorCollection,
+  logger: BasicLogger | undefined): boolean {
+  if (devices !== undefined) {
+    if (!Array.isArray(devices)) {
+      logger?.error('Incorrect configuration: devices must be an array');
+      return false;
+    }
+    for (const element of devices) {
+      if (!isDeviceConfiguration(element)
+        || !hasValidConverterConfigurations(element, converterConfigValidator, logger)) {
+        logger?.error('Incorrect configuration: Entry for device is not correct: ' + JSON.stringify(element));
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 export const isPluginConfiguration = (x: PlatformConfig, converterConfigValidator: ConverterConfigValidatorCollection,
   logger: BasicLogger | undefined = undefined): x is PluginConfiguration => {
   if (x.mqtt === undefined || !isMqttConfiguration(x.mqtt)) {
@@ -19,14 +42,12 @@ export const isPluginConfiguration = (x: PlatformConfig, converterConfigValidato
   }
 
   if (x.defaults !== undefined) {
-    if (isBaseDeviceConfiguration(x.defaults)) {
-      if (x.defaults.converters !== undefined
-        && !converterConfigValidator.allConverterConfigurationsAreValid(x.defaults.converters, logger)) {
-        logger?.error('Incorrect configuration: Invalid converter configuration in device defaults.');
-        return false;
-      }
-    } else {
+    if (!isBaseDeviceConfiguration(x.defaults)) {
       logger?.error('Incorrect configuration: Device defaults are incorrect: ' + JSON.stringify(x.defaults));
+      return false;
+    }
+    if (!hasValidConverterConfigurations(x.defaults, converterConfigValidator, logger)) {
+      logger?.error('Incorrect configuration: Invalid converter configuration in device defaults.');
       return false;
     }
   }
@@ -41,20 +62,7 @@ export const isPluginConfiguration = (x: PlatformConfig, converterConfigValidato
     return false;
   }
 
-  if (x.devices !== undefined) {
-    if (!Array.isArray(x.devices)) {
-      logger?.error('Incorrect configuration: devices must be an array');
-      return false;
-    }
-    for (const element of x.devices) {
-      if (!isDeviceConfiguration(element)
-        || (element.converters !== undefined && !converterConfigValidator.allConverterConfigurationsAreValid(element.converters, logger))) {
-        logger?.error('Incorrect configuration: Entry for device is not correct: ' + JSON.stringify(element));
-        return false;
-      }
-    }
-  }
-  return true;
+  return hasValidDeviceConfigurations(x.devices, converterConfigValidator, logger);
 };
 
 export interface MqttConfiguration extends Record<string, unknown> {

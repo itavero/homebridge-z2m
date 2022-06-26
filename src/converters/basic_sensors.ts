@@ -19,7 +19,7 @@ interface ServiceConstructor {
 }
 
 interface IdentifierGenerator {
-  (endpoint: string | undefined): string;
+  (endpoint: string | undefined, accessory: BasicAccessory): string;
 }
 
 interface BasicSensorConstructor {
@@ -64,7 +64,7 @@ abstract class BasicSensorHandler implements ServiceHandler {
 
     this.serviceName = accessory.getDefaultServiceDisplayName(sub);
 
-    this.identifier = identifierGen(endpoint);
+    this.identifier = identifierGen(endpoint, accessory);
     this.service = accessory.getOrAddService(service(this.serviceName, sub));
     this.tryCreateLowBattery(otherExposes, this.service);
     this.tryCreateTamper(otherExposes, this.service);
@@ -318,6 +318,7 @@ class OccupancySensorHandler extends ConfigurableBinarySensorHandler {
 
   public static readonly converterConfigTag = 'occupancy';
   private static readonly defaultType: string = 'occupancy';
+  private static readonly typeMotion: string = 'motion';
   public static isValidConverterConfiguration(config: unknown, tag: string, logger: Logger | undefined): boolean {
     if (!isBinarySensorConfig(config)) {
       return false;
@@ -334,9 +335,8 @@ class OccupancySensorHandler extends ConfigurableBinarySensorHandler {
       [OccupancySensorHandler.defaultType, new BinarySensorTypeDefinition((n, t) => new hap.Service.OccupancySensor(n, t),
         hap.Characteristic.OccupancyDetected,
         hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED, hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED)],
-      ['motion', new BinarySensorTypeDefinition((n, t) => new hap.Service.MotionSensor(n, t),
-        hap.Characteristic.MotionDetected, true, false,
-        OccupancySensorHandler.converterConfigTag)],
+      [OccupancySensorHandler.typeMotion, new BinarySensorTypeDefinition((n, t) => new hap.Service.MotionSensor(n, t),
+        hap.Characteristic.MotionDetected, true, false, 'occupancy')],
     ]);
   }
 
@@ -345,8 +345,10 @@ class OccupancySensorHandler extends ConfigurableBinarySensorHandler {
       OccupancySensorHandler.converterConfigTag, OccupancySensorHandler.defaultType, OccupancySensorHandler.getTypeDefinitions());
   }
 
-  static generateIdentifier(endpoint: string | undefined) {
-    let identifier = hap.Service.OccupancySensor.UUID;
+  static generateIdentifier(endpoint: string | undefined, accessory: BasicAccessory) {
+    const config = accessory.getConverterConfiguration(OccupancySensorHandler.converterConfigTag);
+    let identifier = (isBinarySensorConfig(config) && config.type === OccupancySensorHandler.typeMotion) ?
+      `${OccupancySensorHandler.converterConfigTag}_${hap.Service.MotionSensor.UUID}` : hap.Service.OccupancySensor.UUID;
     if (endpoint !== undefined) {
       identifier += '_' + endpoint.trim();
     }
@@ -500,9 +502,9 @@ export class BasicSensorCreator implements ServiceCreator {
       const optionalProperties = value.filter(e => exposesHasBinaryProperty(e) && (e.name === 'battery_low' || e.name === 'tamper'))
         .map(e => e as ExposesEntryWithBinaryProperty);
       BasicSensorCreator.mapping.forEach(m => {
-        if (!accessory.isServiceHandlerIdKnown(m.implementation.generateIdentifier(key))) {
-          value.filter(e => e.name === m.name && e.type === m.type)
-            .forEach(e => this.createService(accessory, e, (x) => new m.implementation(x, optionalProperties, accessory)));
+        const values = value.filter(e => e.name === m.name && e.type === m.type);
+        if (values.length > 0 && !accessory.isServiceHandlerIdKnown(m.implementation.generateIdentifier(key, accessory))) {
+          values.forEach(e => this.createService(accessory, e, (x) => new m.implementation(x, optionalProperties, accessory)));
         }
       });
     });

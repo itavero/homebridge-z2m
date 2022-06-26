@@ -355,10 +355,17 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   private mergeDeviceConfig(devConfig: DeviceConfiguration): BaseDeviceConfiguration {
     const result = { ...this.baseDeviceConfig, ...devConfig };
+
+    // Merge converter configs correctly
+    if (this.baseDeviceConfig.converters !== undefined && devConfig.converters !== undefined) {
+      result.converters = { ...this.baseDeviceConfig.converters, ...devConfig.converters };
+    }
+
     if (result.experimental !== undefined) {
       // Normalize experimental feature flags
       result.experimental = result.experimental.map((feature: string) => feature.trim().toLocaleUpperCase());
     }
+
     return result;
   }
 

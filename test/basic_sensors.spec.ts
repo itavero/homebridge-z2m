@@ -423,59 +423,114 @@ describe('Basic Sensors', () => {
       "type": "EndDevice"
    }`;
 
-    // Shared "state"
-    let deviceExposes: ExposesEntry[] = [];
-    let harness: ServiceHandlersTestHarness;
+    describe('as Occupancy Sensor', () => {
+      // Shared "state"
+      let deviceExposes: ExposesEntry[] = [];
+      let harness: ServiceHandlersTestHarness;
 
-    beforeEach(() => {
-      // Only test service creation for first test case and reuse harness afterwards
-      if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
-        const newHarness = new ServiceHandlersTestHarness();
+      beforeEach(() => {
+        // Only test service creation for first test case and reuse harness afterwards
+        if (deviceExposes.length === 0 && harness === undefined) {
+          // Test JSON Device List entry
+          const device = testJsonDeviceListEntry(deviceModelJson);
+          deviceExposes = device?.definition?.exposes ?? [];
+          expect(deviceExposes?.length).toBeGreaterThan(0);
+          const newHarness = new ServiceHandlersTestHarness();
 
-        // Check service creation
-        newHarness.getOrAddHandler(hap.Service.OccupancySensor)
-          .addExpectedCharacteristic('occupancy', hap.Characteristic.OccupancyDetected);
-        newHarness.getOrAddHandler(hap.Service.LightSensor)
-          .addExpectedCharacteristic('illuminance', hap.Characteristic.CurrentAmbientLightLevel);
+          // Check service creation
+          newHarness.addConverterConfiguration('occupancy', { type: 'occupancy' });
+          newHarness.getOrAddHandler(hap.Service.OccupancySensor)
+            .addExpectedCharacteristic('occupancy', hap.Characteristic.OccupancyDetected);
+          newHarness.getOrAddHandler(hap.Service.LightSensor)
+            .addExpectedCharacteristic('illuminance', hap.Characteristic.CurrentAmbientLightLevel);
 
-        newHarness.prepareCreationMocks();
+          newHarness.prepareCreationMocks();
 
-        newHarness.callCreators(deviceExposes);
+          newHarness.callCreators(deviceExposes);
 
-        newHarness.checkCreationExpectations();
-        newHarness.checkExpectedGetableKeys([]);
-        harness = newHarness;
-      }
-      harness?.clearMocks();
+          newHarness.checkCreationExpectations();
+          newHarness.checkExpectedGetableKeys([]);
+          harness = newHarness;
+        }
+        harness?.clearMocks();
+      });
+
+      afterEach(() => {
+        verifyAllWhenMocksCalled();
+        resetAllWhenMocks();
+      });
+
+      test('Update occupancy', (): void => {
+        expect(harness).toBeDefined();
+        harness.checkSingleUpdateState('{"occupancy":false}',
+          hap.Service.OccupancySensor,
+          hap.Characteristic.OccupancyDetected, hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
+        harness.clearMocks();
+        harness.checkSingleUpdateState('{"occupancy":true}',
+          hap.Service.OccupancySensor,
+          hap.Characteristic.OccupancyDetected, hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED);
+      });
+
+      test('Update illuminance', (): void => {
+        expect(harness).toBeDefined();
+        harness.checkSingleUpdateState('{"illuminance":1}', hap.Service.LightSensor,
+          hap.Characteristic.CurrentAmbientLightLevel, 1);
+        harness.clearMocks();
+        harness.checkSingleUpdateState('{"illuminance":2248}', hap.Service.LightSensor,
+          hap.Characteristic.CurrentAmbientLightLevel, 2248);
+      });
     });
 
-    afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
-    });
+    describe('as Motion Sensor', () => {
+      // Shared "state"
+      let deviceExposes: ExposesEntry[] = [];
+      let harness: ServiceHandlersTestHarness;
+      let motionSensorId: string;
 
-    test('Update occupancy', (): void => {
-      expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"occupancy":false}',
-        hap.Service.OccupancySensor,
-        hap.Characteristic.OccupancyDetected, hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
-      harness.clearMocks();
-      harness.checkSingleUpdateState('{"occupancy":true}',
-        hap.Service.OccupancySensor,
-        hap.Characteristic.OccupancyDetected, hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED);
-    });
+      beforeEach(() => {
+        // Only test service creation for first test case and reuse harness afterwards
+        if (deviceExposes.length === 0 && harness === undefined) {
+          // Test JSON Device List entry
+          const device = testJsonDeviceListEntry(deviceModelJson);
+          deviceExposes = device?.definition?.exposes ?? [];
+          expect(deviceExposes?.length).toBeGreaterThan(0);
+          const newHarness = new ServiceHandlersTestHarness();
 
-    test('Update illuminance', (): void => {
-      expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"illuminance":1}', hap.Service.LightSensor,
-        hap.Characteristic.CurrentAmbientLightLevel, 1);
-      harness.clearMocks();
-      harness.checkSingleUpdateState('{"illuminance":2248}', hap.Service.LightSensor,
-        hap.Characteristic.CurrentAmbientLightLevel, 2248);
+          // Check service creation
+          motionSensorId = 'occupancy_' + hap.Service.MotionSensor.UUID;
+
+          newHarness.addConverterConfiguration('occupancy', { type: 'motion' });
+          newHarness.getOrAddHandler(hap.Service.MotionSensor, 'occupancy', motionSensorId)
+            .addExpectedCharacteristic('occupancy', hap.Characteristic.MotionDetected);
+          newHarness.getOrAddHandler(hap.Service.LightSensor)
+            .addExpectedCharacteristic('illuminance', hap.Characteristic.CurrentAmbientLightLevel);
+
+          newHarness.prepareCreationMocks();
+
+          newHarness.callCreators(deviceExposes);
+
+          newHarness.checkCreationExpectations();
+          newHarness.checkExpectedGetableKeys([]);
+          harness = newHarness;
+        }
+        harness?.clearMocks();
+      });
+
+      afterEach(() => {
+        verifyAllWhenMocksCalled();
+        resetAllWhenMocks();
+      });
+
+      test('Update motion', (): void => {
+        expect(harness).toBeDefined();
+        harness.checkSingleUpdateState('{"occupancy":false}',
+          motionSensorId,
+          hap.Characteristic.MotionDetected, false);
+        harness.clearMocks();
+        harness.checkSingleUpdateState('{"occupancy":true}',
+          motionSensorId,
+          hap.Characteristic.MotionDetected, true);
+      });
     });
   });
 

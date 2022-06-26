@@ -6,7 +6,7 @@ import 'jest-chain';
 import { ServiceHandlersTestHarness, testJsonDeviceDefinition } from './testHelpers';
 
 describe('Climate', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     setHap(hapNodeJs);
   });
 
@@ -102,8 +102,8 @@ describe('Climate', () => {
     }`;
 
     // Shared "state"
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -122,7 +122,7 @@ describe('Climate', () => {
           .addExpectedCharacteristic('running_state', hap.Characteristic.CurrentHeatingCoolingState)
           .addExpectedCharacteristic('unit', hap.Characteristic.TemperatureDisplayUnits, false, undefined, false);
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();

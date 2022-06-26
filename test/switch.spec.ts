@@ -6,7 +6,7 @@ import 'jest-chain';
 import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
 
 describe('Switch', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     setHap(hapNodeJs);
   });
 

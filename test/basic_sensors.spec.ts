@@ -7,7 +7,7 @@ import { ServiceHandlersTestHarness, testJsonDeviceListEntry, testJsonExposes } 
 import { Characteristic, CharacteristicValue, WithUUID } from 'homebridge';
 
 describe('Basic Sensors', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     setHap(hapNodeJs);
   });
 

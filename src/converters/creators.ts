@@ -1,5 +1,6 @@
 import { ExposesEntry } from '../z2mModels';
-import { BasicAccessory, ConverterConfigurationRegistry as ConverterConfigurationRegistry, ServiceCreator } from './interfaces';
+import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator } from './interfaces';
+import { BasicLogger } from '../logger';
 import { BasicSensorCreator } from './basic_sensors';
 import { BatteryCreator } from './battery';
 import { CoverCreator } from './cover';
@@ -16,7 +17,7 @@ export interface ServiceCreatorManager {
 }
 
 export interface ConverterConfigValidatorCollection {
-  allConverterConfigurationsAreValid(configurations: object, logger: Logger | undefined): boolean;
+  allConverterConfigurationsAreValid(configurations: object, logger: BasicLogger | undefined): boolean;
 }
 
 interface ServiceCreatorConstructor {

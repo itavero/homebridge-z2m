@@ -8,7 +8,7 @@ import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpe
 jest.useFakeTimers();
 
 describe('Cover', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     setHap(hapNodeJs);
   });
 

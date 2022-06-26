@@ -7,7 +7,7 @@ import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpe
 import { EXP_COLOR_MODE } from '../src/experimental';
 
 describe('Light', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     setHap(hapNodeJs);
   });
 

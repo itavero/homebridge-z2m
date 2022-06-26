@@ -7,7 +7,7 @@ import { ServiceHandlersTestHarness, testJsonDeviceDefinition } from './testHelp
 import { Characteristic, CharacteristicValue, WithUUID } from 'hap-nodejs';
 
 describe('Air Quality Sensor', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     setHap(hapNodeJs);
   });
 

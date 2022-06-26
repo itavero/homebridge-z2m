@@ -6,7 +6,7 @@ import 'jest-chain';
 import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
 
 describe('Action', () => {
-  beforeEach(() => {
+  beforeAll(() => {
     setHap(hapNodeJs);
   });
 
@@ -113,8 +113,8 @@ describe('Action', () => {
     let serviceIdLeft = '';
     let serviceIdRight = '';
     let serviceIdBoth = '';
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -142,7 +142,7 @@ describe('Action', () => {
           .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
 
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -150,8 +150,8 @@ describe('Action', () => {
 
         // Expect the correct event types to be enabled
         const expectedCharacteristicProps = {
-          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS, 
-          maxValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS, 
+          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+          maxValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS,
           validValues: [
             hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
             hap.Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS,
@@ -166,7 +166,7 @@ describe('Action', () => {
         bothService.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 1);
         leftService.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 2);
         rightService.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 3);
-          
+
         // Store harness for future use
         harness = newHarness;
       }
@@ -297,8 +297,8 @@ describe('Action', () => {
     let serviceIdClose = '';
     let serviceIdOpen = '';
     let serviceIdStop = '';
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -326,7 +326,7 @@ describe('Action', () => {
           .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
 
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -334,9 +334,9 @@ describe('Action', () => {
 
         // Expect the correct event types to be enabled
         const expectedCharacteristicProps = {
-          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS, 
-          maxValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS, 
-          validValues: [ hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS ],
+          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+          maxValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+          validValues: [hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS],
         };
         closeService.checkCharacteristicPropertiesHaveBeenSet(actionProperty, expectedCharacteristicProps);
         openService.checkCharacteristicPropertiesHaveBeenSet(actionProperty, expectedCharacteristicProps);
@@ -346,7 +346,7 @@ describe('Action', () => {
         closeService.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 1);
         openService.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 2);
         stopService.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 3);
-          
+
         // Store harness for future use
         harness = newHarness;
       }
@@ -388,7 +388,7 @@ describe('Action', () => {
         harness.checkUpdateStateIsIgnored('{"action":""}');
       }
     });
-      
+
   });
 
   describe('Aqara Opple switch 3 bands', () => {
@@ -625,8 +625,8 @@ describe('Action', () => {
     let serviceIdButton5 = '';
     let serviceIdButton5E = '';
     let serviceIdButton6 = '';
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -682,7 +682,7 @@ describe('Action', () => {
           .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
 
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -690,8 +690,8 @@ describe('Action', () => {
 
         // Expect the correct event types to be enabled
         const allowAllEvents = {
-          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS, 
-          maxValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS, 
+          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+          maxValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS,
           validValues: [
             hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
             hap.Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS,
@@ -699,23 +699,23 @@ describe('Action', () => {
           ],
         };
         const allowSingleAndLong = {
-          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS, 
-          maxValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS, 
+          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+          maxValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS,
           validValues: [
             hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
             hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS,
           ],
         };
         const allowSingle = {
-          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS, 
-          maxValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS, 
+          minValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+          maxValue: hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
           validValues: [
             hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
           ],
         };
         const allowLong = {
-          minValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS, 
-          maxValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS, 
+          minValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS,
+          maxValue: hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS,
           validValues: [
             hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS,
           ],
@@ -732,7 +732,7 @@ describe('Action', () => {
         serviceButton5.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 50);
         serviceButton5E.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 51);
         serviceButton6.checkCharacteristicUpdateValue(serviceLabelCharacteristic, 60);
-          
+
         // Store harness for future use
         harness = newHarness;
       }

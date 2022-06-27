@@ -22,6 +22,7 @@ abstract class LeakSensorHandler extends BinarySensorHandler {
   }
 }
 export class WaterLeakSensorHandler extends LeakSensorHandler {
+  public static readonly exposesName: string = 'water_leak';
   private static readonly SUBTYPE = 'water';
 
   constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
@@ -33,6 +34,7 @@ export class WaterLeakSensorHandler extends LeakSensorHandler {
   }
 }
 export class GasLeakSensorHandler extends LeakSensorHandler {
+  public static readonly exposesName: string = 'gas';
   private static readonly SUBTYPE = 'gas';
 
   constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {

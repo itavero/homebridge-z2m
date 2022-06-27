@@ -1,5 +1,5 @@
 import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty } from '../../z2mModels';
+import { ExposesEntryWithBinaryProperty, ExposesKnownTypes } from '../../z2mModels';
 import { MappingCharacteristicMonitor } from '../monitor';
 import { Characteristic, CharacteristicValue, WithUUID } from 'homebridge';
 import { getOrAddCharacteristic } from '../../helpers';
@@ -28,6 +28,8 @@ export const isBinarySensorConfig = (x: any): x is BinarySensorConfig => (
   ));
 
 export abstract class ConfigurableBinarySensorHandler extends BasicSensorHandler {
+  public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.BINARY;
+
   constructor(accessory: BasicAccessory, expose: ExposesEntryWithBinaryProperty, otherExposes: ExposesEntryWithBinaryProperty[],
     identifierGen: IdentifierGenerator, logName: string,
     configTag: string | undefined, defaultType: string,

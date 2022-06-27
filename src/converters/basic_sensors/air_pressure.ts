@@ -1,11 +1,14 @@
 import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../z2mModels';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
 import { PassthroughCharacteristicMonitor } from '../monitor';
 import { Characteristic, Service } from 'homebridge';
 import { hap } from '../../hap';
 import { BasicSensorHandler } from './basic';
 
 export class AirPressureSensorHandler extends BasicSensorHandler {
+  public static readonly exposesName: string = 'pressure';
+  public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
+
   private static readonly ServiceUUID: string = 'E863F00A-079E-48FF-8F27-9C2605A29F52';
   private static readonly CharacteristicUUID: string = 'E863F10F-079E-48FF-8F27-9C2605A29F52';
   private static readonly CharacteristicName: string = 'Air Pressure';

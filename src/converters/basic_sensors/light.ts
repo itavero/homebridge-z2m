@@ -1,11 +1,14 @@
 import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../z2mModels';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
 import { PassthroughCharacteristicMonitor } from '../monitor';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
 import { BasicSensorHandler } from './basic';
 
 export class LightSensorHandler extends BasicSensorHandler {
+  public static readonly exposesName: string = 'illuminance_lux';
+  public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
+
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(accessory, expose, allExposes, LightSensorHandler.generateIdentifier, (n, t) => new hap.Service.LightSensor(n, t));
     accessory.log.debug(`Configuring LightSensor for ${this.serviceName}`);

@@ -6,7 +6,7 @@ import { ConfigurableBinarySensorHandler, isBinarySensorConfig, BinarySensorType
 
 
 export class OccupancySensorHandler extends ConfigurableBinarySensorHandler {
-
+  public static readonly exposesName: string = 'occupancy';
   public static readonly converterConfigTag = 'occupancy';
   private static readonly defaultType: string = 'occupancy';
   private static readonly typeMotion: string = 'motion';

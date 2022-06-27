@@ -5,6 +5,8 @@ import { BinarySensorHandler } from './binary';
 
 
 export class CarbonMonoxideSensorHandler extends BinarySensorHandler {
+  public static readonly exposesName: string = 'carbon_monoxide';
+
   constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(accessory, expose as ExposesEntryWithBinaryProperty, otherExposes, CarbonMonoxideSensorHandler.generateIdentifier,
       'CarbonMonoxideSensor', (n, t) => new hap.Service.CarbonMonoxideSensor(n, t), hap.Characteristic.CarbonMonoxideDetected,

@@ -24,7 +24,7 @@ export class DocsAccessory implements BasicAccessory {
   constructor(
     readonly displayName: string) { }
 
-  getConverterConfiguration(_tag: string): unknown {
+  getConverterConfiguration(): unknown {
     return {};
   }
 

@@ -12,6 +12,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
  [#458](https://github.com/itavero/homebridge-z2m/pull/458) and related issues)
   - `switch` can be configured as a `switch` (default) or `outlet`
   - `occupancy` can be configured as `occupancy` (default) or `motion`
+- `device_temperature` is now exposed as a temperature sensor. Due to a [change in Zigbee2MQTT](https://github.com/Koenkk/zigbee-herdsman-converters/pull/4267), you might need to update your Homebridge configuration to exclude `device_temperature` if you previously excluded `temperature` for some devices. (see [#456](https://github.com/itavero/homebridge-z2m/issues/456))
 
 ### Changed
 

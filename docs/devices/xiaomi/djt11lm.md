@@ -23,6 +23,8 @@ the Xiaomi DJT11LM
 * [Stateless Programmable Switch](../../action.md)
   * Programmable Switch Event
   * Service Label Index
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

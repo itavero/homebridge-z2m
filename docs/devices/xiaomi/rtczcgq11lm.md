@@ -16,6 +16,8 @@ the Xiaomi RTCZCGQ11LM
 
 * [Occupancy Sensor](../../sensors.md)
   * Occupancy Detected
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

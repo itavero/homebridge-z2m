@@ -20,6 +20,8 @@ the Xiaomi RTCGQ13LM
   * Status Low Battery
 * [Occupancy Sensor](../../sensors.md)
   * Occupancy Detected
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

@@ -16,6 +16,8 @@ the HEIMAN HS2SW2A/HS2SW2A-N
 
 * [Switch](../../switch.md)
   * On
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

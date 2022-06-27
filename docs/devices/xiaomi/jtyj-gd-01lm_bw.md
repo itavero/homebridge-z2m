@@ -22,6 +22,10 @@ the Xiaomi JTYJ-GD-01LM/BW
   * Smoke Detected
   * Status Low Battery
   * Status Tampered
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

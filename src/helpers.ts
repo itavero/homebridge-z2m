@@ -6,7 +6,7 @@ export function errorToString(e: unknown): string {
     return e;
   }
   if (e instanceof Error) {
-    e.message; // works, `e` narrowed to Error
+    return e.message; // works, `e` narrowed to Error
   }
   return JSON.stringify(e);
 }

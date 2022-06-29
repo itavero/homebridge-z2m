@@ -20,6 +20,8 @@ the Xiaomi JY-GZ-01AQ
   * Status Low Battery
 * [Smoke Sensor](../../sensors.md)
   * Smoke Detected
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

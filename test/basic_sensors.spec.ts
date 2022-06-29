@@ -11,104 +11,88 @@ describe('Basic Sensors', () => {
     setHap(hapNodeJs);
   });
 
-  describe('Aqara RH, T and pressure sensor', () => {
-    const deviceModelJson = `{
-      "date_code": "20161129",
-      "definition": {
-         "description": "Aqara temperature, humidity and pressure sensor",
-         "exposes": [
-            {
-               "access": 1,
-               "description": "Remaining battery in %",
-               "name": "battery",
-               "property": "battery",
-               "type": "numeric",
-               "unit": "%",
-               "value_max": 100,
-               "value_min": 0
-            },
-            {
-               "access": 1,
-               "description": "Measured temperature value",
-               "name": "temperature",
-               "property": "temperature",
-               "type": "numeric",
-               "unit": "°C"
-            },
-            {
-               "access": 1,
-               "description": "Measured relative humidity",
-               "name": "humidity",
-               "property": "humidity",
-               "type": "numeric",
-               "unit": "%"
-            },
-            {
-               "access": 1,
-               "description": "The measured atmospheric pressure",
-               "name": "pressure",
-               "property": "pressure",
-               "type": "numeric",
-               "unit": "hPa"
-            },
-            {
-               "access": 1,
-               "description": "Link quality (signal strength)",
-               "name": "linkquality",
-               "property": "linkquality",
-               "type": "numeric",
-               "unit": "lqi",
-               "value_max": 255,
-               "value_min": 0
-            }
-         ],
-         "model": "WSDCGQ11LM",
-         "vendor": "Xiaomi"
+  describe('Aqara T1 temperature, humidity and pressure sensor', () => {
+    const deviceExposesJson = `[
+      {
+        "type": "numeric",
+        "name": "temperature",
+        "property": "temperature",
+        "access": 1,
+        "unit": "°C",
+        "description": "Measured temperature value"
       },
-      "endpoints": {
-         "1": {
-            "bindings": [],
-            "clusters": {
-               "input": [
-                  "genBasic",
-                  "genIdentify",
-                  "msTemperatureMeasurement",
-                  "msPressureMeasurement",
-                  "msRelativeHumidity"
-               ],
-               "output": [
-                  "genBasic",
-                  "genGroups"
-               ]
-            }
-         }
+      {
+        "type": "numeric",
+        "name": "humidity",
+        "property": "humidity",
+        "access": 1,
+        "unit": "%",
+        "description": "Measured relative humidity"
       },
-      "friendly_name": "rht_server",
-      "ieee_address": "0x00158d000414385c",
-      "interview_completed": true,
-      "interviewing": false,
-      "network_address": 30075,
-      "power_source": "Battery",
-      "software_build_id": "3000-0001",
-      "supported": true,
-      "type": "EndDevice"
-   }`;
+      {
+        "type": "numeric",
+        "name": "pressure",
+        "property": "pressure",
+        "access": 1,
+        "unit": "hPa",
+        "description": "The measured atmospheric pressure"
+      },
+      {
+        "type": "numeric",
+        "name": "device_temperature",
+        "property": "device_temperature",
+        "access": 1,
+        "unit": "°C",
+        "description": "Temperature of the device"
+      },
+      {
+        "type": "numeric",
+        "name": "battery",
+        "property": "battery",
+        "access": 1,
+        "unit": "%",
+        "description": "Remaining battery in %",
+        "value_min": 0,
+        "value_max": 100
+      },
+      {
+        "type": "numeric",
+        "name": "voltage",
+        "property": "voltage",
+        "access": 1,
+        "unit": "mV",
+        "description": "Voltage of the battery in millivolts"
+      },
+      {
+        "type": "numeric",
+        "name": "linkquality",
+        "property": "linkquality",
+        "access": 1,
+        "unit": "lqi",
+        "description": "Link quality (signal strength)",
+        "value_min": 0,
+        "value_max": 255
+      }
+    ]`;
 
     // Shared "state"
     const airPressureServiceId = 'E863F00A-079E-48FF-8F27-9C2605A29F52';
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
+    let deviceTemperatureServiceId: string;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
         // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
+        deviceExposes = testJsonExposes(deviceExposesJson);
         expect(deviceExposes?.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
+        deviceTemperatureServiceId = hap.Service.TemperatureSensor.UUID + '_device_temperature';
+        newHarness.getOrAddHandler(hap.Service.TemperatureSensor, 'device_temperature')
+          .addExpectedCharacteristic('device_temperature', hap.Characteristic.CurrentTemperature);
         newHarness.getOrAddHandler(hap.Service.TemperatureSensor)
           .addExpectedCharacteristic('temperature', hap.Characteristic.CurrentTemperature);
         newHarness.getOrAddHandler(hap.Service.HumiditySensor)
@@ -129,6 +113,15 @@ describe('Basic Sensors', () => {
     afterEach(() => {
       verifyAllWhenMocksCalled();
       resetAllWhenMocks();
+    });
+
+    test('Update device temperature', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"device_temperature":12.5}',
+        deviceTemperatureServiceId, hap.Characteristic.CurrentTemperature, 12.5);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"device_temperature":32.1}',
+        deviceTemperatureServiceId, hap.Characteristic.CurrentTemperature, 32.1);
     });
 
     test('Update temperature', (): void => {

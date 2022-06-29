@@ -21,6 +21,9 @@ the Xiaomi SJCGQ11LM
 * [Leak Sensor](../../sensors.md)
   * Leak Detected
   * Status Low Battery
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
 
 
 # Related

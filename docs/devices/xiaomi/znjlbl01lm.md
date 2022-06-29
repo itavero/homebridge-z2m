@@ -18,6 +18,8 @@ the Xiaomi ZNJLBL01LM
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 * [Window Covering](../../cover.md)
   * Current Position
   * Position State

@@ -16,6 +16,8 @@ the Xiaomi SSM-U02
 
 * [Switch](../../switch.md)
   * On
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

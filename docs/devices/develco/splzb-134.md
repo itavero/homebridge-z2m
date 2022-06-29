@@ -16,6 +16,8 @@ the Develco SPLZB-134
 
 * [Switch](../../switch.md)
   * On
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

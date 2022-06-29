@@ -1,5 +1,6 @@
 import { Service } from 'homebridge';
-import { BasicAccessory, BasicLogger, ServiceHandler } from '../converters/interfaces';
+import { BasicAccessory, ServiceHandler } from '../converters/interfaces';
+import { BasicLogger } from '../logger';
 
 export class DocsAccessory implements BasicAccessory {
   readonly log: BasicLogger = <BasicLogger><unknown>{
@@ -22,6 +23,10 @@ export class DocsAccessory implements BasicAccessory {
 
   constructor(
     readonly displayName: string) { }
+
+  getConverterConfiguration(): unknown {
+    return {};
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isExperimentalFeatureEnabled(feature: string): boolean {

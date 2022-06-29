@@ -26,7 +26,10 @@ export class DeviceTemperatureSensorHandler extends BasicSensorHandler {
   }
 
   static generateIdentifier(endpoint: string | undefined) {
-    let identifier = 'device_temperature_' + hap.Service.TemperatureSensor.UUID;
+    if (endpoint === DeviceTemperatureSensorHandler.exposesName) {
+      endpoint = undefined;
+    }
+    let identifier = hap.Service.TemperatureSensor.UUID + '_' + DeviceTemperatureSensorHandler.exposesName;
     if (endpoint !== undefined) {
       identifier += '_' + endpoint.trim();
     }

@@ -109,6 +109,23 @@ export function exposesIsPublished(entry: ExposesEntry): boolean {
   return (entry.access !== undefined) && ((entry.access & ExposesAccessLevel.PUBLISHED) !== 0);
 }
 
+export interface ExposesPredicate {
+  (expose: ExposesEntry): boolean;
+}
+
+export function exposesHasAllRequiredFeatures(entry: ExposesEntryWithFeatures, features: ExposesPredicate[],
+  isPropertyExcluded: ((property: string | undefined) => boolean) = () => false): boolean {
+  for (const f of features) {
+    if (entry.features.findIndex(e => f(e) && !isPropertyExcluded(e.property)) < 0) {
+      // given feature not found
+      return false;
+    }
+  }
+
+  // All mentioned features where matched.
+  return true;
+}
+
 export function exposesGetOverlap(first: ExposesEntry[], second: ExposesEntry[]): ExposesEntry[] {
   const result: ExposesEntry[] = [];
 

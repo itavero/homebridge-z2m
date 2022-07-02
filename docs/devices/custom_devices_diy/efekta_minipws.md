@@ -45,6 +45,16 @@ the Custom devices (DiY) EFEKTA_miniPWS
   },
   {
     "type": "numeric",
+    "name": "report_delay",
+    "property": "report_delay",
+    "access": 3,
+    "unit": "min",
+    "description": "Adjust Report Delay, by default 60 minutes",
+    "value_min": 1,
+    "value_max": 180
+  },
+  {
+    "type": "numeric",
     "name": "linkquality",
     "property": "linkquality",
     "access": 1,

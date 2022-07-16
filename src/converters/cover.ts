@@ -45,7 +45,7 @@ export class CoverCreator implements ServiceCreator {
       .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory, exposeAsWindow));
   }
 
-  private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory, exposeAsWindow: Boolean): void {
+  private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory, exposeAsWindow: boolean): void {
     try {
       const handler = new CoverHandler(expose, accessory, exposeAsWindow);
       accessory.registerServiceHandler(handler);
@@ -72,7 +72,7 @@ class CoverHandler implements ServiceHandler {
   private lastPositionSet = -1;
   private positionCurrent = -1;
 
-  constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory, exposeAsWindow: Boolean) {
+  constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory, exposeAsWindow: boolean) {
     const endpoint = expose.endpoint;
     const serviceTypeName = exposeAsWindow ? 'Window' : 'WindowCovering';
 
@@ -82,7 +82,7 @@ class CoverHandler implements ServiceHandler {
       && e.name === 'position' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
 
     if(!exposeAsWindow) {
-        this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
+      this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
         && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
     }
     
@@ -303,7 +303,7 @@ class CoverHandler implements ServiceHandler {
     }
   }
 
-  static generateIdentifier(exposeAsWindow: Boolean, endpoint: string | undefined) {
+  static generateIdentifier(exposeAsWindow: boolean, endpoint: string | undefined) {
     let identifier = exposeAsWindow ? hap.Service.Window.UUID : hap.Service.WindowCovering.UUID;
     if (endpoint !== undefined) {
       identifier += '_' + endpoint.trim();

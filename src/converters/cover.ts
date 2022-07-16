@@ -1,4 +1,4 @@
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 import {
   exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithFeatures, ExposesEntryWithNumericRangeProperty, exposesHasFeatures,
   exposesHasNumericRangeProperty, exposesIsPublished, ExposesKnownTypes,
@@ -9,16 +9,45 @@ import { CharacteristicSetCallback, CharacteristicValue, Service } from 'homebri
 import { ExtendedTimer } from '../timer';
 import { CharacteristicMonitor, NumericCharacteristicMonitor } from './monitor';
 
+interface CoverConfig {
+  type?: string;
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isCoverWindowConfig = (x: any): x is CoverConfig => (
+  x !== undefined && (
+    x.type === undefined
+    || (typeof x.type === 'string' && x.type.length > 0 &&
+      [CoverCreator.CONFIG_TYPE_COVER, CoverCreator.CONFIG_TYPE_WINDOW].includes(x.type.toLowerCase()))
+  ));
+
 export class CoverCreator implements ServiceCreator {
-  createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    exposes.filter(e => e.type === ExposesKnownTypes.COVER && exposesHasFeatures(e)
-      && !accessory.isServiceHandlerIdKnown(CoverHandler.generateIdentifier(e.endpoint)))
-      .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
+  public static readonly CONFIG_TAG = 'cover';
+  public static readonly CONFIG_TYPE_COVER = 'cover';
+  public static readonly CONFIG_TYPE_WINDOW = 'window';
+  
+  constructor(converterConfigRegistry: ConverterConfigurationRegistry) {
+    converterConfigRegistry.registerConverterConfiguration(CoverCreator.CONFIG_TAG, CoverCreator.isValidConverterConfiguration);
   }
 
-  private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
+  private static isValidConverterConfiguration(config: unknown): boolean {
+    return isCoverWindowConfig(config);
+  }
+
+  createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
+    let exposeAsWindow = false;
+    const converterConfig = accessory.getConverterConfiguration(CoverCreator.CONFIG_TAG);
+    if (isCoverWindowConfig(converterConfig) && converterConfig.type === CoverCreator.CONFIG_TYPE_WINDOW) {
+      exposeAsWindow = true;
+    }
+
+    exposes.filter(e => e.type === ExposesKnownTypes.COVER && exposesHasFeatures(e)
+      && !accessory.isServiceHandlerIdKnown(CoverHandler.generateIdentifier(exposeAsWindow, e.endpoint)))
+      .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory, exposeAsWindow));
+  }
+
+  private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory, exposeAsWindow: Boolean): void {
     try {
-      const handler = new CoverHandler(expose, accessory);
+      const handler = new CoverHandler(expose, accessory, exposeAsWindow);
       accessory.registerServiceHandler(handler);
     } catch (error) {
       accessory.log.warn(`Failed to setup cover for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}": ${error}`);
@@ -43,21 +72,26 @@ class CoverHandler implements ServiceHandler {
   private lastPositionSet = -1;
   private positionCurrent = -1;
 
-  constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
+  constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory, exposeAsWindow: Boolean) {
     const endpoint = expose.endpoint;
-    this.identifier = CoverHandler.generateIdentifier(endpoint);
+    const serviceTypeName = exposeAsWindow ? 'Window' : 'WindowCovering';
+
+    this.identifier = CoverHandler.generateIdentifier(exposeAsWindow, endpoint);
 
     let positionExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
       && e.name === 'position' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
-    this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
-      && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
 
+    if(!exposeAsWindow) {
+        this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
+        && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
+    }
+    
     if (positionExpose === undefined) {
       if (this.tiltExpose !== undefined) {
         // Tilt only device
         positionExpose = this.tiltExpose;
         this.tiltExpose = undefined;
-      } else {
+      } else { // Window acessories don't need tilt
         throw new Error('Required "position" property not found for WindowCovering and no "tilt" as backup.');
       }
     }
@@ -65,8 +99,10 @@ class CoverHandler implements ServiceHandler {
 
     const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
 
-    accessory.log.debug(`Configuring WindowCovering for ${serviceName}`);
-    this.service = accessory.getOrAddService(new hap.Service.WindowCovering(serviceName, endpoint));
+    accessory.log.debug(`Configuring ${serviceTypeName} for ${serviceName}`);
+    this.service = accessory.getOrAddService(exposeAsWindow ?
+      new hap.Service.Window(serviceName, endpoint) :
+      new hap.Service.WindowCovering(serviceName, endpoint));
 
     const current = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentPosition);
     if (current.props.minValue === undefined || current.props.maxValue === undefined) {
@@ -90,7 +126,7 @@ class CoverHandler implements ServiceHandler {
     }
 
     // Tilt
-    if (this.tiltExpose !== undefined) {
+    if (this.tiltExpose !== undefined && !exposeAsWindow) {
       getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle);
       this.monitors.push(new NumericCharacteristicMonitor(this.tiltExpose.property, this.service,
         hap.Characteristic.CurrentHorizontalTiltAngle, this.tiltExpose.value_min, this.tiltExpose.value_max));
@@ -267,8 +303,8 @@ class CoverHandler implements ServiceHandler {
     }
   }
 
-  static generateIdentifier(endpoint: string | undefined) {
-    let identifier = hap.Service.WindowCovering.UUID;
+  static generateIdentifier(exposeAsWindow: Boolean, endpoint: string | undefined) {
+    let identifier = exposeAsWindow ? hap.Service.Window.UUID : hap.Service.WindowCovering.UUID;
     if (endpoint !== undefined) {
       identifier += '_' + endpoint.trim();
     }

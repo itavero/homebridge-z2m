@@ -6,6 +6,11 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- Further allow for alternative implementations. (see [#484](https://github.com/itavero/homebridge-z2m/issues/484))
+  - `cover` can be configured as a `cover` (default) or `window`
+
 ## [1.9.0] - 2022-06-29
 
 ### Added

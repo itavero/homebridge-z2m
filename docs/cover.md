@@ -10,3 +10,21 @@ The table below shows how the different features within this `exposes` entry are
 The required [Position State](https://developers.homebridge.io/#/characteristic/PositionState) characteristic is set when the _Target Position_ is changed or when an `position` is received from MQTT (and the movement is assumed to be stopped).
 
 If the `position` can be _get_, the plugin will try to get frequent updates, after changing the _Target Position_. If the same position is reported twice, movement is assumed to be stopped.
+
+## Converter specific configuration (`cover`)
+
+- `type`: Allows you to use a different HomeKit service:
+  - `cover` (default): expose as a [Window Cover](https://developers.homebridge.io/#/service/WindowCovering)
+  - `window`: expose as a [Window](https://developers.homebridge.io/#/service/Window)
+
+```json
+{
+  "converters": {
+    "cover": {
+      "type": "window"
+    }
+  }
+}
+```
+
+Do note that if the cover is setup as a window the tilt controls (if present) will be ignored

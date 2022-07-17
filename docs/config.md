@@ -41,6 +41,14 @@ A possible configuration looks like this:
          }
       },
       {
+         "id": "0xabcd1234abcd1234",
+         "converters": {
+            "cover": {
+                  "type": "window"
+            }
+         }
+      },
+      {
          "id": "0x1234abcd1234abcd",
          "values": [
             {

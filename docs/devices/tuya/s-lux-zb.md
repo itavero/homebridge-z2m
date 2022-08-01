@@ -20,7 +20,6 @@ the TuYa S-LUX-ZB
   * Status Low Battery
 * [Light Sensor](../../sensors.md)
   * Current Ambient Light Level
-  * Status Low Battery
 
 
 # Related

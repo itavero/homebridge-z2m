@@ -20,8 +20,10 @@ the TuYa TS0601_temperature_humidity_sensor
   * Status Low Battery
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
+  * Status Low Battery
 * [Temperature Sensor](../../sensors.md)
   * Current Temperature
+  * Status Low Battery
 
 
 # Related

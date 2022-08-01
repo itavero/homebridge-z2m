@@ -18,6 +18,8 @@ the Xiaomi ZNLDP13LM
   * Brightness
   * Color Temperature
   * On
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

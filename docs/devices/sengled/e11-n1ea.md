@@ -16,7 +16,10 @@ the Sengled E11-N1EA
 
 * [Lightbulb](../../light.md)
   * Brightness
+  * Color Temperature
+  * Hue
   * On
+  * Saturation
 
 
 # Related

@@ -83,7 +83,7 @@
     "jest": "^27.0.3",
     "jest-chain": "^1.1.5",
     "jest-each": "^29.0.1",
-    "jest-mock-extended": "^2.0.1",
+    "jest-mock-extended": "^3.0.1",
     "jest-sonar": "^0.2.11",
     "jest-when": "^3.0.1",
     "nodemon": "^2.0.7",

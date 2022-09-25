@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Fixed
+
+- Added additional checks to prevent certain errors from occuring during creation of a service handler. (see [#443](https://github.com/itavero/homebridge-z2m/issues/443))
+
 ## [1.9.0] - 2022-06-29
 
 ### Added

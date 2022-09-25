@@ -1,7 +1,8 @@
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
   exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures,
-  exposesHasBinaryProperty, exposesHasEnumProperty, exposesHasFeatures, exposesIsPublished, ExposesKnownTypes,
+  exposesHasAllRequiredFeatures, exposesHasBinaryProperty, exposesHasEnumProperty, exposesHasFeatures, exposesIsPublished,
+  ExposesKnownTypes, ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
@@ -13,6 +14,7 @@ import {
 export class LockCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     exposes.filter(e => e.type === ExposesKnownTypes.LOCK && exposesHasFeatures(e)
+      && exposesHasAllRequiredFeatures(e, [LockHandler.PREDICATE_LOCK_STATE, LockHandler.PREDICATE_STATE], accessory.isPropertyExcluded)
       && !accessory.isServiceHandlerIdKnown(LockHandler.generateIdentifier(e.endpoint)))
       .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
   }
@@ -22,12 +24,18 @@ export class LockCreator implements ServiceCreator {
       const handler = new LockHandler(expose, accessory);
       accessory.registerServiceHandler(handler);
     } catch (error) {
-      accessory.log.warn(`Failed to setup switch for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}": ${error}`);
+      accessory.log.warn(`Failed to setup lock for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}": ${error}`);
     }
   }
 }
 
 class LockHandler implements ServiceHandler {
+  public static readonly PREDICATE_STATE: ExposesPredicate = (e) => exposesHasBinaryProperty(e)
+    && e.name === LockHandler.NAME_STATE && exposesCanBeSet(e) && exposesIsPublished(e);
+
+  public static readonly PREDICATE_LOCK_STATE: ExposesPredicate = (e) => exposesHasEnumProperty(e)
+    && e.name === LockHandler.NAME_LOCK_STATE && exposesIsPublished(e);
+
   private static readonly NAME_STATE = 'state';
   private static readonly NAME_LOCK_STATE = 'lock_state';
   private static get BASIC_MAPPING(): Map<string, CharacteristicValue> {
@@ -46,15 +54,15 @@ class LockHandler implements ServiceHandler {
     const endpoint = expose.endpoint;
     this.identifier = LockHandler.generateIdentifier(endpoint);
 
-    const potentialStateExpose = expose.features.find(e => exposesHasBinaryProperty(e) && !accessory.isPropertyExcluded(e.property)
-      && e.name === LockHandler.NAME_STATE && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithBinaryProperty;
+    const potentialStateExpose = expose.features.find(e => LockHandler.PREDICATE_STATE(e)
+      && !accessory.isPropertyExcluded(e.property)) as ExposesEntryWithBinaryProperty;
     if (potentialStateExpose === undefined) {
       throw new Error(`Required "${LockHandler.NAME_STATE}" property not found for Lock.`);
     }
     this.stateExpose = potentialStateExpose;
 
-    const potentialLockStateExpose = expose.features.find(e => exposesHasEnumProperty(e) && !accessory.isPropertyExcluded(e.property)
-      && e.name === LockHandler.NAME_LOCK_STATE && exposesIsPublished(e)) as ExposesEntryWithEnumProperty;
+    const potentialLockStateExpose = expose.features.find(e => LockHandler.PREDICATE_LOCK_STATE(e)
+      && !accessory.isPropertyExcluded(e.property)) as ExposesEntryWithEnumProperty;
     if (potentialLockStateExpose === undefined) {
       throw new Error(`Required "${LockHandler.NAME_LOCK_STATE}" property not found for Lock.`);
     }

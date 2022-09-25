@@ -1,7 +1,8 @@
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
   exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures, ExposesEntryWithProperty,
-  exposesHasEnumProperty, exposesHasFeatures, exposesHasProperty, exposesIsPublished, ExposesKnownTypes,
+  exposesHasAllRequiredFeatures, exposesHasEnumProperty, exposesHasFeatures, exposesHasProperty, exposesIsPublished, ExposesKnownTypes,
+  ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
 import {
@@ -27,10 +28,6 @@ export class ThermostatCreator implements ServiceCreator {
         + error);
     }
   }
-}
-
-interface ExposesPredicate {
-  (expose: ExposesEntry): boolean;
 }
 
 class ThermostatHandler implements ServiceHandler {
@@ -95,13 +92,9 @@ class ThermostatHandler implements ServiceHandler {
       return false;
     }
 
-    let feature = e.features.find(ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE);
-    if (feature === undefined || accessory.isPropertyExcluded(feature.property)) {
-      return false;
-    }
-
-    feature = e.features.find(ThermostatHandler.PREDICATE_SETPOINT);
-    return (feature !== undefined && !accessory.isPropertyExcluded(feature.property));
+    return exposesHasAllRequiredFeatures(e,
+      [ThermostatHandler.PREDICATE_SETPOINT, ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE],
+      accessory.isPropertyExcluded);
   }
 
   private monitors: CharacteristicMonitor[] = [];
@@ -117,7 +110,7 @@ class ThermostatHandler implements ServiceHandler {
 
     // Store all required features
     const possibleLocalTemp = expose.features.find(ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE);
-    if (possibleLocalTemp === undefined) {
+    if (possibleLocalTemp === undefined || accessory.isPropertyExcluded(possibleLocalTemp.property)) {
       throw new Error('Local temperature feature not found.');
     }
     this.localTemperatureExpose = possibleLocalTemp as ExposesEntryWithProperty;

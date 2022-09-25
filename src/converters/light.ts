@@ -2,9 +2,8 @@ import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
   exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithFeatures,
   ExposesEntryWithNumericRangeProperty,
-  ExposesEntryWithProperty, exposesHasBinaryProperty, exposesHasFeatures,
-  exposesHasNumericRangeProperty,
-  exposesHasProperty, exposesIsPublished, ExposesKnownTypes,
+  ExposesEntryWithProperty, exposesHasAllRequiredFeatures, exposesHasBinaryProperty, exposesHasFeatures,
+  exposesHasNumericRangeProperty, exposesHasProperty, exposesIsPublished, ExposesKnownTypes, ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
@@ -19,6 +18,7 @@ import { EXP_COLOR_MODE } from '../experimental';
 export class LightCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     exposes.filter(e => e.type === ExposesKnownTypes.LIGHT && exposesHasFeatures(e)
+      && exposesHasAllRequiredFeatures(e, [LightHandler.PREDICATE_STATE], accessory.isPropertyExcluded)
       && !accessory.isServiceHandlerIdKnown(LightHandler.generateIdentifier(e.endpoint)))
       .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
   }
@@ -34,6 +34,9 @@ export class LightCreator implements ServiceCreator {
 }
 
 class LightHandler implements ServiceHandler {
+  public static readonly PREDICATE_STATE: ExposesPredicate = (e) => e.name === 'state' && exposesIsPublished(e) && exposesCanBeSet(e)
+    && exposesHasBinaryProperty(e);
+
   public static readonly KEY_COLOR_MODE = 'color_mode';
   public static readonly COLOR_MODE_TEMPERATURE = 'color_temp';
 
@@ -59,11 +62,11 @@ class LightHandler implements ServiceHandler {
       .map(e => e as ExposesEntryWithProperty);
 
     // On/off characteristic (required by HomeKit)
-    const potentialStateExpose = features.find(e => e.name === 'state' && exposesIsPublished(e) && exposesCanBeSet(e));
-    if (potentialStateExpose === undefined || !exposesHasBinaryProperty(potentialStateExpose)) {
+    const potentialStateExpose = features.find(e => LightHandler.PREDICATE_STATE(e) && !accessory.isPropertyExcluded(e.property));
+    if (potentialStateExpose === undefined) {
       throw new Error('Required "state" property not found for Light.');
     }
-    this.stateExpose = potentialStateExpose;
+    this.stateExpose = potentialStateExpose as ExposesEntryWithBinaryProperty;
 
     const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
 

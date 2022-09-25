@@ -1,7 +1,7 @@
 import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 import {
-  exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithFeatures, exposesHasBinaryProperty,
-  exposesHasFeatures, exposesIsPublished, ExposesKnownTypes,
+  exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithFeatures, exposesHasAllRequiredFeatures,
+  exposesHasBinaryProperty, exposesHasFeatures, exposesIsPublished, ExposesKnownTypes, ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
@@ -41,6 +41,7 @@ export class SwitchCreator implements ServiceCreator {
       exposeAsOutlet = true;
     }
     exposes.filter(e => e.type === ExposesKnownTypes.SWITCH && exposesHasFeatures(e)
+      && exposesHasAllRequiredFeatures(e, [SwitchHandler.PREDICATE_STATE], accessory.isPropertyExcluded)
       && !accessory.isServiceHandlerIdKnown(SwitchHandler.generateIdentifier(exposeAsOutlet, e.endpoint)))
       .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory, exposeAsOutlet));
   }
@@ -56,6 +57,9 @@ export class SwitchCreator implements ServiceCreator {
 }
 
 class SwitchHandler implements ServiceHandler {
+  public static readonly PREDICATE_STATE: ExposesPredicate = (e) => exposesHasBinaryProperty(e)
+    && e.name === 'state' && exposesCanBeSet(e) && exposesIsPublished(e);
+
   private monitor: CharacteristicMonitor;
   private stateExpose: ExposesEntryWithBinaryProperty;
 
@@ -65,8 +69,8 @@ class SwitchHandler implements ServiceHandler {
 
     this.identifier = SwitchHandler.generateIdentifier(exposeAsOutlet, endpoint);
 
-    const potentialStateExpose = expose.features.find(e => exposesHasBinaryProperty(e) && !accessory.isPropertyExcluded(e.property)
-      && e.name === 'state' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithBinaryProperty;
+    const potentialStateExpose = expose.features.find(e => SwitchHandler.PREDICATE_STATE(e)
+      && !accessory.isPropertyExcluded(e.property)) as ExposesEntryWithBinaryProperty;
     if (potentialStateExpose === undefined) {
       throw new Error(`Required "state" property not found for ${serviceTypeName}.`);
     }

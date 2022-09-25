@@ -1,4 +1,4 @@
-name: Analyse PR
+name: Analyze PR
 
 on:
   workflow_run:
@@ -16,7 +16,7 @@ jobs:
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Get PR info
-        uses: actions/github-script@v3.1.0
+        uses: actions/github-script@v6
         with:
           script: |
             var artifacts = await github.actions.listWorkflowRunArtifacts({
@@ -43,13 +43,13 @@ jobs:
           for info in pr/* ; do echo ::set-output name=$(basename $info)::$(cat $info); done
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: refs/pull/${{ steps.pr.outputs.number }}/merge
 
       - name: Get reports
-        uses: actions/github-script@v3.1.0
+        uses: actions/github-script@v6
         with:
           script: |
             var artifacts = await github.actions.listWorkflowRunArtifacts({
@@ -72,8 +72,13 @@ jobs:
       - name: Extract reports
         run: unzip reports.zip
 
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
       - name: SonarCloud
-        uses: SonarSource/sonarcloud-github-action@v1.5
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -87,7 +92,7 @@ jobs:
             -Dsonar.pullrequest.base=${{ steps.pr.outputs.base_ref }}
 
       - name: Publish Code Coverage
-        uses: codecov/codecov-action@v1.2.1
+        uses: codecov/codecov-action@v3
         with:
           override_pr: ${{ steps.pr.outputs.number }}
           override_commit: ${{ steps.pr.outputs.head_sha }}

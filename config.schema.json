@@ -9,8 +9,7 @@
       "definitions": {
          "exclude": {
             "type": "boolean",
-            "required": false,
-            "default": false
+            "required": false
          },
          "excluded_keys": {
             "title": "Excluded properties (keys)",
@@ -66,7 +65,6 @@
                      "type": {
                         "title": "Type",
                         "type": "string",
-                        "default": "switch",
                         "oneOf": [
                            {
                               "title": "Switch",
@@ -91,7 +89,6 @@
                      "type": {
                         "title": "Type",
                         "type": "string",
-                        "default": "occupancy",
                         "oneOf": [
                            {
                               "title": "Occupancy",
@@ -196,6 +193,7 @@
             "properties": {
                "exclude": {
                   "title": "Exclude devices by default",
+                  "default": false,
                   "$ref": "#/definitions/exclude"
                },
                "excluded_keys": {

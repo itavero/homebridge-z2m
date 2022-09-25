@@ -9,6 +9,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Fixed
 
 - Added additional checks to prevent certain errors from occuring during creation of a service handler. (see [#443](https://github.com/itavero/homebridge-z2m/issues/443))
+- Removed some default values from `config.schema.json` to prevent certain illegal configurations from being created by accident.
 
 ## [1.9.0] - 2022-06-29
 

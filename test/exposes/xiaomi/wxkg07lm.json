@@ -1,0 +1,48 @@
+[
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "numeric",
+    "name": "voltage",
+    "property": "voltage",
+    "access": 1,
+    "unit": "mV",
+    "description": "Voltage of the battery in millivolts"
+  },
+  {
+    "type": "enum",
+    "name": "action",
+    "property": "action",
+    "access": 1,
+    "values": [
+      "single_left",
+      "single_right",
+      "single_both",
+      "double_left",
+      "double_right",
+      "double_both",
+      "hold_left",
+      "hold_right",
+      "hold_both"
+    ],
+    "description": "Triggered action (e.g. a button click)"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

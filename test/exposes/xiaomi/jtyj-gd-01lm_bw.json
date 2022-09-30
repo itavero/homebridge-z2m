@@ -1,0 +1,107 @@
+[
+  {
+    "type": "binary",
+    "name": "smoke",
+    "property": "smoke",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether the device detected smoke"
+  },
+  {
+    "type": "binary",
+    "name": "battery_low",
+    "property": "battery_low",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates if the battery of this device is almost empty"
+  },
+  {
+    "type": "binary",
+    "name": "tamper",
+    "property": "tamper",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether the device is tampered"
+  },
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "enum",
+    "name": "sensitivity",
+    "property": "sensitivity",
+    "access": 3,
+    "values": [
+      "low",
+      "medium",
+      "high"
+    ]
+  },
+  {
+    "type": "numeric",
+    "name": "smoke_density",
+    "property": "smoke_density",
+    "access": 1
+  },
+  {
+    "type": "enum",
+    "name": "selftest",
+    "property": "selftest",
+    "access": 2,
+    "values": [
+      ""
+    ]
+  },
+  {
+    "type": "numeric",
+    "name": "voltage",
+    "property": "voltage",
+    "access": 1,
+    "unit": "mV",
+    "description": "Voltage of the battery in millivolts"
+  },
+  {
+    "type": "binary",
+    "name": "test",
+    "property": "test",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Test mode activated"
+  },
+  {
+    "type": "numeric",
+    "name": "device_temperature",
+    "property": "device_temperature",
+    "access": 1,
+    "unit": "°C",
+    "description": "Temperature of the device"
+  },
+  {
+    "type": "numeric",
+    "name": "power_outage_count",
+    "property": "power_outage_count",
+    "access": 1,
+    "description": "Number of power outages"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

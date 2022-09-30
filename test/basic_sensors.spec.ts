@@ -3,7 +3,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { loadExposesFromFile, ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 import { Characteristic, CharacteristicValue, WithUUID } from 'homebridge';
 
 describe('Basic Sensors', () => {
@@ -85,117 +85,6 @@ describe('Basic Sensors', () => {
   });
 
   describe('MiJia Honeywell smoke detector', () => {
-    const deviceModelJson = `{
-      "date_code": "20170314",
-      "definition": {
-        "description": "MiJia Honeywell smoke detector",
-        "exposes": [
-          {
-            "access": 1,
-            "description": "Indicates whether the device detected smoke",
-            "name": "smoke",
-            "property": "smoke",
-            "type": "binary",
-            "value_off": false,
-            "value_on": true
-          },
-          {
-            "access": 1,
-            "description": "Indicates if the battery of this device is almost empty",
-            "name": "battery_low",
-            "property": "battery_low",
-            "type": "binary",
-            "value_off": false,
-            "value_on": true
-          },
-          {
-            "access": 1,
-            "description": "Indicates whether the device is tampered",
-            "name": "tamper",
-            "property": "tamper",
-            "type": "binary",
-            "value_off": false,
-            "value_on": true
-          },
-          {
-            "access": 1,
-            "description": "Remaining battery in %",
-            "name": "battery",
-            "property": "battery",
-            "type": "numeric",
-            "unit": "%",
-            "value_max": 100,
-            "value_min": 0
-          },
-          {
-            "access": 7,
-            "name": "sensitivity",
-            "property": "sensitivity",
-            "type": "enum",
-            "values": [
-              "low",
-              "medium",
-              "high"
-            ]
-          },
-          {
-            "access": 1,
-            "name": "smoke_density",
-            "property": "smoke_density",
-            "type": "numeric"
-          },
-          {
-            "access": 2,
-            "name": "selftest",
-            "property": "selftest",
-            "type": "enum",
-            "values": [
-              ""
-            ]
-          },
-          {
-            "access": 1,
-            "description": "Link quality (signal strength)",
-            "name": "linkquality",
-            "property": "linkquality",
-            "type": "numeric",
-            "unit": "lqi",
-            "value_max": 255,
-            "value_min": 0
-          }
-        ],
-        "model": "JTYJ-GD-01LM/BW",
-        "vendor": "Xiaomi"
-      },
-      "endpoints": {
-        "1": {
-          "bindings": [],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify",
-              "genMultistateInput",
-              "ssIasZone",
-              "genAnalogInput",
-              "genPowerCfg"
-            ],
-            "output": [
-              "genOta"
-            ]
-          }
-        }
-      },
-      "friendly_name": "fire_kitchen",
-      "ieee_address": "0x00158d00033ea836",
-      "interview_completed": true,
-      "interviewing": false,
-      "network_address": 55792,
-      "power_source": "Battery",
-      "software_build_id": "3000-0001",
-      "supported": true,
-      "type": "EndDevice"
-    }`;
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -203,10 +92,9 @@ describe('Basic Sensors', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('xiaomi/jtyj-gd-01lm_bw.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
@@ -421,79 +309,6 @@ describe('Basic Sensors', () => {
   });
 
   describe('Aqara water leak sensor', () => {
-    const deviceModelJson = `{
-      "definition": {
-        "description": "Aqara water leak sensor",
-        "exposes": [
-          {
-            "access": 1,
-            "description": "Remaining battery in %",
-            "name": "battery",
-            "property": "battery",
-            "type": "numeric",
-            "unit": "%",
-            "value_max": 100,
-            "value_min": 0
-          },
-          {
-            "access": 1,
-            "description": "Indicates whether the device detected a water leak",
-            "name": "water_leak",
-            "property": "water_leak",
-            "type": "binary",
-            "value_off": false,
-            "value_on": true
-          },
-          {
-            "access": 1,
-            "description": "Indicates if the battery of this device is almost empty",
-            "name": "battery_low",
-            "property": "battery_low",
-            "type": "binary",
-            "value_off": false,
-            "value_on": true
-          },
-          {
-            "access": 1,
-            "description": "Indicates whether the device is tampered",
-            "name": "tamper",
-            "property": "tamper",
-            "type": "binary",
-            "value_off": false,
-            "value_on": true
-          },
-          {
-            "access": 1,
-            "description": "Link quality (signal strength)",
-            "name": "linkquality",
-            "property": "linkquality",
-            "type": "numeric",
-            "unit": "lqi",
-            "value_max": 255,
-            "value_min": 0
-          }
-        ],
-        "model": "SJCGQ11LM",
-        "vendor": "Xiaomi"
-      },
-      "endpoints": {
-        "1": {
-          "bindings": [],
-          "clusters": {
-            "input": [],
-            "output": []
-          }
-        }
-      },
-      "friendly_name": "waterleak_cellar",
-      "ieee_address": "0x00158d00044bebfa",
-      "interview_completed": false,
-      "interviewing": false,
-      "network_address": 32600,
-      "supported": true,
-      "type": "EndDevice"
-    }`;
-
     // Shared "state"
     let waterLeakSensorId = '';
     let deviceExposes: ExposesEntry[] = [];
@@ -502,18 +317,16 @@ describe('Basic Sensors', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('xiaomi/sjcgq11lm.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
         waterLeakSensorId = 'water_' + hap.Service.LeakSensor.UUID;
         newHarness.getOrAddHandler(hap.Service.LeakSensor, 'water', waterLeakSensorId)
           .addExpectedCharacteristic('water_leak', hap.Characteristic.LeakDetected)
-          .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
-          .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
+          .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery);
         newHarness.prepareCreationMocks();
 
         newHarness.callCreators(deviceExposes);
@@ -532,32 +345,22 @@ describe('Basic Sensors', () => {
 
     test('Update state', (): void => {
       expect(harness).toBeDefined();
-      harness.checkUpdateState('{"battery_low":false,"water_leak":false,"tamper":false}', waterLeakSensorId,
+      harness.checkUpdateState('{"battery_low":false,"water_leak":false}', waterLeakSensorId,
         new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED],
-          [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
         ]));
       harness.clearMocks();
-      harness.checkUpdateState('{"battery_low":true,"water_leak":false,"tamper":false}', waterLeakSensorId,
+      harness.checkUpdateState('{"battery_low":true,"water_leak":false}', waterLeakSensorId,
         new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED],
-          [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
         ]));
       harness.clearMocks();
-      harness.checkUpdateState('{"battery_low":false,"water_leak":true,"tamper":false}', waterLeakSensorId,
+      harness.checkUpdateState('{"battery_low":false,"water_leak":true}', waterLeakSensorId,
         new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_DETECTED],
-          [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
-        ]));
-      harness.clearMocks();
-      harness.checkUpdateState('{"battery_low":false,"water_leak":false,"tamper":true}', waterLeakSensorId,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
-          [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
-          [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED],
-          [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
         ]));
     });
   });

@@ -3,7 +3,7 @@ import { hap, setHap } from '../src/hap';
 import { ExposesEntry } from '../src/z2mModels';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { loadExposesFromFile, ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 
 describe('Action', () => {
   beforeAll(() => {
@@ -11,102 +11,6 @@ describe('Action', () => {
   });
 
   describe('Xiaomi WXKG07LM', () => {
-    const deviceModelJson = `{
-      "definition": {
-        "description": "Aqara D1 double key wireless wall switch",
-        "exposes": [
-          {
-            "access": 1,
-            "description": "Remaining battery in %",
-            "name": "battery",
-            "property": "battery",
-            "type": "numeric",
-            "unit": "%",
-            "value_max": 100,
-            "value_min": 0
-          },
-          {
-            "access": 1,
-            "description": "Triggered action (e.g. a button click)",
-            "name": "action",
-            "property": "action",
-            "type": "enum",
-            "values": [
-              "left",
-              "right",
-              "both",
-              "left_double",
-              "right_double",
-              "both_double",
-              "left_long",
-              "right_long",
-              "both_long"
-            ]
-          },
-          {
-            "access": 1,
-            "description": "Link quality (signal strength)",
-            "name": "linkquality",
-            "property": "linkquality",
-            "type": "numeric",
-            "unit": "lqi",
-            "value_max": 255,
-            "value_min": 0
-          }
-        ],
-        "model": "WXKG07LM",
-        "supports_ota": false,
-        "vendor": "Xiaomi"
-      },
-      "endpoints": {
-        "1": {
-          "bindings": [],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify",
-              "genOta",
-              "genMultistateInput"
-            ],
-            "output": [
-              "genBasic",
-              "genGroups",
-              "genIdentify",
-              "genScenes",
-              "genOta",
-              "genMultistateInput"
-            ]
-          },
-          "configured_reportings": []
-        },
-        "2": {
-          "bindings": [],
-          "clusters": {
-            "input": [],
-            "output": []
-          },
-          "configured_reportings": []
-        },
-        "3": {
-          "bindings": [],
-          "clusters": {
-            "input": [],
-            "output": []
-          },
-          "configured_reportings": []
-        }
-      },
-      "friendly_name": "kitchen double rocker",
-      "ieee_address": "0x00158d000651a32d",
-      "interview_completed": false,
-      "interviewing": false,
-      "model_id": "lumi.remote.b286acn02",
-      "network_address": 64135,
-      "power_source": "Battery",
-      "supported": true,
-      "type": "EndDevice"
-    }`;
-
     // Shared "state"
     const actionProperty = 'action';
     const serviceLabelCharacteristic = 'label';
@@ -119,10 +23,9 @@ describe('Action', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('xiaomi/wxkg07lm.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Expect 3 services (one for each value)
@@ -181,7 +84,7 @@ describe('Action', () => {
     test('Status update is handled: Left single', () => {
       expect(harness).toBeDefined();
       if (harness !== undefined) {
-        harness.checkSingleUpdateState('{"action":"left"}', serviceIdLeft,
+        harness.checkSingleUpdateState('{"action":"single_left"}', serviceIdLeft,
           hap.Characteristic.ProgrammableSwitchEvent, hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS);
       }
     });
@@ -189,7 +92,7 @@ describe('Action', () => {
     test('Status update is handled: Right double', () => {
       expect(harness).toBeDefined();
       if (harness !== undefined) {
-        harness.checkSingleUpdateState('{"action":"right_double"}', serviceIdRight,
+        harness.checkSingleUpdateState('{"action":"double_right"}', serviceIdRight,
           hap.Characteristic.ProgrammableSwitchEvent, hap.Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS);
       }
     });
@@ -197,7 +100,7 @@ describe('Action', () => {
     test('Status update is handled: Both long', () => {
       expect(harness).toBeDefined();
       if (harness !== undefined) {
-        harness.checkSingleUpdateState('{"action":"both_long"}', serviceIdBoth,
+        harness.checkSingleUpdateState('{"action":"hold_both"}', serviceIdBoth,
           hap.Characteristic.ProgrammableSwitchEvent, hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS);
       }
     });

@@ -1,0 +1,63 @@
+[
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "binary",
+    "name": "water_leak",
+    "property": "water_leak",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether the device detected a water leak"
+  },
+  {
+    "type": "binary",
+    "name": "battery_low",
+    "property": "battery_low",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates if the battery of this device is almost empty"
+  },
+  {
+    "type": "numeric",
+    "name": "voltage",
+    "property": "voltage",
+    "access": 1,
+    "unit": "mV",
+    "description": "Voltage of the battery in millivolts"
+  },
+  {
+    "type": "numeric",
+    "name": "device_temperature",
+    "property": "device_temperature",
+    "access": 1,
+    "unit": "°C",
+    "description": "Temperature of the device"
+  },
+  {
+    "type": "numeric",
+    "name": "power_outage_count",
+    "property": "power_outage_count",
+    "access": 1,
+    "description": "Number of power outages"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

@@ -3,7 +3,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { loadExposesFromFile, ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
 import { EXP_COLOR_MODE } from '../src/experimental';
 
 describe('Light', () => {
@@ -12,6 +12,7 @@ describe('Light', () => {
   });
 
   describe('Hue White and color ambiance Play Lightbar', () => {
+    // Use embedded device model JSON to test scenario with only color_xy (no color_hs)
     const deviceModelJson = `{
   "date_code": "20191218",
   "definition": {
@@ -529,114 +530,6 @@ describe('Light', () => {
   });
 
   describe('Hue White Single bulb B22', () => {
-    const deviceModelJson = `{
-      "date_code": "20191218",
-      "definition": {
-        "description": "Hue White Single bulb B22",
-        "exposes": [
-          {
-            "features": [
-              {
-                "access": 7,
-                "description": "On/off state of this light",
-                "name": "state",
-                "property": "state",
-                "type": "binary",
-                "value_off": "OFF",
-                "value_on": "ON",
-                "value_toggle": "TOGGLE"
-              },
-              {
-                "access": 7,
-                "description": "Brightness of this light",
-                "name": "brightness",
-                "property": "brightness",
-                "type": "numeric",
-                "value_max": 254,
-                "value_min": 0
-              }
-            ],
-            "type": "light"
-          },
-          {
-            "access": 2,
-            "description": "Triggers an effect on the light (e.g. make light blink for a few seconds)",
-            "name": "effect",
-            "property": "effect",
-            "type": "enum",
-            "values": [
-              "blink",
-              "breathe",
-              "okay",
-              "channel_change",
-              "finish_effect",
-              "stop_effect"
-            ]
-          },
-          {
-            "access": 1,
-            "description": "Link quality (signal strength)",
-            "name": "linkquality",
-            "property": "linkquality",
-            "type": "numeric",
-            "unit": "lqi",
-            "value_max": 255,
-            "value_min": 0
-          }
-        ],
-        "model": "8718696449691",
-        "vendor": "Philips"
-      },
-      "endpoints": {
-        "11": {
-          "bindings": [
-            {
-              "cluster": "genOnOff",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00124b001caa69fb",
-                "type": "endpoint"
-              }
-            }
-          ],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify",
-              "genGroups",
-              "genScenes",
-              "genOnOff",
-              "genLevelCtrl",
-              "touchlink"
-            ],
-            "output": [
-              "genOta"
-            ]
-          }
-        },
-        "242": {
-          "bindings": [],
-          "clusters": {
-            "input": [
-              "greenPower"
-            ],
-            "output": [
-              "greenPower"
-            ]
-          }
-        }
-      },
-      "friendly_name": "light_hobbyroom",
-      "ieee_address": "0x00178801033bbc80",
-      "interview_completed": true,
-      "interviewing": false,
-      "network_address": 7179,
-      "power_source": "Mains (single phase)",
-      "software_build_id": "1.50.2_r30933",
-      "supported": true,
-      "type": "Router"
-    }`;
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -644,9 +537,9 @@ describe('Light', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('philips/8718696449691.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
@@ -736,250 +629,6 @@ describe('Light', () => {
   });
 
   describe('OSRAM Lightify LED CLA60 E27 RGBW', () => {
-    const deviceModelJson = `{
-      "date_code": "20140331CNWT****",
-      "definition": {
-          "description": "LIGHTIFY LED CLA60 E27 RGBW",
-          "exposes": [
-              {
-                  "features": [
-                      {
-                          "access": 7,
-                          "description": "On/off state of this light",
-                          "name": "state",
-                          "property": "state",
-                          "type": "binary",
-                          "value_off": "OFF",
-                          "value_on": "ON",
-                          "value_toggle": "TOGGLE"
-                      },
-                      {
-                          "access": 7,
-                          "description": "Brightness of this light",
-                          "name": "brightness",
-                          "property": "brightness",
-                          "type": "numeric",
-                          "value_max": 254,
-                          "value_min": 0
-                      },
-                      {
-                          "access": 7,
-                          "description": "Color temperature of this light",
-                          "name": "color_temp",
-                          "presets": [
-                              {
-                                  "description": "Coolest temperature supported",
-                                  "name": "coolest",
-                                  "value": 150
-                              },
-                              {
-                                  "description": "Cool temperature (250 mireds / 4000 Kelvin)",
-                                  "name": "cool",
-                                  "value": 250
-                              },
-                              {
-                                  "description": "Neutral temperature (370 mireds / 2700 Kelvin)",
-                                  "name": "neutral",
-                                  "value": 370
-                              },
-                              {
-                                  "description": "Warm temperature (454 mireds / 2200 Kelvin)",
-                                  "name": "warm",
-                                  "value": 454
-                              },
-                              {
-                                  "description": "Warmest temperature supported",
-                                  "name": "warmest",
-                                  "value": 500
-                              }
-                          ],
-                          "property": "color_temp",
-                          "type": "numeric",
-                          "unit": "mired",
-                          "value_max": 500,
-                          "value_min": 150
-                      },
-                      {
-                          "access": 7,
-                          "description": "Color temperature after cold power on of this light",
-                          "name": "color_temp_startup",
-                          "presets": [
-                              {
-                                  "description": "Coolest temperature supported",
-                                  "name": "coolest",
-                                  "value": 150
-                              },
-                              {
-                                  "description": "Cool temperature (250 mireds / 4000 Kelvin)",
-                                  "name": "cool",
-                                  "value": 250
-                              },
-                              {
-                                  "description": "Neutral temperature (370 mireds / 2700 Kelvin)",
-                                  "name": "neutral",
-                                  "value": 370
-                              },
-                              {
-                                  "description": "Warm temperature (454 mireds / 2200 Kelvin)",
-                                  "name": "warm",
-                                  "value": 454
-                              },
-                              {
-                                  "description": "Warmest temperature supported",
-                                  "name": "warmest",
-                                  "value": 500
-                              },
-                              {
-                                  "description": "Restore previous color_temp on cold power on",
-                                  "name": "previous",
-                                  "value": 65535
-                              }
-                          ],
-                          "property": "color_temp_startup",
-                          "type": "numeric",
-                          "unit": "mired",
-                          "value_max": 500,
-                          "value_min": 150
-                      },
-                      {
-                          "description": "Color of this light in the CIE 1931 color space (x/y)",
-                          "features": [
-                              {
-                                  "access": 7,
-                                  "name": "x",
-                                  "property": "x",
-                                  "type": "numeric"
-                              },
-                              {
-                                  "access": 7,
-                                  "name": "y",
-                                  "property": "y",
-                                  "type": "numeric"
-                              }
-                          ],
-                          "name": "color_xy",
-                          "property": "color",
-                          "type": "composite"
-                      },
-                      {
-                          "description": "Color of this light expressed as hue/saturation",
-                          "features": [
-                              {
-                                  "access": 7,
-                                  "name": "hue",
-                                  "property": "hue",
-                                  "type": "numeric"
-                              },
-                              {
-                                  "access": 7,
-                                  "name": "saturation",
-                                  "property": "saturation",
-                                  "type": "numeric"
-                              }
-                          ],
-                          "name": "color_hs",
-                          "property": "color",
-                          "type": "composite"
-                      }
-                  ],
-                  "type": "light"
-              },
-              {
-                  "access": 2,
-                  "description": "Triggers an effect on the light (e.g. make light blink for a few seconds)",
-                  "name": "effect",
-                  "property": "effect",
-                  "type": "enum",
-                  "values": [
-                      "blink",
-                      "breathe",
-                      "okay",
-                      "channel_change",
-                      "finish_effect",
-                      "stop_effect"
-                  ]
-              },
-              {
-                  "access": 1,
-                  "description": "Link quality (signal strength)",
-                  "name": "linkquality",
-                  "property": "linkquality",
-                  "type": "numeric",
-                  "unit": "lqi",
-                  "value_max": 255,
-                  "value_min": 0
-              }
-          ],
-          "model": "AC03645",
-          "supports_ota": true,
-          "vendor": "OSRAM"
-      },
-      "endpoints": {
-          "3": {
-              "bindings": [
-                  {
-                      "cluster": "genOnOff",
-                      "target": {
-                          "endpoint": 1,
-                          "ieee_address": "0x00124b0021cc4c9b",
-                          "type": "endpoint"
-                      }
-                  },
-                  {
-                      "cluster": "genLevelCtrl",
-                      "target": {
-                          "endpoint": 1,
-                          "ieee_address": "0x00124b0021cc4c9b",
-                          "type": "endpoint"
-                      }
-                  }
-              ],
-              "clusters": {
-                  "input": [
-                      "touchlink",
-                      "genBasic",
-                      "genIdentify",
-                      "genGroups",
-                      "genScenes",
-                      "genOnOff",
-                      "genLevelCtrl",
-                      "lightingColorCtrl",
-                      "manuSpecificOsram"
-                  ],
-                  "output": [
-                      "genOta"
-                  ]
-              },
-              "configured_reportings": [
-                  {
-                      "attribute": "onOff",
-                      "cluster": "genOnOff",
-                      "maximum_report_interval": 3600,
-                      "minimum_report_interval": 0,
-                      "reportable_change": 0
-                  },
-                  {
-                      "attribute": "currentLevel",
-                      "cluster": "genLevelCtrl",
-                      "maximum_report_interval": 3600,
-                      "minimum_report_interval": 5,
-                      "reportable_change": 1
-                  }
-              ]
-          }
-      },
-      "friendly_name": "0x7cb03eaa00ac82f3",
-      "ieee_address": "0x7cb03eaa00ac82f3",
-      "interview_completed": true,
-      "interviewing": false,
-      "model_id": "CLA60 RGBW OSRAM",
-      "network_address": 35569,
-      "power_source": "Mains (single phase)",
-      "software_build_id": "V1.05.10",
-      "supported": true,
-      "type": "Router"
-  }`;
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -987,9 +636,9 @@ describe('Light', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('osram/ac03645.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
@@ -1010,8 +659,8 @@ describe('Light', () => {
 
         // Expect range of color temperature to be configured
         lightbulb.checkCharacteristicPropertiesHaveBeenSet('color_temp', {
-          minValue: 150,
-          maxValue: 500,
+          minValue: 153,
+          maxValue: 526,
           minStep: 1,
         });
         harness = newHarness;

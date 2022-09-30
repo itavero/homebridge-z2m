@@ -143,6 +143,7 @@ _*.json
 # Documentation and tests do not have to be in the package
 docs/
 test/
+exposes/
 dist/docgen/
 jest.config.js
 reports/

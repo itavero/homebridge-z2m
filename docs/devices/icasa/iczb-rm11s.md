@@ -23,6 +23,8 @@ the iCasa ICZB-RM11S
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

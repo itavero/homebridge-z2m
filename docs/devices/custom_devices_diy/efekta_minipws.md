@@ -23,6 +23,8 @@ the Custom devices (DiY) EFEKTA_miniPWS
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

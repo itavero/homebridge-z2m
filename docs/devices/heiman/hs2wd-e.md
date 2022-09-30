@@ -23,6 +23,8 @@ the HEIMAN HS2WD-E
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

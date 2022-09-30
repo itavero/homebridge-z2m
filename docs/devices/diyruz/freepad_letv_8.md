@@ -23,6 +23,8 @@ the DIYRuZ FreePad_LeTV_8
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

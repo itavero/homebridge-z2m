@@ -23,6 +23,8 @@ the Moes UFO-R11
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

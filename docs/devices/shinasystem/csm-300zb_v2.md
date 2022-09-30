@@ -23,6 +23,8 @@ the ShinaSystem CSM-300ZB_V2
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

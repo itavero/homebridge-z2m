@@ -23,6 +23,8 @@ the iCasa ICZB-KPD18S
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

@@ -18,6 +18,8 @@ If it doesn't exist yet, you can [open a new request](https://github.com/itavero
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

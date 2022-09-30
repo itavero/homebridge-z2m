@@ -23,6 +23,8 @@ the Dawon DNS KB-HD100-ZB
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

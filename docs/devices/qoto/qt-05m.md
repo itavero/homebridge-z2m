@@ -23,6 +23,8 @@ the QOTO QT-05M
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

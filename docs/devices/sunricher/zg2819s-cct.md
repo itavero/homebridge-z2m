@@ -23,6 +23,8 @@ the Sunricher ZG2819S-CCT
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

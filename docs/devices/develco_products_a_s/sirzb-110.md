@@ -23,6 +23,8 @@ the Develco Products A/S SIRZB-110
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

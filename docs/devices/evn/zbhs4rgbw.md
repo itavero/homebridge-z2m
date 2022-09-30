@@ -23,6 +23,8 @@ the EVN ZBHS4RGBW
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

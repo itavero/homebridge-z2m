@@ -14,8 +14,7 @@ import {
 export class LockCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     exposes.filter(e => e.type === ExposesKnownTypes.LOCK && exposesHasFeatures(e)
-      && exposesHasAllRequiredFeatures(e, [LockHandler.PREDICATE_LOCK_STATE, LockHandler.PREDICATE_STATE],
-        accessory.isPropertyExcluded.bind(accessory))
+      && exposesHasAllRequiredFeatures(e, [LockHandler.PREDICATE_LOCK_STATE, LockHandler.PREDICATE_STATE])
       && !accessory.isServiceHandlerIdKnown(LockHandler.generateIdentifier(e.endpoint)))
       .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
   }
@@ -55,15 +54,13 @@ class LockHandler implements ServiceHandler {
     const endpoint = expose.endpoint;
     this.identifier = LockHandler.generateIdentifier(endpoint);
 
-    const potentialStateExpose = expose.features.find(e => LockHandler.PREDICATE_STATE(e)
-      && !accessory.isPropertyExcluded(e.property)) as ExposesEntryWithBinaryProperty;
+    const potentialStateExpose = expose.features.find(e => LockHandler.PREDICATE_STATE(e)) as ExposesEntryWithBinaryProperty;
     if (potentialStateExpose === undefined) {
       throw new Error(`Required "${LockHandler.NAME_STATE}" property not found for Lock.`);
     }
     this.stateExpose = potentialStateExpose;
 
-    const potentialLockStateExpose = expose.features.find(e => LockHandler.PREDICATE_LOCK_STATE(e)
-      && !accessory.isPropertyExcluded(e.property)) as ExposesEntryWithEnumProperty;
+    const potentialLockStateExpose = expose.features.find(e => LockHandler.PREDICATE_LOCK_STATE(e)) as ExposesEntryWithEnumProperty;
     if (potentialLockStateExpose === undefined) {
       throw new Error(`Required "${LockHandler.NAME_LOCK_STATE}" property not found for Lock.`);
     }

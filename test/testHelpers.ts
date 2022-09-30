@@ -116,7 +116,6 @@ class TestCharacteristic {
     readonly topLevelProperty: string,
     readonly characteristic: WithUUID<{ new(): Characteristic }> | undefined,
     readonly doExpectSet: boolean,
-    readonly doExpectCheckPropertyExcluded: boolean,
   ) {
     if (characteristic !== undefined) {
       this.mock = mock<Characteristic>();
@@ -129,7 +128,7 @@ export declare type ServiceIdentifier = string | WithUUID<{ new(): Service }>;
 export interface ServiceHandlerContainer {
   addExpectedPropertyCheck(property: string): ServiceHandlerContainer;
   addExpectedCharacteristic(identifier: string, characteristic: WithUUID<{ new(): Characteristic }>, doExpectSet?: boolean,
-    property?: string, doExpectCheckPropertyExcluded?: boolean): ServiceHandlerContainer;
+    property?: string): ServiceHandlerContainer;
 
   checkCharacteristicPropertiesHaveBeenSet(identifier: string, props: Partial<CharacteristicProps>): ServiceHandlerContainer;
 
@@ -161,19 +160,18 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
 
   addExpectedPropertyCheck(property: string): ServiceHandlerContainer {
     expect(this.characteristics.has(property)).toBeFalsy();
-    this.characteristics.set(property, new TestCharacteristic(property, undefined, false, true));
+    this.characteristics.set(property, new TestCharacteristic(property, undefined, false));
 
     return this;
   }
 
   addExpectedCharacteristic(identifier: string, characteristic: WithUUID<{ new(): Characteristic }>, doExpectSet = false,
-    property: string | undefined = undefined, doExpectCheckPropertyExcluded = true): ServiceHandlerContainer {
+    property: string | undefined = undefined): ServiceHandlerContainer {
     if (property === undefined) {
       property = identifier;
     }
     expect(this.characteristics.has(identifier)).toBeFalsy();
-    this.characteristics.set(identifier, new TestCharacteristic(property, characteristic, doExpectSet,
-      doExpectCheckPropertyExcluded));
+    this.characteristics.set(identifier, new TestCharacteristic(property, characteristic, doExpectSet));
 
     return this;
   }
@@ -276,7 +274,6 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
 
 export class ServiceHandlersTestHarness {
   private readonly handlers = new Map<string, ServiceHandlerTestData>();
-  private readonly allowedValues = new Map<string, string[]>();
   private readonly experimentalFeatures = new Set<string>();
   private readonly converterConfig = new Map<string, unknown>();
   readonly accessoryMock: MockProxy<BasicAccessory> & BasicAccessory;
@@ -286,11 +283,6 @@ export class ServiceHandlersTestHarness {
     this.accessoryMock.log = mock<Logger>();
 
     // Mock implementations of certain accessory functions
-    this.accessoryMock.isValueAllowedForProperty
-      .mockImplementation((property: string, value: string): boolean => {
-        return this.allowedValues.get(property)?.includes(value) ?? true;
-      });
-
     this.accessoryMock.isExperimentalFeatureEnabled
       .mockImplementation((feature: string): boolean => {
         return this.experimentalFeatures.has(feature.trim().toLocaleUpperCase());
@@ -330,10 +322,6 @@ export class ServiceHandlersTestHarness {
           testHandler.serviceHandler = serviceHandler;
         }
       });
-  }
-
-  configureAllowedValues(property: string, values: string[]) {
-    this.allowedValues.set(property, values);
   }
 
   addExperimentalFeatureFlags(feature: string): void {
@@ -393,11 +381,6 @@ export class ServiceHandlersTestHarness {
   prepareCreationMocks(): void {
     for (const data of this.handlers.values()) {
       for (const mapping of data.characteristics.values()) {
-        if (mapping.doExpectCheckPropertyExcluded) {
-          when(this.accessoryMock.isPropertyExcluded)
-            .calledWith(mapping.topLevelProperty)
-            .mockReturnValue(false);
-        }
         if (mapping.characteristic !== undefined) {
           when(data.serviceMock.getCharacteristic)
             .calledWith(mapping.characteristic)
@@ -453,11 +436,6 @@ export class ServiceHandlersTestHarness {
       expect(this.accessoryMock.registerServiceHandler.mock.calls.length).toBeGreaterThanOrEqual(expectedCallsToRegisterServiceHandler);
 
       for (const mapping of handler.characteristics.values()) {
-        if (mapping.doExpectCheckPropertyExcluded) {
-          expect(this.accessoryMock.isPropertyExcluded)
-            .toBeCalledWith(mapping.topLevelProperty);
-        }
-
         if (mapping.characteristic !== undefined) {
           expect(handler.serviceMock.getCharacteristic)
             .toBeCalledWith(mapping.characteristic);

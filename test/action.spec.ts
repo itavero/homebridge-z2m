@@ -4,6 +4,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
 import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
+import { sanitizeAndFilterExposesEntries } from '../src/helpers';
 
 describe('Action', () => {
   beforeAll(() => {
@@ -32,17 +33,17 @@ describe('Action', () => {
         serviceIdLeft = `${hap.Service.StatelessProgrammableSwitch.UUID}#left`;
         const leftService = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'left', serviceIdLeft)
           .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         serviceIdRight = `${hap.Service.StatelessProgrammableSwitch.UUID}#right`;
         const rightService = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'right', serviceIdRight)
-          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty, false)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         serviceIdBoth = `${hap.Service.StatelessProgrammableSwitch.UUID}#both`;
         const bothService = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'both', serviceIdBoth)
-          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty, false)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         newHarness.prepareCreationMocks();
 
@@ -128,17 +129,17 @@ describe('Action', () => {
         serviceIdClose = `${hap.Service.StatelessProgrammableSwitch.UUID}#close`;
         const closeService = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'close', serviceIdClose)
           .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         serviceIdOpen = `${hap.Service.StatelessProgrammableSwitch.UUID}#open`;
         const openService = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'open', serviceIdOpen)
-          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty, false)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         serviceIdStop = `${hap.Service.StatelessProgrammableSwitch.UUID}#stop`;
         const stopService = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'stop', serviceIdStop)
-          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty, false)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         newHarness.prepareCreationMocks();
 
@@ -226,8 +227,8 @@ describe('Action', () => {
         expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
-        // For this test set explicit included values (to check that function from the accessory is used correctly)
-        newHarness.configureAllowedValues('action', [
+        // For this test explicitly include certain values (to check that function from the accessory is used correctly)
+        const allowedActionValues = [
           'button_1_hold',
           'button_1_release',
           'button_1_single',
@@ -241,34 +242,40 @@ describe('Action', () => {
           'button_6_hold',
           'button_6_release',
           'button_6_single',
-          'button_6_double']);
+          'button_6_double'];
+        deviceExposes = sanitizeAndFilterExposesEntries(deviceExposes, undefined, e => {
+          if (e.property === 'action' && Array.isArray(e.values)) {
+            return e.values.filter(v => allowedActionValues.includes(v));
+          }
+          return e.values ?? [];
+        });
 
 
         // Expect 4 services (one for each button)
         serviceIdButton1 = `${hap.Service.StatelessProgrammableSwitch.UUID}#button_1`;
         const serviceButton1 = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'button_1', serviceIdButton1)
           .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         serviceIdButton2 = `${hap.Service.StatelessProgrammableSwitch.UUID}#button_2`;
         const serviceButton2 = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'button_2', serviceIdButton2)
-          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty, false)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         serviceIdButton5 = `${hap.Service.StatelessProgrammableSwitch.UUID}#button_5`;
         const serviceButton5 = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'button_5', serviceIdButton5)
-          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty, false)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         serviceIdButton5E = `${hap.Service.StatelessProgrammableSwitch.UUID}#button_5#ext1`;
         const serviceButton5E = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'button_5#ext1', serviceIdButton5E)
-          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty, false)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         serviceIdButton6 = `${hap.Service.StatelessProgrammableSwitch.UUID}#button_6`;
         const serviceButton6 = newHarness.getOrAddHandler(hap.Service.StatelessProgrammableSwitch, 'button_6', serviceIdButton6)
-          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty, false)
-          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false, undefined, false);
+          .addExpectedCharacteristic(actionProperty, hap.Characteristic.ProgrammableSwitchEvent, false, actionProperty)
+          .addExpectedCharacteristic(serviceLabelCharacteristic, hap.Characteristic.ServiceLabelIndex, false);
 
         newHarness.prepareCreationMocks();
 

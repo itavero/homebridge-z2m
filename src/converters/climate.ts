@@ -87,14 +87,12 @@ class ThermostatHandler implements ServiceHandler {
   }
 
   public static hasRequiredFeatures(accessory: BasicAccessory, e: ExposesEntryWithFeatures): boolean {
-    if (e.features.findIndex(f => f.name === 'occupied_cooling_setpoint' && !accessory.isPropertyExcluded(f.property)) >= 0) {
+    if (e.features.findIndex(f => f.name === 'occupied_cooling_setpoint') >= 0) {
       // For now ignore devices that have a cooling setpoint as I haven't figured our how to handle this correctly in HomeKit.
       return false;
     }
 
-    return exposesHasAllRequiredFeatures(e,
-      [ThermostatHandler.PREDICATE_SETPOINT, ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE],
-      accessory.isPropertyExcluded.bind(accessory));
+    return exposesHasAllRequiredFeatures(e, [ThermostatHandler.PREDICATE_SETPOINT, ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE]);
   }
 
   private monitors: CharacteristicMonitor[] = [];
@@ -110,25 +108,19 @@ class ThermostatHandler implements ServiceHandler {
 
     // Store all required features
     const possibleLocalTemp = expose.features.find(ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE);
-    if (possibleLocalTemp === undefined || accessory.isPropertyExcluded(possibleLocalTemp.property)) {
+    if (possibleLocalTemp === undefined) {
       throw new Error('Local temperature feature not found.');
     }
     this.localTemperatureExpose = possibleLocalTemp as ExposesEntryWithProperty;
 
     const possibleSetpoint = expose.features.find(ThermostatHandler.PREDICATE_SETPOINT);
-    if (possibleSetpoint === undefined || accessory.isPropertyExcluded(possibleSetpoint.property)) {
+    if (possibleSetpoint === undefined) {
       throw new Error('Setpoint feature not found.');
     }
     this.setpointExpose = possibleSetpoint as ExposesEntryWithProperty;
 
     this.targetModeExpose = expose.features.find(ThermostatHandler.PREDICATE_TARGET_MODE) as ExposesEntryWithEnumProperty;
-    if (this.targetModeExpose !== undefined && accessory.isPropertyExcluded(this.targetModeExpose.property)) {
-      this.targetModeExpose = undefined;
-    }
     this.currentStateExpose = expose.features.find(ThermostatHandler.PREDICATE_CURRENT_STATE) as ExposesEntryWithEnumProperty;
-    if (this.currentStateExpose !== undefined && accessory.isPropertyExcluded(this.currentStateExpose.property)) {
-      this.currentStateExpose = undefined;
-    }
     if (this.targetModeExpose === undefined || this.currentStateExpose === undefined) {
       if (this.targetModeExpose !== undefined) {
         this.accessory.log.debug(`${accessory.displayName}: ignore ${this.targetModeExpose.property}; no current state exposed.`);

@@ -14,7 +14,7 @@ import {
 export class BatteryCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     const endpointMap = groupByEndpoint(exposes.filter(e =>
-      exposesHasProperty(e) && exposesIsPublished(e) && !accessory.isPropertyExcluded(e.property) && (
+      exposesHasProperty(e) && exposesIsPublished(e) && (
         (e.name === 'battery' && exposesHasNumericRangeProperty(e))
         || (e.name === 'battery_low' && exposesHasBinaryProperty(e))
       )).map(e => e as ExposesEntryWithProperty));

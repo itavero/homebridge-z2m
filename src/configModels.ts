@@ -91,6 +91,7 @@ export const isMqttConfiguration = (x: any): x is MqttConfiguration => (
 export interface BaseDeviceConfiguration extends Record<string, unknown> {
   exclude?: boolean;
   excluded_keys?: string[];
+  excluded_endpoints?: string[];
   values?: PropertyValueConfiguration[];
   converters?: object;
   experimental?: string[];
@@ -111,6 +112,11 @@ export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration 
 
   // Optional excluded_keys which must be an array of strings if present
   if (x.excluded_keys !== undefined && !isStringArray(x.excluded_keys)) {
+    return false;
+  }
+
+  // Optional excluded_endpoints which must be an array of strings if present
+  if (x.excluded_endpoints !== undefined && !isStringArray(x.excluded_endpoints)) {
     return false;
   }
 

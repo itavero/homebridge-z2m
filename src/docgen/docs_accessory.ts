@@ -77,16 +77,6 @@ export class DocsAccessory implements BasicAccessory {
     // Do nothing
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  isPropertyExcluded(property: string | undefined): boolean {
-    return false;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  isValueAllowedForProperty(property: string, value: string): boolean {
-    return true;
-  }
-
   registerServiceHandler(handler: ServiceHandler): void {
     this.handlerIds.add(handler.identifier);
   }

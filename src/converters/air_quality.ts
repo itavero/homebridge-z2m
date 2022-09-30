@@ -8,9 +8,8 @@ import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebrid
 
 export class AirQualitySensorCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    const endpointMap = groupByEndpoint(exposes.filter(e =>
-      exposesHasProperty(e) && exposesIsPublished(e) && !accessory.isPropertyExcluded(e.property) &&
-      AirQualitySensorHandler.propertyFactories.find((f) => f.canUseExposesEntry(e)) !== undefined,
+    const endpointMap = groupByEndpoint(exposes.filter(e => exposesHasProperty(e) && exposesIsPublished(e)
+      && AirQualitySensorHandler.propertyFactories.find((f) => f.canUseExposesEntry(e)) !== undefined,
     ).map(e => e as ExposesEntryWithProperty));
     endpointMap.forEach((value, key) => {
       if (!accessory.isServiceHandlerIdKnown(AirQualitySensorHandler.generateIdentifier(key))) {

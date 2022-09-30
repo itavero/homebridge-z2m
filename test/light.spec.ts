@@ -171,8 +171,8 @@ describe('Light', () => {
           .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
           .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true)
           .addExpectedPropertyCheck('color')
-          .addExpectedCharacteristic('hue', hap.Characteristic.Hue, true, undefined, false)
-          .addExpectedCharacteristic('saturation', hap.Characteristic.Saturation, true, undefined, false);
+          .addExpectedCharacteristic('hue', hap.Characteristic.Hue, true)
+          .addExpectedCharacteristic('saturation', hap.Characteristic.Saturation, true);
         newHarness.prepareCreationMocks();
 
         newHarness.callCreators(deviceExposes);
@@ -474,8 +474,8 @@ describe('Light', () => {
           .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
           .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true)
           .addExpectedPropertyCheck('color')
-          .addExpectedCharacteristic('hue', hap.Characteristic.Hue, true, undefined, false)
-          .addExpectedCharacteristic('saturation', hap.Characteristic.Saturation, true, undefined, false);
+          .addExpectedCharacteristic('hue', hap.Characteristic.Hue, true)
+          .addExpectedCharacteristic('saturation', hap.Characteristic.Saturation, true);
         newHarness.prepareCreationMocks();
 
         newHarness.callCreators(deviceExposes);
@@ -647,8 +647,8 @@ describe('Light', () => {
           .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
           .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true)
           .addExpectedPropertyCheck('color')
-          .addExpectedCharacteristic('hue', hap.Characteristic.Hue, true, undefined, false)
-          .addExpectedCharacteristic('saturation', hap.Characteristic.Saturation, true, undefined, false);
+          .addExpectedCharacteristic('hue', hap.Characteristic.Hue, true)
+          .addExpectedCharacteristic('saturation', hap.Characteristic.Saturation, true);
         newHarness.prepareCreationMocks();
 
         newHarness.callCreators(deviceExposes);

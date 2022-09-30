@@ -28,8 +28,8 @@ describe('Cover', () => {
         // Check service creation
         const windowCovering = newHarness.getOrAddHandler(hap.Service.WindowCovering)
           .addExpectedCharacteristic('position', hap.Characteristic.CurrentPosition, false)
-          .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true, undefined, false)
-          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false, undefined, false);
+          .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true)
+          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false);
         newHarness.prepareCreationMocks();
 
         const positionCharacteristicMock = windowCovering.getCharacteristicMock('position');
@@ -151,10 +151,10 @@ describe('Cover', () => {
         // Check service creation
         const windowCovering = newHarness.getOrAddHandler(hap.Service.WindowCovering)
           .addExpectedCharacteristic('position', hap.Characteristic.CurrentPosition, false)
-          .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true, undefined, false)
-          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false, undefined, false)
+          .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true)
+          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false)
           .addExpectedCharacteristic('tilt', hap.Characteristic.CurrentHorizontalTiltAngle, false)
-          .addExpectedCharacteristic('target_tilt', hap.Characteristic.TargetHorizontalTiltAngle, true, undefined, false);
+          .addExpectedCharacteristic('target_tilt', hap.Characteristic.TargetHorizontalTiltAngle, true);
         newHarness.prepareCreationMocks();
 
         const positionCharacteristicMock = windowCovering.getCharacteristicMock('position');
@@ -261,8 +261,8 @@ describe('Cover', () => {
         // Check service creation
         const windowCovering = newHarness.getOrAddHandler(hap.Service.WindowCovering)
           .addExpectedCharacteristic('position', hap.Characteristic.CurrentPosition, false, 'tilt')
-          .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true, undefined, false)
-          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false, undefined, false);
+          .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true)
+          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false);
         newHarness.prepareCreationMocks();
 
         const positionCharacteristicMock = windowCovering.getCharacteristicMock('position');

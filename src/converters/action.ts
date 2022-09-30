@@ -9,16 +9,14 @@ import { SwitchActionHelper, SwitchActionMapping } from './action_helper';
 
 export class StatelessProgrammableSwitchCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    const actionExposes = exposes.filter(e => exposesIsPublished(e) && exposesHasEnumProperty(e) && e.name === 'action'
-      && !accessory.isPropertyExcluded(e.property))
+    const actionExposes = exposes.filter(e => exposesIsPublished(e) && exposesHasEnumProperty(e) && e.name === 'action')
       .map(e => e as ExposesEntryWithEnumProperty);
 
     for (const expose of actionExposes) {
       // Each action expose can map to multiple instances of a Stateless Programmable Switch,
       // depending on the values provided.
       try {
-        const allowedValues = expose.values.filter(v => accessory.isValueAllowedForProperty(expose.property, v));
-        const mappings = SwitchActionHelper.getInstance().valuesToNumberedMappings(allowedValues).filter(m => m.isValidMapping());
+        const mappings = SwitchActionHelper.getInstance().valuesToNumberedMappings(expose.values).filter(m => m.isValidMapping());
         const logEntries: string[] = [`Mapping of property '${expose.property}' of device '${accessory.displayName}':`];
         for (const mapping of mappings) {
           try {

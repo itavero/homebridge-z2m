@@ -6,6 +6,14 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- Properties/exposes information can now be excluded based on the `endpoint`, using the `excluded_endpoints` configuration option. (relates to [#517](https://github.com/itavero/homebridge-z2m/issues/517))
+
+### Changed
+
+- Exposes information is now filtered before passing it to the service handlers. This should make the behavior more consistent and reduce complexity of the service handlers for improved maintainability.
+
 ## [1.9.2] - 2022-10-01
 
 ### Fixed

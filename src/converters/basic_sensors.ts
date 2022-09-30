@@ -66,7 +66,7 @@ export class BasicSensorCreator implements ServiceCreator {
   }
 
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    const endpointMap = groupByEndpoint(exposes.filter(e => exposesHasProperty(e) && !accessory.isPropertyExcluded(e.property)
+    const endpointMap = groupByEndpoint(exposes.filter(e => exposesHasProperty(e)
       && exposesIsPublished(e)).map(e => e as ExposesEntryWithProperty));
 
     endpointMap.forEach((value, key) => {

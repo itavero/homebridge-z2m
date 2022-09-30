@@ -15,10 +15,6 @@ export interface BasicAccessory {
 
     queueKeyForGetAction(key: string | string[]): void;
 
-    isPropertyExcluded(property: string | undefined): boolean;
-
-    isValueAllowedForProperty(property: string, value: string): boolean;
-
     registerServiceHandler(handler: ServiceHandler): void;
 
     isServiceHandlerIdKnown(identifier: string): boolean;

@@ -18,7 +18,7 @@ import { EXP_COLOR_MODE } from '../experimental';
 export class LightCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     exposes.filter(e => e.type === ExposesKnownTypes.LIGHT && exposesHasFeatures(e)
-      && exposesHasAllRequiredFeatures(e, [LightHandler.PREDICATE_STATE], accessory.isPropertyExcluded.bind(accessory))
+      && exposesHasAllRequiredFeatures(e, [LightHandler.PREDICATE_STATE])
       && !accessory.isServiceHandlerIdKnown(LightHandler.generateIdentifier(e.endpoint)))
       .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
   }
@@ -58,11 +58,11 @@ class LightHandler implements ServiceHandler {
     const endpoint = expose.endpoint;
     this.identifier = LightHandler.generateIdentifier(endpoint);
 
-    const features = expose.features.filter(e => exposesHasProperty(e) && !accessory.isPropertyExcluded(e.property))
+    const features = expose.features.filter(e => exposesHasProperty(e))
       .map(e => e as ExposesEntryWithProperty);
 
     // On/off characteristic (required by HomeKit)
-    const potentialStateExpose = features.find(e => LightHandler.PREDICATE_STATE(e) && !accessory.isPropertyExcluded(e.property));
+    const potentialStateExpose = features.find(e => LightHandler.PREDICATE_STATE(e));
     if (potentialStateExpose === undefined) {
       throw new Error('Required "state" property not found for Light.');
     }
@@ -84,7 +84,7 @@ class LightHandler implements ServiceHandler {
     this.tryCreateBrightness(features, service);
 
     // Color: Hue/Saturation or X/Y
-    this.tryCreateColor(expose, service, accessory);
+    this.tryCreateColor(expose, service);
 
     // Color temperature
     this.tryCreateColorTemperature(features, service);
@@ -137,17 +137,17 @@ class LightHandler implements ServiceHandler {
     this.monitors.forEach(m => m.callback(state));
   }
 
-  private tryCreateColor(expose: ExposesEntryWithFeatures, service: Service, accessory: BasicAccessory) {
+  private tryCreateColor(expose: ExposesEntryWithFeatures, service: Service) {
     // First see if color_hs is present
     this.colorExpose = expose.features.find(e => exposesHasFeatures(e)
       && e.type === ExposesKnownTypes.COMPOSITE && e.name === 'color_hs'
-      && e.property !== undefined && !accessory.isPropertyExcluded(e.property)) as ExposesEntryWithFeatures | undefined;
+      && e.property !== undefined) as ExposesEntryWithFeatures | undefined;
 
     // Otherwise check for color_xy
     if (this.colorExpose === undefined) {
       this.colorExpose = expose.features.find(e => exposesHasFeatures(e)
         && e.type === ExposesKnownTypes.COMPOSITE && e.name === 'color_xy'
-        && e.property !== undefined && !accessory.isPropertyExcluded(e.property)) as ExposesEntryWithFeatures | undefined;
+        && e.property !== undefined) as ExposesEntryWithFeatures | undefined;
     }
 
     if (this.colorExpose !== undefined && this.colorExpose.property !== undefined) {

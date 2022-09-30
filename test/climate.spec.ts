@@ -29,7 +29,7 @@ describe('Climate', () => {
           .addExpectedCharacteristic('local_temperature', hap.Characteristic.CurrentTemperature)
           .addExpectedCharacteristic('system_mode', hap.Characteristic.TargetHeatingCoolingState, true)
           .addExpectedCharacteristic('running_state', hap.Characteristic.CurrentHeatingCoolingState)
-          .addExpectedCharacteristic('unit', hap.Characteristic.TemperatureDisplayUnits, false, undefined, false);
+          .addExpectedCharacteristic('unit', hap.Characteristic.TemperatureDisplayUnits);
         newHarness.prepareCreationMocks();
 
         newHarness.callCreators(deviceExposes);

@@ -3,7 +3,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { ServiceHandlersTestHarness, testJsonDeviceListEntry, testJsonExposes } from './testHelpers';
+import { loadExposesFromFile, ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
 import { Characteristic, CharacteristicValue, WithUUID } from 'homebridge';
 
 describe('Basic Sensors', () => {
@@ -12,68 +12,6 @@ describe('Basic Sensors', () => {
   });
 
   describe('Aqara T1 temperature, humidity and pressure sensor', () => {
-    const deviceExposesJson = `[
-      {
-        "type": "numeric",
-        "name": "temperature",
-        "property": "temperature",
-        "access": 1,
-        "unit": "°C",
-        "description": "Measured temperature value"
-      },
-      {
-        "type": "numeric",
-        "name": "humidity",
-        "property": "humidity",
-        "access": 1,
-        "unit": "%",
-        "description": "Measured relative humidity"
-      },
-      {
-        "type": "numeric",
-        "name": "pressure",
-        "property": "pressure",
-        "access": 1,
-        "unit": "hPa",
-        "description": "The measured atmospheric pressure"
-      },
-      {
-        "type": "numeric",
-        "name": "device_temperature",
-        "property": "device_temperature",
-        "access": 1,
-        "unit": "°C",
-        "description": "Temperature of the device"
-      },
-      {
-        "type": "numeric",
-        "name": "battery",
-        "property": "battery",
-        "access": 1,
-        "unit": "%",
-        "description": "Remaining battery in %",
-        "value_min": 0,
-        "value_max": 100
-      },
-      {
-        "type": "numeric",
-        "name": "voltage",
-        "property": "voltage",
-        "access": 1,
-        "unit": "mV",
-        "description": "Voltage of the battery in millivolts"
-      },
-      {
-        "type": "numeric",
-        "name": "linkquality",
-        "property": "linkquality",
-        "access": 1,
-        "unit": "lqi",
-        "description": "Link quality (signal strength)",
-        "value_min": 0,
-        "value_max": 255
-      }
-    ]`;
 
     // Shared "state"
     const airPressureServiceId = 'E863F00A-079E-48FF-8F27-9C2605A29F52';
@@ -84,9 +22,9 @@ describe('Basic Sensors', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        deviceExposes = testJsonExposes(deviceExposesJson);
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('xiaomi/wsdcgq12lm.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
@@ -330,91 +268,6 @@ describe('Basic Sensors', () => {
   });
 
   describe('Aqara PIR sensor', () => {
-    const deviceModelJson = `{
-      "date_code": "20170627",
-      "definition": {
-         "description": "Aqara human body movement and illuminance sensor",
-         "exposes": [
-            {
-               "access": 1,
-               "description": "Remaining battery in %",
-               "name": "battery",
-               "property": "battery",
-               "type": "numeric",
-               "unit": "%",
-               "value_max": 100,
-               "value_min": 0
-            },
-            {
-               "access": 1,
-               "description": "Indicates whether the device detected occupancy",
-               "name": "occupancy",
-               "property": "occupancy",
-               "type": "binary",
-               "value_off": false,
-               "value_on": true
-            },
-            {
-               "access": 1,
-               "description": "Measured illuminance in lux",
-               "name": "illuminance_lux",
-               "property": "illuminance",
-               "type": "numeric",
-               "unit": "lx"
-            },
-            {
-               "access": 1,
-               "description": "Measured illuminance in lux",
-               "name": "illuminance",
-               "property": "illuminance",
-               "type": "numeric",
-               "unit": "lx"
-            },
-            {
-               "access": 1,
-               "description": "Link quality (signal strength)",
-               "name": "linkquality",
-               "property": "linkquality",
-               "type": "numeric",
-               "unit": "lqi",
-               "value_max": 255,
-               "value_min": 0
-            }
-         ],
-         "model": "RTCGQ11LM",
-         "vendor": "Xiaomi"
-      },
-      "endpoints": {
-         "1": {
-            "bindings": [],
-            "clusters": {
-               "input": [
-                  "genBasic",
-                  "msOccupancySensing",
-                  "msIlluminanceMeasurement",
-                  "ssIasZone",
-                  "genPowerCfg",
-                  "genIdentify"
-               ],
-               "output": [
-                  "genBasic",
-                  "genOta"
-               ]
-            },
-            "configured_reportings": []
-         }
-      },
-      "friendly_name": "pir_garage",
-      "ieee_address": "0x00158d000414197f",
-      "interview_completed": true,
-      "interviewing": false,
-      "model_id": "lumi.sensor_motion.aq2",
-      "network_address": 48199,
-      "power_source": "Battery",
-      "software_build_id": "3000-0001",
-      "supported": true,
-      "type": "EndDevice"
-   }`;
 
     describe('as Occupancy Sensor', () => {
       // Shared "state"
@@ -424,10 +277,9 @@ describe('Basic Sensors', () => {
       beforeEach(() => {
         // Only test service creation for first test case and reuse harness afterwards
         if (deviceExposes.length === 0 && harness === undefined) {
-          // Test JSON Device List entry
-          const device = testJsonDeviceListEntry(deviceModelJson);
-          deviceExposes = device?.definition?.exposes ?? [];
-          expect(deviceExposes?.length).toBeGreaterThan(0);
+          // Load exposes from JSON
+          deviceExposes = loadExposesFromFile('xiaomi/rtcgq11lm.json');
+          expect(deviceExposes.length).toBeGreaterThan(0);
           const newHarness = new ServiceHandlersTestHarness();
 
           // Check service creation
@@ -483,10 +335,9 @@ describe('Basic Sensors', () => {
       beforeEach(() => {
         // Only test service creation for first test case and reuse harness afterwards
         if (deviceExposes.length === 0 && harness === undefined) {
-          // Test JSON Device List entry
-          const device = testJsonDeviceListEntry(deviceModelJson);
-          deviceExposes = device?.definition?.exposes ?? [];
-          expect(deviceExposes?.length).toBeGreaterThan(0);
+          // Load exposes from JSON
+          deviceExposes = loadExposesFromFile('xiaomi/rtcgq11lm.json');
+          expect(deviceExposes.length).toBeGreaterThan(0);
           const newHarness = new ServiceHandlersTestHarness();
 
           // Check service creation
@@ -528,71 +379,6 @@ describe('Basic Sensors', () => {
   });
 
   describe('Aqara contact sensor', () => {
-    const deviceModelJson = `{
-      "date_code": "20161128",
-      "definition": {
-        "description": "Aqara door & window contact sensor",
-        "exposes": [
-          {
-            "access": 1,
-            "description": "Remaining battery in %",
-            "name": "battery",
-            "property": "battery",
-            "type": "numeric",
-            "unit": "%",
-            "value_max": 100,
-            "value_min": 0
-          },
-          {
-            "access": 1,
-            "description": "Indicates if the contact is closed (= true) or open (= false)",
-            "name": "contact",
-            "property": "contact",
-            "type": "binary",
-            "value_off": true,
-            "value_on": false
-          },
-          {
-            "access": 1,
-            "description": "Link quality (signal strength)",
-            "name": "linkquality",
-            "property": "linkquality",
-            "type": "numeric",
-            "unit": "lqi",
-            "value_max": 255,
-            "value_min": 0
-          }
-        ],
-        "model": "MCCGQ11LM",
-        "vendor": "Xiaomi"
-      },
-      "endpoints": {
-        "1": {
-          "bindings": [],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify",
-              "genOnOff"
-            ],
-            "output": [
-              "genBasic",
-              "genGroups"
-            ]
-          }
-        }
-      },
-      "friendly_name": "door_shed",
-      "ieee_address": "0x00158d0003e7430e",
-      "interview_completed": true,
-      "interviewing": false,
-      "network_address": 55705,
-      "power_source": "Battery",
-      "software_build_id": "3000-0001",
-      "supported": true,
-      "type": "EndDevice"
-    }`;
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -600,10 +386,9 @@ describe('Basic Sensors', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('xiaomi/mccgq11lm.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
@@ -778,87 +563,6 @@ describe('Basic Sensors', () => {
   });
 
   describe('Oujiabao Gas and carbon monoxide alarm', () => {
-    const deviceModelJson = `{
-      "date_code": "20160825        ",
-      "definition": {
-        "description": "Gas and carbon monoxide alarm",
-        "exposes": [
-          {
-            "access": 1,
-            "description": "Indicates whether the device detected gas",
-            "name": "gas",
-            "property": "gas",
-            "type": "binary",
-            "value_off": false,
-            "value_on": true
-          },
-          {
-            "access": 1,
-            "description": "Indicates if CO2 (carbon monoxide) is detected",
-            "name": "carbon_monoxide",
-            "property": "carbon_monoxide",
-            "type": "binary",
-            "value_off": false,
-            "value_on": true
-          },
-          {
-            "access": 1,
-            "description": "Indicates whether the device is tampered",
-            "name": "tamper",
-            "property": "tamper",
-            "type": "binary",
-            "value_off": false,
-            "value_on": true
-          },
-          {
-            "access": 1,
-            "description": "Indicates if the battery of this device is almost empty",
-            "name": "battery_low",
-            "property": "battery_low",
-            "type": "binary",
-            "value_off": false,
-            "value_on": true
-          },
-          {
-            "access": 1,
-            "description": "Link quality (signal strength)",
-            "name": "linkquality",
-            "property": "linkquality",
-            "type": "numeric",
-            "unit": "lqi",
-            "value_max": 255,
-            "value_min": 0
-          }
-        ],
-        "model": "CR701-YZ",
-        "vendor": "Oujiabao"
-      },
-      "endpoints": {
-        "19": {
-          "bindings": [],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify",
-              "ssIasZone"
-            ],
-            "output": [
-              "genIdentify",
-              "genAlarms"
-            ]
-          }
-        }
-      },
-      "friendly_name": "gas_metering",
-      "ieee_address": "0x00124b0013df5d59",
-      "interview_completed": false,
-      "interviewing": false,
-      "network_address": 1743,
-      "power_source": "Mains (single phase)",
-      "supported": true,
-      "type": "EndDevice"
-    }`;
-
     // Shared "state"
     let gasLeakSensorId = '';
     let deviceExposes: ExposesEntry[] = [];
@@ -867,10 +571,9 @@ describe('Basic Sensors', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('oujiabao/cr701-yz.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
@@ -953,56 +656,6 @@ describe('Basic Sensors', () => {
   });
 
   describe('HEIMAN HS1VS-N', () => {
-    const deviceExposesJson = `[
-      {
-        "type": "binary",
-        "name": "vibration",
-        "property": "vibration",
-        "access": 1,
-        "value_on": true,
-        "value_off": false,
-        "description": "Indicates whether the device detected vibration"
-      },
-      {
-        "type": "binary",
-        "name": "battery_low",
-        "property": "battery_low",
-        "access": 1,
-        "value_on": true,
-        "value_off": false,
-        "description": "Indicates if the battery of this device is almost empty"
-      },
-      {
-        "type": "binary",
-        "name": "tamper",
-        "property": "tamper",
-        "access": 1,
-        "value_on": true,
-        "value_off": false,
-        "description": "Indicates whether the device is tampered"
-      },
-      {
-        "type": "numeric",
-        "name": "battery",
-        "property": "battery",
-        "access": 1,
-        "unit": "%",
-        "description": "Remaining battery in %",
-        "value_min": 0,
-        "value_max": 100
-      },
-      {
-        "type": "numeric",
-        "name": "linkquality",
-        "property": "linkquality",
-        "access": 1,
-        "unit": "lqi",
-        "description": "Link quality (signal strength)",
-        "value_min": 0,
-        "value_max": 255
-      }
-    ]`;
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -1011,9 +664,9 @@ describe('Basic Sensors', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        deviceExposes = testJsonExposes(deviceExposesJson) ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('heiman/hs1vs-n.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
@@ -1049,38 +702,6 @@ describe('Basic Sensors', () => {
   });
 
   describe('SmartThings STSS-PRES-001', () => {
-    const deviceExposesJson = `[
-      {
-        "type": "numeric",
-        "name": "battery",
-        "property": "battery",
-        "access": 1,
-        "unit": "%",
-        "description": "Remaining battery in %",
-        "value_min": 0,
-        "value_max": 100
-      },
-      {
-        "type": "binary",
-        "name": "presence",
-        "property": "presence",
-        "access": 1,
-        "value_on": true,
-        "value_off": false,
-        "description": "Indicates whether the device detected presence"
-      },
-      {
-        "type": "numeric",
-        "name": "linkquality",
-        "property": "linkquality",
-        "access": 1,
-        "unit": "lqi",
-        "description": "Link quality (signal strength)",
-        "value_min": 0,
-        "value_max": 255
-      }
-    ]`;
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -1089,9 +710,9 @@ describe('Basic Sensors', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        deviceExposes = testJsonExposes(deviceExposesJson) ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('smartthings/stss-pres-001.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation

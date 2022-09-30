@@ -1,0 +1,39 @@
+[
+  {
+    "type": "switch",
+    "features": [
+      {
+        "type": "binary",
+        "name": "state",
+        "property": "state",
+        "access": 7,
+        "value_on": "ON",
+        "value_off": "OFF",
+        "description": "On/off state of the switch",
+        "value_toggle": "TOGGLE"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "power_on_behavior",
+    "property": "power_on_behavior",
+    "access": 7,
+    "values": [
+      "off",
+      "previous",
+      "on"
+    ],
+    "description": "Controls the behaviour when the device is powered on"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

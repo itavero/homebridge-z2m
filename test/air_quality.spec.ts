@@ -3,7 +3,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { ServiceHandlersTestHarness, testJsonDeviceDefinition } from './testHelpers';
+import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 import { Characteristic, CharacteristicValue, WithUUID } from 'hap-nodejs';
 
 describe('Air Quality Sensor', () => {
@@ -12,59 +12,6 @@ describe('Air Quality Sensor', () => {
   });
 
   describe('lumi.airmonitor.acn01', () => {
-    const deviceDefinitionJson = `{
-      "description": "Aqara TVOC air quality monitor",
-      "exposes": [
-        {
-          "access": 1,
-          "description": "Remaining battery in %",
-          "name": "battery",
-          "property": "battery",
-          "type": "numeric",
-          "unit": "%",
-          "value_max": 100,
-          "value_min": 0
-        },
-        {
-          "access": 1,
-          "description": "Measured temperature value",
-          "name": "temperature",
-          "property": "temperature",
-          "type": "numeric",
-          "unit": "°C"
-        },
-        {
-          "access": 1,
-          "description": "Measured relative humidity",
-          "name": "humidity",
-          "property": "humidity",
-          "type": "numeric",
-          "unit": "%"
-        },
-        {
-          "access": 1,
-          "description": "Measured VOC value",
-          "name": "voc",
-          "property": "voc",
-          "type": "numeric",
-          "unit": "ppb"
-        },
-        {
-          "access": 1,
-          "description": "Link quality (signal strength)",
-          "name": "linkquality",
-          "property": "linkquality",
-          "type": "numeric",
-          "unit": "lqi",
-          "value_max": 255,
-          "value_min": 0
-        }
-      ],
-      "model": "VOCKQJK11LM",
-      "supports_ota": false,
-      "vendor": "Xiaomi"
-    }`;
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -72,10 +19,9 @@ describe('Air Quality Sensor', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const definition = testJsonDeviceDefinition(deviceDefinitionJson);
-        deviceExposes = definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('xiaomi/vockqjk11lm.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation

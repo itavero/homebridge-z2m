@@ -3,7 +3,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 
 jest.useFakeTimers();
 
@@ -13,106 +13,6 @@ describe('Cover', () => {
   });
 
   describe('IKEA KADRILJ roller blind', () => {
-    const deviceModelJson = `{
-      "date_code": "20190311",
-      "definition": {
-        "description": "KADRILJ roller blind",
-        "exposes": [
-          {
-            "features": [
-              {
-                "access": 7,
-                "name": "state",
-                "property": "state",
-                "type": "binary",
-                "value_off": "CLOSE",
-                "value_on": "OPEN"
-              },
-              {
-                "access": 7,
-                "description": "Position of this cover",
-                "name": "position",
-                "property": "position",
-                "type": "numeric",
-                "value_max": 100,
-                "value_min": 0
-              }
-            ],
-            "type": "cover"
-          },
-          {
-            "access": 1,
-            "description": "Remaining battery in %",
-            "name": "battery",
-            "property": "battery",
-            "type": "numeric",
-            "unit": "%",
-            "value_max": 100,
-            "value_min": 0
-          },
-          {
-            "access": 1,
-            "description": "Link quality (signal strength)",
-            "name": "linkquality",
-            "property": "linkquality",
-            "type": "numeric",
-            "unit": "lqi",
-            "value_max": 255,
-            "value_min": 0
-          }
-        ],
-        "model": "E1926",
-        "vendor": "IKEA"
-      },
-      "endpoints": {
-        "1": {
-          "bindings": [
-            {
-              "cluster": "genPowerCfg",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00124b001caa69fb",
-                "type": "endpoint"
-              }
-            },
-            {
-              "cluster": "closuresWindowCovering",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00124b001caa69fb",
-                "type": "endpoint"
-              }
-            }
-          ],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genPowerCfg",
-              "genIdentify",
-              "genGroups",
-              "genScenes",
-              "genPollCtrl",
-              "closuresWindowCovering",
-              "touchlink"
-            ],
-            "output": [
-              "genOta",
-              "touchlink"
-            ]
-          }
-        }
-      },
-      "friendly_name": "blinds_livingroom_side",
-      "ieee_address": "0x000d6ffffea9430d",
-      "interview_completed": true,
-      "interviewing": false,
-      "network_address": 13941,
-      "power_source": "Battery",
-      "software_build_id": "2.2.009",
-      "supported": true,
-      "type": "EndDevice"
-    }`;
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -120,10 +20,9 @@ describe('Cover', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('ikea/e1926.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
@@ -237,172 +136,6 @@ describe('Cover', () => {
   });
 
   describe('Insta Flush-Mount Blinds Actuator', () => {
-    const deviceModelJson = `{
-      "date_code": "",
-      "definition": {
-        "description": "Blinds actor with Lift/Tilt Calibration & with inputs for wall switches",
-        "exposes": [
-          {
-            "features": [
-              {
-                "access": 3,
-                "name": "state",
-                "property": "state",
-                "type": "binary",
-                "value_off": "CLOSE",
-                "value_on": "OPEN"
-              },
-              {
-                "access": 7,
-                "description": "Position of this cover",
-                "name": "position",
-                "property": "position",
-                "type": "numeric",
-                "value_max": 100,
-                "value_min": 0
-              },
-              {
-                "access": 7,
-                "description": "Tilt of this cover",
-                "name": "tilt",
-                "property": "tilt",
-                "type": "numeric",
-                "value_max": 100,
-                "value_min": 0
-              }
-            ],
-            "type": "cover"
-          },
-          {
-            "access": 1,
-            "description": "Link quality (signal strength)",
-            "name": "linkquality",
-            "property": "linkquality",
-            "type": "numeric",
-            "unit": "lqi",
-            "value_max": 255,
-            "value_min": 0
-          }
-        ],
-        "model": "57008000",
-        "supports_ota": false,
-        "vendor": "Insta GmbH"
-      },
-      "endpoints": {
-        "6": {
-          "bindings": [
-            {
-              "cluster": "genOta",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00212effff06eebd",
-                "type": "endpoint"
-              }
-            },
-            {
-              "cluster": "closuresWindowCovering",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00212effff06eebd",
-                "type": "endpoint"
-              }
-            },
-            {
-              "cluster": "genBasic",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00212effff06eebd",
-                "type": "endpoint"
-              }
-            },
-            {
-              "cluster": "genOnOff",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00212effff06eebd",
-                "type": "endpoint"
-              }
-            }
-          ],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify",
-              "genGroups",
-              "genScenes",
-              "closuresWindowCovering"
-            ],
-            "output": [
-              "genIdentify",
-              "genOta"
-            ]
-          },
-          "configured_reportings": [
-            {
-              "attribute": "currentPositionLiftPercentage",
-              "cluster": "closuresWindowCovering",
-              "maximum_report_interval": 62000,
-              "minimum_report_interval": 1,
-              "reportable_change": 1
-            }
-          ]
-        },
-        "7": {
-          "bindings": [
-            {
-              "cluster": "genBasic",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00212effff06eebd",
-                "type": "endpoint"
-              }
-            },
-            {
-              "cluster": "closuresWindowCovering",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00212effff06eebd",
-                "type": "endpoint"
-              }
-            }
-          ],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify"
-            ],
-            "output": [
-              "genIdentify",
-              "genGroups",
-              "genOta",
-              "closuresWindowCovering"
-            ]
-          },
-          "configured_reportings": []
-        },
-        "242": {
-          "bindings": [],
-          "clusters": {
-            "input": [],
-            "output": [
-              "greenPower"
-            ]
-          },
-          "configured_reportings": []
-        }
-      },
-      "friendly_name": "Rollo",
-      "ieee_address": "0x842e14fffea1cd5f",
-      "interview_completed": true,
-      "interviewing": false,
-      "model_id": "Generic UP Device",
-      "network_address": 22147,
-      "power_source": "Mains (single phase)",
-      "software_build_id": "00.47.00",
-      "supported": true,
-      "type": "Router"
-    }`;
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -410,10 +143,9 @@ describe('Cover', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('insta/57008000.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
@@ -514,129 +246,6 @@ describe('Cover', () => {
   });
 
   describe('Current Products Corp CP180335E-01', () => {
-    const deviceModelJson = `{
-      "date_code":"",
-      "definition":{
-        "description":"Gen. 2 hybrid E-Wand",
-        "exposes":[
-          {
-            "access":1,
-            "description":"Remaining battery in %",
-            "name":"battery",
-            "property":"battery",
-            "type":"numeric",
-            "unit":"%",
-            "value_max":100,
-            "value_min":0
-          },
-          {
-            "features":[
-              {
-                "access":3,
-                "name":"state",
-                "property":"state",
-                "type":"enum",
-                "values":[
-                  "OPEN",
-                  "CLOSE",
-                  "STOP"
-                ]
-              },
-              {
-                "access":7,
-                "description":"Tilt of this cover",
-                "name":"tilt",
-                "property":"tilt",
-                "type":"numeric",
-                "value_max":100,
-                "value_min":0
-              }
-            ],
-            "type":"cover"
-          },
-          {
-            "access":1,
-            "description":"Link quality (signal strength)",
-            "name":"linkquality",
-            "property":"linkquality",
-            "type":"numeric",
-            "unit":"lqi",
-            "value_max":255,
-            "value_min":0
-          }
-        ],
-        "model":"CP180335E-01",
-        "supports_ota":false,
-        "vendor":"Current Products Corp"
-      },
-      "endpoints":{
-        "1":{
-          "bindings":[
-            {
-              "cluster":"genPowerCfg",
-              "target":{
-                "endpoint":1,
-                "ieee_address":"0x00212effff074469",
-                "type":"endpoint"
-              }
-            },
-            {
-              "cluster":"closuresWindowCovering",
-              "target":{
-                "endpoint":1,
-                "ieee_address":"0x00212effff074469",
-                "type":"endpoint"
-              }
-            }
-          ],
-          "clusters":{
-            "input":[
-              "genBasic",
-              "genPowerCfg",
-              "genIdentify",
-              "genGroups",
-              "genScenes",
-              "genOnOff",
-              "genLevelCtrl",
-              "genPollCtrl",
-              "closuresWindowCovering",
-              "haDiagnostic"
-            ],
-            "output":[
-              "genIdentify",
-              "genOta"
-            ]
-          },
-          "configured_reportings":[
-            {
-              "attribute":"batteryPercentageRemaining",
-              "cluster":"genPowerCfg",
-              "maximum_report_interval":62000,
-              "minimum_report_interval":3600,
-              "reportable_change":0
-            },
-            {
-              "attribute":"currentPositionTiltPercentage",
-              "cluster":"closuresWindowCovering",
-              "maximum_report_interval":62000,
-              "minimum_report_interval":1,
-              "reportable_change":1
-            }
-          ]
-        }
-      },
-      "friendly_name":"0x847127fffe4cf99c",
-      "ieee_address":"0x847127fffe4cf99c",
-      "interview_completed":true,
-      "interviewing":false,
-      "manufacturer":"Current Products Corp",
-      "model_id":"E-Wand",
-      "network_address":57023,
-      "power_source":"Battery",
-      "supported":true,
-      "type":"EndDevice"
-    }`;
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -644,10 +253,9 @@ describe('Cover', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes information from file
+        deviceExposes = loadExposesFromFile('current_products_corp/cp180335e-01.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation

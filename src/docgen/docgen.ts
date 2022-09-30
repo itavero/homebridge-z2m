@@ -14,6 +14,7 @@ import { version_herdsman_converters, version_zigbee2mqtt } from './versions';
 
 const docs_base_path = path.join(__dirname, '..', '..', 'docs', 'devices');
 const exposes_base_path = path.join(__dirname, '..', '..', 'exposes');
+const test_exposes_base_path = path.join(__dirname, '..', '..', 'test', 'exposes');
 setHap(hapNodeJs);
 
 // Clean devices directory
@@ -23,6 +24,18 @@ for (const file of fs.readdirSync(docs_base_path, { withFileTypes: true })) {
     fs.rmSync(p, { recursive: true });
   } else if (file.isFile()) {
     fs.unlinkSync(p);
+  }
+}
+
+// Clean exposes directory
+if (fs.existsSync(exposes_base_path)) {
+  for (const file of fs.readdirSync(exposes_base_path, { withFileTypes: true })) {
+    const p = path.join(exposes_base_path, file.name);
+    if (file.isDirectory()) {
+      fs.rmSync(p, { recursive: true });
+    } else if (file.isFile()) {
+      fs.unlinkSync(p);
+    }
   }
 }
 
@@ -210,6 +223,8 @@ If it doesn't exist yet, you can [open a new request](https://github.com/itavero
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 \`\`\`json
 ${JSON.stringify(device.exposes, null, 2)}
 \`\`\`
@@ -238,6 +253,8 @@ ${serviceInfoToMarkdown(services)}
       // Also add exposes information for these devices
       devicePage += `
 ## Exposes
+
+This is the information provided by Zigbee2MQTT for this device:
 
 \`\`\`json
 ${JSON.stringify(device.exposes, null, 2)}
@@ -313,6 +330,34 @@ allDevices.forEach(d => {
     console.log(`Problem generating device page for ${d.vendor} ${d.model}: ${Error}`);
   }
 });
+
+// Update JSON files with exposes information used for automated tests
+function update_test_input(test_resources: string, json_source: string) {
+  if (fs.existsSync(test_resources)) {
+    for (const file of fs.readdirSync(test_resources, { withFileTypes: true })) {
+      const dst = path.join(test_resources, file.name);
+      const src = path.join(json_source, file.name);
+      if (file.isDirectory()) {
+        if (!fs.existsSync(src)) {
+          console.log(`TEST INPUT: Source for ${dst} can not be found. Removing old files.`);
+          fs.rmdirSync(dst, { recursive: true });
+        } else {
+          update_test_input(dst, src);
+        }
+      } else if (file.isFile()) {
+        if (!fs.existsSync(src)) {
+          console.log(`TEST INPUT: Source for ${dst} can not be found. Removing old file.`);
+          fs.unlinkSync(dst);
+        } else {
+          // Overwrite with new version
+          console.log(`TEST INPUT: Updating ${file.name}`);
+          fs.copyFileSync(src, dst);
+        }
+      }
+    }
+  }
+}
+update_test_input(test_exposes_base_path, exposes_base_path);
 
 // Group devices per vendor
 const devices: Map<string, any[]> = allDevices.map(d => {

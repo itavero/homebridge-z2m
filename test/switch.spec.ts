@@ -3,7 +3,7 @@ import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 
 describe('Switch', () => {
   beforeAll(() => {
@@ -11,102 +11,6 @@ describe('Switch', () => {
   });
 
   describe('IKEA TRADFRI control outlet', () => {
-    const deviceModelJson = `
-    {
-      "date_code": "20191026",
-      "definition": {
-        "description": "TRADFRI control outlet",
-        "exposes": [
-          {
-            "features": [
-              {
-                "access": 7,
-                "description": "On/off state of the switch",
-                "name": "state",
-                "property": "state",
-                "type": "binary",
-                "value_off": "OFF",
-                "value_on": "ON",
-                "value_toggle": "TOGGLE"
-              }
-            ],
-            "type": "switch"
-          },
-          {
-            "access": 1,
-            "description": "Link quality (signal strength)",
-            "name": "linkquality",
-            "property": "linkquality",
-            "type": "numeric",
-            "unit": "lqi",
-            "value_max": 255,
-            "value_min": 0
-          }
-        ],
-        "model": "E1603/E1702",
-        "vendor": "IKEA"
-      },
-      "endpoints": {
-        "1": {
-          "bindings": [
-            {
-              "cluster": "genOnOff",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00124b001caa69fb",
-                "type": "endpoint"
-              }
-            },
-            {
-              "cluster": "genLevelCtrl",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00124b001caa69fb",
-                "type": "endpoint"
-              }
-            }
-          ],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify",
-              "genGroups",
-              "genScenes",
-              "genOnOff",
-              "genLevelCtrl",
-              "touchlink"
-            ],
-            "output": [
-              "genScenes",
-              "genOta",
-              "genPollCtrl",
-              "touchlink"
-            ]
-          }
-        },
-        "242": {
-          "bindings": [],
-          "clusters": {
-            "input": [
-              "greenPower"
-            ],
-            "output": [
-              "greenPower"
-            ]
-          }
-        }
-      },
-      "friendly_name": "light_livingroom_sjopenna",
-      "ieee_address": "0x000d6ffffeb82582",
-      "interview_completed": true,
-      "interviewing": false,
-      "network_address": 16527,
-      "power_source": "Mains (single phase)",
-      "software_build_id": "2.0.024",
-      "supported": true,
-      "type": "Router"
-    }`;
-
     describe('as Switch', () => {
       // Shared "state"
       let deviceExposes: ExposesEntry[] = [];
@@ -115,10 +19,9 @@ describe('Switch', () => {
       beforeEach(() => {
         // Only test service creation for first test case and reuse harness afterwards
         if (deviceExposes.length === 0 && harness === undefined) {
-          // Test JSON Device List entry
-          const device = testJsonDeviceListEntry(deviceModelJson);
-          deviceExposes = device?.definition?.exposes ?? [];
-          expect(deviceExposes?.length).toBeGreaterThan(0);
+          // Load exposes from JSON
+          deviceExposes = loadExposesFromFile('ikea/e1603_e1702_e1708.json');
+          expect(deviceExposes.length).toBeGreaterThan(0);
           const newHarness = new ServiceHandlersTestHarness();
 
           // Check service creation
@@ -173,10 +76,8 @@ describe('Switch', () => {
       beforeEach(() => {
         // Only test service creation for first test case and reuse harness afterwards
         if (deviceExposes.length === 0 && harness === undefined) {
-          // Test JSON Device List entry
-          const device = testJsonDeviceListEntry(deviceModelJson);
-          deviceExposes = device?.definition?.exposes ?? [];
-          expect(deviceExposes?.length).toBeGreaterThan(0);
+          // Load exposes from JSON
+          deviceExposes = loadExposesFromFile('ikea/e1603_e1702_e1708.json');
           const newHarness = new ServiceHandlersTestHarness();
 
           // Check service creation
@@ -226,280 +127,6 @@ describe('Switch', () => {
   });
 
   describe('Ubisys S2', () => {
-    const deviceModelJson = `{
-      "date_code": "20191127-DE-FB0",
-      "definition": {
-        "description": "Power switch S2",
-        "exposes": [
-          {
-            "endpoint": "l1",
-            "features": [
-              {
-                "access": 7,
-                "description": "On/off state of the switch",
-                "endpoint": "l1",
-                "name": "state",
-                "property": "state_l1",
-                "type": "binary",
-                "value_off": "OFF",
-                "value_on": "ON",
-                "value_toggle": "TOGGLE"
-              }
-            ],
-            "type": "switch"
-          },
-          {
-            "endpoint": "l2",
-            "features": [
-              {
-                "access": 7,
-                "description": "On/off state of the switch",
-                "endpoint": "l2",
-                "name": "state",
-                "property": "state_l2",
-                "type": "binary",
-                "value_off": "OFF",
-                "value_on": "ON",
-                "value_toggle": "TOGGLE"
-              }
-            ],
-            "type": "switch"
-          },
-          {
-            "access": 5,
-            "description": "Instantaneous measured power",
-            "endpoint": "meter",
-            "name": "power",
-            "property": "power",
-            "type": "numeric",
-            "unit": "W"
-          },
-          {
-            "access": 1,
-            "description": "Triggered action (e.g. a button click)",
-            "name": "action",
-            "property": "action",
-            "type": "enum",
-            "values": [
-              "toggle_s1",
-              "toggle_s2",
-              "on_s1",
-              "on_s2",
-              "off_s1",
-              "off_s2",
-              "recall_*_s1",
-              "recal_*_s2",
-              "brightness_move_up_s1",
-              "brightness_move_up_s2",
-              "brightness_move_down_s1",
-              "brightness_move_down_s2",
-              "brightness_stop_s1",
-              "brightness_stop_s2"
-            ]
-          },
-          {
-            "access": 1,
-            "description": "Link quality (signal strength)",
-            "name": "linkquality",
-            "property": "linkquality",
-            "type": "numeric",
-            "unit": "lqi",
-            "value_max": 255,
-            "value_min": 0
-          }
-        ],
-        "model": "S2",
-        "supports_ota": true,
-        "vendor": "Ubisys"
-      },
-      "endpoints": {
-        "1": {
-          "bindings": [
-            {
-              "cluster": "genOnOff",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00124b0021b7788c",
-                "type": "endpoint"
-              }
-            }
-          ],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify",
-              "genGroups",
-              "genScenes",
-              "genOnOff"
-            ],
-            "output": []
-          },
-          "configured_reportings": [
-            {
-              "attribute": "onOff",
-              "cluster": "genOnOff",
-              "maximum_report_interval": 300,
-              "minimum_report_interval": 0,
-              "reportable_change": 0
-            }
-          ]
-        },
-        "2": {
-          "bindings": [
-            {
-              "cluster": "genOnOff",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00124b0021b7788c",
-                "type": "endpoint"
-              }
-            }
-          ],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify",
-              "genGroups",
-              "genScenes",
-              "genOnOff"
-            ],
-            "output": []
-          },
-          "configured_reportings": [
-            {
-              "attribute": "onOff",
-              "cluster": "genOnOff",
-              "maximum_report_interval": 300,
-              "minimum_report_interval": 0,
-              "reportable_change": 0
-            }
-          ]
-        },
-        "3": {
-          "bindings": [
-            {
-              "cluster": "genOnOff",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x001fee00000058d9",
-                "type": "endpoint"
-              }
-            }
-          ],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify"
-            ],
-            "output": [
-              "genScenes",
-              "genOnOff",
-              "genLevelCtrl"
-            ]
-          },
-          "configured_reportings": []
-        },
-        "4": {
-          "bindings": [
-            {
-              "cluster": "genOnOff",
-              "target": {
-                "endpoint": 2,
-                "ieee_address": "0x001fee00000058d9",
-                "type": "endpoint"
-              }
-            }
-          ],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genIdentify"
-            ],
-            "output": [
-              "genScenes",
-              "genOnOff",
-              "genLevelCtrl"
-            ]
-          },
-          "configured_reportings": []
-        },
-        "5": {
-          "bindings": [
-            {
-              "cluster": "seMetering",
-              "target": {
-                "endpoint": 1,
-                "ieee_address": "0x00124b0021b7788c",
-                "type": "endpoint"
-              }
-            }
-          ],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "seMetering",
-              "haElectricalMeasurement"
-            ],
-            "output": []
-          },
-          "configured_reportings": [
-            {
-              "attribute": "instantaneousDemand",
-              "cluster": "seMetering",
-              "maximum_report_interval": 3600,
-              "minimum_report_interval": 5,
-              "reportable_change": 1
-            }
-          ]
-        },
-        "200": {
-          "bindings": [],
-          "clusters": {
-            "input": [],
-            "output": []
-          },
-          "configured_reportings": []
-        },
-        "232": {
-          "bindings": [],
-          "clusters": {
-            "input": [
-              "genBasic",
-              "genCommissioning",
-              "manuSpecificUbisysDeviceSetup"
-            ],
-            "output": [
-              "genIdentify",
-              "genOta"
-            ]
-          },
-          "configured_reportings": []
-        },
-        "242": {
-          "bindings": [],
-          "clusters": {
-            "input": [
-              "greenPower"
-            ],
-            "output": [
-              "greenPower"
-            ]
-          },
-          "configured_reportings": []
-        }
-      },
-      "friendly_name": "KuecheWand",
-      "ieee_address": "0x001fee00000058d9",
-      "interview_completed": true,
-      "interviewing": false,
-      "model_id": "S2 (5502)",
-      "network_address": 38227,
-      "power_source": "Mains (single phase)",
-      "supported": true,
-      "type": "Router"
-    }`;
-
-
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -507,10 +134,9 @@ describe('Switch', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('ubisys/s2.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation

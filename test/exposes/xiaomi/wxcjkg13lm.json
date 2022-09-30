@@ -1,0 +1,87 @@
+[
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "numeric",
+    "name": "voltage",
+    "property": "voltage",
+    "access": 1,
+    "unit": "mV",
+    "description": "Voltage of the battery in millivolts"
+  },
+  {
+    "type": "enum",
+    "name": "action",
+    "property": "action",
+    "access": 1,
+    "values": [
+      "button_1_hold",
+      "button_1_release",
+      "button_1_single",
+      "button_1_double",
+      "button_1_triple",
+      "button_2_hold",
+      "button_2_release",
+      "button_2_single",
+      "button_2_double",
+      "button_2_triple",
+      "button_3_hold",
+      "button_3_release",
+      "button_3_single",
+      "button_3_double",
+      "button_3_triple",
+      "button_4_hold",
+      "button_4_release",
+      "button_4_single",
+      "button_4_double",
+      "button_4_triple",
+      "button_5_hold",
+      "button_5_release",
+      "button_5_single",
+      "button_5_double",
+      "button_5_triple",
+      "button_6_hold",
+      "button_6_release",
+      "button_6_single",
+      "button_6_double",
+      "button_6_triple"
+    ],
+    "description": "Triggered action (e.g. a button click)"
+  },
+  {
+    "type": "enum",
+    "name": "operation_mode",
+    "property": "operation_mode",
+    "access": 7,
+    "values": [
+      "command",
+      "event"
+    ],
+    "description": "Operation mode, select \"command\" to enable bindings (wake up the device before changing modes!)"
+  },
+  {
+    "type": "numeric",
+    "name": "power_outage_count",
+    "property": "power_outage_count",
+    "access": 1,
+    "description": "Number of power outages"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

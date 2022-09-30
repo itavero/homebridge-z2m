@@ -1,0 +1,137 @@
+[
+  {
+    "type": "lock",
+    "features": [
+      {
+        "type": "binary",
+        "name": "state",
+        "property": "state",
+        "access": 7,
+        "value_on": "LOCK",
+        "value_off": "UNLOCK",
+        "description": "State of the lock"
+      },
+      {
+        "type": "enum",
+        "name": "lock_state",
+        "property": "lock_state",
+        "access": 1,
+        "values": [
+          "not_fully_locked",
+          "locked",
+          "unlocked"
+        ],
+        "description": "Actual state of the lock"
+      }
+    ]
+  },
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "composite",
+    "property": "pin_code",
+    "name": "pin_code",
+    "features": [
+      {
+        "type": "numeric",
+        "name": "user",
+        "property": "user",
+        "access": 2,
+        "description": "User ID to set or clear the pincode for"
+      },
+      {
+        "type": "enum",
+        "name": "user_type",
+        "property": "user_type",
+        "access": 2,
+        "values": [
+          "unrestricted",
+          "year_day_schedule",
+          "week_day_schedule",
+          "master",
+          "non_access"
+        ],
+        "description": "Type of user, unrestricted: owner (default), (year|week)_day_schedule: user has ability to open lock based on specific time period, master: user has ability to both program and operate the door lock, non_access: user is recognized by the lock but does not have the ability to open the lock"
+      },
+      {
+        "type": "binary",
+        "name": "user_enabled",
+        "property": "user_enabled",
+        "access": 2,
+        "value_on": true,
+        "value_off": false,
+        "description": "Whether the user is enabled/disabled"
+      },
+      {
+        "type": "numeric",
+        "name": "pin_code",
+        "property": "pin_code",
+        "access": 2,
+        "description": "Pincode to set, set pincode to null to clear"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "action",
+    "property": "action",
+    "access": 1,
+    "values": [
+      "unknown",
+      "lock",
+      "unlock",
+      "lock_failure_invalid_pin_or_id",
+      "lock_failure_invalid_schedule",
+      "unlock_failure_invalid_pin_or_id",
+      "unlock_failure_invalid_schedule",
+      "one_touch_lock",
+      "key_lock",
+      "key_unlock",
+      "auto_lock",
+      "schedule_lock",
+      "schedule_unlock",
+      "manual_lock",
+      "manual_unlock",
+      "non_access_user_operational_event"
+    ],
+    "description": "Triggered action on the lock"
+  },
+  {
+    "type": "enum",
+    "name": "action_source_name",
+    "property": "action_source_name",
+    "access": 1,
+    "values": [
+      "keypad",
+      "rfid",
+      "manual",
+      "rf"
+    ],
+    "description": "Source of the triggered action on the lock"
+  },
+  {
+    "type": "numeric",
+    "name": "action_user",
+    "property": "action_user",
+    "access": 1,
+    "description": "ID of user that triggered the action on the lock"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

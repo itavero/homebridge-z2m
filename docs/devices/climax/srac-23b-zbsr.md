@@ -23,6 +23,8 @@ the Climax SRAC-23B-ZBSR
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

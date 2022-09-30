@@ -23,6 +23,8 @@ the DIYRuZ DIYRuZ_FreePad
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

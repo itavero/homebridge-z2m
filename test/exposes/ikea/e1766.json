@@ -27,7 +27,7 @@
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",
-    "description": "Link quality (signal strength). This text does not be long here, but I have added it deliberatily to see if it gets updated correctly.",
+    "description": "Link quality (signal strength)",
     "value_min": 0,
     "value_max": 255
   }

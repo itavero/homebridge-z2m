@@ -23,6 +23,8 @@ the Neo NAS-AB02B2
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

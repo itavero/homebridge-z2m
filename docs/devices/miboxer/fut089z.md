@@ -23,6 +23,8 @@ the MiBoxer FUT089Z
 
 ## Exposes
 
+This is the information provided by Zigbee2MQTT for this device:
+
 ```json
 [
   {

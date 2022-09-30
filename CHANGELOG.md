@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.9.1] - 2022-10-01
+
 ### Fixed
 
 - Added additional checks to prevent certain errors from occuring during creation of a service handler. (see [#443](https://github.com/itavero/homebridge-z2m/issues/443))
@@ -332,7 +334,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.0...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.1...HEAD
+[1.9.1]: https://github.com/itavero/homebridge-z2m/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/itavero/homebridge-z2m/compare/v1.8.0...v1.9.0
 [1.8.0]: https://github.com/itavero/homebridge-z2m/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/itavero/homebridge-z2m/compare/v1.7.0-rc.1...v1.7.0

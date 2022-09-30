@@ -8,11 +8,53 @@ import { mock, mockClear, MockProxy } from 'jest-mock-extended';
 import { when } from 'jest-when';
 import 'jest-chain';
 import { BasicServiceCreatorManager } from '../src/converters/creators';
+import fs from 'fs';
+import path from 'path';
 
 export interface HomebridgeCharacteristicSetCallback {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (value: CharacteristicValue, cb: CharacteristicSetCallback, context?: any, connectionID?: SessionIdentifier): void;
 }
+
+export const loadExposesFromFile = (filename: string): ExposesEntry[] => {
+  // Check if file exists
+  let filePath = filename;
+  if (!fs.existsSync(filePath)) {
+    // Try to combine path
+    filePath = path.join(__dirname, './exposes/', filename);
+
+    if (!fs.existsSync(filePath)) {
+      // Try to find it in the output of the documentation script
+      const pathToGeneratedFile = path.join(__dirname, '../exposes/', filename);
+      if (fs.existsSync(pathToGeneratedFile)) {
+        // Copy it to filePath to make sure we put it into Git as well
+        const baseDir = path.dirname(filePath);
+        if (!fs.existsSync(baseDir)) {
+          fs.mkdirSync(baseDir, { recursive: true });
+        }
+        fs.copyFileSync(pathToGeneratedFile, filePath);
+      } else {
+        return [];
+      }
+    }
+    expect(fs.existsSync(filePath)).toBeTruthy();
+  }
+
+  const fileContent = fs.readFileSync(filePath, 'utf8');
+  const output = JSON.parse(fileContent);
+  expect(Array.isArray(output)).toBeTruthy();
+
+  if (Array.isArray(output)) {
+    expect(output.length).toBeGreaterThan(0);
+    const invalidExposes = output.find(e => !isExposesEntry(e));
+    expect(invalidExposes).toBeUndefined();
+    if (invalidExposes !== undefined) {
+      return [];
+    }
+    return output;
+  }
+  return [];
+};
 
 export const testJsonDeviceListEntry = (json: string): DeviceListEntry | undefined => {
   const output = JSON.parse(json);

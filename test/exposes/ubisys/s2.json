@@ -1,0 +1,104 @@
+[
+  {
+    "type": "switch",
+    "features": [
+      {
+        "type": "binary",
+        "name": "state",
+        "property": "state_l1",
+        "access": 7,
+        "value_on": "ON",
+        "value_off": "OFF",
+        "description": "On/off state of the switch",
+        "value_toggle": "TOGGLE",
+        "endpoint": "l1"
+      }
+    ],
+    "endpoint": "l1"
+  },
+  {
+    "type": "switch",
+    "features": [
+      {
+        "type": "binary",
+        "name": "state",
+        "property": "state_l2",
+        "access": 7,
+        "value_on": "ON",
+        "value_off": "OFF",
+        "description": "On/off state of the switch",
+        "value_toggle": "TOGGLE",
+        "endpoint": "l2"
+      }
+    ],
+    "endpoint": "l2"
+  },
+  {
+    "type": "numeric",
+    "name": "power",
+    "property": "power",
+    "access": 5,
+    "unit": "W",
+    "description": "Instantaneous measured power",
+    "endpoint": "meter"
+  },
+  {
+    "type": "enum",
+    "name": "action",
+    "property": "action",
+    "access": 1,
+    "values": [
+      "toggle_s1",
+      "toggle_s2",
+      "on_s1",
+      "on_s2",
+      "off_s1",
+      "off_s2",
+      "recall_*_s1",
+      "recal_*_s2",
+      "brightness_move_up_s1",
+      "brightness_move_up_s2",
+      "brightness_move_down_s1",
+      "brightness_move_down_s2",
+      "brightness_stop_s1",
+      "brightness_stop_s2"
+    ],
+    "description": "Triggered action (e.g. a button click)"
+  },
+  {
+    "type": "enum",
+    "name": "power_on_behavior",
+    "property": "power_on_behavior_l1",
+    "access": 7,
+    "values": [
+      "off",
+      "previous",
+      "on"
+    ],
+    "description": "Controls the behavior when the device is powered on",
+    "endpoint": "l1"
+  },
+  {
+    "type": "enum",
+    "name": "power_on_behavior",
+    "property": "power_on_behavior_l2",
+    "access": 7,
+    "values": [
+      "off",
+      "previous",
+      "on"
+    ],
+    "description": "Controls the behavior when the device is powered on",
+    "endpoint": "l2"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

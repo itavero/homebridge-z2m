@@ -3,7 +3,7 @@ import { hap, setHap } from '../src/hap';
 import { ExposesEntry } from '../src/z2mModels';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
-import { ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { loadExposesFromFile, ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
 
 describe('Action', () => {
   beforeAll(() => {
@@ -204,93 +204,6 @@ describe('Action', () => {
   });
 
   describe('IKEA TRADFRI open/close remote', () => {
-    const deviceModelJson = `{
-        "date_code": "20190311",
-        "definition": {
-           "description": "TRADFRI open/close remote",
-           "exposes": [
-              {
-                 "access": 1,
-                 "description": "Remaining battery in %",
-                 "name": "battery",
-                 "property": "battery",
-                 "type": "numeric",
-                 "unit": "%",
-                 "value_max": 100,
-                 "value_min": 0
-              },
-              {
-                 "access": 1,
-                 "description": "Triggered action (e.g. a button click)",
-                 "name": "action",
-                 "property": "action",
-                 "type": "enum",
-                 "values": [
-                    "close",
-                    "open",
-                    "stop"
-                 ]
-              },
-              {
-                 "access": 1,
-                 "description": "Link quality (signal strength)",
-                 "name": "linkquality",
-                 "property": "linkquality",
-                 "type": "numeric",
-                 "unit": "lqi",
-                 "value_max": 255,
-                 "value_min": 0
-              }
-           ],
-           "model": "E1766",
-           "vendor": "IKEA"
-        },
-        "endpoints": {
-           "1": {
-              "bindings": [
-                 {
-                    "cluster": "genPowerCfg",
-                    "target": {
-                       "endpoint": 1,
-                       "ieee_address": "0x00124b001caa69fb",
-                       "type": "endpoint"
-                    }
-                 }
-              ],
-              "clusters": {
-                 "input": [
-                    "genBasic",
-                    "genPowerCfg",
-                    "genIdentify",
-                    "genAlarms",
-                    "genPollCtrl",
-                    "touchlink"
-                 ],
-                 "output": [
-                    "genIdentify",
-                    "genGroups",
-                    "genOnOff",
-                    "genLevelCtrl",
-                    "genOta",
-                    "closuresWindowCovering",
-                    "touchlink"
-                 ]
-              },
-              "configured_reportings": []
-           }
-        },
-        "friendly_name": "remote_livingroom_curtains",
-        "ieee_address": "0x086bd7fffe2037f0",
-        "interview_completed": true,
-        "interviewing": false,
-        "model_id": "TRADFRI open/close remote",
-        "network_address": 38517,
-        "power_source": "Battery",
-        "software_build_id": "2.2.010",
-        "supported": true,
-        "type": "EndDevice"
-     }`;
-
     // Shared "state"
     const actionProperty = 'action';
     const serviceLabelCharacteristic = 'label';
@@ -303,10 +216,9 @@ describe('Action', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('ikea/e1766.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // Expect 3 services (one for each value)
@@ -392,231 +304,6 @@ describe('Action', () => {
   });
 
   describe('Aqara Opple switch 3 bands', () => {
-    const deviceModelJson = `{
-        "date_code":"20190730",
-        "definition":{
-          "description":"Aqara Opple switch 3 bands",
-          "exposes":[
-            {
-              "access":1,
-              "description":"Remaining battery in %",
-              "name":"battery",
-              "property":"battery",
-              "type":"numeric",
-              "unit":"%",
-              "value_max":100,
-              "value_min":0
-            },
-            {
-              "access":1,
-              "description":"Triggered action (e.g. a button click)",
-              "name":"action",
-              "property":"action",
-              "type":"enum",
-              "values":[
-                "button_1_hold",
-                "button_1_release",
-                "button_2_hold",
-                "button_2_release",
-                "button_5_single",
-                "button_5_double",
-                "button_5_triple",
-                "button_6_hold",
-                "button_6_release",
-                "button_2_single",
-                "button_2_double",
-                "button_2_triple",
-                "button_1_single",
-                "button_1_double",
-                "button_1_triple",
-                "button_3_hold",
-                "button_3_release",
-                "button_3_single",
-                "button_3_double",
-                "button_3_triple",
-                "button_4_hold",
-                "button_4_release",
-                "button_4_single",
-                "button_4_double",
-                "button_4_triple",
-                "button_5_hold",
-                "button_5_release",
-                "button_6_single",
-                "button_6_double",
-                "button_6_triple"
-              ]
-            },
-            {
-              "access":7,
-              "description":"Operation mode, select command to enable bindings",
-              "name":"operation_mode",
-              "property":"operation_mode",
-              "type":"enum",
-              "values":[
-                "command",
-                "event"
-              ]
-            },
-            {
-              "access":1,
-              "description":"Link quality (signal strength)",
-              "name":"linkquality",
-              "property":"linkquality",
-              "type":"numeric",
-              "unit":"lqi",
-              "value_max":255,
-              "value_min":0
-            }
-          ],
-          "model":"WXCJKG13LM",
-          "vendor":"Xiaomi"
-        },
-        "endpoints":{
-          "1":{
-            "bindings":[
-              {
-                "cluster":"genOnOff",
-                "target":{
-                  "endpoint":1,
-                  "ieee_address":"0x00124b001caa69fb",
-                  "type":"endpoint"
-                }
-              },
-              {
-                "cluster":"genLevelCtrl",
-                "target":{
-                  "endpoint":1,
-                  "ieee_address":"0x00124b001caa69fb",
-                  "type":"endpoint"
-                }
-              },
-              {
-                "cluster":"lightingColorCtrl",
-                "target":{
-                  "endpoint":1,
-                  "ieee_address":"0x00124b001caa69fb",
-                  "type":"endpoint"
-                }
-              },
-              {
-                "cluster":"genPowerCfg",
-                "target":{
-                  "endpoint":1,
-                  "ieee_address":"0x00124b001caa69fb",
-                  "type":"endpoint"
-                }
-              }
-            ],
-            "clusters":{
-              "input":[
-                "genBasic",
-                "genIdentify",
-                "genPowerCfg"
-              ],
-              "output":[
-                "genIdentify",
-                "genOnOff",
-                "genLevelCtrl",
-                "lightingColorCtrl"
-              ]
-            },
-            "configured_reportings":[
-              
-            ]
-          },
-          "2":{
-            "bindings":[
-              
-            ],
-            "clusters":{
-              "input":[
-                
-              ],
-              "output":[
-                
-              ]
-            },
-            "configured_reportings":[
-              
-            ]
-          },
-          "3":{
-            "bindings":[
-              
-            ],
-            "clusters":{
-              "input":[
-                
-              ],
-              "output":[
-                
-              ]
-            },
-            "configured_reportings":[
-              
-            ]
-          },
-          "4":{
-            "bindings":[
-              
-            ],
-            "clusters":{
-              "input":[
-                
-              ],
-              "output":[
-                
-              ]
-            },
-            "configured_reportings":[
-              
-            ]
-          },
-          "5":{
-            "bindings":[
-              
-            ],
-            "clusters":{
-              "input":[
-                
-              ],
-              "output":[
-                
-              ]
-            },
-            "configured_reportings":[
-              
-            ]
-          },
-          "6":{
-            "bindings":[
-              
-            ],
-            "clusters":{
-              "input":[
-                
-              ],
-              "output":[
-                
-              ]
-            },
-            "configured_reportings":[
-              
-            ]
-          }
-        },
-        "friendly_name":"remote_livingroom",
-        "ieee_address":"0x04cf8cdf3c7d5ee6",
-        "interview_completed":true,
-        "interviewing":false,
-        "model_id":"lumi.remote.b686opcn01",
-        "network_address":20793,
-        "power_source":"Battery",
-        "software_build_id":"2019",
-        "supported":true,
-        "type":"EndDevice"
-      }`;
-
     // Shared "state"
     const actionProperty = 'action';
     const serviceLabelCharacteristic = 'label';
@@ -631,10 +318,9 @@ describe('Action', () => {
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
-        // Test JSON Device List entry
-        const device = testJsonDeviceListEntry(deviceModelJson);
-        deviceExposes = device?.definition?.exposes ?? [];
-        expect(deviceExposes?.length).toBeGreaterThan(0);
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('xiaomi/wxcjkg13lm.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
         // For this test set explicit included values (to check that function from the accessory is used correctly)

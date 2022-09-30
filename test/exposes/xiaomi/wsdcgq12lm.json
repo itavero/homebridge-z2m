@@ -1,0 +1,69 @@
+[
+  {
+    "type": "numeric",
+    "name": "temperature",
+    "property": "temperature",
+    "access": 1,
+    "unit": "°C",
+    "description": "Measured temperature value"
+  },
+  {
+    "type": "numeric",
+    "name": "humidity",
+    "property": "humidity",
+    "access": 1,
+    "unit": "%",
+    "description": "Measured relative humidity"
+  },
+  {
+    "type": "numeric",
+    "name": "pressure",
+    "property": "pressure",
+    "access": 1,
+    "unit": "hPa",
+    "description": "The measured atmospheric pressure"
+  },
+  {
+    "type": "numeric",
+    "name": "device_temperature",
+    "property": "device_temperature",
+    "access": 1,
+    "unit": "°C",
+    "description": "Temperature of the device"
+  },
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "numeric",
+    "name": "voltage",
+    "property": "voltage",
+    "access": 1,
+    "unit": "mV",
+    "description": "Voltage of the battery in millivolts"
+  },
+  {
+    "type": "numeric",
+    "name": "power_outage_count",
+    "property": "power_outage_count",
+    "access": 1,
+    "description": "Number of power outages"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

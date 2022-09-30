@@ -3,6 +3,7 @@ dist
 
 # Ignore generated exposes information
 exposes/
+!test/exposes/
 
 # ------------- Defaults ------------- #
 

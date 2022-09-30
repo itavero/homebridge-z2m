@@ -1,0 +1,48 @@
+[
+  {
+    "type": "binary",
+    "name": "gas",
+    "property": "gas",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether the device detected gas"
+  },
+  {
+    "type": "binary",
+    "name": "carbon_monoxide",
+    "property": "carbon_monoxide",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates if CO (carbon monoxide) is detected"
+  },
+  {
+    "type": "binary",
+    "name": "tamper",
+    "property": "tamper",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether the device is tampered"
+  },
+  {
+    "type": "binary",
+    "name": "battery_low",
+    "property": "battery_low",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates if the battery of this device is almost empty"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

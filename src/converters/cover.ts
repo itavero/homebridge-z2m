@@ -1,7 +1,8 @@
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
-  exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithFeatures, ExposesEntryWithNumericRangeProperty, exposesHasFeatures,
-  exposesHasNumericRangeProperty, exposesIsPublished, ExposesKnownTypes,
+  exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures,
+  ExposesEntryWithNumericRangeProperty, exposesHasEnumProperty, exposesHasFeatures, exposesHasNumericRangeProperty, exposesIsPublished,
+  ExposesKnownTypes,
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
@@ -27,8 +28,10 @@ export class CoverCreator implements ServiceCreator {
 }
 
 class CoverHandler implements ServiceHandler {
+  private static readonly STATE_HOLD_POSITION = 'STOP';
   private readonly positionExpose: ExposesEntryWithNumericRangeProperty;
   private readonly tiltExpose: ExposesEntryWithNumericRangeProperty | undefined;
+  private readonly stateExpose: ExposesEntryWithEnumProperty | undefined;
   private readonly service: Service;
   private readonly updateTimer: ExtendedTimer | undefined;
   private readonly target_min: number;
@@ -51,6 +54,8 @@ class CoverHandler implements ServiceHandler {
       && e.name === 'position' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
     this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e)
       && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
+    this.stateExpose = expose.features.find(e => e.type === ExposesKnownTypes.ENUM && e.name === 'state' && exposesCanBeSet(e)
+      && exposesHasEnumProperty(e) && e.values.includes(CoverHandler.STATE_HOLD_POSITION)) as ExposesEntryWithEnumProperty;
 
     if (positionExpose === undefined) {
       if (this.tiltExpose !== undefined) {
@@ -105,6 +110,12 @@ class CoverHandler implements ServiceHandler {
     } else {
       this.target_tilt_min = -90;
       this.target_tilt_max = 90;
+    }
+
+    // Hold Position
+    if (this.stateExpose !== undefined) {
+      getOrAddCharacteristic(this.service, hap.Characteristic.HoldPosition)
+        .on('set', this.handleSetHoldPosition.bind(this));
     }
 
     if (exposesCanBeGet(this.positionExpose)) {
@@ -265,6 +276,18 @@ class CoverHandler implements ServiceHandler {
     } else {
       callback(new Error('tilt not supported'));
     }
+  }
+
+  private handleSetHoldPosition(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
+    const doHold = value as boolean;
+    if (doHold) {
+      if (this.stateExpose) {
+        const data = {};
+        data[this.stateExpose.property] = CoverHandler.STATE_HOLD_POSITION;
+        this.accessory.queueDataForSetAction(data);
+      }
+    }
+    callback(null);
   }
 
   static generateIdentifier(endpoint: string | undefined) {

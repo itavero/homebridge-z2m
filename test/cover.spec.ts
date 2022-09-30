@@ -29,7 +29,8 @@ describe('Cover', () => {
         const windowCovering = newHarness.getOrAddHandler(hap.Service.WindowCovering)
           .addExpectedCharacteristic('position', hap.Characteristic.CurrentPosition, false)
           .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true)
-          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false);
+          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false)
+          .addExpectedCharacteristic('state', hap.Characteristic.HoldPosition, true);
         newHarness.prepareCreationMocks();
 
         const positionCharacteristicMock = windowCovering.getCharacteristicMock('position');
@@ -68,6 +69,12 @@ describe('Cover', () => {
         [hap.Characteristic.TargetPosition, 100],
       ]));
       harness.clearMocks();
+    });
+
+    test('HomeKit: Hold position', () => {
+      expect(harness).toBeDefined();
+
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'state', true, { state: 'STOP' });
     });
 
     test('HomeKit: Change target position', () => {
@@ -154,7 +161,8 @@ describe('Cover', () => {
           .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true)
           .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false)
           .addExpectedCharacteristic('tilt', hap.Characteristic.CurrentHorizontalTiltAngle, false)
-          .addExpectedCharacteristic('target_tilt', hap.Characteristic.TargetHorizontalTiltAngle, true);
+          .addExpectedCharacteristic('target_tilt', hap.Characteristic.TargetHorizontalTiltAngle, true)
+          .addExpectedCharacteristic('state', hap.Characteristic.HoldPosition, true);
         newHarness.prepareCreationMocks();
 
         const positionCharacteristicMock = windowCovering.getCharacteristicMock('position');
@@ -243,6 +251,12 @@ describe('Cover', () => {
       harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'target_tilt', 90, { tilt: 100 });
       harness.clearMocks();
     });
+
+    test('HomeKit: Hold position', () => {
+      expect(harness).toBeDefined();
+
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'state', true, { state: 'STOP' });
+    });
   });
 
   describe('Current Products Corp CP180335E-01', () => {
@@ -262,7 +276,8 @@ describe('Cover', () => {
         const windowCovering = newHarness.getOrAddHandler(hap.Service.WindowCovering)
           .addExpectedCharacteristic('position', hap.Characteristic.CurrentPosition, false, 'tilt')
           .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true)
-          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false);
+          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false)
+          .addExpectedCharacteristic('state', hap.Characteristic.HoldPosition, true);
         newHarness.prepareCreationMocks();
 
         const positionCharacteristicMock = windowCovering.getCharacteristicMock('position');
@@ -364,6 +379,12 @@ describe('Cover', () => {
       jest.runOnlyPendingTimers();
       harness.checkGetKeysQueued('tilt');
       harness.clearMocks();
+    });
+
+    test('HomeKit: Hold position', () => {
+      expect(harness).toBeDefined();
+
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'state', true, { state: 'STOP' });
     });
   });
 

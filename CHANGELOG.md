@@ -9,6 +9,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Added
 
 - Properties/exposes information can now be excluded based on the `endpoint`, using the `excluded_endpoints` configuration option. (relates to [#517](https://github.com/itavero/homebridge-z2m/issues/517))
+- Window Covering can now be requested to stop moving (see [#483](https://github.com/itavero/homebridge-z2m/issues/483))
 
 ### Changed
 

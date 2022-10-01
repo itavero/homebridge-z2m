@@ -94,7 +94,7 @@ class ThermostatHandler implements ServiceHandler {
 
     return exposesHasAllRequiredFeatures(e,
       [ThermostatHandler.PREDICATE_SETPOINT, ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE],
-      accessory.isPropertyExcluded);
+      accessory.isPropertyExcluded.bind(accessory));
   }
 
   private monitors: CharacteristicMonitor[] = [];

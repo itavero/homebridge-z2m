@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed a bug introduced in [1.9.1] that caused several types of devices to stop working, due to a coding error. (see [#535](https://github.com/itavero/homebridge-z2m/issues/535) for more details)
+
 ## [1.9.1] - 2022-10-01
 
 ### Fixed

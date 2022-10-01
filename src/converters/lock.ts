@@ -14,7 +14,8 @@ import {
 export class LockCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     exposes.filter(e => e.type === ExposesKnownTypes.LOCK && exposesHasFeatures(e)
-      && exposesHasAllRequiredFeatures(e, [LockHandler.PREDICATE_LOCK_STATE, LockHandler.PREDICATE_STATE], accessory.isPropertyExcluded)
+      && exposesHasAllRequiredFeatures(e, [LockHandler.PREDICATE_LOCK_STATE, LockHandler.PREDICATE_STATE],
+        accessory.isPropertyExcluded.bind(accessory))
       && !accessory.isServiceHandlerIdKnown(LockHandler.generateIdentifier(e.endpoint)))
       .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
   }

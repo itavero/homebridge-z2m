@@ -18,7 +18,7 @@ import { EXP_COLOR_MODE } from '../experimental';
 export class LightCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     exposes.filter(e => e.type === ExposesKnownTypes.LIGHT && exposesHasFeatures(e)
-      && exposesHasAllRequiredFeatures(e, [LightHandler.PREDICATE_STATE], accessory.isPropertyExcluded)
+      && exposesHasAllRequiredFeatures(e, [LightHandler.PREDICATE_STATE], accessory.isPropertyExcluded.bind(accessory))
       && !accessory.isServiceHandlerIdKnown(LightHandler.generateIdentifier(e.endpoint)))
       .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
   }

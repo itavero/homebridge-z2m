@@ -16,6 +16,7 @@ the Lonsonho QS-Zigbee-C03
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

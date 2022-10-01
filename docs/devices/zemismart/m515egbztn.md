@@ -16,6 +16,7 @@ the Zemismart M515EGBZTN
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

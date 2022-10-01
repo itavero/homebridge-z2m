@@ -16,6 +16,7 @@ the Zemismart ZM-CSW032-D
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

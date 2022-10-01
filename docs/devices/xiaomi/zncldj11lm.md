@@ -16,6 +16,7 @@ the Xiaomi ZNCLDJ11LM
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

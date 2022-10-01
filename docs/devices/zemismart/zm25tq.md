@@ -16,6 +16,7 @@ the Zemismart ZM25TQ
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

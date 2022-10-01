@@ -178,29 +178,30 @@ describe('Plugin configuration', () => {
       });
 
       it.each`
-      converter       | type            | expected
-      ${'occupancy'}  | ${'occupancy'}  | ${true}
-      ${'occupancy'}  | ${'motion'}     | ${true}
-      ${'occupancy'}  | ${'contact'}    | ${false}
-      ${'occupancy'}  | ${1}            | ${false}
-      ${'switch'}     | ${'switch'}     | ${true}
-      ${'switch'}     | ${'outlet'}     | ${true}
-      ${'switch'}     | ${'contact'}    | ${false}
-      ${'switch'}     | ${1}            | ${false}
-    `('validates converter config for $converter if type is set to $type correctly (result: $expected)',
+        converter      | type           | expected
+        ${'occupancy'} | ${'occupancy'} | ${true}
+        ${'occupancy'} | ${'motion'}    | ${true}
+        ${'occupancy'} | ${'contact'}   | ${false}
+        ${'occupancy'} | ${1}           | ${false}
+        ${'switch'}    | ${'switch'}    | ${true}
+        ${'switch'}    | ${'outlet'}    | ${true}
+        ${'switch'}    | ${'contact'}   | ${false}
+        ${'switch'}    | ${1}           | ${false}
+      `(
+        'validates converter config for $converter if type is set to $type correctly (result: $expected)',
         ({ converter, type, expected }) => {
           const config: PlatformConfig = {
             ...minimalValidConfiguration,
             defaults: {
-              converters: {
-              },
+              converters: {},
             },
           };
           config.defaults.converters[converter] = {
             type: type,
           };
           expect(isPluginConfiguration(config, BasicServiceCreatorManager.getInstance())).toBe(expected);
-        });
+        }
+      );
     });
   });
 });

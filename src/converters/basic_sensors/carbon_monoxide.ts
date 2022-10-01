@@ -3,14 +3,21 @@ import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../
 import { hap } from '../../hap';
 import { BinarySensorHandler } from './binary';
 
-
 export class CarbonMonoxideSensorHandler extends BinarySensorHandler {
   public static readonly exposesName: string = 'carbon_monoxide';
 
   constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
-    super(accessory, expose as ExposesEntryWithBinaryProperty, otherExposes, CarbonMonoxideSensorHandler.generateIdentifier,
-      'CarbonMonoxideSensor', (n, t) => new hap.Service.CarbonMonoxideSensor(n, t), hap.Characteristic.CarbonMonoxideDetected,
-      hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_ABNORMAL, hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_NORMAL);
+    super(
+      accessory,
+      expose as ExposesEntryWithBinaryProperty,
+      otherExposes,
+      CarbonMonoxideSensorHandler.generateIdentifier,
+      'CarbonMonoxideSensor',
+      (n, t) => new hap.Service.CarbonMonoxideSensor(n, t),
+      hap.Characteristic.CarbonMonoxideDetected,
+      hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_ABNORMAL,
+      hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_NORMAL
+    );
   }
 
   static generateIdentifier(endpoint: string | undefined) {

@@ -6,7 +6,6 @@ import { hap } from '../../hap';
 import { BasicSensorHandler } from './basic';
 
 export class HumiditySensorHandler extends BasicSensorHandler {
-
   public static readonly exposesName: string = 'humidity';
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
 

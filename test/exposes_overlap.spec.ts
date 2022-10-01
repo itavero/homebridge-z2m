@@ -2,7 +2,6 @@ import 'jest-chain';
 import { exposesCollectionsAreEqual, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures, exposesGetOverlap } from '../src/z2mModels';
 
 describe('exposesGetOverlap', () => {
-
   const lightA = `[
     {
       "type": "light",
@@ -33,7 +32,7 @@ describe('exposesGetOverlap', () => {
           "access": 7,
           "unit": "mired",
           "value_min": 153,
-          "value_max": 454,
+          "value_max": 505,
           "description": "Color temperature of this light",
           "presets": [
             {
@@ -58,7 +57,7 @@ describe('exposesGetOverlap', () => {
             },
             {
               "name": "warmest",
-              "value": 454,
+              "value": 505,
               "description": "Warmest temperature supported"
             }
           ]
@@ -441,7 +440,6 @@ describe('exposesGetOverlap', () => {
   }
   ]`;
 
-
   test('Equal input results in equal output', () => {
     const exposesA = JSON.parse(lightA);
     const overlap = exposesGetOverlap(exposesA, exposesA);
@@ -455,13 +453,13 @@ describe('exposesGetOverlap', () => {
     const overlap = exposesGetOverlap(exposesA, exposesB);
     expect(overlap).not.toBeUndefined();
     expect(overlap.length).toBe(3);
-    expect(overlap.findIndex(e => e.name === 'linkquality')).toBeGreaterThanOrEqual(0);
+    expect(overlap.findIndex((e) => e.name === 'linkquality')).toBeGreaterThanOrEqual(0);
 
-    const effectExpose = overlap.find(e => e.name === 'effect') as ExposesEntryWithEnumProperty;
+    const effectExpose = overlap.find((e) => e.name === 'effect') as ExposesEntryWithEnumProperty;
     expect(effectExpose).not.toBeUndefined();
     expect(effectExpose.values.length).toEqual(6);
 
-    const lightExpose = overlap.find(e => e.type === 'light') as ExposesEntryWithFeatures;
+    const lightExpose = overlap.find((e) => e.type === 'light') as ExposesEntryWithFeatures;
     expect(lightExpose).not.toBeUndefined();
     expect(lightExpose.features.length).toEqual(4);
 
@@ -469,16 +467,15 @@ describe('exposesGetOverlap', () => {
     expect(exposesCollectionsAreEqual(overlap, exposesB)).toBeFalsy();
   });
 
-
   test('Dimmer: multiple endpoints vs single endpoint', () => {
     const exposesA = JSON.parse(dimmerMultipleEndpoints);
     const exposesB = JSON.parse(dimmerSingleEndpoint);
     const overlap = exposesGetOverlap(exposesA, exposesB);
     expect(overlap).not.toBeUndefined();
     expect(overlap.length).toBe(2);
-    expect(overlap.findIndex(e => e.name === 'linkquality')).toBeGreaterThanOrEqual(0);
+    expect(overlap.findIndex((e) => e.name === 'linkquality')).toBeGreaterThanOrEqual(0);
 
-    const lightExpose = overlap.find(e => e.type === 'light') as ExposesEntryWithFeatures;
+    const lightExpose = overlap.find((e) => e.type === 'light') as ExposesEntryWithFeatures;
     expect(lightExpose).not.toBeUndefined();
     expect(lightExpose.features.length).toEqual(2);
 

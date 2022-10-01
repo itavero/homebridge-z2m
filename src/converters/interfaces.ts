@@ -3,37 +3,37 @@ import { ExposesEntry } from '../z2mModels';
 import { BasicLogger } from '../logger';
 
 export interface BasicAccessory {
-    log: BasicLogger;
+  log: BasicLogger;
 
-    displayName: string;
+  displayName: string;
 
-    getDefaultServiceDisplayName(subType: string | undefined): string;
+  getDefaultServiceDisplayName(subType: string | undefined): string;
 
-    getOrAddService(service: Service): Service;
+  getOrAddService(service: Service): Service;
 
-    queueDataForSetAction(data: Record<string, unknown>): void;
+  queueDataForSetAction(data: Record<string, unknown>): void;
 
-    queueKeyForGetAction(key: string | string[]): void;
+  queueKeyForGetAction(key: string | string[]): void;
 
-    registerServiceHandler(handler: ServiceHandler): void;
+  registerServiceHandler(handler: ServiceHandler): void;
 
-    isServiceHandlerIdKnown(identifier: string): boolean;
+  isServiceHandlerIdKnown(identifier: string): boolean;
 
-    isExperimentalFeatureEnabled(feature: string): boolean;
+  isExperimentalFeatureEnabled(feature: string): boolean;
 
-    getConverterConfiguration(tag: string): unknown | undefined;
+  getConverterConfiguration(tag: string): unknown | undefined;
 }
 
 export interface ServiceHandler {
-    identifier: string;
-    getableKeys: string[];
-    updateState(state: Record<string, unknown>): void;
+  identifier: string;
+  getableKeys: string[];
+  updateState(state: Record<string, unknown>): void;
 }
 
 export interface ConverterConfigurationRegistry {
-    registerConverterConfiguration(tag: string, validator: (config: unknown, tag: string, logger: Logger | undefined) => boolean): void;
+  registerConverterConfiguration(tag: string, validator: (config: unknown, tag: string, logger: Logger | undefined) => boolean): void;
 }
 
 export interface ServiceCreator {
-    createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
+  createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
 }

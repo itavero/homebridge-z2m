@@ -1,7 +1,7 @@
 import { API } from 'homebridge';
 
 import { PLATFORM_NAME } from './settings';
-import { Zigbee2mqttPlatform } from './platform'; 
+import { Zigbee2mqttPlatform } from './platform';
 import { setHap } from './hap';
 
 /**

@@ -24,7 +24,8 @@ describe('Climate', () => {
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
-        newHarness.getOrAddHandler(hap.Service.Thermostat)
+        newHarness
+          .getOrAddHandler(hap.Service.Thermostat)
           .addExpectedCharacteristic('current_heating_setpoint', hap.Characteristic.TargetTemperature, true)
           .addExpectedCharacteristic('local_temperature', hap.Characteristic.CurrentTemperature)
           .addExpectedCharacteristic('system_mode', hap.Characteristic.TargetHeatingCoolingState, true)
@@ -48,44 +49,67 @@ describe('Climate', () => {
 
     test('Status update is handled: Local Temperature', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"local_temperature":19.5}', hap.Service.Thermostat,
-        hap.Characteristic.CurrentTemperature, 19.5);
+      harness.checkSingleUpdateState('{"local_temperature":19.5}', hap.Service.Thermostat, hap.Characteristic.CurrentTemperature, 19.5);
     });
 
     test('Status update is handled: Target Temperature', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"current_heating_setpoint":21.5}', hap.Service.Thermostat,
-        hap.Characteristic.TargetTemperature, 21.5);
+      harness.checkSingleUpdateState(
+        '{"current_heating_setpoint":21.5}',
+        hap.Service.Thermostat,
+        hap.Characteristic.TargetTemperature,
+        21.5
+      );
     });
 
     test('Status update is handled: Idle state', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"running_state":"idle"}', hap.Service.Thermostat,
-        hap.Characteristic.CurrentHeatingCoolingState, hap.Characteristic.CurrentHeatingCoolingState.OFF);
+      harness.checkSingleUpdateState(
+        '{"running_state":"idle"}',
+        hap.Service.Thermostat,
+        hap.Characteristic.CurrentHeatingCoolingState,
+        hap.Characteristic.CurrentHeatingCoolingState.OFF
+      );
     });
 
     test('Status update is handled: Heating state', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"running_state":"heat"}', hap.Service.Thermostat,
-        hap.Characteristic.CurrentHeatingCoolingState, hap.Characteristic.CurrentHeatingCoolingState.HEAT);
+      harness.checkSingleUpdateState(
+        '{"running_state":"heat"}',
+        hap.Service.Thermostat,
+        hap.Characteristic.CurrentHeatingCoolingState,
+        hap.Characteristic.CurrentHeatingCoolingState.HEAT
+      );
     });
 
     test('Status update is handled: Target Off state', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"system_mode":"off"}', hap.Service.Thermostat,
-        hap.Characteristic.TargetHeatingCoolingState, hap.Characteristic.TargetHeatingCoolingState.OFF);
+      harness.checkSingleUpdateState(
+        '{"system_mode":"off"}',
+        hap.Service.Thermostat,
+        hap.Characteristic.TargetHeatingCoolingState,
+        hap.Characteristic.TargetHeatingCoolingState.OFF
+      );
     });
 
     test('Status update is handled: Target Auto state', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"system_mode":"auto"}', hap.Service.Thermostat,
-        hap.Characteristic.TargetHeatingCoolingState, hap.Characteristic.TargetHeatingCoolingState.AUTO);
+      harness.checkSingleUpdateState(
+        '{"system_mode":"auto"}',
+        hap.Service.Thermostat,
+        hap.Characteristic.TargetHeatingCoolingState,
+        hap.Characteristic.TargetHeatingCoolingState.AUTO
+      );
     });
 
     test('Status update is handled: Target Heat state', () => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"system_mode":"heat"}', hap.Service.Thermostat,
-        hap.Characteristic.TargetHeatingCoolingState, hap.Characteristic.TargetHeatingCoolingState.HEAT);
+      harness.checkSingleUpdateState(
+        '{"system_mode":"heat"}',
+        hap.Service.Thermostat,
+        hap.Characteristic.TargetHeatingCoolingState,
+        hap.Characteristic.TargetHeatingCoolingState.HEAT
+      );
     });
 
     test('HomeKit: Change setpoint', () => {
@@ -95,20 +119,32 @@ describe('Climate', () => {
 
     test('HomeKit: Set to Off mode', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Thermostat, 'system_mode',
-        hap.Characteristic.TargetHeatingCoolingState.OFF, 'off');
+      harness.checkHomeKitUpdateWithSingleValue(
+        hap.Service.Thermostat,
+        'system_mode',
+        hap.Characteristic.TargetHeatingCoolingState.OFF,
+        'off'
+      );
     });
 
     test('HomeKit: Set to Heat mode', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Thermostat, 'system_mode',
-        hap.Characteristic.TargetHeatingCoolingState.HEAT, 'heat');
+      harness.checkHomeKitUpdateWithSingleValue(
+        hap.Service.Thermostat,
+        'system_mode',
+        hap.Characteristic.TargetHeatingCoolingState.HEAT,
+        'heat'
+      );
     });
 
     test('HomeKit: Set to Auto mode', () => {
       expect(harness).toBeDefined();
-      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Thermostat, 'system_mode',
-        hap.Characteristic.TargetHeatingCoolingState.AUTO, 'auto');
+      harness.checkHomeKitUpdateWithSingleValue(
+        hap.Service.Thermostat,
+        'system_mode',
+        hap.Characteristic.TargetHeatingCoolingState.AUTO,
+        'auto'
+      );
     });
   });
 });

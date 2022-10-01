@@ -1,7 +1,12 @@
 import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 import {
-  ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithProperty,
-  exposesHasBinaryProperty, exposesHasProperty, exposesIsPublished, ExposesKnownTypes,
+  ExposesEntry,
+  ExposesEntryWithBinaryProperty,
+  ExposesEntryWithProperty,
+  exposesHasBinaryProperty,
+  exposesHasProperty,
+  exposesIsPublished,
+  ExposesKnownTypes,
 } from '../z2mModels';
 import { Logger } from 'homebridge';
 import { groupByEndpoint } from '../helpers';
@@ -24,7 +29,7 @@ interface ExposeToHandlerFunction {
 }
 
 interface BasicSensorConstructor {
-  new(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory);
+  new (expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory);
 }
 
 declare type WithBasicSensorProperties<T> = T & {
@@ -55,9 +60,7 @@ export class BasicSensorCreator implements ServiceCreator {
     DeviceTemperatureSensorHandler,
   ];
 
-  private static configs: WithConfigurableConverter<unknown>[] = [
-    OccupancySensorHandler,
-  ];
+  private static configs: WithConfigurableConverter<unknown>[] = [OccupancySensorHandler];
 
   constructor(converterConfigRegistry: ConverterConfigurationRegistry) {
     for (const config of BasicSensorCreator.configs) {
@@ -66,16 +69,18 @@ export class BasicSensorCreator implements ServiceCreator {
   }
 
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    const endpointMap = groupByEndpoint(exposes.filter(e => exposesHasProperty(e)
-      && exposesIsPublished(e)).map(e => e as ExposesEntryWithProperty));
+    const endpointMap = groupByEndpoint(
+      exposes.filter((e) => exposesHasProperty(e) && exposesIsPublished(e)).map((e) => e as ExposesEntryWithProperty)
+    );
 
     endpointMap.forEach((value, key) => {
-      const optionalProperties = value.filter(e => exposesHasBinaryProperty(e) && (e.name === 'battery_low' || e.name === 'tamper'))
-        .map(e => e as ExposesEntryWithBinaryProperty);
-      BasicSensorCreator.handlers.forEach(h => {
-        const values = value.filter(e => e.name === h.exposesName && e.type === h.exposesType);
+      const optionalProperties = value
+        .filter((e) => exposesHasBinaryProperty(e) && (e.name === 'battery_low' || e.name === 'tamper'))
+        .map((e) => e as ExposesEntryWithBinaryProperty);
+      BasicSensorCreator.handlers.forEach((h) => {
+        const values = value.filter((e) => e.name === h.exposesName && e.type === h.exposesType);
         if (values.length > 0 && !accessory.isServiceHandlerIdKnown(h.generateIdentifier(key, accessory))) {
-          values.forEach(e => this.createService(accessory, e, (x) => new h(x, optionalProperties, accessory)));
+          values.forEach((e) => this.createService(accessory, e, (x) => new h(x, optionalProperties, accessory)));
         }
       });
     });

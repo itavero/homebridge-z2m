@@ -56,6 +56,7 @@
     "xiaomi",
     "aqara",
     "philips",
+    "signify",
     "hue",
     "ikea",
     "tradfri",
@@ -64,7 +65,9 @@
     "lonsonho",
     "osram",
     "innr",
-    "gledopto"
+    "gledopto",
+    "sonoff",
+    "lidl"
   ],
   "dependencies": {
     "color-convert": "^2.0.1",

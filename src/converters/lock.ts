@@ -1,22 +1,35 @@
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
-  exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures,
-  exposesHasAllRequiredFeatures, exposesHasBinaryProperty, exposesHasEnumProperty, exposesHasFeatures, exposesIsPublished,
-  ExposesKnownTypes, ExposesPredicate,
+  exposesCanBeGet,
+  exposesCanBeSet,
+  ExposesEntry,
+  ExposesEntryWithBinaryProperty,
+  ExposesEntryWithEnumProperty,
+  ExposesEntryWithFeatures,
+  exposesHasAllRequiredFeatures,
+  exposesHasBinaryProperty,
+  exposesHasEnumProperty,
+  exposesHasFeatures,
+  exposesIsPublished,
+  ExposesKnownTypes,
+  ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
 import { CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
-import {
-  CharacteristicMonitor, MappingCharacteristicMonitor,
-} from './monitor';
+import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
 
 export class LockCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    exposes.filter(e => e.type === ExposesKnownTypes.LOCK && exposesHasFeatures(e)
-      && exposesHasAllRequiredFeatures(e, [LockHandler.PREDICATE_LOCK_STATE, LockHandler.PREDICATE_STATE])
-      && !accessory.isServiceHandlerIdKnown(LockHandler.generateIdentifier(e.endpoint)))
-      .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
+    exposes
+      .filter(
+        (e) =>
+          e.type === ExposesKnownTypes.LOCK &&
+          exposesHasFeatures(e) &&
+          exposesHasAllRequiredFeatures(e, [LockHandler.PREDICATE_LOCK_STATE, LockHandler.PREDICATE_STATE]) &&
+          !accessory.isServiceHandlerIdKnown(LockHandler.generateIdentifier(e.endpoint))
+      )
+      .forEach((e) => this.createService(e as ExposesEntryWithFeatures, accessory));
   }
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
@@ -30,11 +43,11 @@ export class LockCreator implements ServiceCreator {
 }
 
 class LockHandler implements ServiceHandler {
-  public static readonly PREDICATE_STATE: ExposesPredicate = (e) => exposesHasBinaryProperty(e)
-    && e.name === LockHandler.NAME_STATE && exposesCanBeSet(e) && exposesIsPublished(e);
+  public static readonly PREDICATE_STATE: ExposesPredicate = (e) =>
+    exposesHasBinaryProperty(e) && e.name === LockHandler.NAME_STATE && exposesCanBeSet(e) && exposesIsPublished(e);
 
-  public static readonly PREDICATE_LOCK_STATE: ExposesPredicate = (e) => exposesHasEnumProperty(e)
-    && e.name === LockHandler.NAME_LOCK_STATE && exposesIsPublished(e);
+  public static readonly PREDICATE_LOCK_STATE: ExposesPredicate = (e) =>
+    exposesHasEnumProperty(e) && e.name === LockHandler.NAME_LOCK_STATE && exposesIsPublished(e);
 
   private static readonly NAME_STATE = 'state';
   private static readonly NAME_LOCK_STATE = 'lock_state';
@@ -54,26 +67,25 @@ class LockHandler implements ServiceHandler {
     const endpoint = expose.endpoint;
     this.identifier = LockHandler.generateIdentifier(endpoint);
 
-    const potentialStateExpose = expose.features.find(e => LockHandler.PREDICATE_STATE(e)) as ExposesEntryWithBinaryProperty;
+    const potentialStateExpose = expose.features.find((e) => LockHandler.PREDICATE_STATE(e)) as ExposesEntryWithBinaryProperty;
     if (potentialStateExpose === undefined) {
       throw new Error(`Required "${LockHandler.NAME_STATE}" property not found for Lock.`);
     }
     this.stateExpose = potentialStateExpose;
 
-    const potentialLockStateExpose = expose.features.find(e => LockHandler.PREDICATE_LOCK_STATE(e)) as ExposesEntryWithEnumProperty;
+    const potentialLockStateExpose = expose.features.find((e) => LockHandler.PREDICATE_LOCK_STATE(e)) as ExposesEntryWithEnumProperty;
     if (potentialLockStateExpose === undefined) {
       throw new Error(`Required "${LockHandler.NAME_LOCK_STATE}" property not found for Lock.`);
     }
     this.lockStateExpose = potentialLockStateExpose;
 
     const lockStateMapping = LockHandler.BASIC_MAPPING;
-    const missingValues = this.lockStateExpose.values.filter(v => !lockStateMapping.has(v));
+    const missingValues = this.lockStateExpose.values.filter((v) => !lockStateMapping.has(v));
     if (missingValues.length > 0) {
       throw new Error(`Property "${LockHandler.NAME_LOCK_STATE}" of Lock does not support value(s): ${missingValues.join(', ')}`);
     }
 
     const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
-
 
     accessory.log.debug(`Configuring LockMechanism for ${serviceName}`);
     const service = accessory.getOrAddService(new hap.Service.LockMechanism(serviceName, endpoint));
@@ -82,8 +94,9 @@ class LockHandler implements ServiceHandler {
     const stateValues = new Map<CharacteristicValue, CharacteristicValue>();
     stateValues.set(this.stateExpose.value_on, hap.Characteristic.LockTargetState.SECURED);
     stateValues.set(this.stateExpose.value_off, hap.Characteristic.LockTargetState.UNSECURED);
-    this.monitors.push(new MappingCharacteristicMonitor(this.stateExpose.property, service, hap.Characteristic.LockTargetState,
-      stateValues));
+    this.monitors.push(
+      new MappingCharacteristicMonitor(this.stateExpose.property, service, hap.Characteristic.LockTargetState, stateValues)
+    );
 
     getOrAddCharacteristic(service, hap.Characteristic.LockCurrentState);
     for (const value of this.lockStateExpose.values) {
@@ -91,8 +104,9 @@ class LockHandler implements ServiceHandler {
         lockStateMapping.set(value, hap.Characteristic.LockCurrentState.UNKNOWN);
       }
     }
-    this.monitors.push(new MappingCharacteristicMonitor(this.lockStateExpose.property, service, hap.Characteristic.LockCurrentState,
-      lockStateMapping));
+    this.monitors.push(
+      new MappingCharacteristicMonitor(this.lockStateExpose.property, service, hap.Characteristic.LockCurrentState, lockStateMapping)
+    );
   }
 
   identifier: string;
@@ -108,7 +122,7 @@ class LockHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitors.forEach(m => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state));
   }
 
   private handleSetState(value: CharacteristicValue, callback: CharacteristicSetCallback): void {

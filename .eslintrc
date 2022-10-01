@@ -14,8 +14,14 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "ignorePatterns": [
-    "dist"
+  "ignorePatterns": ["dist"],
+  "overrides": [
+    {
+      "files": ["**/*.spec.ts"],
+      "rules": {
+        "sonarjs/no-duplicate-string": ["off"]
+      }
+    }
   ],
   "rules": {
     "quotes": ["warn", "single"],
@@ -27,7 +33,11 @@
     "max-len": ["warn", 140],
     "no-console": ["warn"], // use the provided Homebridge log method instead
     "no-non-null-assertion": ["off"],
-    "lines-between-class-members": ["warn", "always", {"exceptAfterSingleLine": true}],
+    "lines-between-class-members": [
+      "warn",
+      "always",
+      { "exceptAfterSingleLine": true }
+    ],
     "no-else-return": ["error", { "allowElseIf": false }],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
@@ -36,6 +46,7 @@
     "@typescript-eslint/prefer-for-of": ["warn"],
     "@typescript-eslint/adjacent-overload-signatures": ["warn"],
     "@typescript-eslint/method-signature-style": ["warn", "method"],
-    "@typescript-eslint/no-misused-new": ["error"]
+    "@typescript-eslint/no-misused-new": ["error"],
+    "sonarjs/cognitive-complexity": ["error", 20]
   }
 }

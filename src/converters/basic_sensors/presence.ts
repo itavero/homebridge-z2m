@@ -7,11 +7,17 @@ export class PresenceSensorHandler extends BinarySensorHandler {
   public static readonly exposesName: string = 'presence';
 
   constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
-    super(accessory, expose as ExposesEntryWithBinaryProperty, otherExposes, PresenceSensorHandler.generateIdentifier,
+    super(
+      accessory,
+      expose as ExposesEntryWithBinaryProperty,
+      otherExposes,
+      PresenceSensorHandler.generateIdentifier,
       'Occupancy Sensor (presence)',
       (n, t) => new hap.Service.OccupancySensor(n, (PresenceSensorHandler.exposesName + ' ' + (t ?? '')).trim()),
       hap.Characteristic.OccupancyDetected,
-      hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED, hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
+      hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED,
+      hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED
+    );
   }
 
   static generateIdentifier(endpoint: string | undefined) {

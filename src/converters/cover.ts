@@ -1,7 +1,15 @@
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
-  exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures,
-  ExposesEntryWithNumericRangeProperty, exposesHasEnumProperty, exposesHasFeatures, exposesHasNumericRangeProperty, exposesIsPublished,
+  exposesCanBeGet,
+  exposesCanBeSet,
+  ExposesEntry,
+  ExposesEntryWithEnumProperty,
+  ExposesEntryWithFeatures,
+  ExposesEntryWithNumericRangeProperty,
+  exposesHasEnumProperty,
+  exposesHasFeatures,
+  exposesHasNumericRangeProperty,
+  exposesIsPublished,
   ExposesKnownTypes,
 } from '../z2mModels';
 import { hap } from '../hap';
@@ -12,9 +20,14 @@ import { CharacteristicMonitor, NumericCharacteristicMonitor } from './monitor';
 
 export class CoverCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    exposes.filter(e => e.type === ExposesKnownTypes.COVER && exposesHasFeatures(e)
-      && !accessory.isServiceHandlerIdKnown(CoverHandler.generateIdentifier(e.endpoint)))
-      .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
+    exposes
+      .filter(
+        (e) =>
+          e.type === ExposesKnownTypes.COVER &&
+          exposesHasFeatures(e) &&
+          !accessory.isServiceHandlerIdKnown(CoverHandler.generateIdentifier(e.endpoint))
+      )
+      .forEach((e) => this.createService(e as ExposesEntryWithFeatures, accessory));
   }
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
@@ -50,12 +63,20 @@ class CoverHandler implements ServiceHandler {
     const endpoint = expose.endpoint;
     this.identifier = CoverHandler.generateIdentifier(endpoint);
 
-    let positionExpose = expose.features.find(e => exposesHasNumericRangeProperty(e)
-      && e.name === 'position' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
-    this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e)
-      && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
-    this.stateExpose = expose.features.find(e => e.type === ExposesKnownTypes.ENUM && e.name === 'state' && exposesCanBeSet(e)
-      && exposesHasEnumProperty(e) && e.values.includes(CoverHandler.STATE_HOLD_POSITION)) as ExposesEntryWithEnumProperty;
+    let positionExpose = expose.features.find(
+      (e) => exposesHasNumericRangeProperty(e) && e.name === 'position' && exposesCanBeSet(e) && exposesIsPublished(e)
+    ) as ExposesEntryWithNumericRangeProperty;
+    this.tiltExpose = expose.features.find(
+      (e) => exposesHasNumericRangeProperty(e) && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)
+    ) as ExposesEntryWithNumericRangeProperty | undefined;
+    this.stateExpose = expose.features.find(
+      (e) =>
+        e.type === ExposesKnownTypes.ENUM &&
+        e.name === 'state' &&
+        exposesCanBeSet(e) &&
+        exposesHasEnumProperty(e) &&
+        e.values.includes(CoverHandler.STATE_HOLD_POSITION)
+    ) as ExposesEntryWithEnumProperty;
 
     if (positionExpose === undefined) {
       if (this.tiltExpose !== undefined) {
@@ -97,8 +118,15 @@ class CoverHandler implements ServiceHandler {
     // Tilt
     if (this.tiltExpose !== undefined) {
       getOrAddCharacteristic(this.service, hap.Characteristic.CurrentHorizontalTiltAngle);
-      this.monitors.push(new NumericCharacteristicMonitor(this.tiltExpose.property, this.service,
-        hap.Characteristic.CurrentHorizontalTiltAngle, this.tiltExpose.value_min, this.tiltExpose.value_max));
+      this.monitors.push(
+        new NumericCharacteristicMonitor(
+          this.tiltExpose.property,
+          this.service,
+          hap.Characteristic.CurrentHorizontalTiltAngle,
+          this.tiltExpose.value_min,
+          this.tiltExpose.value_max
+        )
+      );
 
       const target_tilt = getOrAddCharacteristic(this.service, hap.Characteristic.TargetHorizontalTiltAngle);
       if (target_tilt.props.minValue === undefined || target_tilt.props.maxValue === undefined) {
@@ -114,8 +142,7 @@ class CoverHandler implements ServiceHandler {
 
     // Hold Position
     if (this.stateExpose !== undefined) {
-      getOrAddCharacteristic(this.service, hap.Characteristic.HoldPosition)
-        .on('set', this.handleSetHoldPosition.bind(this));
+      getOrAddCharacteristic(this.service, hap.Characteristic.HoldPosition).on('set', this.handleSetHoldPosition.bind(this));
     }
 
     if (exposesCanBeGet(this.positionExpose)) {
@@ -138,7 +165,7 @@ class CoverHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitors.forEach(m => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state));
 
     if (this.positionExpose.property in state) {
       const latestPosition = state[this.positionExpose.property] as number;
@@ -207,13 +234,17 @@ class CoverHandler implements ServiceHandler {
       return output_max;
     }
     const percentage = (value - input_min) / (input_max - input_min);
-    return output_min + (percentage * (output_max - output_min));
+    return output_min + percentage * (output_max - output_min);
   }
 
   private scaleAndUpdateCurrentPosition(value: number, isStopped: boolean): void {
-    const characteristicValue = this.scaleNumber(value,
-      this.positionExpose.value_min, this.positionExpose.value_max,
-      this.current_min, this.current_max);
+    const characteristicValue = this.scaleNumber(
+      value,
+      this.positionExpose.value_min,
+      this.positionExpose.value_max,
+      this.current_min,
+      this.current_max
+    );
 
     this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
 
@@ -227,9 +258,13 @@ class CoverHandler implements ServiceHandler {
   }
 
   private handleSetTargetPosition(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
-    const target = this.scaleNumber(value as number,
-      this.target_min, this.target_max,
-      this.positionExpose.value_min, this.positionExpose.value_max);
+    const target = this.scaleNumber(
+      value as number,
+      this.target_min,
+      this.target_max,
+      this.positionExpose.value_min,
+      this.positionExpose.value_max
+    );
 
     const data = {};
     data[this.positionExpose.property] = target;
@@ -265,9 +300,9 @@ class CoverHandler implements ServiceHandler {
     if (this.tiltExpose) {
       // map value: angle back to target: percentage
       // must be rounded for set action
-      const targetTilt = Math.round(this.scaleNumber(value as number,
-        this.target_tilt_min, this.target_tilt_max,
-        this.tiltExpose.value_min, this.tiltExpose.value_max));
+      const targetTilt = Math.round(
+        this.scaleNumber(value as number, this.target_tilt_min, this.target_tilt_max, this.tiltExpose.value_min, this.tiltExpose.value_max)
+      );
 
       const data = {};
       data[this.tiltExpose.property] = targetTilt;
@@ -280,12 +315,10 @@ class CoverHandler implements ServiceHandler {
 
   private handleSetHoldPosition(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const doHold = value as boolean;
-    if (doHold) {
-      if (this.stateExpose) {
-        const data = {};
-        data[this.stateExpose.property] = CoverHandler.STATE_HOLD_POSITION;
-        this.accessory.queueDataForSetAction(data);
-      }
+    if (doHold && this.stateExpose) {
+      const data = {};
+      data[this.stateExpose.property] = CoverHandler.STATE_HOLD_POSITION;
+      this.accessory.queueDataForSetAction(data);
     }
     callback(null);
   }

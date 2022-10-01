@@ -27,8 +27,10 @@ export class SwitchActionMapping {
 
   public merge(other: SwitchActionMapping): SwitchActionMapping {
     if (this.subType !== other.subType) {
-      throw new Error('Can NOT merge SwitchActionMapping instances with different identifiers and/or extensions. ' +
-        `(got subtype ${this.subType} and ${other.subType})`);
+      throw new Error(
+        'Can NOT merge SwitchActionMapping instances with different identifiers and/or extensions. ' +
+          `(got subtype ${this.subType} and ${other.subType})`
+      );
     }
 
     if (this.serviceLabelIndex === undefined) {
@@ -62,8 +64,9 @@ export class SwitchActionMapping {
       return;
     }
     if (other !== local) {
-      throw new Error(`Can NOT merge SwitchActionMapping instances that both have a different value for ${description}. ` +
-        `(got ${local} and ${other})`);
+      throw new Error(
+        `Can NOT merge SwitchActionMapping instances that both have a different value for ${description}. ` + `(got ${local} and ${other})`
+      );
     }
   }
 
@@ -101,33 +104,19 @@ export class SwitchActionMapping {
 }
 
 export class SwitchActionHelper {
-  private static readonly singleAction: Set<string> = new Set([
-    'single', 'click', 'press',
-  ]);
+  private static readonly singleAction: Set<string> = new Set(['single', 'click', 'press']);
 
-  private static readonly doubleAction: Set<string> = new Set([
-    'double',
-  ]);
+  private static readonly doubleAction: Set<string> = new Set(['double']);
 
-  private static readonly longAction: Set<string> = new Set([
-    'hold', 'long',
-  ]);
+  private static readonly longAction: Set<string> = new Set(['hold', 'long']);
 
-  private static readonly tripleAction: Set<string> = new Set([
-    'triple', 'tripple',
-  ]);
+  private static readonly tripleAction: Set<string> = new Set(['triple', 'tripple']);
 
-  private static readonly quadrupleAction: Set<string> = new Set([
-    'quadruple',
-  ]);
+  private static readonly quadrupleAction: Set<string> = new Set(['quadruple']);
 
-  private static readonly ignoredAdditions: Set<string> = new Set([
-    'release', 'hold-release',
-  ]);
+  private static readonly ignoredAdditions: Set<string> = new Set(['release', 'hold-release']);
 
-  private static readonly separators: string[] = [
-    '_', '-',
-  ];
+  private static readonly separators: string[] = ['_', '-'];
 
   private static readonly regex_number = new RegExp('(\\d{1,3})');
 
@@ -138,7 +127,8 @@ export class SwitchActionHelper {
   private static instance: SwitchActionHelper;
 
   private constructor() {
-    const additions = [...SwitchActionHelper.ignoredAdditions,
+    const additions = [
+      ...SwitchActionHelper.ignoredAdditions,
       ...SwitchActionHelper.singleAction,
       ...SwitchActionHelper.doubleAction,
       ...SwitchActionHelper.longAction,
@@ -223,8 +213,7 @@ export class SwitchActionHelper {
       return mapping;
     }
 
-    mapping.identifier = input.replace(this.regex_id_start, '')
-      .replace(this.regex_id_end, '');
+    mapping.identifier = input.replace(this.regex_id_start, '').replace(this.regex_id_end, '');
 
     // Check if identifier is equal to the input
     // If so, consider it a single press action
@@ -260,7 +249,7 @@ export class SwitchActionHelper {
     }
 
     // Filter out invalid mappings and sort them
-    const sortedMappings = this.sortMappingsByIdentifier([...groupedMappings.values()].filter(m => m.hasValidValues()));
+    const sortedMappings = this.sortMappingsByIdentifier([...groupedMappings.values()].filter((m) => m.hasValidValues()));
 
     // Determine labels
     this.labelSortedMappings(sortedMappings);
@@ -296,9 +285,9 @@ export class SwitchActionHelper {
     }
 
     // Determine numbering strategy
-    const numericMultiplier = (maximumTimesNumberIsUsed <= 1) ? 1 : 10;
-    const useIncrementalNumbers = (maximumTimesNumberIsUsed > 10);
-    const startLabelForNonNumericIds = useIncrementalNumbers ? 1 : ((highestNumber + 1) * numericMultiplier);
+    const numericMultiplier = maximumTimesNumberIsUsed <= 1 ? 1 : 10;
+    const useIncrementalNumbers = maximumTimesNumberIsUsed > 10;
+    const startLabelForNonNumericIds = useIncrementalNumbers ? 1 : (highestNumber + 1) * numericMultiplier;
 
     return [numericMultiplier, useIncrementalNumbers, startLabelForNonNumericIds];
   }

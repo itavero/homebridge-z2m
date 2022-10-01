@@ -95,7 +95,7 @@ export const exposesHasNumericRangeProperty = (x: ExposesEntry): x is ExposesEnt
 export const exposesHasBinaryProperty = (x: ExposesEntry): x is ExposesEntryWithBinaryProperty => (exposesHasProperty(x)
   && x.type === ExposesKnownTypes.BINARY && x.value_on !== undefined && x.value_off !== undefined);
 export const exposesHasEnumProperty = (x: ExposesEntry): x is ExposesEntryWithEnumProperty => (exposesHasProperty(x)
-  && x.type === ExposesKnownTypes.ENUM && x.values !== undefined && x.values.length > 0);
+  && x.type === ExposesKnownTypes.ENUM && Array.isArray(x.values) && x.values.length > 0);
 
 export function exposesCanBeSet(entry: ExposesEntry): boolean {
   return (entry.access !== undefined) && ((entry.access & ExposesAccessLevel.SET) !== 0);

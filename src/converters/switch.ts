@@ -41,7 +41,7 @@ export class SwitchCreator implements ServiceCreator {
       exposeAsOutlet = true;
     }
     exposes.filter(e => e.type === ExposesKnownTypes.SWITCH && exposesHasFeatures(e)
-      && exposesHasAllRequiredFeatures(e, [SwitchHandler.PREDICATE_STATE], accessory.isPropertyExcluded.bind(accessory))
+      && exposesHasAllRequiredFeatures(e, [SwitchHandler.PREDICATE_STATE])
       && !accessory.isServiceHandlerIdKnown(SwitchHandler.generateIdentifier(exposeAsOutlet, e.endpoint)))
       .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory, exposeAsOutlet));
   }
@@ -69,8 +69,7 @@ class SwitchHandler implements ServiceHandler {
 
     this.identifier = SwitchHandler.generateIdentifier(exposeAsOutlet, endpoint);
 
-    const potentialStateExpose = expose.features.find(e => SwitchHandler.PREDICATE_STATE(e)
-      && !accessory.isPropertyExcluded(e.property)) as ExposesEntryWithBinaryProperty;
+    const potentialStateExpose = expose.features.find(e => SwitchHandler.PREDICATE_STATE(e)) as ExposesEntryWithBinaryProperty;
     if (potentialStateExpose === undefined) {
       throw new Error(`Required "state" property not found for ${serviceTypeName}.`);
     }

@@ -20,6 +20,15 @@
                "minLength": 1
             }
          },
+         "excluded_endpoints": {
+            "title": "Excluded endpoints",
+            "type": "array",
+            "required": false,
+            "items": {
+               "type": "string",
+               "minLength": 0
+            }
+         },
          "values": {
             "title": "Include/exclude values",
             "type": "array",
@@ -199,6 +208,9 @@
                "excluded_keys": {
                   "$ref": "#/definitions/excluded_keys"
                },
+               "excluded_endpoints": {
+                  "$ref": "#/definitions/excluded_endpoints"
+               },
                "values": {
                   "$ref": "#/definitions/values"
                },
@@ -233,6 +245,12 @@
                   },
                   "excluded_keys": {
                      "$ref": "#/definitions/excluded_keys",
+                     "condition": {
+                        "functionBody": "return !model.devices[arrayIndices].exclude;"
+                     }
+                  },
+                  "excluded_endpoints": {
+                     "$ref": "#/definitions/excluded_endpoints",
                      "condition": {
                         "functionBody": "return !model.devices[arrayIndices].exclude;"
                      }

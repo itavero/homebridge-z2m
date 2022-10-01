@@ -113,10 +113,9 @@ export interface ExposesPredicate {
   (expose: ExposesEntry): boolean;
 }
 
-export function exposesHasAllRequiredFeatures(entry: ExposesEntryWithFeatures, features: ExposesPredicate[],
-  isPropertyExcluded: ((property: string | undefined) => boolean) = () => false): boolean {
+export function exposesHasAllRequiredFeatures(entry: ExposesEntryWithFeatures, features: ExposesPredicate[]): boolean {
   for (const f of features) {
-    if (entry.features.findIndex(e => f(e) && !isPropertyExcluded(e.property)) < 0) {
+    if (entry.features.findIndex(e => f(e)) < 0) {
       // given feature not found
       return false;
     }
@@ -145,7 +144,7 @@ export function exposesGetOverlap(first: ExposesEntry[], second: ExposesEntry[])
 }
 
 // Removes endpoint specific info and possible duplicates
-function normalizeExposes(entries: ExposesEntry[]): ExposesEntry[] {
+export function normalizeExposes(entries: ExposesEntry[]): ExposesEntry[] {
   const result: ExposesEntry[] = [];
   for (const entry of entries) {
     const normalized = exposesRemoveEndpoint(entry);

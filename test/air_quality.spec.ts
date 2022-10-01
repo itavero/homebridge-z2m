@@ -27,7 +27,7 @@ describe('Air Quality Sensor', () => {
         // Check service creation
         newHarness.getOrAddHandler(hap.Service.AirQualitySensor)
           .addExpectedCharacteristic('voc', hap.Characteristic.VOCDensity)
-          .addExpectedCharacteristic('aq', hap.Characteristic.AirQuality, false, undefined, false);
+          .addExpectedCharacteristic('aq', hap.Characteristic.AirQuality);
         newHarness.prepareCreationMocks();
 
         newHarness.callCreators(deviceExposes);

@@ -47,9 +47,9 @@ class CoverHandler implements ServiceHandler {
     const endpoint = expose.endpoint;
     this.identifier = CoverHandler.generateIdentifier(endpoint);
 
-    let positionExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
+    let positionExpose = expose.features.find(e => exposesHasNumericRangeProperty(e)
       && e.name === 'position' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
-    this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e) && !accessory.isPropertyExcluded(e.property)
+    this.tiltExpose = expose.features.find(e => exposesHasNumericRangeProperty(e)
       && e.name === 'tilt' && exposesCanBeSet(e) && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty | undefined;
 
     if (positionExpose === undefined) {

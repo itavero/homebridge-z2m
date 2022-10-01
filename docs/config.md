@@ -34,6 +34,9 @@ A possible configuration looks like this:
       },
       {
          "id": "0xabcd1234abcd1234",
+         "excluded_endpoints": [
+            "l2"
+         ],
          "converters": {
             "switch": {
                "type": "outlet"
@@ -82,7 +85,8 @@ Currently the following options are available:
 * `exclude`: if set to `true` this device will not be fully ignored.
 * `excluded_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be ignored/excluded for this device.
 * `included_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be included for this device, even if they are excluded in the global default device configuration (see below).
-* `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard. This is currently only applied in the [Stateless Programmable Switch](action.md).
+* `excluded_endpoints`: an array of endpoints that should be ignored/excluded for this device. To ignore properties without an endpoint, add `''` (empty string) to the array.
+* `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard.
 * `exposes`: An array of exposes information, using the [structures defined by Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/usage/exposes.html).
 * `converters`: An object to optionally provide additional configuration for specific converters. More information can be found in the documentation of the [converters](converters.md), if applicable.
 

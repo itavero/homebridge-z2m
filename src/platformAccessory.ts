@@ -5,9 +5,12 @@ import { hap } from './hap';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
 import { BasicAccessory, ServiceHandler } from './converters/interfaces';
 import { BasicLogger } from './logger';
-import { deviceListEntriesAreEqual, DeviceListEntry, isDeviceDefinition, isDeviceListEntry, isDeviceListEntryForGroup } from './z2mModels';
+import {
+  deviceListEntriesAreEqual, DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry, isDeviceListEntryForGroup,
+} from './z2mModels';
 import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
 import { QoS } from 'mqtt';
+import { sanitizeAndFilterExposesEntries } from './helpers';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;
@@ -121,7 +124,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     return this.serviceHandlers.has(identifier);
   }
 
-  isPropertyExcluded(property: string | undefined): boolean {
+  private isPropertyExcluded(property: string | undefined): boolean {
     if (property === undefined) {
       // Property is undefined, so it can't be excluded.
       // This is accepted so all exposes models can easily be checked.
@@ -137,7 +140,40 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     return this.additionalConfig.excluded_keys?.includes(property) ?? false;
   }
 
-  isValueAllowedForProperty(property: string, value: string): boolean {
+  private isEndpointExcluded(endpoint: string | undefined): boolean {
+    if (this.additionalConfig.excluded_endpoints === undefined || this.additionalConfig.excluded_endpoints.length === 0) {
+      // No excluded endpoints defined
+      return false;
+    }
+    return this.additionalConfig.excluded_endpoints.includes(endpoint ?? '');
+  }
+
+  private isExposesEntryExcluded(exposesEntry: ExposesEntry): boolean {
+    if (this.isPropertyExcluded(exposesEntry.property)) {
+      return true;
+    }
+
+    if (this.isEndpointExcluded(exposesEntry.endpoint)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  private filterValuesForExposesEntry(exposesEntry: ExposesEntry): string[] {
+    if (exposesEntry.values === undefined || exposesEntry.values.length === 0) {
+      return [];
+    }
+
+    if (exposesEntry.property === undefined) {
+      // Do not filter.
+      return exposesEntry.values;
+    }
+
+    return exposesEntry.values.filter(v => this.isValueAllowedForProperty(exposesEntry.property ?? '', v));
+  }
+
+  private isValueAllowedForProperty(property: string, value: string): boolean {
     const config = this.additionalConfig.values?.find(c => c.property === property);
     if (config) {
       if (config.include && config.include.length > 0) {
@@ -275,6 +311,13 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         && this.additionalConfig.exposes.length > 0) {
         info.definition.exposes = this.additionalConfig.exposes;
       }
+    }
+
+    // Filter/sanitize exposes information
+    if (info?.definition?.exposes !== undefined) {
+      info.definition.exposes = sanitizeAndFilterExposesEntries(info.definition.exposes, e => {
+        return !this.isExposesEntryExcluded(e);
+      }, this.filterValuesForExposesEntry.bind(this));
     }
 
     // Only update the device if a valid device list entry is passed.

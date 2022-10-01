@@ -41,7 +41,7 @@ export class SwitchCreator implements ServiceCreator {
       exposeAsOutlet = true;
     }
     exposes.filter(e => e.type === ExposesKnownTypes.SWITCH && exposesHasFeatures(e)
-      && exposesHasAllRequiredFeatures(e, [SwitchHandler.PREDICATE_STATE], accessory.isPropertyExcluded)
+      && exposesHasAllRequiredFeatures(e, [SwitchHandler.PREDICATE_STATE], accessory.isPropertyExcluded.bind(accessory))
       && !accessory.isServiceHandlerIdKnown(SwitchHandler.generateIdentifier(exposeAsOutlet, e.endpoint)))
       .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory, exposeAsOutlet));
   }

@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.9.2] - 2022-10-01
+
 ### Fixed
 
 - Fixed a bug introduced in [1.9.1] that caused several types of devices to stop working, due to a coding error. (see [#535](https://github.com/itavero/homebridge-z2m/issues/535) for more details)
@@ -338,7 +340,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.1...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...HEAD
+[1.9.2]: https://github.com/itavero/homebridge-z2m/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/itavero/homebridge-z2m/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/itavero/homebridge-z2m/compare/v1.8.0...v1.9.0
 [1.8.0]: https://github.com/itavero/homebridge-z2m/compare/v1.7.0...v1.8.0

@@ -16,6 +16,7 @@ the NodOn SIN-4-RS-20
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

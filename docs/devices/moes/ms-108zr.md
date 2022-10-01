@@ -16,6 +16,7 @@ the Moes MS-108ZR
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

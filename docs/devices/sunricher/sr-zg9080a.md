@@ -16,6 +16,7 @@ the Sunricher SR-ZG9080A
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

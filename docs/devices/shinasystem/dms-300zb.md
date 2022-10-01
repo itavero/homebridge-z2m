@@ -18,9 +18,90 @@ the ShinaSystem DMS-300ZB
   * Battery Level
   * Charging State
   * Status Low Battery
-* [Occupancy Sensor](../../sensors.md)
-  * Occupancy Detected
 
+
+
+## Exposes
+
+This is the information provided by Zigbee2MQTT for this device:
+
+```json
+[
+  {
+    "type": "numeric",
+    "name": "battery",
+    "property": "battery",
+    "access": 1,
+    "unit": "%",
+    "description": "Remaining battery in %",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "type": "numeric",
+    "name": "voltage",
+    "property": "voltage",
+    "access": 1,
+    "unit": "mV",
+    "description": "Voltage of the battery in millivolts"
+  },
+  {
+    "type": "binary",
+    "name": "occupancy_in",
+    "property": "occupancy_in",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether \"IN\" Sensor of the device detected occupancy"
+  },
+  {
+    "type": "binary",
+    "name": "occupancy_out",
+    "property": "occupancy_out",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether \"OUT\" Sensor of the device detected occupancy"
+  },
+  {
+    "type": "binary",
+    "name": "occupancy_or",
+    "property": "occupancy_or",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether \"IN or OUT\" Sensor of the device detected occupancy"
+  },
+  {
+    "type": "binary",
+    "name": "occupancy_and",
+    "property": "occupancy_and",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates whether \"IN and OUT\" Sensor of the device detected occupancy"
+  },
+  {
+    "type": "numeric",
+    "name": "occupancy_timeout",
+    "property": "occupancy_timeout",
+    "access": 7,
+    "unit": "second",
+    "value_min": 0,
+    "value_max": 3600
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]
+```
 
 # Related
 * [Other devices from ShinaSystem](../index.md#shinasystem)

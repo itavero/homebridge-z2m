@@ -16,6 +16,7 @@ the Profalux NSAV061
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

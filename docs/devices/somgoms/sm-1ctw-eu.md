@@ -16,6 +16,7 @@ the Somgoms SM-1CTW-EU
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

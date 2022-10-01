@@ -16,6 +16,7 @@ the Nue / 3A ZW-EU-4C
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

@@ -16,6 +16,7 @@ the HEIMAN HS2CM-N-DC
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

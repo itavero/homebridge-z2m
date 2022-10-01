@@ -16,6 +16,7 @@ the Somgoms ZSTY-SM-1CTZG-US-W
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

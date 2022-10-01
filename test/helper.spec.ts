@@ -7,7 +7,7 @@ import { loadExposesFromFile } from './testHelpers';
 describe('Helper functions', () => {
 
   test('Add missing endpoints to ExposesEntry', () => {
-    const exposes = loadExposesFromFile('siglis/zfp-1a-ch.json');
+    const exposes = loadExposesFromFile('xiaomi/znddmk11lm.json');
     const sanitized = sanitizeAndFilterExposesEntries(exposes);
 
     // Should not be identical, as explicit endpoint information is added.
@@ -22,7 +22,7 @@ describe('Helper functions', () => {
   });
 
   test('Get all endpoints', () => {
-    const exposes = loadExposesFromFile('siglis/zfp-1a-ch.json');
+    const exposes = loadExposesFromFile('tuya/ts0115.json');
     const endpoints = getAllEndpoints(exposes);
     endpoints.sort();
 
@@ -33,8 +33,6 @@ describe('Helper functions', () => {
       'l3',
       'l4',
       'l5',
-      'l6',
-      'l7',
     ];
     expectedEndpoints.sort();
 

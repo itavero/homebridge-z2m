@@ -3,14 +3,23 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig }
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { Zigbee2mqttAccessory } from './platformAccessory';
 import {
-  BaseDeviceConfiguration, DeviceConfiguration, isDeviceConfiguration, isPluginConfiguration,
+  BaseDeviceConfiguration,
+  DeviceConfiguration,
+  isDeviceConfiguration,
+  isPluginConfiguration,
   PluginConfiguration,
 } from './configModels';
 
 import * as mqtt from 'mqtt';
 import * as fs from 'fs';
 import {
-  DeviceListEntry, DeviceListEntryForGroup, ExposesEntry, exposesGetOverlap, GroupListEntry, isDeviceListEntry, isDeviceListEntryForGroup,
+  DeviceListEntry,
+  DeviceListEntryForGroup,
+  ExposesEntry,
+  exposesGetOverlap,
+  GroupListEntry,
+  isDeviceListEntry,
+  isDeviceListEntryForGroup,
 } from './z2mModels';
 import * as semver from 'semver';
 import { errorToString } from './helpers';
@@ -33,19 +42,14 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private groupUpdatePending = false;
   private deviceUpdatePending = false;
 
-  constructor(
-    public readonly log: Logger,
-    config: PlatformConfig,
-    public readonly api: API,
-  ) {
+  constructor(public readonly log: Logger, config: PlatformConfig, public readonly api: API) {
     // Prepare internal states, variables and such
     this.onMessage = this.onMessage.bind(this);
     this.didReceiveDevices = false;
     this.lastReceivedZigbee2MqttVersion = undefined;
 
     // Set device defaults
-    this.baseDeviceConfig = {
-    };
+    this.baseDeviceConfig = {};
 
     // Validate configuration
     if (isPluginConfiguration(config, BasicServiceCreatorManager.getInstance(), log)) {
@@ -57,7 +61,6 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
     // Use configuration
     if (this.config !== undefined) {
-
       // Normalize experimental feature flags
       if (this.config.experimental !== undefined) {
         this.config.experimental = this.config.experimental.map((feature: string) => feature.trim().toLocaleUpperCase());
@@ -94,8 +97,10 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       this.log.info('Connected to MQTT server');
       setTimeout(() => {
         if (!this.didReceiveDevices) {
-          this.log.error('DID NOT RECEIVE ANY DEVICES AFTER BEING CONNECTED FOR TWO MINUTES.\n'
-            + `Please verify that Zigbee2MQTT is running and that it is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
+          this.log.error(
+            'DID NOT RECEIVE ANY DEVICES AFTER BEING CONNECTED FOR TWO MINUTES.\n' +
+              `Please verify that Zigbee2MQTT is running and that it is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`
+          );
         }
       }, 120000);
     });
@@ -159,24 +164,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     return options;
   }
 
-  private checkZigbee2MqttVersion(version: string, topic: string) {
-    if (version !== this.lastReceivedZigbee2MqttVersion) {
-      // Only log the version if it is different from what we have previously received.
-      this.lastReceivedZigbee2MqttVersion = version;
-      this.log.info(`Using Zigbee2MQTT v${version} (identified via ${topic})`);
-    }
-
-    // Ignore -dev suffix if present, because Zigbee2MQTT appends this to the latest released version
-    // for the future development build (instead of applying semantic versioning).
-    const strippedVersion = version.replace(/-dev$/, '');
-
-    if (semver.lt(strippedVersion, Zigbee2mqttPlatform.MIN_Z2M_VERSION)) {
-      this.log.error('!!! UPDATE OF ZIGBEE2MQTT REQUIRED !!! \n' +
-        `Zigbee2MQTT v${version} is TOO OLD. The minimum required version is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION}. \n` +
-        `This means that ${PLUGIN_NAME} MIGHT NOT WORK AS EXPECTED!`);
-    }
-  }
-
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   private onMessage(topic: string, payload: Buffer) {
     const fullTopic = topic;
     try {
@@ -230,25 +218,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
           }
         } else if (topic === 'info' || topic === 'config') {
           // New topic (bridge/info) and legacy topic (bridge/config) should both contain the version number.
-          const info = JSON.parse(payload.toString());
-          if ('version' in info) {
-            this.checkZigbee2MqttVersion(info['version'], fullTopic);
-          } else {
-            this.log.error(`No version found in message on '${fullTopic}'.`);
-          }
-
-          // Also check for potentially incorrect configurations:
-          if ('config' in info) {
-            const outputFormat = info.config.experimental?.output;
-            if (outputFormat !== undefined) {
-              if (!outputFormat.includes('json')) {
-                this.log.error('Zigbee2MQTT MUST output JSON in order for this plugin to work correctly. ' +
-                  `Currently 'experimental.output' is set to '${outputFormat}'. Please adjust your configuration.`);
-              } else {
-                this.log.debug(`Zigbee2MQTT 'experimental.output' is set to '${outputFormat}'`);
-              }
-            }
-          }
+          this.checkZigbee2MqttVersionAndConfig(payload.toString(), fullTopic);
         }
       } else if (!topic.endsWith('/get') && !topic.endsWith('/set')) {
         // Probably a status update from a device
@@ -267,6 +237,46 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     } catch (Error) {
       this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
       this.log.error(errorToString(Error));
+    }
+  }
+
+  private checkZigbee2MqttVersionAndConfig(payload: string, fullTopic: string) {
+    const info = JSON.parse(payload);
+    if ('version' in info) {
+      if (info.version !== this.lastReceivedZigbee2MqttVersion) {
+        // Only log the version if it is different from what we have previously received.
+        this.lastReceivedZigbee2MqttVersion = info.version;
+        this.log.info(`Using Zigbee2MQTT v${info.version} (identified via ${fullTopic})`);
+      }
+
+      // Ignore -dev suffix if present, because Zigbee2MQTT appends this to the latest released version
+      // for the future development build (instead of applying semantic versioning).
+      const strippedVersion = info.version.replace(/-dev$/, '');
+
+      if (semver.lt(strippedVersion, Zigbee2mqttPlatform.MIN_Z2M_VERSION)) {
+        this.log.error(
+          '!!!UPDATE OF ZIGBEE2MQTT REQUIRED!!! \n' +
+            `Zigbee2MQTT v${info.version} is TOO OLD. The minimum required version is v${Zigbee2mqttPlatform.MIN_Z2M_VERSION}. \n` +
+            `This means that ${PLUGIN_NAME} MIGHT NOT WORK AS EXPECTED!`
+        );
+      }
+    } else {
+      this.log.error(`No version found in message on '${fullTopic}'.`);
+    }
+
+    // Also check for potentially incorrect configurations:
+    if ('config' in info) {
+      const outputFormat = info.config.experimental?.output;
+      if (outputFormat !== undefined) {
+        if (!outputFormat.includes('json')) {
+          this.log.error(
+            'Zigbee2MQTT MUST output JSON in order for this plugin to work correctly. ' +
+              `Currently 'experimental.output' is set to '${outputFormat}'. Please adjust your configuration.`
+          );
+        } else {
+          this.log.debug(`Zigbee2MQTT 'experimental.output' is set to '${outputFormat}'`);
+        }
+      }
     }
   }
 
@@ -297,7 +307,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     for (let i = this.accessories.length - 1; i >= 0; --i) {
       const foundIndex = this.lastReceivedDevices.findIndex((d) => d.ieee_address === this.accessories[i].ieeeAddress);
       const foundGroupIndex = this.lastReceivedGroups.findIndex((g) => g.id === this.accessories[i].groupId);
-      if (((foundIndex < 0) && (foundGroupIndex < 0)) || this.isDeviceExcluded(this.accessories[i].accessory.context.device)) {
+      if ((foundIndex < 0 && foundGroupIndex < 0) || this.isDeviceExcluded(this.accessories[i].accessory.context.device)) {
         // Not found or excluded; remove it.
         this.log.debug(`Removing accessory ${this.accessories[i].displayName} (${this.accessories[i].ieeeAddress})`);
         staleAccessories.push(this.accessories[i].accessory);
@@ -312,7 +322,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private handleReceivedDevices(devices: DeviceListEntry[]) {
     this.log.debug('Received devices...');
     this.didReceiveDevices = true;
-    devices.forEach(d => this.createOrUpdateAccessory(d));
+    devices.forEach((d) => this.createOrUpdateAccessory(d));
   }
 
   configureAccessory(accessory: PlatformAccessory) {
@@ -383,7 +393,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     if (this.config?.exclude_grouped_devices === true && this.lastReceivedGroups !== undefined) {
       const id = typeof device === 'string' ? device : device.ieee_address;
       for (const group of this.lastReceivedGroups) {
-        if (group.members.findIndex(m => m.ieee_address === id) >= 0) {
+        if (group.members.findIndex((m) => m.ieee_address === id) >= 0) {
           this.log.debug(`Device (${id}) is excluded because it is in a group: ${group.friendly_name} (${group.id})`);
           return true;
         }
@@ -395,8 +405,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private addAccessory(accessory: PlatformAccessory) {
     const ieee_address = accessory.context.device.ieee_address ?? accessory.context.device.ieeeAddr;
     if (this.isDeviceExcluded(accessory.context.device)) {
-      this.log.warn(
-        `Excluded device found on startup: ${accessory.context.device.friendly_name} (${ieee_address}).`);
+      this.log.warn(`Excluded device found on startup: ${accessory.context.device.friendly_name} (${ieee_address}).`);
       process.nextTick(() => {
         try {
           this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
@@ -409,8 +418,10 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
 
     if (!isDeviceListEntry(accessory.context.device)) {
-      this.log.warn(`Restoring old (pre v1.0.0) accessory ${accessory.context.device.friendly_name} (${ieee_address}). This accessory ` +
-        `will not work until updated device information is received from Zigbee2MQTT v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`);
+      this.log.warn(
+        `Restoring old (pre v1.0.0) accessory ${accessory.context.device.friendly_name} (${ieee_address}). This accessory ` +
+          `will not work until updated device information is received from Zigbee2MQTT v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`
+      );
     }
 
     if (this.accessories.findIndex((acc) => acc.UUID === accessory.UUID) < 0) {
@@ -478,8 +489,13 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     if (exposes.length === 0) {
       // No exposes found. Check if additional config is given.
       const config = this.getAdditionalConfigForDevice(group);
-      if (config !== undefined && (config.exclude === undefined || config.exclude === false)
-        && isDeviceConfiguration(config) && config.exposes !== undefined && config.exposes.length > 0) {
+      if (
+        config !== undefined &&
+        (config.exclude === undefined || config.exclude === false) &&
+        isDeviceConfiguration(config) &&
+        config.exposes !== undefined &&
+        config.exposes.length > 0
+      ) {
         // Additional config is given and it is not excluded.
         exposes = config.exposes;
       } else {
@@ -511,7 +527,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     let exposes: ExposesEntry[] = [];
     let firstEntry = true;
     for (const member of group.members) {
-      const device = this.lastReceivedDevices.find((dev) => (dev.ieee_address === member.ieee_address));
+      const device = this.lastReceivedDevices.find((dev) => dev.ieee_address === member.ieee_address);
       if (device === undefined) {
         this.log.warn(`Cannot find group member in devices: ${member.ieee_address}`);
         continue;

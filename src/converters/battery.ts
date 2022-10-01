@@ -1,23 +1,37 @@
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
-  exposesCanBeGet, ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithNumericRangeProperty, ExposesEntryWithProperty,
-  exposesHasBinaryProperty, exposesHasNumericRangeProperty, exposesHasProperty, exposesIsPublished,
+  exposesCanBeGet,
+  ExposesEntry,
+  ExposesEntryWithBinaryProperty,
+  ExposesEntryWithNumericRangeProperty,
+  ExposesEntryWithProperty,
+  exposesHasBinaryProperty,
+  exposesHasNumericRangeProperty,
+  exposesHasProperty,
+  exposesIsPublished,
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic, groupByEndpoint } from '../helpers';
 import { CharacteristicValue } from 'homebridge';
 import {
   BinaryConditionCharacteristicMonitor,
-  CharacteristicMonitor, MappingCharacteristicMonitor, NumericCharacteristicMonitor,
+  CharacteristicMonitor,
+  MappingCharacteristicMonitor,
+  NumericCharacteristicMonitor,
 } from './monitor';
 
 export class BatteryCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    const endpointMap = groupByEndpoint(exposes.filter(e =>
-      exposesHasProperty(e) && exposesIsPublished(e) && (
-        (e.name === 'battery' && exposesHasNumericRangeProperty(e))
-        || (e.name === 'battery_low' && exposesHasBinaryProperty(e))
-      )).map(e => e as ExposesEntryWithProperty));
+    const endpointMap = groupByEndpoint(
+      exposes
+        .filter(
+          (e) =>
+            exposesHasProperty(e) &&
+            exposesIsPublished(e) &&
+            ((e.name === 'battery' && exposesHasNumericRangeProperty(e)) || (e.name === 'battery_low' && exposesHasBinaryProperty(e)))
+        )
+        .map((e) => e as ExposesEntryWithProperty)
+    );
     endpointMap.forEach((value, key) => {
       if (!accessory.isServiceHandlerIdKnown(BatteryHandler.generateIdentifier(key))) {
         this.createService(key, value, accessory);
@@ -30,8 +44,7 @@ export class BatteryCreator implements ServiceCreator {
       const handler = new BatteryHandler(endpoint, exposes, accessory);
       accessory.registerServiceHandler(handler);
     } catch (error) {
-      accessory.log.warn('Failed to setup battery service ' +
-        `for accessory ${accessory.displayName} for endpoint ${endpoint}: ${error}`);
+      accessory.log.warn('Failed to setup battery service ' + `for accessory ${accessory.displayName} for endpoint ${endpoint}: ${error}`);
     }
   }
 }
@@ -54,12 +67,19 @@ class BatteryHandler implements ServiceHandler {
     // Note: no defined exposes name for the charge state, so assuming batteries are non-chargeable.
     service.updateCharacteristic(hap.Characteristic.ChargingState, hap.Characteristic.ChargingState.NOT_CHARGEABLE);
 
-    this.batteryLevelExpose = exposes.find(e => e.name === 'battery') as ExposesEntryWithNumericRangeProperty;
-    this.batteryLowExpose = exposes.find(e => e.name === 'battery_low') as ExposesEntryWithBinaryProperty;
+    this.batteryLevelExpose = exposes.find((e) => e.name === 'battery') as ExposesEntryWithNumericRangeProperty;
+    this.batteryLowExpose = exposes.find((e) => e.name === 'battery_low') as ExposesEntryWithBinaryProperty;
 
     if (this.batteryLevelExpose !== undefined) {
-      this.monitors.push(new NumericCharacteristicMonitor(this.batteryLevelExpose.property, service, hap.Characteristic.BatteryLevel,
-        this.batteryLevelExpose.value_min, this.batteryLevelExpose.value_max));
+      this.monitors.push(
+        new NumericCharacteristicMonitor(
+          this.batteryLevelExpose.property,
+          service,
+          hap.Characteristic.BatteryLevel,
+          this.batteryLevelExpose.value_min,
+          this.batteryLevelExpose.value_max
+        )
+      );
     } else {
       if (this.batteryLowExpose === undefined) {
         throw new Error(`Can NOT create Battery Service (${serviceName}), if both 'battery' and 'battery_low' are missing.`);
@@ -69,26 +89,32 @@ class BatteryHandler implements ServiceHandler {
       const fakeLevels = new Map<CharacteristicValue, CharacteristicValue>();
       fakeLevels.set(this.batteryLowExpose.value_on, 0);
       fakeLevels.set(this.batteryLowExpose.value_off, 100);
-      this.monitors.push(new MappingCharacteristicMonitor(this.batteryLowExpose.property, service, hap.Characteristic.BatteryLevel,
-        fakeLevels));
+      this.monitors.push(
+        new MappingCharacteristicMonitor(this.batteryLowExpose.property, service, hap.Characteristic.BatteryLevel, fakeLevels)
+      );
     }
 
     if (this.batteryLowExpose !== undefined) {
       const batteryLowMapping = new Map<CharacteristicValue, CharacteristicValue>();
-      batteryLowMapping.set(this.batteryLowExpose.value_on,
-        hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW);
-      batteryLowMapping.set(this.batteryLowExpose.value_off,
-        hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
-      this.monitors.push(new MappingCharacteristicMonitor(this.batteryLowExpose.property, service, hap.Characteristic.StatusLowBattery,
-        batteryLowMapping));
+      batteryLowMapping.set(this.batteryLowExpose.value_on, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW);
+      batteryLowMapping.set(this.batteryLowExpose.value_off, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
+      this.monitors.push(
+        new MappingCharacteristicMonitor(this.batteryLowExpose.property, service, hap.Characteristic.StatusLowBattery, batteryLowMapping)
+      );
     } else {
       if (this.batteryLevelExpose === undefined) {
         throw new Error(`Can NOT create Battery Service (${serviceName}), if both 'battery' and 'battery_low' are missing.`);
       }
-      this.monitors.push(new BinaryConditionCharacteristicMonitor(this.batteryLevelExpose.property, service,
-        hap.Characteristic.StatusLowBattery, (v) => ((v as number) < 30),
-        hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW,
-        hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL));
+      this.monitors.push(
+        new BinaryConditionCharacteristicMonitor(
+          this.batteryLevelExpose.property,
+          service,
+          hap.Characteristic.StatusLowBattery,
+          (v) => (v as number) < 30,
+          hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW,
+          hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
+        )
+      );
     }
   }
 
@@ -105,7 +131,7 @@ class BatteryHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitors.forEach(m => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state));
   }
 
   static generateIdentifier(endpoint: string | undefined) {

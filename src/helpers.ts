@@ -11,7 +11,7 @@ export function errorToString(e: unknown): string {
   return JSON.stringify(e);
 }
 
-export function getOrAddCharacteristic(service: Service, characteristic: WithUUID<{ new(): Characteristic }>): Characteristic {
+export function getOrAddCharacteristic(service: Service, characteristic: WithUUID<{ new (): Characteristic }>): Characteristic {
   return service.getCharacteristic(characteristic) || service.addCharacteristic(characteristic);
 }
 
@@ -66,17 +66,23 @@ export function getAllEndpoints(entries: ExposesEntry[], parentEndpoint?: string
   return result;
 }
 
-export function sanitizeAndFilterExposesEntries(input: ExposesEntry[],
-  filter?: (entry: ExposesEntry) => boolean, valueFilter?: (entry: ExposesEntry) => string[],
-  parentEndpoint?: string | undefined): ExposesEntry[] {
-
-  return input.filter(e => filter === undefined || filter(e))
-    .map(e => sanitizeAndFilterExposesEntry(e, filter, valueFilter, parentEndpoint));
+export function sanitizeAndFilterExposesEntries(
+  input: ExposesEntry[],
+  filter?: (entry: ExposesEntry) => boolean,
+  valueFilter?: (entry: ExposesEntry) => string[],
+  parentEndpoint?: string | undefined
+): ExposesEntry[] {
+  return input
+    .filter((e) => filter === undefined || filter(e))
+    .map((e) => sanitizeAndFilterExposesEntry(e, filter, valueFilter, parentEndpoint));
 }
 
-function sanitizeAndFilterExposesEntry(input: ExposesEntry,
-  filter?: (entry: ExposesEntry) => boolean, valueFilter?: (entry: ExposesEntry) => string[],
-  parentEndpoint?: string | undefined): ExposesEntry {
+function sanitizeAndFilterExposesEntry(
+  input: ExposesEntry,
+  filter?: (entry: ExposesEntry) => boolean,
+  valueFilter?: (entry: ExposesEntry) => string[],
+  parentEndpoint?: string | undefined
+): ExposesEntry {
   const output: ExposesEntry = {
     ...input,
   };

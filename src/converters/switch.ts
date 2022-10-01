@@ -1,25 +1,32 @@
 import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 import {
-  exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithFeatures, exposesHasAllRequiredFeatures,
-  exposesHasBinaryProperty, exposesHasFeatures, exposesIsPublished, ExposesKnownTypes, ExposesPredicate,
+  exposesCanBeGet,
+  exposesCanBeSet,
+  ExposesEntry,
+  ExposesEntryWithBinaryProperty,
+  ExposesEntryWithFeatures,
+  exposesHasAllRequiredFeatures,
+  exposesHasBinaryProperty,
+  exposesHasFeatures,
+  exposesIsPublished,
+  ExposesKnownTypes,
+  ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
 import { CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
-import {
-  CharacteristicMonitor, MappingCharacteristicMonitor,
-} from './monitor';
+import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
 
 interface SwitchConfig {
   type?: string;
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isSwitchConfig = (x: any): x is SwitchConfig => (
-  x !== undefined && (
-    x.type === undefined
-    || (typeof x.type === 'string' && x.type.length > 0 &&
-      [SwitchCreator.CONFIG_TYPE_SWITCH, SwitchCreator.CONFIG_TYPE_OUTLET].includes(x.type.toLowerCase()))
-  ));
+export const isSwitchConfig = (x: any): x is SwitchConfig =>
+  x !== undefined &&
+  (x.type === undefined ||
+    (typeof x.type === 'string' &&
+      x.type.length > 0 &&
+      [SwitchCreator.CONFIG_TYPE_SWITCH, SwitchCreator.CONFIG_TYPE_OUTLET].includes(x.type.toLowerCase())));
 
 export class SwitchCreator implements ServiceCreator {
   public static readonly CONFIG_TAG = 'switch';
@@ -40,10 +47,15 @@ export class SwitchCreator implements ServiceCreator {
     if (isSwitchConfig(converterConfig) && converterConfig.type === SwitchCreator.CONFIG_TYPE_OUTLET) {
       exposeAsOutlet = true;
     }
-    exposes.filter(e => e.type === ExposesKnownTypes.SWITCH && exposesHasFeatures(e)
-      && exposesHasAllRequiredFeatures(e, [SwitchHandler.PREDICATE_STATE])
-      && !accessory.isServiceHandlerIdKnown(SwitchHandler.generateIdentifier(exposeAsOutlet, e.endpoint)))
-      .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory, exposeAsOutlet));
+    exposes
+      .filter(
+        (e) =>
+          e.type === ExposesKnownTypes.SWITCH &&
+          exposesHasFeatures(e) &&
+          exposesHasAllRequiredFeatures(e, [SwitchHandler.PREDICATE_STATE]) &&
+          !accessory.isServiceHandlerIdKnown(SwitchHandler.generateIdentifier(exposeAsOutlet, e.endpoint))
+      )
+      .forEach((e) => this.createService(e as ExposesEntryWithFeatures, accessory, exposeAsOutlet));
   }
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory, exposeAsOutlet: boolean): void {
@@ -57,8 +69,8 @@ export class SwitchCreator implements ServiceCreator {
 }
 
 class SwitchHandler implements ServiceHandler {
-  public static readonly PREDICATE_STATE: ExposesPredicate = (e) => exposesHasBinaryProperty(e)
-    && e.name === 'state' && exposesCanBeSet(e) && exposesIsPublished(e);
+  public static readonly PREDICATE_STATE: ExposesPredicate = (e) =>
+    exposesHasBinaryProperty(e) && e.name === 'state' && exposesCanBeSet(e) && exposesIsPublished(e);
 
   private monitor: CharacteristicMonitor;
   private stateExpose: ExposesEntryWithBinaryProperty;
@@ -69,7 +81,7 @@ class SwitchHandler implements ServiceHandler {
 
     this.identifier = SwitchHandler.generateIdentifier(exposeAsOutlet, endpoint);
 
-    const potentialStateExpose = expose.features.find(e => SwitchHandler.PREDICATE_STATE(e)) as ExposesEntryWithBinaryProperty;
+    const potentialStateExpose = expose.features.find((e) => SwitchHandler.PREDICATE_STATE(e)) as ExposesEntryWithBinaryProperty;
     if (potentialStateExpose === undefined) {
       throw new Error(`Required "state" property not found for ${serviceTypeName}.`);
     }
@@ -78,16 +90,15 @@ class SwitchHandler implements ServiceHandler {
     const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
 
     accessory.log.debug(`Configuring ${serviceTypeName} for ${serviceName}`);
-    const service = accessory.getOrAddService(exposeAsOutlet ?
-      new hap.Service.Outlet(serviceName, endpoint) :
-      new hap.Service.Switch(serviceName, endpoint));
+    const service = accessory.getOrAddService(
+      exposeAsOutlet ? new hap.Service.Outlet(serviceName, endpoint) : new hap.Service.Switch(serviceName, endpoint)
+    );
 
     getOrAddCharacteristic(service, hap.Characteristic.On).on('set', this.handleSetOn.bind(this));
     const onOffValues = new Map<CharacteristicValue, CharacteristicValue>();
     onOffValues.set(this.stateExpose.value_on, true);
     onOffValues.set(this.stateExpose.value_off, false);
-    this.monitor = new MappingCharacteristicMonitor(this.stateExpose.property, service, hap.Characteristic.On,
-      onOffValues);
+    this.monitor = new MappingCharacteristicMonitor(this.stateExpose.property, service, hap.Characteristic.On, onOffValues);
   }
 
   identifier: string;

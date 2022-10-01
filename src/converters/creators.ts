@@ -21,11 +21,12 @@ export interface ConverterConfigValidatorCollection {
 }
 
 interface ServiceCreatorConstructor {
-  new(converterConfigRegistry: ConverterConfigurationRegistry): ServiceCreator;
+  new (converterConfigRegistry: ConverterConfigurationRegistry): ServiceCreator;
 }
 
-export class BasicServiceCreatorManager implements ServiceCreatorManager, ConverterConfigValidatorCollection,
-  ConverterConfigurationRegistry {
+export class BasicServiceCreatorManager
+  implements ServiceCreatorManager, ConverterConfigValidatorCollection, ConverterConfigurationRegistry
+{
   private static readonly constructors: ServiceCreatorConstructor[] = [
     LightCreator,
     SwitchCreator,
@@ -46,7 +47,7 @@ export class BasicServiceCreatorManager implements ServiceCreatorManager, Conver
 
   private constructor() {
     this.converterConfigs = new Map();
-    this.creators = BasicServiceCreatorManager.constructors.map(c => new c(this));
+    this.creators = BasicServiceCreatorManager.constructors.map((c) => new c(this));
   }
 
   allConverterConfigurationsAreValid(configurations: object, logger: Logger | undefined): boolean {

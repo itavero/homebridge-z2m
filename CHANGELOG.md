@@ -15,6 +15,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Exposes information is now filtered before passing it to the service handlers. This should make the behavior more consistent and reduce complexity of the service handlers for improved maintainability.
 
+### Fixed
+
+- When combining exposes information of grouped devices, the `value_min` and `value_max` were not being combined correctly. This has been fixed, so that the resulting range is supported by all devices in the group.
+
 ## [1.9.2] - 2022-10-01
 
 ### Fixed
@@ -32,7 +36,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Added
 
-- Some converters now have some additional configuration options which allows you to select an alternative implementation. (see 
+- Some converters now have some additional configuration options which allows you to select an alternative implementation. (see
  [#458](https://github.com/itavero/homebridge-z2m/pull/458) and related issues)
   - `switch` can be configured as a `switch` (default) or `outlet`
   - `occupancy` can be configured as `occupancy` (default) or `motion`
@@ -216,7 +220,7 @@ For `cover` devices the following changes/fixes are in this release:
 ## [1.1.0-beta.1][] - 2021-01-16
 ### Changed
 - Zigbee2MQTT minimal version check ignores the `-dev` suffix, so that the newer development build is also accepted.
-- Updated Name characteristic of the Accessory Information service with the `friendly_name` received from Zigbee2MQTT. 
+- Updated Name characteristic of the Accessory Information service with the `friendly_name` received from Zigbee2MQTT.
 - Fixed some typo's, both in code and documentation.
 - Changed casing of Zigbee2MQTT in logs and such.
 

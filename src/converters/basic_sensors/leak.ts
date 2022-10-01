@@ -4,13 +4,26 @@ import { hap } from '../../hap';
 import { BinarySensorHandler } from './binary';
 import { IdentifierGenerator } from './basic';
 
-
 abstract class LeakSensorHandler extends BinarySensorHandler {
-  constructor(subType: string, identifierGen: IdentifierGenerator, expose: ExposesEntryWithProperty,
-    otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
-    super(accessory, expose as ExposesEntryWithBinaryProperty, otherExposes, identifierGen, subType + ' LeakSensor',
-      (n, t) => new hap.Service.LeakSensor(n, t), hap.Characteristic.LeakDetected,
-      hap.Characteristic.LeakDetected.LEAK_DETECTED, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED, subType);
+  constructor(
+    subType: string,
+    identifierGen: IdentifierGenerator,
+    expose: ExposesEntryWithProperty,
+    otherExposes: ExposesEntryWithBinaryProperty[],
+    accessory: BasicAccessory
+  ) {
+    super(
+      accessory,
+      expose as ExposesEntryWithBinaryProperty,
+      otherExposes,
+      identifierGen,
+      subType + ' LeakSensor',
+      (n, t) => new hap.Service.LeakSensor(n, t),
+      hap.Characteristic.LeakDetected,
+      hap.Characteristic.LeakDetected.LEAK_DETECTED,
+      hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED,
+      subType
+    );
   }
 
   static generateIdentifier(endpoint: string | undefined, additionalSubType: string) {

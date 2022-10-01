@@ -1,11 +1,9 @@
-
 import 'jest-chain';
 import { getAllEndpoints, sanitizeAndFilterExposesEntries } from '../src/helpers';
 import { exposesCollectionsAreEqual, normalizeExposes } from '../src/z2mModels';
 import { loadExposesFromFile } from './testHelpers';
 
 describe('Helper functions', () => {
-
   test('Add missing endpoints to ExposesEntry', () => {
     const exposes = loadExposesFromFile('xiaomi/znddmk11lm.json');
     const sanitized = sanitizeAndFilterExposesEntries(exposes);
@@ -26,14 +24,7 @@ describe('Helper functions', () => {
     const endpoints = getAllEndpoints(exposes);
     endpoints.sort();
 
-    const expectedEndpoints = [
-      undefined,
-      'l1',
-      'l2',
-      'l3',
-      'l4',
-      'l5',
-    ];
+    const expectedEndpoints = [undefined, 'l1', 'l2', 'l3', 'l4', 'l5'];
     expectedEndpoints.sort();
 
     expect(endpoints).toEqual(expectedEndpoints);

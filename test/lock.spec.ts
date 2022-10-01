@@ -25,7 +25,8 @@ describe('Lock', () => {
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
-        newHarness.getOrAddHandler(hap.Service.LockMechanism)
+        newHarness
+          .getOrAddHandler(hap.Service.LockMechanism)
           .addExpectedCharacteristic('state', hap.Characteristic.LockTargetState, true)
           .addExpectedCharacteristic('lock_state', hap.Characteristic.LockCurrentState);
         newHarness.prepareCreationMocks();
@@ -46,20 +47,26 @@ describe('Lock', () => {
 
     test('Status update is handled: Locked', () => {
       expect(harness).toBeDefined();
-      harness.checkUpdateState('{"lock_state":"locked","state":"LOCK"}',
-        hap.Service.LockMechanism, new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+      harness.checkUpdateState(
+        '{"lock_state":"locked","state":"LOCK"}',
+        hap.Service.LockMechanism,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.LockTargetState, hap.Characteristic.LockTargetState.SECURED],
           [hap.Characteristic.LockCurrentState, hap.Characteristic.LockCurrentState.SECURED],
-        ]));
+        ])
+      );
     });
 
     test('Status update is handled: Unlocked', () => {
       expect(harness).toBeDefined();
-      harness.checkUpdateState('{"battery":80,"linkquality":18,"lock_state":"unlocked","state":"UNLOCK"}',
-        hap.Service.LockMechanism, new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+      harness.checkUpdateState(
+        '{"battery":80,"linkquality":18,"lock_state":"unlocked","state":"UNLOCK"}',
+        hap.Service.LockMechanism,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.LockTargetState, hap.Characteristic.LockTargetState.UNSECURED],
           [hap.Characteristic.LockCurrentState, hap.Characteristic.LockCurrentState.UNSECURED],
-        ]));
+        ])
+      );
     });
 
     test('HomeKit: Lock', () => {

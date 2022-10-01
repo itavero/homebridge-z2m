@@ -10,9 +10,14 @@ export class DeviceTemperatureSensorHandler extends BasicSensorHandler {
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
 
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
-
-    super(accessory, expose, allExposes, DeviceTemperatureSensorHandler.generateIdentifier,
-      (n, t) => new hap.Service.TemperatureSensor(n, t), DeviceTemperatureSensorHandler.exposesName);
+    super(
+      accessory,
+      expose,
+      allExposes,
+      DeviceTemperatureSensorHandler.generateIdentifier,
+      (n, t) => new hap.Service.TemperatureSensor(n, t),
+      DeviceTemperatureSensorHandler.exposesName
+    );
     accessory.log.debug(`Configuring Device TemperatureSensor for ${this.serviceName}`);
     const characteristic = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentTemperature);
     if (!copyExposesRangeToCharacteristic(expose, characteristic)) {

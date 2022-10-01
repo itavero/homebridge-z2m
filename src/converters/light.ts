@@ -1,15 +1,29 @@
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
-  exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithBinaryProperty, ExposesEntryWithFeatures,
+  exposesCanBeGet,
+  exposesCanBeSet,
+  ExposesEntry,
+  ExposesEntryWithBinaryProperty,
+  ExposesEntryWithFeatures,
   ExposesEntryWithNumericRangeProperty,
-  ExposesEntryWithProperty, exposesHasAllRequiredFeatures, exposesHasBinaryProperty, exposesHasFeatures,
-  exposesHasNumericRangeProperty, exposesHasProperty, exposesIsPublished, ExposesKnownTypes, ExposesPredicate,
+  ExposesEntryWithProperty,
+  exposesHasAllRequiredFeatures,
+  exposesHasBinaryProperty,
+  exposesHasFeatures,
+  exposesHasNumericRangeProperty,
+  exposesHasProperty,
+  exposesIsPublished,
+  ExposesKnownTypes,
+  ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
 import { CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
 import {
-  CharacteristicMonitor, MappingCharacteristicMonitor, NestedCharacteristicMonitor, NumericCharacteristicMonitor,
+  CharacteristicMonitor,
+  MappingCharacteristicMonitor,
+  NestedCharacteristicMonitor,
+  NumericCharacteristicMonitor,
   PassthroughCharacteristicMonitor,
 } from './monitor';
 import { convertHueSatToXy, convertMiredColorTemperatureToHueSat, convertXyToHueSat } from '../colorhelper';
@@ -17,10 +31,15 @@ import { EXP_COLOR_MODE } from '../experimental';
 
 export class LightCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    exposes.filter(e => e.type === ExposesKnownTypes.LIGHT && exposesHasFeatures(e)
-      && exposesHasAllRequiredFeatures(e, [LightHandler.PREDICATE_STATE])
-      && !accessory.isServiceHandlerIdKnown(LightHandler.generateIdentifier(e.endpoint)))
-      .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
+    exposes
+      .filter(
+        (e) =>
+          e.type === ExposesKnownTypes.LIGHT &&
+          exposesHasFeatures(e) &&
+          exposesHasAllRequiredFeatures(e, [LightHandler.PREDICATE_STATE]) &&
+          !accessory.isServiceHandlerIdKnown(LightHandler.generateIdentifier(e.endpoint))
+      )
+      .forEach((e) => this.createService(e as ExposesEntryWithFeatures, accessory));
   }
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
@@ -34,8 +53,8 @@ export class LightCreator implements ServiceCreator {
 }
 
 class LightHandler implements ServiceHandler {
-  public static readonly PREDICATE_STATE: ExposesPredicate = (e) => e.name === 'state' && exposesIsPublished(e) && exposesCanBeSet(e)
-    && exposesHasBinaryProperty(e);
+  public static readonly PREDICATE_STATE: ExposesPredicate = (e) =>
+    e.name === 'state' && exposesIsPublished(e) && exposesCanBeSet(e) && exposesHasBinaryProperty(e);
 
   public static readonly KEY_COLOR_MODE = 'color_mode';
   public static readonly COLOR_MODE_TEMPERATURE = 'color_temp';
@@ -58,11 +77,10 @@ class LightHandler implements ServiceHandler {
     const endpoint = expose.endpoint;
     this.identifier = LightHandler.generateIdentifier(endpoint);
 
-    const features = expose.features.filter(e => exposesHasProperty(e))
-      .map(e => e as ExposesEntryWithProperty);
+    const features = expose.features.filter((e) => exposesHasProperty(e)).map((e) => e as ExposesEntryWithProperty);
 
     // On/off characteristic (required by HomeKit)
-    const potentialStateExpose = features.find(e => LightHandler.PREDICATE_STATE(e));
+    const potentialStateExpose = features.find((e) => LightHandler.PREDICATE_STATE(e));
     if (potentialStateExpose === undefined) {
       throw new Error('Required "state" property not found for Light.');
     }
@@ -77,8 +95,7 @@ class LightHandler implements ServiceHandler {
     const onOffValues = new Map<CharacteristicValue, CharacteristicValue>();
     onOffValues.set(this.stateExpose.value_on, true);
     onOffValues.set(this.stateExpose.value_off, false);
-    this.monitors.push(new MappingCharacteristicMonitor(this.stateExpose.property, service, hap.Characteristic.On,
-      onOffValues));
+    this.monitors.push(new MappingCharacteristicMonitor(this.stateExpose.property, service, hap.Characteristic.On, onOffValues));
 
     // Brightness characteristic
     this.tryCreateBrightness(features, service);
@@ -102,67 +119,71 @@ class LightHandler implements ServiceHandler {
     if (this.colorTempExpose !== undefined && exposesCanBeGet(this.colorTempExpose)) {
       keys.push(this.colorTempExpose.property);
     }
-    if (this.colorExpose !== undefined && this.colorExpose.property !== undefined) {
-      if ((this.colorComponentAExpose !== undefined && exposesCanBeGet(this.colorComponentAExpose))
-        || (this.colorComponentBExpose !== undefined && exposesCanBeGet(this.colorComponentBExpose))
-      ) {
-        keys.push(this.colorExpose.property);
-      }
+    if (
+      this.colorExpose !== undefined &&
+      this.colorExpose.property !== undefined &&
+      ((this.colorComponentAExpose !== undefined && exposesCanBeGet(this.colorComponentAExpose)) ||
+        (this.colorComponentBExpose !== undefined && exposesCanBeGet(this.colorComponentBExpose)))
+    ) {
+      keys.push(this.colorExpose.property);
     }
     return keys;
   }
 
   updateState(state: Record<string, unknown>): void {
-    if (this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE)) {
-      // Use color_mode to filter out the non-active color information
-      // to prevent "incorrect" updates (leading to "glitches" in the Home.app)
-      if (LightHandler.KEY_COLOR_MODE in state) {
-        if (this.colorTempExpose !== undefined
-          && this.colorTempExpose.property in state
-          && state[LightHandler.KEY_COLOR_MODE] !== LightHandler.COLOR_MODE_TEMPERATURE) {
-          // Color mode is NOT Color Temperature. Remove color temperature information.
-          delete state[this.colorTempExpose.property];
-        }
+    // Use color_mode to filter out the non-active color information
+    // to prevent "incorrect" updates (leading to "glitches" in the Home.app)
+    if (this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE) && LightHandler.KEY_COLOR_MODE in state) {
+      if (
+        this.colorTempExpose !== undefined &&
+        this.colorTempExpose.property in state &&
+        state[LightHandler.KEY_COLOR_MODE] !== LightHandler.COLOR_MODE_TEMPERATURE
+      ) {
+        // Color mode is NOT Color Temperature. Remove color temperature information.
+        delete state[this.colorTempExpose.property];
+      }
 
-        if (this.colorExpose !== undefined
-          && this.colorExpose.property !== undefined
-          && this.colorExpose.property in state
-          && state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE) {
-          // Color mode is Color Temperature. Remove HS/XY color information.
-          delete state[this.colorExpose.property];
-        }
+      if (
+        this.colorExpose !== undefined &&
+        this.colorExpose.property !== undefined &&
+        this.colorExpose.property in state &&
+        state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE
+      ) {
+        // Color mode is Color Temperature. Remove HS/XY color information.
+        delete state[this.colorExpose.property];
       }
     }
 
-    this.monitors.forEach(m => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state));
   }
 
   private tryCreateColor(expose: ExposesEntryWithFeatures, service: Service) {
     // First see if color_hs is present
-    this.colorExpose = expose.features.find(e => exposesHasFeatures(e)
-      && e.type === ExposesKnownTypes.COMPOSITE && e.name === 'color_hs'
-      && e.property !== undefined) as ExposesEntryWithFeatures | undefined;
+    this.colorExpose = expose.features.find(
+      (e) => exposesHasFeatures(e) && e.type === ExposesKnownTypes.COMPOSITE && e.name === 'color_hs' && e.property !== undefined
+    ) as ExposesEntryWithFeatures | undefined;
 
     // Otherwise check for color_xy
     if (this.colorExpose === undefined) {
-      this.colorExpose = expose.features.find(e => exposesHasFeatures(e)
-        && e.type === ExposesKnownTypes.COMPOSITE && e.name === 'color_xy'
-        && e.property !== undefined) as ExposesEntryWithFeatures | undefined;
+      this.colorExpose = expose.features.find(
+        (e) => exposesHasFeatures(e) && e.type === ExposesKnownTypes.COMPOSITE && e.name === 'color_xy' && e.property !== undefined
+      ) as ExposesEntryWithFeatures | undefined;
     }
 
     if (this.colorExpose !== undefined && this.colorExpose.property !== undefined) {
       // Note: Components of color_xy and color_hs do not specify a range in zigbee-herdsman-converters
-      const components = this.colorExpose.features.filter(e => exposesHasProperty(e) && e.type === ExposesKnownTypes.NUMERIC)
-        .map(e => e as ExposesEntryWithProperty);
+      const components = this.colorExpose.features
+        .filter((e) => exposesHasProperty(e) && e.type === ExposesKnownTypes.NUMERIC)
+        .map((e) => e as ExposesEntryWithProperty);
 
       this.colorComponentAExpose = undefined;
       this.colorComponentBExpose = undefined;
       if (this.colorExpose.name === 'color_hs') {
-        this.colorComponentAExpose = components.find(e => e.name === 'hue');
-        this.colorComponentBExpose = components.find(e => e.name === 'saturation');
+        this.colorComponentAExpose = components.find((e) => e.name === 'hue');
+        this.colorComponentBExpose = components.find((e) => e.name === 'saturation');
       } else if (this.colorExpose.name === 'color_xy') {
-        this.colorComponentAExpose = components.find(e => e.name === 'x');
-        this.colorComponentBExpose = components.find(e => e.name === 'y');
+        this.colorComponentAExpose = components.find((e) => e.name === 'x');
+        this.colorComponentBExpose = components.find((e) => e.name === 'y');
       }
       if (this.colorComponentAExpose === undefined || this.colorComponentBExpose === undefined) {
         // Can't create service if not all components are present.
@@ -178,17 +199,25 @@ class LightHandler implements ServiceHandler {
           new NestedCharacteristicMonitor(this.colorExpose.property, [
             new PassthroughCharacteristicMonitor(this.colorComponentAExpose.property, service, hap.Characteristic.Hue),
             new PassthroughCharacteristicMonitor(this.colorComponentBExpose.property, service, hap.Characteristic.Saturation),
-          ]));
+          ])
+        );
       } else if (this.colorExpose.name === 'color_xy') {
-        this.monitors.push(new ColorXyCharacteristicMonitor(service, this.colorExpose.property,
-          this.colorComponentAExpose.property, this.colorComponentBExpose.property));
+        this.monitors.push(
+          new ColorXyCharacteristicMonitor(
+            service,
+            this.colorExpose.property,
+            this.colorComponentAExpose.property,
+            this.colorComponentBExpose.property
+          )
+        );
       }
     }
   }
 
   private tryCreateColorTemperature(features: ExposesEntryWithProperty[], service: Service) {
-    this.colorTempExpose = features.find(e => e.name === 'color_temp' && exposesHasNumericRangeProperty(e) && exposesCanBeSet(e)
-      && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
+    this.colorTempExpose = features.find(
+      (e) => e.name === 'color_temp' && exposesHasNumericRangeProperty(e) && exposesCanBeSet(e) && exposesIsPublished(e)
+    ) as ExposesEntryWithNumericRangeProperty;
     if (this.colorTempExpose !== undefined) {
       const characteristic = getOrAddCharacteristic(service, hap.Characteristic.ColorTemperature);
       characteristic.setProps({
@@ -202,27 +231,36 @@ class LightHandler implements ServiceHandler {
 
       characteristic.on('set', this.handleSetColorTemperature.bind(this));
 
-      this.monitors.push(new PassthroughCharacteristicMonitor(this.colorTempExpose.property, service,
-        hap.Characteristic.ColorTemperature));
+      this.monitors.push(new PassthroughCharacteristicMonitor(this.colorTempExpose.property, service, hap.Characteristic.ColorTemperature));
 
       // Also supports colors?
-      if (this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE)) {
-        if (this.colorTempExpose !== undefined && this.colorExpose !== undefined) {
-          // Add monitor to convert Color Temperature to Hue / Saturation
-          // based on the 'color_mode'
-          this.monitors.push(new ColorTemperatureToHueSatMonitor(service, this.colorTempExpose.property));
-        }
+      if (
+        this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE) &&
+        this.colorTempExpose !== undefined &&
+        this.colorExpose !== undefined
+      ) {
+        // Add monitor to convert Color Temperature to Hue / Saturation
+        // based on the 'color_mode'
+        this.monitors.push(new ColorTemperatureToHueSatMonitor(service, this.colorTempExpose.property));
       }
     }
   }
 
   private tryCreateBrightness(features: ExposesEntryWithProperty[], service: Service) {
-    this.brightnessExpose = features.find(e => e.name === 'brightness' && exposesHasNumericRangeProperty(e) && exposesCanBeSet(e)
-      && exposesIsPublished(e)) as ExposesEntryWithNumericRangeProperty;
+    this.brightnessExpose = features.find(
+      (e) => e.name === 'brightness' && exposesHasNumericRangeProperty(e) && exposesCanBeSet(e) && exposesIsPublished(e)
+    ) as ExposesEntryWithNumericRangeProperty;
     if (this.brightnessExpose !== undefined) {
       getOrAddCharacteristic(service, hap.Characteristic.Brightness).on('set', this.handleSetBrightness.bind(this));
-      this.monitors.push(new NumericCharacteristicMonitor(this.brightnessExpose.property, service, hap.Characteristic.Brightness,
-        this.brightnessExpose.value_min, this.brightnessExpose.value_max));
+      this.monitors.push(
+        new NumericCharacteristicMonitor(
+          this.brightnessExpose.property,
+          service,
+          hap.Characteristic.Brightness,
+          this.brightnessExpose.value_min,
+          this.brightnessExpose.value_max
+        )
+      );
     }
   }
 
@@ -241,8 +279,9 @@ class LightHandler implements ServiceHandler {
       } else if (value >= 100) {
         data[this.brightnessExpose.property] = this.brightnessExpose.value_max;
       } else {
-        data[this.brightnessExpose.property] = Math.round(this.brightnessExpose.value_min
-          + (((value as number) / 100) * (this.brightnessExpose.value_max - this.brightnessExpose.value_min)));
+        data[this.brightnessExpose.property] = Math.round(
+          this.brightnessExpose.value_min + ((value as number) / 100) * (this.brightnessExpose.value_max - this.brightnessExpose.value_min)
+        );
       }
       this.accessory.queueDataForSetAction(data);
       callback(null);
@@ -302,10 +341,12 @@ class LightHandler implements ServiceHandler {
       if (this.received_hue && this.received_saturation) {
         this.received_hue = false;
         this.received_saturation = false;
-        if (this.colorExpose?.name === 'color_hs'
-          && this.colorExpose?.property !== undefined
-          && this.colorComponentAExpose !== undefined
-          && this.colorComponentBExpose !== undefined) {
+        if (
+          this.colorExpose?.name === 'color_hs' &&
+          this.colorExpose?.property !== undefined &&
+          this.colorComponentAExpose !== undefined &&
+          this.colorComponentBExpose !== undefined
+        ) {
           const data = {};
           data[this.colorExpose.property] = {};
           data[this.colorExpose.property][this.colorComponentAExpose.property] = this.cached_hue;
@@ -323,10 +364,12 @@ class LightHandler implements ServiceHandler {
       if (this.received_hue && this.received_saturation) {
         this.received_hue = false;
         this.received_saturation = false;
-        if (this.colorExpose?.name === 'color_xy'
-          && this.colorExpose?.property !== undefined
-          && this.colorComponentAExpose !== undefined
-          && this.colorComponentBExpose !== undefined) {
+        if (
+          this.colorExpose?.name === 'color_xy' &&
+          this.colorExpose?.property !== undefined &&
+          this.colorComponentAExpose !== undefined &&
+          this.colorComponentBExpose !== undefined
+        ) {
           const data = {};
           const xy = convertHueSatToXy(this.cached_hue, this.cached_saturation);
           data[this.colorExpose.property] = {};
@@ -350,15 +393,14 @@ class LightHandler implements ServiceHandler {
 }
 
 class ColorTemperatureToHueSatMonitor implements CharacteristicMonitor {
-  constructor(
-    private readonly service: Service,
-    private readonly key_temp: string,
-  ) { }
+  constructor(private readonly service: Service, private readonly key_temp: string) {}
 
   callback(state: Record<string, unknown>): void {
-    if (this.key_temp in state
-      && LightHandler.KEY_COLOR_MODE in state
-      && state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE) {
+    if (
+      this.key_temp in state &&
+      LightHandler.KEY_COLOR_MODE in state &&
+      state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE
+    ) {
       const temperature = state[this.key_temp] as number;
       const hueSat = convertMiredColorTemperatureToHueSat(temperature);
       this.service.updateCharacteristic(hap.Characteristic.Hue, hueSat[0]);
@@ -372,8 +414,8 @@ class ColorXyCharacteristicMonitor implements CharacteristicMonitor {
     private readonly service: Service,
     private readonly key: string,
     private readonly key_x: string,
-    private readonly key_y: string,
-  ) { }
+    private readonly key_y: string
+  ) {}
 
   callback(state: Record<string, unknown>): void {
     if (this.key in state) {

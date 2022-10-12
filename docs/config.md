@@ -9,6 +9,9 @@ A possible configuration looks like this:
       "base_topic": "zigbee2mqtt",
       "server": "mqtt://localhost:1883"
    },
+   "log": {
+      "mqtt_publish": "debug"
+   },
    "defaults": {
       "excluded_keys": [
          "lqi"
@@ -72,6 +75,13 @@ Within the `mqtt` object, you can add pretty much all the configuration options 
 * `reject_unauthorized`
 * `keepalive`
 * `version`
+
+# Logging
+Within the `log` object, you can configure the logging level for certain parts of the plugin.
+The available log levels are `error`, `warn`, `info` and `debug`.
+
+Currently, the following can be configured:
+* `mqtt_publish`: The log level for MQTT messages that are published by the plugin. (default: `debug`)
 
 ### Disable QoS for published MQTT messages
 Some MQTT brokers do not have support for QoS. If the QoS Levels sent by this plugin are leading to problems, you can force the plugin to disable this for all messages (i.e. set the QoS level to 0) by setting the `disable_qos` to `true`.

@@ -1,4 +1,4 @@
-import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig } from 'homebridge';
+import { API, DynamicPlatformPlugin, Logger, LogLevel, PlatformAccessory, PlatformConfig } from 'homebridge';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { Zigbee2mqttAccessory } from './platformAccessory';
@@ -466,7 +466,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         return;
       }
 
-      this.log.info(`Publish to '${topic}': '${payload}'`);
+      this.log.log((this.config?.log?.mqtt_publish ?? LogLevel.DEBUG) as LogLevel, `Publish to '${topic}': '${payload}'`);
 
       return new Promise<void>((resolve) => {
         this.mqttClient?.publish(topic, payload, options, () => resolve());

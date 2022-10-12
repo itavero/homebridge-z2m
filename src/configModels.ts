@@ -1,10 +1,11 @@
-import { PlatformConfig } from 'homebridge';
+import { LogLevel, PlatformConfig } from 'homebridge';
 import { ConverterConfigValidatorCollection } from './converters/creators';
 import { BasicLogger } from './logger';
 import { ExposesEntry, isExposesEntry } from './z2mModels';
 
 export interface PluginConfiguration extends PlatformConfig {
   mqtt: MqttConfiguration;
+  log?: LogConfiguration;
   defaults?: BaseDeviceConfiguration;
   experimental?: string[];
   devices?: DeviceConfiguration[];
@@ -49,6 +50,10 @@ export const isPluginConfiguration = (
     return false;
   }
 
+  if (x.log !== undefined && !isLogConfiguration(x.log)) {
+    logger?.error('Incorrect configuration: log configuration is invalid: ' + JSON.stringify(x.log));
+  }
+
   if (x.defaults !== undefined) {
     if (!isBaseDeviceConfiguration(x.defaults)) {
       logger?.error('Incorrect configuration: Device defaults are incorrect: ' + JSON.stringify(x.defaults));
@@ -73,6 +78,15 @@ export const isPluginConfiguration = (
   return hasValidDeviceConfigurations(x.devices, converterConfigValidator, logger);
 };
 
+export interface LogConfiguration extends Record<string, unknown> {
+  mqtt_publish?: string;
+}
+
+const allowedLogLevels = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isLogConfiguration = (x: any): x is LogConfiguration =>
+  !(x.mqtt_publish !== undefined && typeof x.mqtt_publish !== 'string' && !allowedLogLevels.includes(x.mqtt_publish));
 export interface MqttConfiguration extends Record<string, unknown> {
   base_topic: string;
   server: string;

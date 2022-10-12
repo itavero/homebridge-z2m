@@ -14,6 +14,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Changed
 
 - Exposes information is now filtered before passing it to the service handlers. This should make the behavior more consistent and reduce complexity of the service handlers for improved maintainability.
+- MQTT messages being published by this plugin are now logged to the `debug` log level by default. This can be changed by setting `log.mqtt_publish` to the desired log level (e.g. `info`) in the plugin configuration. (see [#518](https://github.com/itavero/homebridge-z2m/issues/518))
 
 ### Fixed
 

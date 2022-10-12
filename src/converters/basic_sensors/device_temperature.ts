@@ -4,6 +4,7 @@ import { PassthroughCharacteristicMonitor } from '../monitor';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
 import { BasicSensorHandler } from './basic';
+import { Characteristic } from 'homebridge';
 
 export class DeviceTemperatureSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'device_temperature';
@@ -28,6 +29,10 @@ export class DeviceTemperatureSensorHandler extends BasicSensorHandler {
       });
     }
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentTemperature));
+  }
+
+  get mainCharacteristics(): Characteristic[] {
+    return [this.service.getCharacteristic(hap.Characteristic.CurrentTemperature)];
   }
 
   static generateIdentifier(endpoint: string | undefined) {

@@ -44,6 +44,10 @@ export class AirPressureSensorHandler extends BasicSensorHandler {
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, AirPressureSensorHandler.CharacteristicName));
   }
 
+  get mainCharacteristics(): (Characteristic | undefined)[] {
+    return [this.service.getCharacteristic(AirPressureSensorHandler.CharacteristicName)];
+  }
+
   static generateIdentifier(endpoint: string | undefined) {
     let identifier = AirPressureSensorHandler.ServiceUUID;
     if (endpoint !== undefined) {

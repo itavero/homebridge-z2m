@@ -117,6 +117,7 @@ export interface BaseDeviceConfiguration extends Record<string, unknown> {
   values?: PropertyValueConfiguration[];
   converters?: object;
   experimental?: string[];
+  ignore_availability?: boolean;
 }
 
 export interface DeviceConfiguration extends BaseDeviceConfiguration {
@@ -140,6 +141,10 @@ export const hasOptionalStringArrays = (object: any, ...properties: string[]): b
 export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration => {
   // Optional boolean exclude property
   if (x.exclude !== undefined && typeof x.exclude !== 'boolean') {
+    return false;
+  }
+  // Optional boolean ignore_availability property
+  if (x.ignore_availability !== undefined && typeof x.ignore_availability !== 'boolean') {
     return false;
   }
 

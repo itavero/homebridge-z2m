@@ -3,7 +3,7 @@ import { exposesHasEnumProperty, exposesIsPublished, exposesCanBeGet, ExposesEnt
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 
 import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
-import { CharacteristicProps, CharacteristicValue } from 'homebridge';
+import { Characteristic, CharacteristicProps, CharacteristicValue } from 'homebridge';
 import { getOrAddCharacteristic } from '../helpers';
 import { SwitchActionHelper, SwitchActionMapping } from './action_helper';
 
@@ -53,6 +53,7 @@ export class StatelessProgrammableSwitchCreator implements ServiceCreator {
 class StatelessProgrammableSwitchHandler implements ServiceHandler {
   public readonly identifier: string;
   private readonly monitor: CharacteristicMonitor;
+  private readonly eventCharacteristic: Characteristic;
 
   constructor(accessory: BasicAccessory, private readonly actionExpose: ExposesEntryWithEnumProperty, mapping: SwitchActionMapping) {
     this.identifier = StatelessProgrammableSwitchHandler.generateIdentifier(actionExpose.endpoint, mapping.subType);
@@ -72,7 +73,7 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
 
     // Setup monitor and characteristic
     getOrAddCharacteristic(service, hap.Characteristic.ServiceLabelIndex).updateValue(mapping.serviceLabelIndex ?? 0);
-    const eventCharacteristic = getOrAddCharacteristic(service, hap.Characteristic.ProgrammableSwitchEvent);
+    this.eventCharacteristic = getOrAddCharacteristic(service, hap.Characteristic.ProgrammableSwitchEvent);
     const valueMap = new Map<CharacteristicValue, number>();
     if (mapping.valueSinglePress !== undefined) {
       valueMap.set(mapping.valueSinglePress, hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS);
@@ -83,8 +84,14 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
     if (mapping.valueLongPress !== undefined) {
       valueMap.set(mapping.valueLongPress, hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS);
     }
-    eventCharacteristic.setProps(StatelessProgrammableSwitchHandler.generateValueConfigForProgrammableSwitchEvents([...valueMap.values()]));
+    this.eventCharacteristic.setProps(
+      StatelessProgrammableSwitchHandler.generateValueConfigForProgrammableSwitchEvents([...valueMap.values()])
+    );
     this.monitor = new MappingCharacteristicMonitor(actionExpose.property, service, hap.Characteristic.ProgrammableSwitchEvent, valueMap);
+  }
+
+  get mainCharacteristics(): Characteristic[] {
+    return [this.eventCharacteristic];
   }
 
   private static generateValueConfigForProgrammableSwitchEvents(events: number[]): Partial<CharacteristicProps> {

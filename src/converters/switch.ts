@@ -14,7 +14,7 @@ import {
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
-import { CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
 import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
 
 interface SwitchConfig {
@@ -72,6 +72,7 @@ class SwitchHandler implements ServiceHandler {
   public static readonly PREDICATE_STATE: ExposesPredicate = (e) =>
     exposesHasBinaryProperty(e) && e.name === 'state' && exposesCanBeSet(e) && exposesIsPublished(e);
 
+  public mainCharacteristics: Characteristic[];
   private monitor: CharacteristicMonitor;
   private stateExpose: ExposesEntryWithBinaryProperty;
 
@@ -94,7 +95,7 @@ class SwitchHandler implements ServiceHandler {
       exposeAsOutlet ? new hap.Service.Outlet(serviceName, endpoint) : new hap.Service.Switch(serviceName, endpoint)
     );
 
-    getOrAddCharacteristic(service, hap.Characteristic.On).on('set', this.handleSetOn.bind(this));
+    this.mainCharacteristics = [getOrAddCharacteristic(service, hap.Characteristic.On).on('set', this.handleSetOn.bind(this))];
     const onOffValues = new Map<CharacteristicValue, CharacteristicValue>();
     onOffValues.set(this.stateExpose.value_on, true);
     onOffValues.set(this.stateExpose.value_off, false);

@@ -201,6 +201,10 @@ class AirQualitySensorHandler implements ServiceHandler {
     }
   }
 
+  get mainCharacteristics(): Characteristic[] {
+    return [this.service.getCharacteristic(hap.Characteristic.AirQuality)];
+  }
+
   identifier: string;
   get getableKeys(): string[] {
     const keys: string[] = [];

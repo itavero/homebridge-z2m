@@ -10,6 +10,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Properties/exposes information can now be excluded based on the `endpoint`, using the `excluded_endpoints` configuration option. (relates to [#517](https://github.com/itavero/homebridge-z2m/issues/517))
 - Window Covering can now be requested to stop moving (see [#483](https://github.com/itavero/homebridge-z2m/issues/483))
+- Availability information from Zigbee2MQTT, if available, is now used to determine if a device is reachable or not. (see [#36](https://github.com/itavero/homebridge-z2m/issues/36))
 
 ### Changed
 

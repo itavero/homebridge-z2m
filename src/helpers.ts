@@ -11,6 +11,10 @@ export function errorToString(e: unknown): string {
   return JSON.stringify(e);
 }
 
+export function getDiffFromArrays<T>(a: T[], b: T[]): T[] {
+  return a.filter((x) => !b.includes(x)).concat(b.filter((x) => !a.includes(x)));
+}
+
 export function getOrAddCharacteristic(service: Service, characteristic: WithUUID<{ new (): Characteristic }>): Characteristic {
   return service.getCharacteristic(characteristic) || service.addCharacteristic(characteristic);
 }

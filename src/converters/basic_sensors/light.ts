@@ -4,6 +4,7 @@ import { PassthroughCharacteristicMonitor } from '../monitor';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
 import { BasicSensorHandler } from './basic';
+import { Characteristic } from 'homebridge';
 
 export class LightSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'illuminance_lux';
@@ -22,6 +23,10 @@ export class LightSensorHandler extends BasicSensorHandler {
     }
 
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentAmbientLightLevel));
+  }
+
+  get mainCharacteristics(): Characteristic[] {
+    return [this.service.getCharacteristic(hap.Characteristic.CurrentAmbientLightLevel)];
   }
 
   static generateIdentifier(endpoint: string | undefined) {

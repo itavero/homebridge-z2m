@@ -14,7 +14,7 @@ import {
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
-import { CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
 import { ExtendedTimer } from '../timer';
 import { CharacteristicMonitor, NumericCharacteristicMonitor } from './monitor';
 
@@ -150,6 +150,13 @@ class CoverHandler implements ServiceHandler {
     }
     this.waitingForUpdate = false;
     this.ignoreNextUpdateIfEqualToTarget = false;
+  }
+
+  get mainCharacteristics(): Characteristic[] {
+    return [
+      this.service.getCharacteristic(hap.Characteristic.CurrentPosition),
+      this.service.getCharacteristic(hap.Characteristic.PositionState),
+    ];
   }
 
   identifier: string;

@@ -24,6 +24,7 @@ import {
 import * as semver from 'semver';
 import { errorToString, getDiffFromArrays } from './helpers';
 import { BasicServiceCreatorManager } from './converters/creators';
+import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from './configHelpers';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   public readonly config?: PluginConfiguration;
@@ -335,62 +336,41 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       }
 
       // Check availability configuration
-      const currentAvailabilityConfig = this.availabilityIsEnabledGlobally;
-      if (info.config.availability !== undefined) {
-        // Is it a simple boolean?
-        if (typeof info.config.availability === 'boolean') {
-          this.availabilityIsEnabledGlobally = info.config.availability;
-        } else {
-          // It is an object with one of the expected keys, so in that case, availability is considered enabled.
-          this.availabilityIsEnabledGlobally = 'active' in info.config.availability || 'passive' in info.config.availability;
-        }
-      } else {
-        // Default configuration is disabled
-        this.availabilityIsEnabledGlobally = false;
+      this.processAvailabilityConfig(info);
+    }
+  }
+
+  private processAvailabilityConfig(config) {
+    const currentAvailabilityConfig = this.availabilityIsEnabledGlobally;
+    this.availabilityIsEnabledGlobally = isAvailabilityEnabledGlobally(config);
+    this.log.debug(`Zigbee2MQTT availability feature is enabled globally: '${this.availabilityIsEnabledGlobally}'`);
+
+    // Check device configurations
+    const devices = getAvailabilityConfigurationForDevices(config, this.log);
+
+    // Find changes in availability configuration
+    const changedDevices = [
+      ...new Set([
+        ...getDiffFromArrays<string>(Array.from(this.availabilityEnabledDevices.values()), devices.enabled),
+        ...getDiffFromArrays<string>(Array.from(this.availabilityDisabledDevices.values()), devices.disabled),
+      ]),
+    ];
+
+    // Copy new values
+    this.availabilityEnabledDevices = new Set(devices.enabled);
+    this.availabilityDisabledDevices = new Set(devices.disabled);
+
+    // Update the necessary devices
+    if (this.availabilityIsEnabledGlobally !== currentAvailabilityConfig) {
+      // Update availability for all devices
+      this.log.debug(`Availability configuration changed from ${currentAvailabilityConfig} to ${this.availabilityIsEnabledGlobally}`);
+      for (const accessory of this.accessories) {
+        accessory.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(accessory.ieeeAddress));
       }
-      this.log.debug(`Zigbee2MQTT availability feature is enabled globally: '${this.availabilityIsEnabledGlobally}'`);
-
-      // Check device configurations
-      const enabledDevicesAvail: string[] = [];
-      const disabledDevicesAvail: string[] = [];
-      if ('devices' in info.config && typeof info.config.devices === 'object') {
-        for (const device of Object.keys(info.config.devices)) {
-          if (info.config.devices[device].availability !== undefined) {
-            if (info.config.devices[device].availability) {
-              this.log.debug(`Availability feature is explicitly enabled for device '${device}'`);
-              enabledDevicesAvail.push(device);
-            } else {
-              this.log.debug(`Availability feature is explicitly disabled for device '${device}'`);
-              disabledDevicesAvail.push(device);
-            }
-          }
-        }
-      }
-
-      // Find changes in availability configuration
-      const changedDevices = [
-        ...getDiffFromArrays<string>(Array.from(this.availabilityEnabledDevices.values()), enabledDevicesAvail),
-        ...getDiffFromArrays<string>(Array.from(this.availabilityDisabledDevices.values()), disabledDevicesAvail),
-      ];
-
-      // Copy new values
-      this.availabilityEnabledDevices = new Set(enabledDevicesAvail);
-      this.availabilityDisabledDevices = new Set(disabledDevicesAvail);
-
-      // Update the necessary devices
-      if (this.availabilityIsEnabledGlobally !== currentAvailabilityConfig) {
-        // Update availability for all devices
-        this.log.debug(`Availability configuration changed from ${currentAvailabilityConfig} to ${this.availabilityIsEnabledGlobally}`);
-        for (const accessory of this.accessories) {
-          accessory.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(accessory.ieeeAddress));
-        }
-      } else {
-        // Only update changed devices
-        for (const address of changedDevices) {
-          this.accessories
-            .find((acc) => acc.ieeeAddress === address)
-            ?.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(address));
-        }
+    } else {
+      // Only update changed devices
+      for (const address of changedDevices) {
+        this.accessories.find((acc) => acc.ieeeAddress === address)?.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(address));
       }
     }
   }

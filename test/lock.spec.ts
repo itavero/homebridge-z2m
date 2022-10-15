@@ -34,6 +34,7 @@ describe('Lock', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys(['state']);
         harness = newHarness;
       }

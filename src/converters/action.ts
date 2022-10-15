@@ -53,7 +53,7 @@ export class StatelessProgrammableSwitchCreator implements ServiceCreator {
 class StatelessProgrammableSwitchHandler implements ServiceHandler {
   public readonly identifier: string;
   private readonly monitor: CharacteristicMonitor;
-  private readonly eventCharacteristic: Characteristic;
+  public readonly mainCharacteristics: Characteristic[] = [];
 
   constructor(accessory: BasicAccessory, private readonly actionExpose: ExposesEntryWithEnumProperty, mapping: SwitchActionMapping) {
     this.identifier = StatelessProgrammableSwitchHandler.generateIdentifier(actionExpose.endpoint, mapping.subType);
@@ -73,7 +73,7 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
 
     // Setup monitor and characteristic
     getOrAddCharacteristic(service, hap.Characteristic.ServiceLabelIndex).updateValue(mapping.serviceLabelIndex ?? 0);
-    this.eventCharacteristic = getOrAddCharacteristic(service, hap.Characteristic.ProgrammableSwitchEvent);
+    const eventCharacteristic = getOrAddCharacteristic(service, hap.Characteristic.ProgrammableSwitchEvent);
     const valueMap = new Map<CharacteristicValue, number>();
     if (mapping.valueSinglePress !== undefined) {
       valueMap.set(mapping.valueSinglePress, hap.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS);
@@ -84,14 +84,9 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
     if (mapping.valueLongPress !== undefined) {
       valueMap.set(mapping.valueLongPress, hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS);
     }
-    this.eventCharacteristic.setProps(
-      StatelessProgrammableSwitchHandler.generateValueConfigForProgrammableSwitchEvents([...valueMap.values()])
-    );
+    eventCharacteristic.setProps(StatelessProgrammableSwitchHandler.generateValueConfigForProgrammableSwitchEvents([...valueMap.values()]));
+    this.mainCharacteristics.push(eventCharacteristic);
     this.monitor = new MappingCharacteristicMonitor(actionExpose.property, service, hap.Characteristic.ProgrammableSwitchEvent, valueMap);
-  }
-
-  get mainCharacteristics(): Characteristic[] {
-    return [this.eventCharacteristic];
   }
 
   private static generateValueConfigForProgrammableSwitchEvents(events: number[]): Partial<CharacteristicProps> {

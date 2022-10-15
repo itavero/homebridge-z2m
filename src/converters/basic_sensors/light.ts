@@ -10,6 +10,8 @@ export class LightSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'illuminance_lux';
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
 
+  public readonly mainCharacteristics: Characteristic[] = [];
+
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(accessory, expose, allExposes, LightSensorHandler.generateIdentifier, (n, t) => new hap.Service.LightSensor(n, t));
     accessory.log.debug(`Configuring LightSensor for ${this.serviceName}`);
@@ -21,12 +23,9 @@ export class LightSensorHandler extends BasicSensorHandler {
         minValue: 0,
       });
     }
+    this.mainCharacteristics.push(characteristic);
 
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentAmbientLightLevel));
-  }
-
-  get mainCharacteristics(): Characteristic[] {
-    return [this.service.getCharacteristic(hap.Characteristic.CurrentAmbientLightLevel)];
   }
 
   static generateIdentifier(endpoint: string | undefined) {

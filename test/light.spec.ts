@@ -179,6 +179,7 @@ describe('Light', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
 
         newHarness.checkExpectedGetableKeys(['state', 'brightness', 'color_temp', 'color']);
 
@@ -492,6 +493,7 @@ describe('Light', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
 
         newHarness.checkExpectedGetableKeys(['state', 'brightness', 'color_temp', 'color']);
 
@@ -566,6 +568,7 @@ describe('Light', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
 
         newHarness.checkExpectedGetableKeys(['state', 'brightness']);
         harness = newHarness;
@@ -670,6 +673,7 @@ describe('Light', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
 
         newHarness.checkExpectedGetableKeys(['state', 'brightness', 'color_temp', 'color']);
 

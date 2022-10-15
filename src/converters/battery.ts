@@ -12,7 +12,7 @@ import {
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic, groupByEndpoint } from '../helpers';
-import { Characteristic, CharacteristicValue } from 'homebridge';
+import { CharacteristicValue } from 'homebridge';
 import {
   BinaryConditionCharacteristicMonitor,
   CharacteristicMonitor,
@@ -118,7 +118,7 @@ class BatteryHandler implements ServiceHandler {
     }
   }
 
-  get mainCharacteristics(): (Characteristic | undefined)[] {
+  get mainCharacteristics(): undefined[] {
     // If the device is really supported, it will expose more than just this service.
     // No need to add the main characteristics here.
     return [];

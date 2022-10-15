@@ -34,6 +34,7 @@ describe('Air Quality Sensor', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }

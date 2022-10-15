@@ -10,6 +10,8 @@ export class DeviceTemperatureSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'device_temperature';
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
 
+  public readonly mainCharacteristics: Characteristic[] = [];
+
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(
       accessory,
@@ -28,11 +30,8 @@ export class DeviceTemperatureSensorHandler extends BasicSensorHandler {
         maxValue: 100,
       });
     }
+    this.mainCharacteristics.push(characteristic);
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentTemperature));
-  }
-
-  get mainCharacteristics(): Characteristic[] {
-    return [this.service.getCharacteristic(hap.Characteristic.CurrentTemperature)];
   }
 
   static generateIdentifier(endpoint: string | undefined) {

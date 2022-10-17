@@ -49,8 +49,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private zigbee2MqttHasBeenOffline = false;
   private connectionPreviouslyClosed = false;
   private availabilityIsEnabledGlobally = false;
-  private availabilityEnabledDevices = new Set<string>();
-  private availabilityDisabledDevices = new Set<string>();
+  private availabilityEnabledDevices = new Array<string>();
+  private availabilityDisabledDevices = new Array<string>();
 
   constructor(public readonly log: Logger, config: PlatformConfig, public readonly api: API) {
     // Prepare internal states, variables and such
@@ -351,35 +351,36 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     // Find changes in availability configuration
     const changedDevices = [
       ...new Set([
-        ...getDiffFromArrays<string>(Array.from(this.availabilityEnabledDevices.values()), devices.enabled),
-        ...getDiffFromArrays<string>(Array.from(this.availabilityDisabledDevices.values()), devices.disabled),
+        ...getDiffFromArrays<string>(this.availabilityEnabledDevices, devices.enabled),
+        ...getDiffFromArrays<string>(this.availabilityDisabledDevices, devices.disabled),
       ]),
     ];
 
     // Copy new values
-    this.availabilityEnabledDevices = new Set(devices.enabled);
-    this.availabilityDisabledDevices = new Set(devices.disabled);
+    this.availabilityEnabledDevices = devices.enabled;
+    this.availabilityDisabledDevices = devices.disabled;
 
     // Update the necessary devices
     if (this.availabilityIsEnabledGlobally !== currentAvailabilityConfig) {
       // Update availability for all devices
       this.log.debug(`Availability configuration changed from ${currentAvailabilityConfig} to ${this.availabilityIsEnabledGlobally}`);
       for (const accessory of this.accessories) {
-        accessory.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(accessory.ieeeAddress));
+        accessory.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(accessory));
       }
     } else {
       // Only update changed devices
-      for (const address of changedDevices) {
-        this.accessories.find((acc) => acc.ieeeAddress === address)?.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(address));
+      for (const identifier of changedDevices) {
+        const accessory = this.accessories.find((acc) => acc.matchesIdentifier(identifier));
+        accessory?.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(accessory));
       }
     }
   }
 
-  private isAvailabilityEnabledForAddress(ieeeAddress: string): boolean {
-    if (this.availabilityEnabledDevices.has(ieeeAddress)) {
+  private isAvailabilityEnabledForAddress(device: Zigbee2mqttAccessory): boolean {
+    if (this.availabilityEnabledDevices.findIndex((d) => device.matchesIdentifier(d)) >= 0) {
       return true;
     }
-    if (this.availabilityDisabledDevices.has(ieeeAddress)) {
+    if (this.availabilityDisabledDevices.findIndex((d) => device.matchesIdentifier(d)) >= 0) {
       return false;
     }
     return this.availabilityIsEnabledGlobally;
@@ -572,7 +573,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     const existingAcc = this.accessories.find((acc) => acc.UUID === uuid);
     if (existingAcc) {
       existingAcc.updateDeviceInformation(device);
-      existingAcc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(existingAcc.ieeeAddress));
+      existingAcc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(existingAcc));
     } else {
       // New entry
       this.log.info('New accessory:', device.friendly_name);
@@ -581,7 +582,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
       const acc = new Zigbee2mqttAccessory(this, accessory, this.getAdditionalConfigForDevice(device));
       this.accessories.push(acc);
-      acc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(acc.ieeeAddress));
+      acc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(acc));
     }
   }
 

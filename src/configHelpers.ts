@@ -1,21 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Logger } from 'homebridge';
 
 /**
- * Check if availability is configured
+ * Check if availability is configured. Based on utils.isAvailabilityEnabledForEntity from Zigbee2MQTT code base.
  * @param config config part of the object published to bridge/info
  * @returns True if availability is configured
  */
-export function isAvailabilityEnabledGlobally(config: Record<string, never>): boolean {
-  if (config.availability !== undefined && config.availability !== null) {
-    // Is it a simple boolean?
-    if (typeof config.availability === 'boolean') {
-      return config.availability;
-    }
-    // It is an object with one of the expected keys, so in that case, availability is considered enabled.
-    return 'active' in config.availability || 'passive' in config.availability;
+export function isAvailabilityEnabledGlobally(config: Record<string, any>): boolean {
+  const availabilityEnabled = config.availability || config.advanced?.availability_timeout;
+  if (!availabilityEnabled) {
+    return false;
   }
-  // Default configuration is disabled
-  return false;
+
+  let passList = config.advanced?.availability_passlist ?? [];
+  passList = passList.concat(config.advanced?.availability_whitelist ?? []);
+  // If a pass list is defined, availability cannot be considered globally enabled.
+  return passList.length === 0;
 }
 
 /**
@@ -28,12 +28,37 @@ export interface BooleanDeviceList {
 
 /**
  * Check if availability is explicitly enabled or disabled for any devices.
+ * Based on utils.isAvailabilityEnabledForEntity from Zigbee2MQTT code base.
  * @param config config part of the object published to bridge/info
  * @param logger Logger
- * @returns
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getAvailabilityConfigurationForDevices(config: Record<string, any>, logger?: Logger): BooleanDeviceList {
+  const result = getAvailabilityFromDeviceConfigurations(config, logger);
+
+  // Also check availability_passlist, availability_blocklist, availability_whitelist and availability_blacklist.
+  if ('advanced' in config) {
+    let passList = config.advanced.availability_passlist ?? [];
+    passList = passList.concat(config.advanced.availability_whitelist ?? []);
+    if (passList.length > 0) {
+      // Add all entries from pass list to result.enabled
+      for (const device of passList) {
+        _logAvailabilityConfigForDevice(logger, device, true, 'pass list');
+        result.enabled.push(device);
+      }
+    } else {
+      // Block list only used if pass list is not defined.
+      let blockList = config.advanced.availability_blocklist ?? [];
+      blockList = blockList.concat(config.advanced.availability_blacklist ?? []);
+      for (const device of blockList) {
+        _logAvailabilityConfigForDevice(logger, device, false, 'block list');
+        result.disabled.push(device);
+      }
+    }
+  }
+  return result;
+}
+
+function getAvailabilityFromDeviceConfigurations(config: Record<string, any>, logger: Logger | undefined): BooleanDeviceList {
   const result = {
     enabled: new Array<string>(),
     disabled: new Array<string>(),
@@ -43,14 +68,18 @@ export function getAvailabilityConfigurationForDevices(config: Record<string, an
       if (config.devices[device].availability !== undefined) {
         const name = config.devices[device].friendly_name ?? device;
         if (config.devices[device].availability === false) {
-          logger?.debug(`Availability feature is explicitly disabled for device '${name}'`);
+          _logAvailabilityConfigForDevice(logger, name, false, 'device config');
           result.disabled.push(device);
         } else {
-          logger?.debug(`Availability feature is explicitly enabled for device '${name}'`);
+          _logAvailabilityConfigForDevice(logger, name, true, 'device config');
           result.enabled.push(device);
         }
       }
     }
   }
   return result;
+}
+
+function _logAvailabilityConfigForDevice(logger: Logger | undefined, device: string, enabled: boolean, source: string): void {
+  logger?.debug(`Availability feature is ${enabled ? 'enabled' : 'disabled'} for device '${device}' (via ${source})`);
 }

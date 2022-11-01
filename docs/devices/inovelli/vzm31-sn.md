@@ -17,6 +17,9 @@ the Inovelli VZM31-SN
 * [Lightbulb](../../light.md)
   * Brightness
   * On
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 
 
 # Related

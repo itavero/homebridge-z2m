@@ -1,4 +1,4 @@
-import { HAPStatus, PlatformAccessory, Service } from 'homebridge';
+import { Controller, HAPStatus, PlatformAccessory, Service } from 'homebridge';
 import { Zigbee2mqttPlatform } from './platform';
 import { ExtendedTimer } from './timer';
 import { hap } from './hap';
@@ -481,5 +481,9 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       name += ` ${subType}`;
     }
     return name;
+  }
+
+  configureController(controller: Controller) {
+    this.accessory.configureController(controller);
   }
 }

@@ -30,12 +30,12 @@ import { convertHueSatToXy, convertMiredColorTemperatureToHueSat, convertXyToHue
 import { EXP_COLOR_MODE } from '../experimental';
 
 interface LightConfig {
-  adaptive_lightning_enabled?: boolean;
+  adaptive_lighting?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isLightConfig = (x: any): x is LightConfig =>
-  x !== undefined && (x.adaptive_lightning_enabled === undefined || typeof x.adaptive_lightning_enabled === 'boolean');
+  x !== undefined && (x.adaptive_lighting === undefined || typeof x.adaptive_lighting === 'boolean');
 
 export class LightCreator implements ServiceCreator {
   public static readonly CONFIG_TAG = 'light';
@@ -59,7 +59,7 @@ export class LightCreator implements ServiceCreator {
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
     const converterConfig = accessory.getConverterConfiguration(LightCreator.CONFIG_TAG);
     let adaptiveLightingEnabled = false;
-    if (isLightConfig(converterConfig) && converterConfig.adaptive_lightning_enabled) {
+    if (isLightConfig(converterConfig) && converterConfig.adaptive_lighting) {
       adaptiveLightingEnabled = true;
     }
 
@@ -314,7 +314,7 @@ class LightHandler implements ServiceHandler {
   }
 
   private tryCreateAdaptiveLighting(service: Service) {
-    // Adaptive lightning is not enabled
+    // Adaptive lighting is not enabled
     if (!this.adaptiveLightingEnabled) {
       return;
     }
@@ -479,7 +479,7 @@ class LightHandler implements ServiceHandler {
           return false;
         }
 
-        this.accessory.log.info(`Adaptive Lightning: Update for ${this.accessory.displayName} temperature=${value}`);
+        this.accessory.log.debug(`Adaptive Lighting: Update for ${this.accessory.displayName} temperature=${value}`);
       }
     } else {
       this.resetAdaptiveLightingTemperature();

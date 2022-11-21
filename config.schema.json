@@ -155,8 +155,8 @@
             "title": "Light",
             "type": "object",
             "properties": {
-              "adaptive_lightning_enabled": {
-                "title": "Enable adaptive lightning",
+              "adaptive_lighting": {
+                "title": "Enable Adaptive Lighting",
                 "type": "boolean",
                 "required": false
               }

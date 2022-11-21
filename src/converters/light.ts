@@ -18,7 +18,7 @@ import {
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
-import { CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
 import {
   CharacteristicMonitor,
   MappingCharacteristicMonitor,
@@ -59,6 +59,8 @@ class LightHandler implements ServiceHandler {
   public static readonly KEY_COLOR_MODE = 'color_mode';
   public static readonly COLOR_MODE_TEMPERATURE = 'color_temp';
 
+  public mainCharacteristics: Characteristic[];
+
   private monitors: CharacteristicMonitor[] = [];
   private stateExpose: ExposesEntryWithBinaryProperty;
   private brightnessExpose: ExposesEntryWithNumericRangeProperty | undefined;
@@ -91,7 +93,7 @@ class LightHandler implements ServiceHandler {
     accessory.log.debug(`Configuring Light for ${serviceName}`);
     const service = accessory.getOrAddService(new hap.Service.Lightbulb(serviceName, endpoint));
 
-    getOrAddCharacteristic(service, hap.Characteristic.On).on('set', this.handleSetOn.bind(this));
+    this.mainCharacteristics = [getOrAddCharacteristic(service, hap.Characteristic.On).on('set', this.handleSetOn.bind(this))];
     const onOffValues = new Map<CharacteristicValue, CharacteristicValue>();
     onOffValues.set(this.stateExpose.value_on, true);
     onOffValues.set(this.stateExpose.value_off, false);
@@ -251,7 +253,9 @@ class LightHandler implements ServiceHandler {
       (e) => e.name === 'brightness' && exposesHasNumericRangeProperty(e) && exposesCanBeSet(e) && exposesIsPublished(e)
     ) as ExposesEntryWithNumericRangeProperty;
     if (this.brightnessExpose !== undefined) {
-      getOrAddCharacteristic(service, hap.Characteristic.Brightness).on('set', this.handleSetBrightness.bind(this));
+      this.mainCharacteristics.push(
+        getOrAddCharacteristic(service, hap.Characteristic.Brightness).on('set', this.handleSetBrightness.bind(this))
+      );
       this.monitors.push(
         new NumericCharacteristicMonitor(
           this.brightnessExpose.property,

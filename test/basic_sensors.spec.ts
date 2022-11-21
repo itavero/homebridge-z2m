@@ -44,6 +44,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -119,6 +120,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -202,6 +204,7 @@ describe('Basic Sensors', () => {
           newHarness.callCreators(deviceExposes);
 
           newHarness.checkCreationExpectations();
+          newHarness.checkHasMainCharacteristics();
           newHarness.checkExpectedGetableKeys([]);
           harness = newHarness;
         }
@@ -268,6 +271,7 @@ describe('Basic Sensors', () => {
           newHarness.callCreators(deviceExposes);
 
           newHarness.checkCreationExpectations();
+          newHarness.checkHasMainCharacteristics();
           newHarness.checkExpectedGetableKeys([]);
           harness = newHarness;
         }
@@ -308,6 +312,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -362,6 +367,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -435,6 +441,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -565,6 +572,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -608,6 +616,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }

@@ -14,7 +14,7 @@ import {
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
-import { CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
 import { ExtendedTimer } from '../timer';
 import { CharacteristicMonitor, NumericCharacteristicMonitor } from './monitor';
 
@@ -59,6 +59,8 @@ class CoverHandler implements ServiceHandler {
   private lastPositionSet = -1;
   private positionCurrent = -1;
 
+  public readonly mainCharacteristics: Characteristic[] = [];
+
   constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
     const endpoint = expose.endpoint;
     this.identifier = CoverHandler.generateIdentifier(endpoint);
@@ -95,13 +97,14 @@ class CoverHandler implements ServiceHandler {
     this.service = accessory.getOrAddService(new hap.Service.WindowCovering(serviceName, endpoint));
 
     const current = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentPosition);
+    this.mainCharacteristics.push(current);
     if (current.props.minValue === undefined || current.props.maxValue === undefined) {
       throw new Error('CurrentPosition for Cover does not hav a rang (minValue, maxValue) defined.');
     }
     this.current_min = current.props.minValue;
     this.current_max = current.props.maxValue;
 
-    getOrAddCharacteristic(this.service, hap.Characteristic.PositionState);
+    this.mainCharacteristics.push(getOrAddCharacteristic(this.service, hap.Characteristic.PositionState));
 
     const target = getOrAddCharacteristic(this.service, hap.Characteristic.TargetPosition);
     if (target.props.minValue === undefined || target.props.maxValue === undefined) {

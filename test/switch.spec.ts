@@ -29,8 +29,8 @@ describe('Switch', () => {
           newHarness.prepareCreationMocks();
 
           newHarness.callCreators(deviceExposes);
-
           newHarness.checkCreationExpectations();
+          newHarness.checkHasMainCharacteristics();
           newHarness.checkExpectedGetableKeys(['state']);
           harness = newHarness;
         }
@@ -92,6 +92,7 @@ describe('Switch', () => {
           newHarness.callCreators(deviceExposes);
 
           newHarness.checkCreationExpectations();
+          newHarness.checkHasMainCharacteristics();
           newHarness.checkExpectedGetableKeys(['state']);
           harness = newHarness;
         }
@@ -151,6 +152,7 @@ describe('Switch', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys(['state_l1', 'state_l2']);
         harness = newHarness;
       }

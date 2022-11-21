@@ -1,4 +1,4 @@
-import { PlatformAccessory, Service } from 'homebridge';
+import { HAPStatus, PlatformAccessory, Service } from 'homebridge';
 import { Zigbee2mqttPlatform } from './platform';
 import { ExtendedTimer } from './timer';
 import { hap } from './hap';
@@ -28,6 +28,9 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
   private readonly pendingGetKeys: Set<string>;
   private getIsScheduled: boolean;
+
+  private availabilityEnabled: boolean;
+  private isAvailable: boolean;
 
   get log(): BasicLogger {
     return this.platform.log;
@@ -76,6 +79,10 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       this.log.warn(`Experimental features enabled for ${this.displayName}: ${this.additionalConfig.experimental.join(', ')}`);
     }
 
+    // Set availability (always assume it is available at startup)
+    this.isAvailable = true;
+    this.availabilityEnabled = this.additionalConfig.ignore_availability === true ? false : true;
+
     // Setup delayed publishing
     this.pendingPublishData = {};
     this.publishIsScheduled = false;
@@ -96,6 +103,71 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
     // Immediately request an update to start off.
     this.queueAllKeysForGet();
+  }
+
+  setAvailabilityEnabled(enabled: boolean): void {
+    const previousConfig = this.availabilityEnabled;
+    this.availabilityEnabled = this.additionalConfig.ignore_availability === true ? false : enabled;
+    if (previousConfig !== this.availabilityEnabled) {
+      this.log.debug(`Availability feature for ${this.displayName} is now ${this.availabilityEnabled ? 'enabled' : 'disabled'}`);
+    }
+    if (!this.availabilityEnabled) {
+      // Mark all services as online.
+      // We do not have to know the Zigbee2MQTT online state to do this,
+      // as this should only change when Zigbee2MQTT is also online.
+      this.updateErrorStateOnMainCharacteristics(HAPStatus.SUCCESS);
+    }
+  }
+
+  updateAvailability(available: boolean): void {
+    if (available !== this.isAvailable) {
+      this.isAvailable = available;
+      this.log.debug(`${this.displayName} is ${available ? 'available' : 'UNAVAILABLE'}`);
+      if (this.availabilityEnabled) {
+        if (this.isAvailable) {
+          this.sendLastValueOnMainCharacteristics();
+        } else {
+          this.updateErrorStateOnMainCharacteristics(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+        }
+      }
+    }
+  }
+
+  informOnZigbee2MqttOnlineStateChange(online: boolean): void {
+    if (online) {
+      if (this.isAvailable || this.additionalConfig.ignore_availability === true) {
+        // Accessory used to be available before Zigbee2MQTT went offline.
+        // Mark all services as available again.
+        this.sendLastValueOnMainCharacteristics();
+      }
+    } else {
+      // Zigbee2MQTT went offline. Mark all services as unavailable.
+      this.updateErrorStateOnMainCharacteristics(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+    }
+  }
+
+  private updateErrorStateOnMainCharacteristics(status: HAPStatus): void {
+    this.log.debug(`Update "error" status for characteristics of ${this.displayName} to ${status}`);
+    const error = new this.platform.api.hap.HapStatusError(status);
+    for (const handler of this.serviceHandlers.values()) {
+      for (const characteristic of handler.mainCharacteristics) {
+        characteristic?.updateValue(error);
+      }
+    }
+  }
+
+  private sendLastValueOnMainCharacteristics(): void {
+    this.log.debug(`Send last value for main characteristics of ${this.displayName}`);
+    for (const handler of this.serviceHandlers.values()) {
+      for (const characteristic of handler.mainCharacteristics) {
+        if (characteristic === undefined) {
+          continue;
+        }
+        if (characteristic.value !== undefined && characteristic.value !== null) {
+          characteristic.sendEventNotification(characteristic.value);
+        }
+      }
+    }
   }
 
   getConverterConfiguration(tag: string): unknown | undefined {

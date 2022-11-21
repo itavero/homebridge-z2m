@@ -413,6 +413,21 @@ export class ServiceHandlersTestHarness {
     expect(actualKeys.sort()).toEqual(keys.sort());
   }
 
+  checkHasMainCharacteristics(expectedResult = true): void {
+    let foundCharacteristics = false;
+    for (const characteristic of [...this.handlers.values()]
+      .map((h) => h.serviceHandler)
+      .filter((h) => h !== undefined)
+      .map((h) => h!.mainCharacteristics)) {
+      const count = characteristic.filter((c) => c !== undefined).length;
+      if (count > 0) {
+        foundCharacteristics = true;
+        break;
+      }
+    }
+    expect(foundCharacteristics).toBe(expectedResult);
+  }
+
   checkCreationExpectations(): void {
     let expectedCallsToGetOrAddService = 0;
     let expectedCallsToRegisterServiceHandler = 0;

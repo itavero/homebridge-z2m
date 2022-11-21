@@ -1,4 +1,4 @@
-import { Logger, Service } from 'homebridge';
+import { Characteristic, Logger, Service } from 'homebridge';
 import { ExposesEntry } from '../z2mModels';
 import { BasicLogger } from '../logger';
 
@@ -25,6 +25,7 @@ export interface BasicAccessory {
 }
 
 export interface ServiceHandler {
+  mainCharacteristics: (Characteristic | undefined)[];
   identifier: string;
   getableKeys: string[];
   updateState(state: Record<string, unknown>): void;

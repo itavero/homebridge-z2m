@@ -25,6 +25,7 @@ export const isBinarySensorConfig = (x: any): x is BinarySensorConfig =>
 
 export abstract class ConfigurableBinarySensorHandler extends BasicSensorHandler {
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.BINARY;
+  public mainCharacteristics: Characteristic[];
 
   constructor(
     accessory: BasicAccessory,
@@ -56,7 +57,7 @@ export abstract class ConfigurableBinarySensorHandler extends BasicSensorHandler
     super(accessory, expose, otherExposes, identifierGen, definition.service, definition.additionalSubType);
     accessory.log.debug(`Configuring ${logName} for ${this.serviceName}`);
 
-    getOrAddCharacteristic(this.service, definition.characteristic);
+    this.mainCharacteristics = [getOrAddCharacteristic(this.service, definition.characteristic)];
     const mapping = new Map<CharacteristicValue, CharacteristicValue>();
     mapping.set(expose.value_on, definition.hapOnValue);
     mapping.set(expose.value_off, definition.hapOffValue);

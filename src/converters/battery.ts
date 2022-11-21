@@ -118,6 +118,12 @@ class BatteryHandler implements ServiceHandler {
     }
   }
 
+  get mainCharacteristics(): undefined[] {
+    // If the device is really supported, it will expose more than just this service.
+    // No need to add the main characteristics here.
+    return [];
+  }
+
   identifier: string;
   get getableKeys(): string[] {
     const keys: string[] = [];

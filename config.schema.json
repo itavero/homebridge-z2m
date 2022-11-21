@@ -60,6 +60,11 @@
           "minLength": 0
         }
       },
+      "ignore_availability": {
+        "title": "Ignore availability information",
+        "type": "boolean",
+        "required": false
+      },
       "values": {
         "title": "Include/exclude values",
         "type": "array",
@@ -246,6 +251,9 @@
             "default": false,
             "$ref": "#/definitions/exclude"
           },
+          "ignore_availability": {
+            "$ref": "#/definitions/ignore_availability"
+          },
           "excluded_keys": {
             "$ref": "#/definitions/excluded_keys"
           },
@@ -283,6 +291,12 @@
             "exclude": {
               "title": "Exclude entire device",
               "$ref": "#/definitions/exclude"
+            },
+            "ignore_availability": {
+              "$ref": "#/definitions/ignore_availability",
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
             },
             "excluded_keys": {
               "$ref": "#/definitions/excluded_keys",

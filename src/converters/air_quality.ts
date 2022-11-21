@@ -179,13 +179,15 @@ class AirQualitySensorHandler implements ServiceHandler {
   private readonly properties: AirQualityProperty[] = [];
   private readonly service: Service;
 
+  public mainCharacteristics: Characteristic[] = [];
+
   constructor(endpoint: string | undefined, exposes: ExposesEntryWithProperty[], private readonly accessory: BasicAccessory) {
     this.identifier = AirQualitySensorHandler.generateIdentifier(endpoint);
 
     const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
     accessory.log.debug(`Configuring Air Quality Sensor for ${serviceName}`);
     this.service = accessory.getOrAddService(new hap.Service.AirQualitySensor(serviceName, endpoint));
-    getOrAddCharacteristic(this.service, hap.Characteristic.AirQuality);
+    this.mainCharacteristics.push(getOrAddCharacteristic(this.service, hap.Characteristic.AirQuality));
 
     for (const e of exposes) {
       const factory = AirQualitySensorHandler.propertyFactories.find((f) => f.canUseExposesEntry(e));

@@ -4,10 +4,13 @@ import { PassthroughCharacteristicMonitor } from '../monitor';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
 import { BasicSensorHandler } from './basic';
+import { Characteristic } from 'homebridge';
 
 export class HumiditySensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'humidity';
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
+
+  public readonly mainCharacteristics: Characteristic[] = [];
 
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(accessory, expose, allExposes, HumiditySensorHandler.generateIdentifier, (n, t) => new hap.Service.HumiditySensor(n, t));
@@ -15,6 +18,7 @@ export class HumiditySensorHandler extends BasicSensorHandler {
 
     const characteristic = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentRelativeHumidity);
     copyExposesRangeToCharacteristic(expose, characteristic);
+    this.mainCharacteristics.push(characteristic);
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentRelativeHumidity));
   }
 

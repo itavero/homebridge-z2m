@@ -17,7 +17,7 @@ import {
 import { hap } from '../hap';
 import { CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor } from './monitor';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
-import { CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
 
 export class ThermostatCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
@@ -110,6 +110,8 @@ class ThermostatHandler implements ServiceHandler {
     return exposesHasAllRequiredFeatures(e, [ThermostatHandler.PREDICATE_SETPOINT, ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE]);
   }
 
+  public mainCharacteristics: Characteristic[];
+
   private monitors: CharacteristicMonitor[] = [];
   private localTemperatureExpose: ExposesEntryWithProperty;
   private setpointExpose: ExposesEntryWithProperty;
@@ -155,6 +157,7 @@ class ThermostatHandler implements ServiceHandler {
 
     // Monitor local temperature
     const currentTemperature = getOrAddCharacteristic(service, hap.Characteristic.CurrentTemperature);
+    this.mainCharacteristics = [currentTemperature];
     copyExposesRangeToCharacteristic(this.localTemperatureExpose, currentTemperature);
     this.monitors.push(
       new PassthroughCharacteristicMonitor(this.localTemperatureExpose.property, service, hap.Characteristic.CurrentTemperature)

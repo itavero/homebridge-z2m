@@ -1,7 +1,7 @@
 import { BasicAccessory, ServiceHandler } from '../interfaces';
 import { exposesCanBeGet, ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, exposesIsPublished } from '../../z2mModels';
 import { CharacteristicMonitor, MappingCharacteristicMonitor } from '../monitor';
-import { CharacteristicValue, Service } from 'homebridge';
+import { Characteristic, CharacteristicValue, Service } from 'homebridge';
 import { getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
 
@@ -47,6 +47,8 @@ export abstract class BasicSensorHandler implements ServiceHandler {
     this.tryCreateLowBattery(otherExposes, this.service);
     this.tryCreateTamper(otherExposes, this.service);
   }
+
+  abstract mainCharacteristics: (Characteristic | undefined)[];
 
   get getableKeys(): string[] {
     const keys: string[] = [];

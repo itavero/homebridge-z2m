@@ -4,10 +4,13 @@ import { PassthroughCharacteristicMonitor } from '../monitor';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
 import { BasicSensorHandler } from './basic';
+import { Characteristic } from 'homebridge';
 
 export class DeviceTemperatureSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'device_temperature';
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
+
+  public readonly mainCharacteristics: Characteristic[] = [];
 
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(
@@ -27,6 +30,7 @@ export class DeviceTemperatureSensorHandler extends BasicSensorHandler {
         maxValue: 100,
       });
     }
+    this.mainCharacteristics.push(characteristic);
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentTemperature));
   }
 

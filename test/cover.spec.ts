@@ -49,6 +49,7 @@ describe('Cover', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys(['position']);
         harness = newHarness;
       }
@@ -198,6 +199,7 @@ describe('Cover', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys(['position', 'tilt']);
         harness = newHarness;
       }
@@ -314,6 +316,7 @@ describe('Cover', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         harness = newHarness;
       }
       harness?.clearMocks();

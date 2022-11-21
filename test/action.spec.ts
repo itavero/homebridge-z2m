@@ -53,6 +53,7 @@ describe('Action', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
 
         // Expect the correct event types to be enabled
@@ -164,6 +165,7 @@ describe('Action', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
 
         // Expect the correct event types to be enabled
@@ -317,6 +319,7 @@ describe('Action', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
 
         // Expect the correct event types to be enabled

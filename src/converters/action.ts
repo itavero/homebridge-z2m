@@ -3,7 +3,7 @@ import { exposesHasEnumProperty, exposesIsPublished, exposesCanBeGet, ExposesEnt
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 
 import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
-import { CharacteristicProps, CharacteristicValue } from 'homebridge';
+import { Characteristic, CharacteristicProps, CharacteristicValue } from 'homebridge';
 import { getOrAddCharacteristic } from '../helpers';
 import { SwitchActionHelper, SwitchActionMapping } from './action_helper';
 
@@ -53,6 +53,7 @@ export class StatelessProgrammableSwitchCreator implements ServiceCreator {
 class StatelessProgrammableSwitchHandler implements ServiceHandler {
   public readonly identifier: string;
   private readonly monitor: CharacteristicMonitor;
+  public readonly mainCharacteristics: Characteristic[] = [];
 
   constructor(accessory: BasicAccessory, private readonly actionExpose: ExposesEntryWithEnumProperty, mapping: SwitchActionMapping) {
     this.identifier = StatelessProgrammableSwitchHandler.generateIdentifier(actionExpose.endpoint, mapping.subType);
@@ -84,6 +85,7 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
       valueMap.set(mapping.valueLongPress, hap.Characteristic.ProgrammableSwitchEvent.LONG_PRESS);
     }
     eventCharacteristic.setProps(StatelessProgrammableSwitchHandler.generateValueConfigForProgrammableSwitchEvents([...valueMap.values()]));
+    this.mainCharacteristics.push(eventCharacteristic);
     this.monitor = new MappingCharacteristicMonitor(actionExpose.property, service, hap.Characteristic.ProgrammableSwitchEvent, valueMap);
   }
 

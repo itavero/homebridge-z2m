@@ -122,8 +122,6 @@ describe('Zigbee2MQTT Config Helper functions', () => {
           },
         },
         advanced: {
-          availability_passlist: [],
-          availability_whitelist: [],
           availability_blocklist: ['device_d', 'device_e'],
           availability_blacklist: ['device_f', 'device_g'],
         },
@@ -132,6 +130,30 @@ describe('Zigbee2MQTT Config Helper functions', () => {
       const result = getAvailabilityConfigurationForDevices(config);
       const expect_enabled = ['device_b'].sort();
       const expect_disabled = ['device_a', 'device_d', 'device_e', 'device_f', 'device_g'].sort();
+      expect(result.enabled.sort()).toEqual(expect_enabled);
+      expect(result.disabled.sort()).toEqual(expect_disabled);
+    });
+    test('no pass or block list, only device config', () => {
+      const config = {
+        devices: {
+          device_a: {
+            availability: true,
+          },
+          device_b: {
+            availability: false,
+          },
+          device_c: {
+            transition: 4,
+          },
+        },
+        advanced: {
+          some_other_setting: 'some_value',
+        },
+      };
+
+      const result = getAvailabilityConfigurationForDevices(config);
+      const expect_enabled = ['device_a'].sort();
+      const expect_disabled = ['device_b'].sort();
       expect(result.enabled.sort()).toEqual(expect_enabled);
       expect(result.disabled.sort()).toEqual(expect_disabled);
     });

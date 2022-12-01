@@ -31,7 +31,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "binary",
     "name": "card",
     "property": "card",
-    "access": 1,
+    "access": 5,
     "value_on": true,
     "value_off": false,
     "description": "Indicates if the card is inserted (= true) or not (= false)"

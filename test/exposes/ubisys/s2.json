@@ -75,7 +75,7 @@
       "previous",
       "on"
     ],
-    "description": "Controls the behavior when the device is powered on",
+    "description": "Controls the behavior when the device is powered on after power loss",
     "endpoint": "l1"
   },
   {
@@ -88,7 +88,7 @@
       "previous",
       "on"
     ],
-    "description": "Controls the behavior when the device is powered on",
+    "description": "Controls the behavior when the device is powered on after power loss",
     "endpoint": "l2"
   },
   {

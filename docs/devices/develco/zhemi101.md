@@ -85,7 +85,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 2,
     "description": "Current summation value sent to the display. e.g. 570 = 0,570 kWh",
     "value_min": 0,
-    "value_max": 10000
+    "value_max": 268435455
   },
   {
     "type": "binary",

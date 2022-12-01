@@ -94,7 +94,7 @@
       "previous",
       "on"
     ],
-    "description": "Controls the behavior when the device is powered on"
+    "description": "Controls the behavior when the device is powered on after power loss"
   },
   {
     "type": "numeric",

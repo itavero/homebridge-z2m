@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.10.0] - 2022-12-09
+
 ### Added
 
 - Properties/exposes information can now be excluded based on the `endpoint`, using the `excluded_endpoints` configuration option. (relates to [#517](https://github.com/itavero/homebridge-z2m/issues/517))
@@ -355,7 +357,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...v1.10.0
 [1.9.2]: https://github.com/itavero/homebridge-z2m/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/itavero/homebridge-z2m/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/itavero/homebridge-z2m/compare/v1.8.0...v1.9.0

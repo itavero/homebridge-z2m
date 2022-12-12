@@ -1,4 +1,4 @@
-import { Service } from 'homebridge';
+import { Controller, Service } from 'homebridge';
 import { BasicAccessory, ServiceHandler } from '../converters/interfaces';
 import { BasicLogger } from '../logger';
 
@@ -20,10 +20,17 @@ export class DocsAccessory implements BasicAccessory {
 
   private readonly services: Service[] = [];
   private readonly handlerIds = new Set<string>();
+  private readonly controllers = new Set<string>();
 
   constructor(readonly displayName: string) {}
 
-  getConverterConfiguration(): unknown {
+  getConverterConfiguration(tag: string): unknown | undefined {
+    if (tag === 'light') {
+      // Return a config that has adaptive lighting enabled
+      return {
+        adaptive_lighting: true,
+      };
+    }
     return {};
   }
 
@@ -80,5 +87,13 @@ export class DocsAccessory implements BasicAccessory {
 
   isServiceHandlerIdKnown(identifier: string): boolean {
     return this.handlerIds.has(identifier);
+  }
+
+  configureController(controller: Controller): void {
+    this.controllers.add(controller.constructor.name);
+  }
+
+  getControllerNames(): string[] {
+    return [...this.controllers].sort();
   }
 }

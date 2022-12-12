@@ -115,6 +115,14 @@ const serviceNameMapping = new Map<string, ServiceInfo>([
   addServiceMapping(hapNodeJs.Service.AirQualitySensor, 'air_quality.md'),
 ]);
 
+// Controllers
+class ControllerMapping {
+  constructor(readonly displayName: string, readonly page: string) {}
+}
+const controllerMapping = new Map<string, ControllerMapping>([
+  ['AdaptiveLightingController', new ControllerMapping('Adaptive Lighting', 'light.md')],
+]);
+
 const servicesIgnoredForDeterminingSupport = new Set<string>([hapNodeJs.Service.BatteryService.UUID]);
 
 const ignoredExposesNames = new Set<string>(['linkquality', 'battery', 'battery_low']);
@@ -177,7 +185,7 @@ function serviceInfoToMarkdown(info: Map<string, string[]>): string {
   return result;
 }
 
-function generateDevicePage(basePath: string, device: any, services: Map<string, string[]>) {
+function generateDevicePage(basePath: string, device: any, services: Map<string, string[]>, controllers: string[]) {
   if (device.whiteLabelOf) {
     // Don't generate device page for white label products.
     return;
@@ -249,7 +257,7 @@ The following HomeKit Services and Characteristics are exposed by
 ${device.whiteLabel ? 'these devices' : `the ${device.vendor} ${device.model}`}
 
 ${serviceInfoToMarkdown(services)}
-
+${controllersToMarkdownList(controllers)}
 `;
 
     if (!isSupported && hasPropertiesThatAreNotIgnored) {
@@ -272,6 +280,22 @@ ${JSON.stringify(device.exposes, null, 2)}
 * [Other devices from ${device.vendor}](../index.md#${normalizeNameForAnchor(device.vendor)})
 * [Zigbee2MQTT documentation for this device](${generateZigbee2MqttLink(device)})`;
   fs.writeFileSync(fileName, devicePage);
+}
+
+function controllersToMarkdownList(controllers: string[]) {
+  let result = '';
+  if (controllers.length > 0) {
+    result += '## Other features\n';
+    for (const controller of controllers) {
+      const mapping = controllerMapping.get(controller);
+      if (mapping === undefined) {
+        result += `* ${controller}\n`;
+      } else {
+        result += `* [${mapping.displayName}](../../${mapping.page})\n`;
+      }
+    }
+  }
+  return result;
 }
 
 function generateExposesJson(basePath: string, device: any) {
@@ -316,19 +340,21 @@ for (const device of allDevices) {
 }
 
 // Check services for all non white label devices
-function checkServicesAndCharacteristics(device: any): Map<string, string[]> {
+function checkServicesAndCharacteristics(device: any): DocsAccessory {
   const exposes = device.exposes.map((e) => e as ExposesEntry);
   const accessory = new DocsAccessory(`${device.vendor} ${device.model}`);
   BasicServiceCreatorManager.getInstance().createHomeKitEntitiesFromExposes(accessory, exposes);
-  return accessory.getServicesAndCharacteristics();
+  return accessory;
 }
 
 allDevices.forEach((d) => {
   try {
     if (d.whiteLabelOf === undefined) {
       generateExposesJson(exposes_base_path, d);
-      const services = checkServicesAndCharacteristics(d);
-      generateDevicePage(docs_base_path, d, services);
+      const accessory = checkServicesAndCharacteristics(d);
+      const services = accessory.getServicesAndCharacteristics();
+      const controllers = accessory.getControllerNames();
+      generateDevicePage(docs_base_path, d, services, controllers);
     }
   } catch (Error) {
     console.log(`Problem generating device page for ${d.vendor} ${d.model}: ${Error}`);

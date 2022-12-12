@@ -466,20 +466,21 @@ class LightHandler implements ServiceHandler {
 
   private handleAdaptiveLighting(value: number): boolean {
     // Adaptive Lighting active?
-    if (this.adaptiveLighting !== undefined && this.adaptiveLighting.isAdaptiveLightingActive()) {
+    if (this.colorTempExpose !== undefined && this.adaptiveLighting !== undefined && this.adaptiveLighting.isAdaptiveLightingActive()) {
       if (this.lastAdaptiveLightingTemperature === undefined) {
         this.lastAdaptiveLightingTemperature = value;
       } else {
         const change = Math.abs(this.lastAdaptiveLightingTemperature - value);
         if (change < 1) {
           this.accessory.log.debug(
-            `Adaptive Lighting: Color temperature ${value} skipped for ${this.accessory.displayName}. ` +
-              `Previous: ${this.lastAdaptiveLightingTemperature}`
+            `adaptive_lighting: ${this.accessory.displayName}: skipped ${this.colorTempExpose.property} (new: ${value}; ` +
+              `old: ${this.lastAdaptiveLightingTemperature}`
           );
           return false;
         }
 
-        this.accessory.log.debug(`Adaptive Lighting: Update for ${this.accessory.displayName} temperature=${value}`);
+        this.accessory.log.debug(`adaptive_lighting: ${this.accessory.displayName}: ${this.colorTempExpose.property} ${value}`);
+        this.lastAdaptiveLightingTemperature = value;
       }
     } else {
       this.resetAdaptiveLightingTemperature();

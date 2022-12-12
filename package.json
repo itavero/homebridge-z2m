@@ -46,7 +46,11 @@
     "check-release": "release-it --dry-run -VV",
     "release": "release-it",
     "check-pre-release": "release-it --dry-run -VV --npm.tag=next",
-    "pre-release": "release-it --npm.tag=next"
+    "pre-release": "release-it --npm.tag=next",
+    "beta-release": "release-it --preRelease=beta --npm.tag=next",
+    "check-beta-release": "release-it --preRelease=beta --npm.tag=next",
+    "rc-release": "release-it --preRelease=rc --npm.tag=next",
+    "check-rc-release": "release-it --preRelease=rc --npm.tag=next"
   },
   "keywords": [
     "homebridge-plugin",

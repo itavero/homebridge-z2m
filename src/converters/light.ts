@@ -175,30 +175,50 @@ class LightHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    // Use color_mode to filter out the non-active color information
-    // to prevent "incorrect" updates (leading to "glitches" in the Home.app)
-    if (this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE) && LightHandler.KEY_COLOR_MODE in state) {
-      if (
-        this.colorTempExpose !== undefined &&
-        this.colorTempExpose.property in state &&
-        state[LightHandler.KEY_COLOR_MODE] !== LightHandler.COLOR_MODE_TEMPERATURE
-      ) {
-        // Color mode is NOT Color Temperature. Remove color temperature information.
-        delete state[this.colorTempExpose.property];
-      }
+    if (LightHandler.KEY_COLOR_MODE in state) {
+      const colorModeIsTemperature: boolean = state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE;
+      // If adaptive lighting is enabled, try to detect if the color was changed externally
+      // which should result in turning off adaptive lighting.
+      this.disableAdaptiveLightingBasedOnState(colorModeIsTemperature, state);
 
-      if (
-        this.colorExpose !== undefined &&
-        this.colorExpose.property !== undefined &&
-        this.colorExpose.property in state &&
-        state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE
-      ) {
-        // Color mode is Color Temperature. Remove HS/XY color information.
-        delete state[this.colorExpose.property];
+      // Use color_mode to filter out the non-active color information
+      // to prevent "incorrect" updates (leading to "glitches" in the Home.app)
+      if (this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE)) {
+        if (this.colorTempExpose !== undefined && this.colorTempExpose.property in state && !colorModeIsTemperature) {
+          // Color mode is NOT Color Temperature. Remove color temperature information.
+          delete state[this.colorTempExpose.property];
+        }
+
+        if (
+          this.colorExpose !== undefined &&
+          this.colorExpose.property !== undefined &&
+          this.colorExpose.property in state &&
+          colorModeIsTemperature
+        ) {
+          // Color mode is Color Temperature. Remove HS/XY color information.
+          delete state[this.colorExpose.property];
+        }
       }
     }
 
     this.monitors.forEach((m) => m.callback(state));
+  }
+
+  private disableAdaptiveLightingBasedOnState(colorModeIsTemperature: boolean, state: Record<string, unknown>) {
+    if (this.colorTempExpose !== undefined && this.adaptiveLighting !== undefined && this.adaptiveLighting.isAdaptiveLightingActive()) {
+      if (!colorModeIsTemperature) {
+        // Must be color temperature if adaptive lighting is active
+        this.accessory.log.debug('adaptive_lighting: disable due to color mode change');
+        this.adaptiveLighting.disableAdaptiveLighting();
+      } else if (this.lastAdaptiveLightingTemperature !== undefined && this.colorTempExpose.property in state) {
+        const delta = Math.abs(this.lastAdaptiveLightingTemperature - (state[this.colorTempExpose.property] as number));
+        // Typically we expect a small delta if the status update is caused by a change from adaptive lighting.
+        if (delta > 10) {
+          this.accessory.log.debug(`adaptive_lighting: disable due to large delta (${delta})`);
+          this.adaptiveLighting.disableAdaptiveLighting();
+        }
+      }
+    }
   }
 
   private tryCreateColor(expose: ExposesEntryWithFeatures, service: Service) {
@@ -414,6 +434,11 @@ class LightHandler implements ServiceHandler {
       if (this.received_hue && this.received_saturation) {
         this.received_hue = false;
         this.received_saturation = false;
+        if (this.adaptiveLighting?.isAdaptiveLightingActive()) {
+          // Hue/Saturation set from HomeKit, disable Adaptive Lighting
+          this.accessory.log.debug('adaptive_lighting: disable due to hue/sat');
+          this.adaptiveLighting.disableAdaptiveLighting();
+        }
         if (
           this.colorExpose?.name === 'color_hs' &&
           this.colorExpose?.property !== undefined &&
@@ -437,6 +462,11 @@ class LightHandler implements ServiceHandler {
       if (this.received_hue && this.received_saturation) {
         this.received_hue = false;
         this.received_saturation = false;
+        if (this.adaptiveLighting?.isAdaptiveLightingActive()) {
+          // Hue/Saturation set from HomeKit, disable Adaptive Lighting
+          this.accessory.log.debug('adaptive_lighting: disable due to hue/sat');
+          this.adaptiveLighting.disableAdaptiveLighting();
+        }
         if (
           this.colorExpose?.name === 'color_xy' &&
           this.colorExpose?.property !== undefined &&

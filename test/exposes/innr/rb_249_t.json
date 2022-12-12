@@ -1,0 +1,143 @@
+[
+  {
+    "type": "light",
+    "features": [
+      {
+        "type": "binary",
+        "name": "state",
+        "property": "state",
+        "access": 7,
+        "value_on": "ON",
+        "value_off": "OFF",
+        "value_toggle": "TOGGLE",
+        "description": "On/off state of this light"
+      },
+      {
+        "type": "numeric",
+        "name": "brightness",
+        "property": "brightness",
+        "access": 7,
+        "value_min": 0,
+        "value_max": 254,
+        "description": "Brightness of this light"
+      },
+      {
+        "type": "numeric",
+        "name": "color_temp",
+        "property": "color_temp",
+        "access": 7,
+        "unit": "mired",
+        "value_min": 200,
+        "value_max": 454,
+        "description": "Color temperature of this light",
+        "presets": [
+          {
+            "name": "coolest",
+            "value": 200,
+            "description": "Coolest temperature supported"
+          },
+          {
+            "name": "cool",
+            "value": 250,
+            "description": "Cool temperature (250 mireds / 4000 Kelvin)"
+          },
+          {
+            "name": "neutral",
+            "value": 370,
+            "description": "Neutral temperature (370 mireds / 2700 Kelvin)"
+          },
+          {
+            "name": "warm",
+            "value": 454,
+            "description": "Warm temperature (454 mireds / 2200 Kelvin)"
+          },
+          {
+            "name": "warmest",
+            "value": 454,
+            "description": "Warmest temperature supported"
+          }
+        ]
+      },
+      {
+        "type": "numeric",
+        "name": "color_temp_startup",
+        "property": "color_temp_startup",
+        "access": 7,
+        "unit": "mired",
+        "value_min": 200,
+        "value_max": 454,
+        "description": "Color temperature after cold power on of this light",
+        "presets": [
+          {
+            "name": "coolest",
+            "value": 200,
+            "description": "Coolest temperature supported"
+          },
+          {
+            "name": "cool",
+            "value": 250,
+            "description": "Cool temperature (250 mireds / 4000 Kelvin)"
+          },
+          {
+            "name": "neutral",
+            "value": 370,
+            "description": "Neutral temperature (370 mireds / 2700 Kelvin)"
+          },
+          {
+            "name": "warm",
+            "value": 454,
+            "description": "Warm temperature (454 mireds / 2200 Kelvin)"
+          },
+          {
+            "name": "warmest",
+            "value": 454,
+            "description": "Warmest temperature supported"
+          },
+          {
+            "name": "previous",
+            "value": 65535,
+            "description": "Restore previous color_temp on cold power on"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "effect",
+    "property": "effect",
+    "access": 2,
+    "values": [
+      "blink",
+      "breathe",
+      "okay",
+      "channel_change",
+      "finish_effect",
+      "stop_effect"
+    ],
+    "description": "Triggers an effect on the light (e.g. make light blink for a few seconds)"
+  },
+  {
+    "type": "enum",
+    "name": "power_on_behavior",
+    "property": "power_on_behavior",
+    "access": 7,
+    "values": [
+      "off",
+      "on",
+      "toggle",
+      "previous"
+    ],
+    "description": "Controls the behavior when the device is powered on after power loss"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

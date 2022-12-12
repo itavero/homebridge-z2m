@@ -150,6 +150,17 @@
                 ]
               }
             }
+          },
+          "light": {
+            "title": "Light",
+            "type": "object",
+            "properties": {
+              "adaptive_lighting": {
+                "title": "Enable Adaptive Lighting",
+                "type": "boolean",
+                "required": false
+              }
+            }
           }
         }
       }

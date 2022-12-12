@@ -787,4 +787,162 @@ describe('Light', () => {
       harness.checkSetDataQueued({ color: { hue: 300, saturation: 100 } });
     });
   });
+  describe('Namron Zigbee Dimmer (Adaptive Lighting ignored)', () => {
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('namron/4512700.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
+
+        // Check service creation
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Enable adaptive lighting to check if it will be ignored (as this device does not have a color temperature)
+        newHarness.addConverterConfiguration('light', { adaptive_lighting: true });
+        newHarness.numberOfExpectedControllers = 0;
+
+        newHarness
+          .getOrAddHandler(hap.Service.Lightbulb)
+          .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+          .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true);
+        newHarness.prepareCreationMocks();
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
+
+        newHarness.checkExpectedGetableKeys(['state', 'brightness']);
+        harness = newHarness;
+      }
+
+      harness?.clearMocks();
+      const brightnessCharacteristicMock = harness?.getOrAddHandler(hap.Service.Lightbulb).getCharacteristicMock('brightness');
+      if (brightnessCharacteristicMock !== undefined) {
+        brightnessCharacteristicMock.props.minValue = 0;
+        brightnessCharacteristicMock.props.maxValue = 100;
+      }
+    });
+
+    afterEach(() => {
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
+    });
+
+    test('HomeKit: Turn On', () => {
+      expect(harness).toBeDefined();
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'state', true, 'ON');
+    });
+
+    test('HomeKit: Turn Off', () => {
+      expect(harness).toBeDefined();
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'state', false, 'OFF');
+    });
+  });
+
+  describe('Innr RB-249-T (Adaptive Lighting turned on)', () => {
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
+
+        // Check service creation
+        const newHarness = new ServiceHandlersTestHarness();
+        newHarness.addConverterConfiguration('light', { adaptive_lighting: true });
+        newHarness.numberOfExpectedControllers = 1;
+        const lightbulb = newHarness
+          .getOrAddHandler(hap.Service.Lightbulb)
+          .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+          .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
+          .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
+        newHarness.prepareCreationMocks();
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
+
+        newHarness.checkExpectedGetableKeys(['state', 'brightness', 'color_temp']);
+
+        // Expect range of color temperature to be configured
+        lightbulb.checkCharacteristicPropertiesHaveBeenSet('color_temp', {
+          minValue: 200,
+          maxValue: 454,
+          minStep: 1,
+        });
+        harness = newHarness;
+      }
+
+      harness?.clearMocks();
+      const brightnessCharacteristicMock = harness?.getOrAddHandler(hap.Service.Lightbulb).getCharacteristicMock('brightness');
+      if (brightnessCharacteristicMock !== undefined) {
+        brightnessCharacteristicMock.props.minValue = 0;
+        brightnessCharacteristicMock.props.maxValue = 100;
+      }
+    });
+
+    afterEach(() => {
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
+    });
+
+    test('Status update is handled: State On', () => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"state":"ON"}', hap.Service.Lightbulb, hap.Characteristic.On, true);
+    });
+
+    test('Status update is handled: State Off', () => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"state":"OFF"}', hap.Service.Lightbulb, hap.Characteristic.On, false);
+    });
+
+    test('Status update is handled: Brightness 50%', () => {
+      expect(harness).toBeDefined();
+      harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+      harness.checkSingleUpdateState('{"brightness":127}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 50);
+    });
+
+    test('HomeKit: Turn On', () => {
+      expect(harness).toBeDefined();
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'state', true, 'ON');
+    });
+
+    test('HomeKit: Turn Off', () => {
+      expect(harness).toBeDefined();
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'state', false, 'OFF');
+    });
+
+    test('HomeKit: Brightness to 50%', () => {
+      expect(harness).toBeDefined();
+      harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'brightness', 50, 127);
+    });
+
+    describe('HomeKit: Color Temperature', () => {
+      test('Set to 400', () => {
+        expect(harness).toBeDefined();
+        harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'color_temp', 400, 400);
+      });
+
+      test('Set out of bounds (low)', () => {
+        expect(harness).toBeDefined();
+        harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'color_temp', 199, 200);
+      });
+
+      test('Set out of bounds (high)', () => {
+        expect(harness).toBeDefined();
+        harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'color_temp', 455, 454);
+      });
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import { Characteristic, Logger, Service } from 'homebridge';
+import { Characteristic, Controller, Logger, Service } from 'homebridge';
 import { ExposesEntry } from '../z2mModels';
 import { BasicLogger } from '../logger';
 
@@ -22,6 +22,8 @@ export interface BasicAccessory {
   isExperimentalFeatureEnabled(feature: string): boolean;
 
   getConverterConfiguration(tag: string): unknown | undefined;
+
+  configureController(controller: Controller): void;
 }
 
 export interface ServiceHandler {

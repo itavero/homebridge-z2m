@@ -1,4 +1,4 @@
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { BasicAccessory, ServiceCreator, ServiceHandler, ConverterConfigurationRegistry } from './interfaces';
 import {
   exposesCanBeGet,
   exposesCanBeSet,
@@ -18,7 +18,7 @@ import {
 } from '../z2mModels';
 import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
-import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Controller, Service } from 'homebridge';
 import {
   CharacteristicMonitor,
   MappingCharacteristicMonitor,
@@ -29,7 +29,21 @@ import {
 import { convertHueSatToXy, convertMiredColorTemperatureToHueSat, convertXyToHueSat } from '../colorhelper';
 import { EXP_COLOR_MODE } from '../experimental';
 
+interface LightConfig {
+  adaptive_lighting?: boolean;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isLightConfig = (x: any): x is LightConfig =>
+  x !== undefined && (x.adaptive_lighting === undefined || typeof x.adaptive_lighting === 'boolean');
+
 export class LightCreator implements ServiceCreator {
+  public static readonly CONFIG_TAG = 'light';
+
+  constructor(converterConfigRegistry: ConverterConfigurationRegistry) {
+    converterConfigRegistry.registerConverterConfiguration(LightCreator.CONFIG_TAG, LightCreator.isValidConverterConfiguration);
+  }
+
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     exposes
       .filter(
@@ -43,13 +57,28 @@ export class LightCreator implements ServiceCreator {
   }
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
+    const converterConfig = accessory.getConverterConfiguration(LightCreator.CONFIG_TAG);
+    let adaptiveLightingEnabled = false;
+    if (isLightConfig(converterConfig) && converterConfig.adaptive_lighting) {
+      adaptiveLightingEnabled = true;
+    }
+
     try {
-      const handler = new LightHandler(expose, accessory);
+      const handler = new LightHandler(expose, accessory, adaptiveLightingEnabled);
       accessory.registerServiceHandler(handler);
     } catch (error) {
       accessory.log.warn(`Failed to setup light for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}": ${error}`);
     }
   }
+
+  private static isValidConverterConfiguration(config: unknown): boolean {
+    return isLightConfig(config);
+  }
+}
+
+interface AdaptiveLightingControl extends Controller {
+  isAdaptiveLightingActive(): boolean;
+  disableAdaptiveLighting(): void;
 }
 
 class LightHandler implements ServiceHandler {
@@ -69,13 +98,23 @@ class LightHandler implements ServiceHandler {
   private colorComponentAExpose: ExposesEntryWithProperty | undefined;
   private colorComponentBExpose: ExposesEntryWithProperty | undefined;
 
+  // Adaptive lighting
+  private adaptiveLighting: AdaptiveLightingControl | undefined;
+  private lastAdaptiveLightingTemperature: number | undefined;
+  private colorHueCharacteristic: Characteristic | undefined;
+  private colorSaturationCharacteristic: Characteristic | undefined;
+
   // Internal cache for hue and saturation. Needed in case X/Y is used
   private cached_hue = 0.0;
   private received_hue = false;
   private cached_saturation = 0.0;
   private received_saturation = false;
 
-  constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
+  constructor(
+    expose: ExposesEntryWithFeatures,
+    private readonly accessory: BasicAccessory,
+    private readonly adaptiveLightingEnabled: boolean
+  ) {
     const endpoint = expose.endpoint;
     this.identifier = LightHandler.generateIdentifier(endpoint);
 
@@ -107,6 +146,9 @@ class LightHandler implements ServiceHandler {
 
     // Color temperature
     this.tryCreateColorTemperature(features, service);
+
+    // Adaptive lighting
+    this.tryCreateAdaptiveLighting(service);
   }
 
   identifier: string;
@@ -133,30 +175,50 @@ class LightHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    // Use color_mode to filter out the non-active color information
-    // to prevent "incorrect" updates (leading to "glitches" in the Home.app)
-    if (this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE) && LightHandler.KEY_COLOR_MODE in state) {
-      if (
-        this.colorTempExpose !== undefined &&
-        this.colorTempExpose.property in state &&
-        state[LightHandler.KEY_COLOR_MODE] !== LightHandler.COLOR_MODE_TEMPERATURE
-      ) {
-        // Color mode is NOT Color Temperature. Remove color temperature information.
-        delete state[this.colorTempExpose.property];
-      }
+    if (LightHandler.KEY_COLOR_MODE in state) {
+      const colorModeIsTemperature: boolean = state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE;
+      // If adaptive lighting is enabled, try to detect if the color was changed externally
+      // which should result in turning off adaptive lighting.
+      this.disableAdaptiveLightingBasedOnState(colorModeIsTemperature, state);
 
-      if (
-        this.colorExpose !== undefined &&
-        this.colorExpose.property !== undefined &&
-        this.colorExpose.property in state &&
-        state[LightHandler.KEY_COLOR_MODE] === LightHandler.COLOR_MODE_TEMPERATURE
-      ) {
-        // Color mode is Color Temperature. Remove HS/XY color information.
-        delete state[this.colorExpose.property];
+      // Use color_mode to filter out the non-active color information
+      // to prevent "incorrect" updates (leading to "glitches" in the Home.app)
+      if (this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE)) {
+        if (this.colorTempExpose !== undefined && this.colorTempExpose.property in state && !colorModeIsTemperature) {
+          // Color mode is NOT Color Temperature. Remove color temperature information.
+          delete state[this.colorTempExpose.property];
+        }
+
+        if (
+          this.colorExpose !== undefined &&
+          this.colorExpose.property !== undefined &&
+          this.colorExpose.property in state &&
+          colorModeIsTemperature
+        ) {
+          // Color mode is Color Temperature. Remove HS/XY color information.
+          delete state[this.colorExpose.property];
+        }
       }
     }
 
     this.monitors.forEach((m) => m.callback(state));
+  }
+
+  private disableAdaptiveLightingBasedOnState(colorModeIsTemperature: boolean, state: Record<string, unknown>) {
+    if (this.colorTempExpose !== undefined && this.adaptiveLighting !== undefined && this.adaptiveLighting.isAdaptiveLightingActive()) {
+      if (!colorModeIsTemperature) {
+        // Must be color temperature if adaptive lighting is active
+        this.accessory.log.debug('adaptive_lighting: disable due to color mode change');
+        this.adaptiveLighting.disableAdaptiveLighting();
+      } else if (this.lastAdaptiveLightingTemperature !== undefined && this.colorTempExpose.property in state) {
+        const delta = Math.abs(this.lastAdaptiveLightingTemperature - (state[this.colorTempExpose.property] as number));
+        // Typically we expect a small delta if the status update is caused by a change from adaptive lighting.
+        if (delta > 10) {
+          this.accessory.log.debug(`adaptive_lighting: disable due to large delta (${delta})`);
+          this.adaptiveLighting.disableAdaptiveLighting();
+        }
+      }
+    }
   }
 
   private tryCreateColor(expose: ExposesEntryWithFeatures, service: Service) {
@@ -193,8 +255,11 @@ class LightHandler implements ServiceHandler {
         return;
       }
 
-      getOrAddCharacteristic(service, hap.Characteristic.Hue).on('set', this.handleSetHue.bind(this));
-      getOrAddCharacteristic(service, hap.Characteristic.Saturation).on('set', this.handleSetSaturation.bind(this));
+      this.colorHueCharacteristic = getOrAddCharacteristic(service, hap.Characteristic.Hue).on('set', this.handleSetHue.bind(this));
+      this.colorSaturationCharacteristic = getOrAddCharacteristic(service, hap.Characteristic.Saturation).on(
+        'set',
+        this.handleSetSaturation.bind(this)
+      );
 
       if (this.colorExpose.name === 'color_hs') {
         this.monitors.push(
@@ -268,6 +333,25 @@ class LightHandler implements ServiceHandler {
     }
   }
 
+  private tryCreateAdaptiveLighting(service: Service) {
+    // Adaptive lighting is not enabled
+    if (!this.adaptiveLightingEnabled) {
+      return;
+    }
+
+    // Need at least brightness and color temperature to add Adaptive Lighting
+    if (this.brightnessExpose === undefined || this.colorTempExpose === undefined) {
+      return;
+    }
+
+    this.adaptiveLighting = new hap.AdaptiveLightingController(service).on('disable', this.resetAdaptiveLightingTemperature.bind(this));
+    this.accessory.configureController(this.adaptiveLighting);
+  }
+
+  private resetAdaptiveLightingTemperature(): void {
+    this.lastAdaptiveLightingTemperature = undefined;
+  }
+
   private handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
     data[this.stateExpose.property] = (value as boolean) ? this.stateExpose.value_on : this.stateExpose.value_off;
@@ -295,17 +379,22 @@ class LightHandler implements ServiceHandler {
   }
 
   private handleSetColorTemperature(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
-    if (this.colorTempExpose !== undefined) {
+    if (this.colorTempExpose !== undefined && typeof value === 'number') {
       const data = {};
-      if (this.colorTempExpose.value_min !== undefined && value < this.colorTempExpose.value_min) {
+      if (value < this.colorTempExpose.value_min) {
         value = this.colorTempExpose.value_min;
       }
 
-      if (this.colorTempExpose.value_max !== undefined && value > this.colorTempExpose.value_max) {
+      if (value > this.colorTempExpose.value_max) {
         value = this.colorTempExpose.value_max;
       }
+
       data[this.colorTempExpose.property] = value;
-      this.accessory.queueDataForSetAction(data);
+
+      if (this.handleAdaptiveLighting(value)) {
+        this.accessory.queueDataForSetAction(data);
+      }
+
       callback(null);
     } else {
       callback(new Error('color temperature not supported'));
@@ -345,6 +434,11 @@ class LightHandler implements ServiceHandler {
       if (this.received_hue && this.received_saturation) {
         this.received_hue = false;
         this.received_saturation = false;
+        if (this.adaptiveLighting?.isAdaptiveLightingActive()) {
+          // Hue/Saturation set from HomeKit, disable Adaptive Lighting
+          this.accessory.log.debug('adaptive_lighting: disable due to hue/sat');
+          this.adaptiveLighting.disableAdaptiveLighting();
+        }
         if (
           this.colorExpose?.name === 'color_hs' &&
           this.colorExpose?.property !== undefined &&
@@ -368,6 +462,11 @@ class LightHandler implements ServiceHandler {
       if (this.received_hue && this.received_saturation) {
         this.received_hue = false;
         this.received_saturation = false;
+        if (this.adaptiveLighting?.isAdaptiveLightingActive()) {
+          // Hue/Saturation set from HomeKit, disable Adaptive Lighting
+          this.accessory.log.debug('adaptive_lighting: disable due to hue/sat');
+          this.adaptiveLighting.disableAdaptiveLighting();
+        }
         if (
           this.colorExpose?.name === 'color_xy' &&
           this.colorExpose?.property !== undefined &&
@@ -393,6 +492,39 @@ class LightHandler implements ServiceHandler {
       identifier += '_' + endpoint.trim();
     }
     return identifier;
+  }
+
+  private handleAdaptiveLighting(value: number): boolean {
+    // Adaptive Lighting active?
+    if (this.colorTempExpose !== undefined && this.adaptiveLighting !== undefined && this.adaptiveLighting.isAdaptiveLightingActive()) {
+      if (this.lastAdaptiveLightingTemperature === undefined) {
+        this.lastAdaptiveLightingTemperature = value;
+      } else {
+        const change = Math.abs(this.lastAdaptiveLightingTemperature - value);
+        if (change < 1) {
+          this.accessory.log.debug(
+            `adaptive_lighting: ${this.accessory.displayName}: skipped ${this.colorTempExpose.property} (new: ${value}; ` +
+              `old: ${this.lastAdaptiveLightingTemperature}`
+          );
+          return false;
+        }
+
+        this.accessory.log.debug(`adaptive_lighting: ${this.accessory.displayName}: ${this.colorTempExpose.property} ${value}`);
+        this.lastAdaptiveLightingTemperature = value;
+      }
+    } else {
+      this.resetAdaptiveLightingTemperature();
+    }
+
+    return true;
+  }
+
+  private updateHueAndSaturationBasedOnColorTemperature(value: number): void {
+    if (this.colorHueCharacteristic !== undefined && this.colorSaturationCharacteristic !== undefined) {
+      const color = hap.ColorUtils.colorTemperatureToHueAndSaturation(value, true);
+      this.colorHueCharacteristic.updateValue(color.hue);
+      this.colorSaturationCharacteristic.updateValue(color.saturation);
+    }
   }
 }
 

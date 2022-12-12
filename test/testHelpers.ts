@@ -167,9 +167,16 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
   serviceHandler?: ServiceHandler;
   readonly serviceMock: MockProxy<Service> & Service;
   readonly characteristics: Map<string, TestCharacteristic> = new Map<string, TestCharacteristic>();
+  readonly addedCharacteristicUUIDs = new Set<string>();
 
   constructor(readonly serviceUuid: string, readonly subType: string | undefined, readonly serviceIdentifier: string) {
     this.serviceMock = mock<Service>();
+    this.serviceMock.testCharacteristic.mockImplementation((c) => {
+      if (typeof c === 'string') {
+        return false;
+      }
+      return this.addedCharacteristicUUIDs.has(c.UUID);
+    });
   }
 
   addExpectedPropertyCheck(property: string): ServiceHandlerContainer {
@@ -286,6 +293,8 @@ export class ServiceHandlersTestHarness {
   private readonly converterConfig = new Map<string, unknown>();
   readonly accessoryMock: MockProxy<BasicAccessory> & BasicAccessory;
 
+  public numberOfExpectedControllers = 0;
+
   constructor() {
     this.accessoryMock = mock<BasicAccessory>();
     this.accessoryMock.log = mock<Logger>();
@@ -390,7 +399,12 @@ export class ServiceHandlersTestHarness {
         if (mapping.characteristic !== undefined) {
           when(data.serviceMock.getCharacteristic).calledWith(mapping.characteristic).mockReturnValue(undefined);
 
-          when(data.serviceMock.addCharacteristic).calledWith(mapping.characteristic).mockReturnValue(mapping.mock);
+          when(data.serviceMock.addCharacteristic)
+            .calledWith(mapping.characteristic)
+            .mockImplementation((characteristic: Characteristic) => {
+              data.addedCharacteristicUUIDs.add(characteristic.UUID);
+              return mapping.mock;
+            });
 
           if (mapping.mock !== undefined) {
             mapping.mock.on.mockReturnThis();
@@ -431,6 +445,8 @@ export class ServiceHandlersTestHarness {
   checkCreationExpectations(): void {
     let expectedCallsToGetOrAddService = 0;
     let expectedCallsToRegisterServiceHandler = 0;
+
+    expect(this.accessoryMock.configureController).toBeCalledTimes(this.numberOfExpectedControllers);
 
     for (const handler of this.handlers.values()) {
       expect(this.accessoryMock.isServiceHandlerIdKnown).toHaveBeenCalledWith(handler.serviceIdentifier);

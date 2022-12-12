@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.11.0-beta.0] - 2022-12-12
+
 ### Added
 
 - **Adaptive Lighting**: Added support for Adaptive Lighting. Currently this needs to be enabled *manually* in the plugin configuration, using [converter specific configuration for `light`](https://z2m.dev/light.html#converter-specific-configuration-light). In a future release this might get enabled by default. (see [#30](https://github.com/itavero/homebridge-z2m/issues/30) / [#488](https://github.com/itavero/homebridge-z2m/pull/488))
@@ -361,7 +363,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.10.0...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.0...HEAD
+[1.11.0-beta.0]: https://github.com/itavero/homebridge-z2m/compare/v1.10.0...v1.11.0-beta.0
 [1.10.0]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...v1.10.0
 [1.9.2]: https://github.com/itavero/homebridge-z2m/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/itavero/homebridge-z2m/compare/v1.9.0...v1.9.1

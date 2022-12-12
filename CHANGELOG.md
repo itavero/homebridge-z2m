@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- **Adaptive Lighting**: Added support for Adaptive Lighting. Currently this needs to be enabled *manually* in the plugin configuration, using [converter specific configuration for `light`](https://z2m.dev/light.html#converter-specific-configuration-light). In a future release this might get enabled by default. (see [#30](https://github.com/itavero/homebridge-z2m/issues/30) / [#488](https://github.com/itavero/homebridge-z2m/pull/488))
+
 ## [1.10.0] - 2022-12-09
 
 ### Added

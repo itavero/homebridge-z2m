@@ -21,6 +21,8 @@ the UR Lighting TH008L10RGBCCT
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from UR Lighting](../index.md#ur_lighting)

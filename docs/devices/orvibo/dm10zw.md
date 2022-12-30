@@ -19,6 +19,8 @@ the ORVIBO DM10ZW
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from ORVIBO](../index.md#orvibo)

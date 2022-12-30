@@ -19,6 +19,8 @@ the Xiaomi XDD11LM
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Xiaomi](../index.md#xiaomi)

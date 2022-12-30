@@ -21,6 +21,8 @@ the Skydance WZ5_rgbcct
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Skydance](../index.md#skydance)

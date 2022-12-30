@@ -21,6 +21,8 @@ the Sengled E21-N1EA
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Sengled](../index.md#sengled)

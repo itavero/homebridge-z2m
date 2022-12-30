@@ -19,6 +19,8 @@ the Alchemy AL8TC13W-AP
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Alchemy](../index.md#alchemy)

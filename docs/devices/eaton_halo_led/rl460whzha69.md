@@ -19,6 +19,8 @@ the Eaton/Halo LED RL460WHZHA69
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Eaton/Halo LED](../index.md#eaton_halo_led)

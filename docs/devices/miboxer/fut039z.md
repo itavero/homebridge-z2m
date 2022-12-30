@@ -21,6 +21,8 @@ the Miboxer FUT039Z
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Miboxer](../index.md#miboxer)

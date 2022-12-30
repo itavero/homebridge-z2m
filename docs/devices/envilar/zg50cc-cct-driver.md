@@ -19,6 +19,8 @@ the Envilar ZG50CC-CCT-DRIVER
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Envilar](../index.md#envilar)

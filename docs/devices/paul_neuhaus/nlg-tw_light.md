@@ -19,6 +19,8 @@ the Paul Neuhaus NLG-TW light
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Paul Neuhaus](../index.md#paul_neuhaus)

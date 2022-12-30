@@ -21,6 +21,8 @@ the Xiaomi ZNLDP13LM
 * [Temperature Sensor](../../sensors.md)
   * Current Temperature
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Xiaomi](../index.md#xiaomi)

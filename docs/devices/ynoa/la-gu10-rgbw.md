@@ -21,6 +21,8 @@ the Ynoa LA-GU10-RGBW
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Ynoa](../index.md#ynoa)

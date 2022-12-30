@@ -19,6 +19,8 @@ the Sunricher HK-ZD-CCT-A
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Sunricher](../index.md#sunricher)

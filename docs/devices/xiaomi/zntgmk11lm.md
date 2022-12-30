@@ -21,6 +21,8 @@ the Xiaomi ZNTGMK11LM
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Xiaomi](../index.md#xiaomi)

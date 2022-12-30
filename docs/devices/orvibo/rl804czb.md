@@ -21,6 +21,8 @@ the Orvibo RL804CZB
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Orvibo](../index.md#orvibo)

@@ -21,6 +21,8 @@ the MiBoxer FUT066Z
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from MiBoxer](../index.md#miboxer)

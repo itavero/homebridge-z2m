@@ -19,6 +19,8 @@ the ADEO IM-CDZDGAAG005KA-MZN
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from ADEO](../index.md#adeo)

@@ -19,6 +19,8 @@ the Aurora AU-A1GSZ9CX
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Aurora](../index.md#aurora)

@@ -21,6 +21,8 @@ the Zipato rgbw2.zbee27
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Zipato](../index.md#zipato)

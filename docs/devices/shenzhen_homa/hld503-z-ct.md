@@ -19,6 +19,8 @@ the Shenzhen Homa HLD503-Z-CT
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Shenzhen Homa](../index.md#shenzhen_homa)

@@ -21,6 +21,8 @@ the GIDEALED ZC05M
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from GIDEALED](../index.md#gidealed)

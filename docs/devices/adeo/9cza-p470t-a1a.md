@@ -21,6 +21,8 @@ the ADEO 9CZA-P470T-A1A
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from ADEO](../index.md#adeo)

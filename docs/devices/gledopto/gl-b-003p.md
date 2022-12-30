@@ -19,6 +19,8 @@ the Gledopto GL-B-003P
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Gledopto](../index.md#gledopto)

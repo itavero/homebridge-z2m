@@ -21,6 +21,8 @@ the LEDVANCE SMARTZBA60RGBW
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from LEDVANCE](../index.md#ledvance)

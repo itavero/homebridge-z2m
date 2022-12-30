@@ -21,6 +21,8 @@ the Ajax Online ZB_A60_RGBCW
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Ajax Online](../index.md#ajax_online)

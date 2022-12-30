@@ -21,6 +21,8 @@ the Garza Smart Garza-Standard-A60
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Garza Smart](../index.md#garza_smart)

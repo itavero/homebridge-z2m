@@ -21,6 +21,8 @@ the Sengled E1G-G8E
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Sengled](../index.md#sengled)

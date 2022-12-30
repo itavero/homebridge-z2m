@@ -21,6 +21,8 @@ the Letsleds HLC929-Z-RGBW-4C-IA-OTA-3.0
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Letsleds](../index.md#letsleds)

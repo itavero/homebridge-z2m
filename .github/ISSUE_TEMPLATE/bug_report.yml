@@ -34,7 +34,6 @@ body:
       placeholder: |
         - Device 1
         - Device 2
-      render: markdown
     validations:
       required: false
   - type: textarea

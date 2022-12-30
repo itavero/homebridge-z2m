@@ -1,0 +1,110 @@
+name: Bug report
+description: Report an issue to help us improve the plugin
+title: "[Bug] "
+labels:
+  - "bug"
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the bug you encountered.
+      options:
+        - label: I have searched the existing issues
+          required: true
+  - type: textarea
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is (e.g. the current behavior).
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Related devices
+      description: |
+        Are you experiencing this behavior with a particular device?
+        Please list which device(s) you experience this with.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Related Devices
+      description: |
+        Are you experiencing this behavior with a particular device?
+        Please list which device(s) you experience this with.
+      placeholder: |
+        - Device 1
+        - Device 2
+      render: markdown
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Change '...' via the Home app.
+        2. Log shows MQTT message '...' being published to topic '...'
+        3. The device does the following: '...'
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen, compared to what actually happened.
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        **MQTT messages**
+        If possible (and applicable), please provide the following MQTT messages.
+        One possible way to view this, is by using an MQTT client like _MQTT Explorer_.
+  - type: textarea
+    attributes:
+      label: Device entry
+      description: |
+        The device entry from `zigbee2mqtt/bridge/devices`
+        (note: this is different from `zigbee2mqtt/bridge/config/devices`)
+      render: json
+  - type: textarea
+    attributes:
+      label: Status update
+      description: |
+        Status update from `zigbee2mqtt/[FRIENDLY_NAME]` for related device(s).
+      render: json
+  - type: textarea
+    attributes:
+      label: Messages from this plugin
+      description: |
+        Messages published by this plugin that might be related to your issue.
+        These can also be seen in the Homebridge logs when debug logs are enabled.
+      render: json
+  - type: markdown
+    attributes:
+      value: |
+        **Versions used**
+        Please provide the version of the following pieces of software:
+  - type: input
+    attributes:
+      label: This plugin
+      placeholder: e.g. 1.11.0
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Homebridge
+      placeholder: e.g. 1.6.0
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Zigbee2MQTT
+      placeholder: e.g. 1.28.4
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Homebridge Config UI X (if applicable)
+      placeholder: e.g. 4.50.2
+    validations:
+      required: false

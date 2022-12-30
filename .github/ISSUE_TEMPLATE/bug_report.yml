@@ -56,7 +56,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        **MQTT messages**
+        # MQTT messages
         If possible (and applicable), please provide the following MQTT messages.
         One possible way to view this, is by using an MQTT client like _MQTT Explorer_.
   - type: textarea
@@ -82,7 +82,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        **Versions used**
+        # Versions used
         Please provide the version of the following pieces of software:
   - type: input
     attributes:

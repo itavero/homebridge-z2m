@@ -21,6 +21,8 @@ the Mycket MS-SP-LE27WRGB
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Mycket](../index.md#mycket)

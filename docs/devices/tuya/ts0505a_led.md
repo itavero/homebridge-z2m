@@ -21,6 +21,8 @@ the TuYa TS0505A_led
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from TuYa](../index.md#tuya)

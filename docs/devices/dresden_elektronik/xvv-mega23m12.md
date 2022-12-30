@@ -19,6 +19,8 @@ the Dresden Elektronik XVV-Mega23M12
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Dresden Elektronik](../index.md#dresden_elektronik)

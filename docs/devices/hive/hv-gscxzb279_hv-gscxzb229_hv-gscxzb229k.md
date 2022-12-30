@@ -19,6 +19,8 @@ the Hive HV-GSCXZB279_HV-GSCXZB229_HV-GSCXZB229K
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Hive](../index.md#hive)

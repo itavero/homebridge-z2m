@@ -21,6 +21,8 @@ the Innr OFL 140 C
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Innr](../index.md#innr)

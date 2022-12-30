@@ -21,6 +21,8 @@ the Zemismart HGZB-DLC4-N15B
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Zemismart](../index.md#zemismart)

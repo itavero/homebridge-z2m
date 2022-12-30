@@ -21,6 +21,8 @@ the Zemismart LXZB-12A
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Zemismart](../index.md#zemismart)

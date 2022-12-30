@@ -19,6 +19,8 @@ the HEIMAN HS2WDS
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from HEIMAN](../index.md#heiman)

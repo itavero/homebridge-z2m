@@ -19,6 +19,8 @@ the Acuity Brands Lighting (ABL) WF4C_WF6C
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Acuity Brands Lighting (ABL)](../index.md#acuity_brands_lighting_abl)

@@ -21,6 +21,8 @@ the ADEO IA-CDZFB2AA007NA-MZN-02
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from ADEO](../index.md#adeo)

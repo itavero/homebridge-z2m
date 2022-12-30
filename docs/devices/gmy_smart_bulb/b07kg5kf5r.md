@@ -19,6 +19,8 @@ the GMY Smart Bulb B07KG5KF5R
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from GMY Smart Bulb](../index.md#gmy_smart_bulb)

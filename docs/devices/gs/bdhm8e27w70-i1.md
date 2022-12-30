@@ -19,6 +19,8 @@ the GS BDHM8E27W70-I1
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from GS](../index.md#gs)

@@ -21,6 +21,8 @@ the LifeControl MCLH-02
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from LifeControl](../index.md#lifecontrol)

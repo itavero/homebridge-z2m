@@ -19,6 +19,8 @@ the Leedarson 6xy-M350ST-W1Z
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Leedarson](../index.md#leedarson)

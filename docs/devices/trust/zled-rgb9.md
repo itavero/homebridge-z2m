@@ -21,6 +21,8 @@ the Trust ZLED-RGB9
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Trust](../index.md#trust)

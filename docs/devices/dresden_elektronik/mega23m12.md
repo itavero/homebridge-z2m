@@ -21,6 +21,8 @@ the Dresden Elektronik Mega23M12
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Dresden Elektronik](../index.md#dresden_elektronik)

@@ -19,6 +19,8 @@ the Skydance WZ5_cct
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Skydance](../index.md#skydance)

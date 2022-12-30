@@ -21,6 +21,8 @@ the Paul Neuhaus NLG-RGBW__light
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Paul Neuhaus](../index.md#paul_neuhaus)

@@ -21,6 +21,8 @@ the Moes ZLD-RCW
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Moes](../index.md#moes)

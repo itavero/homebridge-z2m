@@ -21,6 +21,8 @@ the LEDVANCE GPDRPLOP401100CE
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from LEDVANCE](../index.md#ledvance)

@@ -21,6 +21,8 @@ the Ajax Online AJ_ZIGPROA60
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Ajax Online](../index.md#ajax_online)

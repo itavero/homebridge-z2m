@@ -21,6 +21,8 @@ the Aurora AU-A1ZBSCRGBCX
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Aurora](../index.md#aurora)

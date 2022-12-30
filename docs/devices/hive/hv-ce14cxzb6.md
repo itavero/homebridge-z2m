@@ -19,6 +19,8 @@ the Hive HV-CE14CXZB6
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Hive](../index.md#hive)

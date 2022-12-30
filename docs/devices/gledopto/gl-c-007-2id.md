@@ -21,6 +21,8 @@ the Gledopto GL-C-007-2ID
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Gledopto](../index.md#gledopto)

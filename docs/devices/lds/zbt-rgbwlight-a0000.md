@@ -21,6 +21,8 @@ the LDS ZBT-RGBWLight-A0000
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from LDS](../index.md#lds)

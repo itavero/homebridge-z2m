@@ -21,6 +21,8 @@ the ADEO IP-CDZOTAAP005JA-MAN
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from ADEO](../index.md#adeo)

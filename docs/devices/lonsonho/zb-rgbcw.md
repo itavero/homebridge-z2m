@@ -21,6 +21,8 @@ the Lonsonho ZB-RGBCW
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Lonsonho](../index.md#lonsonho)

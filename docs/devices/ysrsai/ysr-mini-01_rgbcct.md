@@ -21,6 +21,8 @@ the YSRSAI YSR-MINI-01_rgbcct
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from YSRSAI](../index.md#ysrsai)

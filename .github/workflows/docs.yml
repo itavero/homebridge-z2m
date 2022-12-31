@@ -28,18 +28,18 @@ jobs:
       - name: Determine Zigbee2MQTT version
         id: version
         run: |
-          echo "::set-output name=updated::0"
+          echo "updated=0" >> $GITHUB_OUTPUT
           Z2M_VERSION=$(npm view zigbee2mqtt@latest version)
-          echo "::set-output name=z2m::$Z2M_VERSION"
+          echo "z2m=$Z2M_VERSION" >> $GITHUB_OUTPUT
           HERDSMAN_VERSION=$(npm view "zigbee2mqtt@$Z2M_VERSION" dependencies.zigbee-herdsman-converters)
-          echo "::set-output name=herdsman::$HERDSMAN_VERSION"
+          echo "herdsman=$HERDSMAN_VERSION" >> $GITHUB_OUTPUT
           {
-            echo "// GENERATED FILE: DO NOT EDIT MANUALLY!" 
+            echo "// GENERATED FILE: DO NOT EDIT MANUALLY!"
             echo "const version_zigbee2mqtt = '$Z2M_VERSION';"
             echo "const version_herdsman_converters = '$HERDSMAN_VERSION';"
             echo "export { version_zigbee2mqtt, version_herdsman_converters };"
           } > ${{ env.versions_file }}
-          git diff --exit-code -s ${{ env.versions_file }} || echo "::set-output name=updated::1"
+          git diff --exit-code -s ${{ env.versions_file }} || echo "updated=1" >> $GITHUB_OUTPUT
 
       - name: Install regular dependencies and zigbee-herdsman-converters
         if: ${{ steps.version.outputs.updated == 1 || inputs.forced }}
@@ -51,9 +51,9 @@ jobs:
         id: docs
         if: ${{ steps.version.outputs.updated == 1 || inputs.forced }}
         run: |
-          echo "::set-output name=updated::0"
+          echo "updated=0" >> $GITHUB_OUTPUT
           node_modules/.bin/ts-node src/docgen/docgen.ts
-          git diff --exit-code -s docs || echo "::set-output name=updated::1"
+          git diff --exit-code -s docs ||echo "updated=1" >> $GITHUB_OUTPUT
 
       - name: Open/update PR
         if: ${{ steps.docs.outputs.updated == 1 }}

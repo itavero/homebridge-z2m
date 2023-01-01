@@ -24,13 +24,298 @@ these devices
   * Battery Level
   * Charging State
   * Status Low Battery
-* [Thermostat](../../climate.md)
-  * Current Heating Cooling State
-  * Current Temperature
-  * Target Heating Cooling State
-  * Target Temperature
-  * Temperature Display Units
 
+
+
+## Exposes
+
+This is the information provided by Zigbee2MQTT for this device:
+
+```json
+[
+  {
+    "type": "binary",
+    "name": "battery_low",
+    "property": "battery_low",
+    "access": 1,
+    "value_on": true,
+    "value_off": false,
+    "description": "Indicates if the battery of this device is almost empty"
+  },
+  {
+    "type": "lock",
+    "features": [
+      {
+        "type": "binary",
+        "name": "state",
+        "property": "child_lock",
+        "access": 3,
+        "value_on": "LOCK",
+        "value_off": "UNLOCK",
+        "description": "Enables/disables physical input on the device"
+      }
+    ]
+  },
+  {
+    "type": "binary",
+    "name": "open_window",
+    "property": "open_window",
+    "access": 3,
+    "value_on": "ON",
+    "value_off": "OFF",
+    "description": "Enables/disables the status on the device"
+  },
+  {
+    "type": "numeric",
+    "name": "open_window_temperature",
+    "property": "open_window_temperature",
+    "access": 3,
+    "unit": "°C",
+    "description": "Open window temperature",
+    "value_min": 5,
+    "value_max": 30
+  },
+  {
+    "type": "numeric",
+    "name": "comfort_temperature",
+    "property": "comfort_temperature",
+    "access": 3,
+    "unit": "°C",
+    "description": "Comfort temperature",
+    "value_min": 5,
+    "value_max": 30
+  },
+  {
+    "type": "numeric",
+    "name": "eco_temperature",
+    "property": "eco_temperature",
+    "access": 3,
+    "unit": "°C",
+    "description": "Eco temperature",
+    "value_min": 5,
+    "value_max": 30
+  },
+  {
+    "type": "climate",
+    "features": [
+      {
+        "type": "enum",
+        "name": "preset",
+        "property": "preset",
+        "access": 3,
+        "values": [
+          "auto",
+          "manual",
+          "holiday"
+        ],
+        "description": "Mode of this device (similar to system_mode)"
+      },
+      {
+        "type": "numeric",
+        "name": "local_temperature_calibration",
+        "property": "local_temperature_calibration",
+        "access": 3,
+        "value_min": -5,
+        "value_max": 5,
+        "value_step": 0.1,
+        "unit": "°C",
+        "description": "Offset to be used in the local_temperature"
+      },
+      {
+        "type": "numeric",
+        "name": "local_temperature",
+        "property": "local_temperature",
+        "access": 1,
+        "unit": "°C",
+        "description": "Current temperature measured on the device"
+      },
+      {
+        "type": "numeric",
+        "name": "current_heating_setpoint",
+        "property": "current_heating_setpoint",
+        "access": 2,
+        "value_min": 5,
+        "value_max": 30,
+        "value_step": 0.5,
+        "unit": "°C",
+        "description": "Temperature setpoint"
+      },
+      {
+        "type": "enum",
+        "name": "system_mode",
+        "property": "system_mode",
+        "access": 3,
+        "values": [
+          "off",
+          "heat"
+        ],
+        "description": "Only for Homeassistant"
+      }
+    ]
+  },
+  {
+    "type": "binary",
+    "name": "heating_stop",
+    "property": "heating_stop",
+    "access": 3,
+    "value_on": "ON",
+    "value_off": "OFF",
+    "description": "Battery life can be prolonged by switching the heating off. To achieve this, the valve is closed fully. To activate the heating stop, the device display \"HS\", press the pair button to cancel."
+  },
+  {
+    "type": "binary",
+    "name": "frost_protection",
+    "property": "frost_protection",
+    "access": 3,
+    "value_on": "ON",
+    "value_off": "OFF",
+    "description": "When Anti-Freezing function is activated, the temperature in the house is kept at 8 °C.When Anti-Freezing function is activated, the temperature in the house is kept at 8 °C, the device display \"AF\".press the pair button to cancel."
+  },
+  {
+    "type": "numeric",
+    "name": "boost_timeset_countdown",
+    "property": "boost_timeset_countdown",
+    "access": 3,
+    "unit": "second",
+    "description": "Setting minimum 0 - maximum 465 seconds boost time. The boost (♨) function is activated. The remaining time for the function will be counted down in seconds ( 465 to 0 ).",
+    "value_min": 0,
+    "value_max": 465
+  },
+  {
+    "type": "numeric",
+    "name": "holiday_temperature",
+    "property": "holiday_temperature",
+    "access": 3,
+    "unit": "°C",
+    "description": "Holiday temperature",
+    "value_min": 5,
+    "value_max": 30
+  },
+  {
+    "type": "text",
+    "name": "holiday_start_stop",
+    "property": "holiday_start_stop",
+    "access": 3,
+    "description": "The holiday mode will automatically start at the set time starting point and run the holiday temperature. Can be defined in the following format: `startYear/startMonth/startDay startHours:startMinutes | endYear/endMonth/endDay endHours:endMinutes`. For example: `2022/10/01 16:30 | 2022/10/21 18:10`. After the end of holiday mode, it switches to \"auto\" mode and uses schedule."
+  },
+  {
+    "type": "enum",
+    "name": "working_day",
+    "property": "working_day",
+    "access": 3,
+    "values": [
+      "mon_sun",
+      "mon_fri+sat+sun",
+      "separate"
+    ],
+    "description": "`mon_sun` - schedule for Monday used for each day (define it only for Monday). `mon_fri+sat+sun` - schedule for workdays used from Monday (define it only for Monday), Saturday and Sunday are defined separately. `separate` - schedule for each day is defined separately."
+  },
+  {
+    "type": "composite",
+    "property": "schedule",
+    "name": "schedule",
+    "features": [
+      {
+        "type": "enum",
+        "name": "week_day",
+        "property": "week_day",
+        "access": 2,
+        "values": [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday",
+          "saturday",
+          "sunday"
+        ]
+      },
+      {
+        "type": "text",
+        "name": "schedule",
+        "property": "schedule",
+        "access": 2
+      }
+    ],
+    "description": "Schedule will work with \"auto\" preset. In this mode, the device executes a preset week programming temperature time and temperature. Before using these properties, check `working_day` property. Each day can contain up to 10 segments. At least 1 segment should be defined. Different count of segments can be defined for each day, e.g., 3 segments for Monday, 5 segments for Thursday, etc. It should be defined in the following format: `hours:minutes/temperature`. Minutes can be only tens, i.e., 00, 10, 20, 30, 40, 50. Segments should be divided by space symbol. Each day should end with the last segment of 24:00. Examples: `04:00/20 08:30/22 10:10/18 18:40/24 22:50/19.5`; `06:00/21.5 17:20/26 24:00/18`. The temperature will be set from the beginning/start of one period and until the next period, e.g., `04:00/20 24:00/22` means that from 00:00 to 04:00 temperature will be 20 degrees and from 04:00 to 00:00 temperature will be 22 degrees."
+  },
+  {
+    "type": "text",
+    "name": "schedule_monday",
+    "property": "schedule_monday",
+    "access": 1,
+    "description": "Schedule for monday, format: \"HH:MM/C\""
+  },
+  {
+    "type": "text",
+    "name": "schedule_tuesday",
+    "property": "schedule_tuesday",
+    "access": 1,
+    "description": "Schedule for tuesday, format: \"HH:MM/C\""
+  },
+  {
+    "type": "text",
+    "name": "schedule_wednesday",
+    "property": "schedule_wednesday",
+    "access": 1,
+    "description": "Schedule for wednesday, format: \"HH:MM/C\""
+  },
+  {
+    "type": "text",
+    "name": "schedule_thursday",
+    "property": "schedule_thursday",
+    "access": 1,
+    "description": "Schedule for thursday, format: \"HH:MM/C\""
+  },
+  {
+    "type": "text",
+    "name": "schedule_friday",
+    "property": "schedule_friday",
+    "access": 1,
+    "description": "Schedule for friday, format: \"HH:MM/C\""
+  },
+  {
+    "type": "text",
+    "name": "schedule_saturday",
+    "property": "schedule_saturday",
+    "access": 1,
+    "description": "Schedule for saturday, format: \"HH:MM/C\""
+  },
+  {
+    "type": "text",
+    "name": "schedule_sunday",
+    "property": "schedule_sunday",
+    "access": 1,
+    "description": "Schedule for sunday, format: \"HH:MM/C\""
+  },
+  {
+    "type": "binary",
+    "name": "online",
+    "property": "online",
+    "access": 3,
+    "value_on": "ON",
+    "value_off": "OFF",
+    "description": "The current data request from the device."
+  },
+  {
+    "type": "numeric",
+    "name": "error_status",
+    "property": "error_status",
+    "access": 1,
+    "description": "Error status"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]
+```
 
 # Related
 * [Other devices from TuYa](../index.md#tuya)

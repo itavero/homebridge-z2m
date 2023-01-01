@@ -34,15 +34,6 @@
     "endpoint": "l2"
   },
   {
-    "type": "numeric",
-    "name": "power",
-    "property": "power",
-    "access": 5,
-    "unit": "W",
-    "description": "Instantaneous measured power",
-    "endpoint": "meter"
-  },
-  {
     "type": "enum",
     "name": "action",
     "property": "action",
@@ -90,6 +81,22 @@
     ],
     "description": "Controls the behavior when the device is powered on after power loss",
     "endpoint": "l2"
+  },
+  {
+    "type": "numeric",
+    "name": "power",
+    "property": "power",
+    "access": 5,
+    "unit": "W",
+    "description": "Instantaneous measured power"
+  },
+  {
+    "type": "numeric",
+    "name": "energy",
+    "property": "energy",
+    "access": 5,
+    "unit": "kWh",
+    "description": "Sum of consumed energy"
   },
   {
     "type": "numeric",

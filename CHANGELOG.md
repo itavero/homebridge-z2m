@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.11.0-beta.1] - 2023-01-09
+
 ### Changed
 
 - Updated `config.schema.json` to have `exclude` set to `false` if it is unchecked in the Config UI. This should allow users to override a global `exclude: true` setting for specific devices, via the web interface. (see [#610](https://github.com/itavero/homebridge-z2m/issues/610))
@@ -369,7 +371,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.0...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.1...HEAD
+[1.11.0-beta.1]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.0...v1.11.0-beta.1
 [1.11.0-beta.0]: https://github.com/itavero/homebridge-z2m/compare/v1.10.0...v1.11.0-beta.0
 [1.10.0]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...v1.10.0
 [1.9.2]: https://github.com/itavero/homebridge-z2m/compare/v1.9.1...v1.9.2

@@ -301,7 +301,8 @@
             },
             "exclude": {
               "title": "Exclude entire device",
-              "$ref": "#/definitions/exclude"
+              "$ref": "#/definitions/exclude",
+              "default": false
             },
             "ignore_availability": {
               "$ref": "#/definitions/ignore_availability",

@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Changed
+
+- Updated `config.schema.json` to have `exclude` set to `false` if it is unchecked in the Config UI. This should allow users to override a global `exclude: true` setting for specific devices, via the web interface. (see [#610](https://github.com/itavero/homebridge-z2m/issues/610))
+
 ## [1.11.0-beta.0] - 2022-12-12
 
 ### Added

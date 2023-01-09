@@ -121,6 +121,7 @@ export interface BaseDeviceConfiguration extends Record<string, unknown> {
   converters?: object;
   experimental?: string[];
   ignore_availability?: boolean;
+  ignore_z2m_online?: boolean;
 }
 
 export interface DeviceConfiguration extends BaseDeviceConfiguration {
@@ -148,6 +149,11 @@ export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration 
   }
   // Optional boolean ignore_availability property
   if (x.ignore_availability !== undefined && typeof x.ignore_availability !== 'boolean') {
+    return false;
+  }
+
+  // Optional boolean ignore_z2m_online property
+  if (x.ignore_z2m_online !== undefined && typeof x.ignore_z2m_online !== 'boolean') {
     return false;
   }
 

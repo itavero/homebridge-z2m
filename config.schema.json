@@ -65,6 +65,11 @@
         "type": "boolean",
         "required": false
       },
+      "ignore_z2m_online": {
+        "title": "Ignore Zigbee2MQTT online status",
+        "type": "boolean",
+        "required": false
+      },
       "values": {
         "title": "Include/exclude values",
         "type": "array",
@@ -270,6 +275,9 @@
           "ignore_availability": {
             "$ref": "#/definitions/ignore_availability"
           },
+          "ignore_z2m_online": {
+            "$ref": "#/definitions/ignore_z2m_online"
+          },
           "excluded_keys": {
             "$ref": "#/definitions/excluded_keys"
           },
@@ -311,6 +319,12 @@
             },
             "ignore_availability": {
               "$ref": "#/definitions/ignore_availability",
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
+            },
+            "ignore_z2m_online": {
+              "$ref": "#/definitions/ignore_z2m_online",
               "condition": {
                 "functionBody": "return !model.devices[arrayIndices].exclude;"
               }

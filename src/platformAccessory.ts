@@ -134,12 +134,14 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   informOnZigbee2MqttOnlineStateChange(online: boolean): void {
+    if (this.additionalConfig.ignore_z2m_online === true) {
+      // Ignore this call
+      return;
+    }
     if (online) {
-      if (this.isAvailable || this.additionalConfig.ignore_availability === true) {
-        // Accessory used to be available before Zigbee2MQTT went offline.
-        // Mark all services as available again.
-        this.sendLastValueOnMainCharacteristics();
-      }
+      // Ignore previous state, as this might no longer be accurate.
+      // Mark all services as available again.
+      this.sendLastValueOnMainCharacteristics();
     } else {
       // Zigbee2MQTT went offline. Mark all services as unavailable.
       this.updateErrorStateOnMainCharacteristics(HAPStatus.SERVICE_COMMUNICATION_FAILURE);

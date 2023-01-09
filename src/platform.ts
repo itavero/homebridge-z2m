@@ -25,14 +25,18 @@ import * as semver from 'semver';
 import { errorToString, getDiffFromArrays } from './helpers';
 import { BasicServiceCreatorManager } from './converters/creators';
 import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from './configHelpers';
+import { BasicLogger } from './logger';
+import { ConfigurableLogger } from './configurableLogger';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
-  public readonly config?: PluginConfiguration;
-  private baseDeviceConfig: BaseDeviceConfiguration;
-  private readonly mqttClient?: mqtt.MqttClient;
   private static readonly MIN_Z2M_VERSION = '1.17.0';
   private static readonly TOPIC_BRIDGE = 'bridge/';
   private static readonly TOPIC_SUFFIX_AVAILABILITY = '/availability';
+
+  public readonly config?: PluginConfiguration;
+  public readonly log: ConfigurableLogger;
+  private readonly mqttClient?: mqtt.MqttClient;
+  private baseDeviceConfig: BaseDeviceConfiguration;
 
   // this is used to track restored cached accessories
   private readonly accessories: Zigbee2mqttAccessory[] = [];
@@ -52,25 +56,34 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private availabilityEnabledDevices = new Array<string>();
   private availabilityDisabledDevices = new Array<string>();
 
-  constructor(public readonly log: Logger, config: PlatformConfig, public readonly api: API) {
+  constructor(logger: Logger, config: PlatformConfig, public readonly api: API) {
     // Prepare internal states, variables and such
     this.onMessage = this.onMessage.bind(this);
     this.didReceiveDevices = false;
     this.lastReceivedZigbee2MqttVersion = undefined;
 
+    // Prepare logger
+    this.log = new ConfigurableLogger(logger);
+
     // Set device defaults
     this.baseDeviceConfig = {};
 
     // Validate configuration
-    if (isPluginConfiguration(config, BasicServiceCreatorManager.getInstance(), log)) {
+    if (isPluginConfiguration(config, BasicServiceCreatorManager.getInstance(), this.log)) {
       this.config = config;
     } else {
-      log.error(`INVALID CONFIGURATION FOR PLUGIN: ${PLUGIN_NAME}\nThis plugin will NOT WORK until this problem is resolved.`);
+      this.log.error(`INVALID CONFIGURATION FOR PLUGIN: ${PLUGIN_NAME}\nThis plugin will NOT WORK until this problem is resolved.`);
       return;
     }
 
     // Use configuration
     if (this.config !== undefined) {
+      // Set log level
+      this.log.debugAsInfo = this.config.log?.debug_as_info ?? false;
+      if (this.log.debugAsInfo) {
+        this.log.warn('Debug messages will be logged as INFO.');
+      }
+
       // Normalize experimental feature flags
       if (this.config.experimental !== undefined) {
         this.config.experimental = this.config.experimental.map((feature: string) => feature.trim().toLocaleUpperCase());
@@ -124,7 +137,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     return this.config.experimental.includes(feature.trim().toLocaleUpperCase());
   }
 
-  private static createMqttOptions(log: Logger, config: PluginConfiguration): mqtt.IClientOptions {
+  private static createMqttOptions(log: BasicLogger, config: PluginConfiguration): mqtt.IClientOptions {
     const options: mqtt.IClientOptions = {};
     if (config.mqtt.version) {
       options.protocolVersion = config.mqtt.version;

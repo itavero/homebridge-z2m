@@ -10,7 +10,6 @@ import { SwitchCreator } from './switch';
 import { StatelessProgrammableSwitchCreator } from './action';
 import { ThermostatCreator } from './climate';
 import { AirQualitySensorCreator } from './air_quality';
-import { Logger } from 'homebridge';
 
 export interface ServiceCreatorManager {
   createHomeKitEntitiesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
@@ -43,14 +42,14 @@ export class BasicServiceCreatorManager
 
   private creators: ServiceCreator[];
 
-  private converterConfigs: Map<string, (config: unknown, tag: string, logger: Logger | undefined) => boolean>;
+  private converterConfigs: Map<string, (config: unknown, tag: string, logger: BasicLogger | undefined) => boolean>;
 
   private constructor() {
     this.converterConfigs = new Map();
     this.creators = BasicServiceCreatorManager.constructors.map((c) => new c(this));
   }
 
-  allConverterConfigurationsAreValid(configurations: object, logger: Logger | undefined): boolean {
+  allConverterConfigurationsAreValid(configurations: object, logger: BasicLogger | undefined): boolean {
     for (const key of Object.keys(configurations)) {
       const validator = this.converterConfigs.get(key);
       if (validator !== undefined) {
@@ -67,7 +66,7 @@ export class BasicServiceCreatorManager
     return true;
   }
 
-  registerConverterConfiguration(tag: string, validator: (config: unknown, tag: string, logger: Logger | undefined) => boolean): void {
+  registerConverterConfiguration(tag: string, validator: (config: unknown, tag: string, logger: BasicLogger | undefined) => boolean): void {
     tag = tag.trim().toLocaleLowerCase();
     if (this.converterConfigs.has(tag)) {
       throw new Error(`Duplicate converter configuration tag detected: ${tag}`);

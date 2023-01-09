@@ -1,15 +1,15 @@
 import { BasicAccessory } from '../interfaces';
 import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../z2mModels';
-import { Logger } from 'homebridge';
 import { hap } from '../../hap';
 import { ConfigurableBinarySensorHandler, isBinarySensorConfig, BinarySensorTypeDefinition } from './binary';
+import { BasicLogger } from '../../logger';
 
 export class OccupancySensorHandler extends ConfigurableBinarySensorHandler {
   public static readonly exposesName: string = 'occupancy';
   public static readonly converterConfigTag = 'occupancy';
   private static readonly defaultType: string = 'occupancy';
   private static readonly typeMotion: string = 'motion';
-  public static isValidConverterConfiguration(config: unknown, tag: string, logger: Logger | undefined): boolean {
+  public static isValidConverterConfiguration(config: unknown, tag: string, logger: BasicLogger | undefined): boolean {
     if (!isBinarySensorConfig(config)) {
       return false;
     }

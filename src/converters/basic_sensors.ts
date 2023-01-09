@@ -8,7 +8,6 @@ import {
   exposesIsPublished,
   ExposesKnownTypes,
 } from '../z2mModels';
-import { Logger } from 'homebridge';
 import { groupByEndpoint } from '../helpers';
 import { HumiditySensorHandler } from './basic_sensors/humidity';
 import { AirPressureSensorHandler } from './basic_sensors/air_pressure';
@@ -23,6 +22,7 @@ import { PresenceSensorHandler } from './basic_sensors/presence';
 import { OccupancySensorHandler } from './basic_sensors/occupancy';
 import { IdentifierGenerator } from './basic_sensors/basic';
 import { DeviceTemperatureSensorHandler } from './basic_sensors/device_temperature';
+import { BasicLogger } from '../logger';
 
 interface ExposeToHandlerFunction {
   (expose: ExposesEntryWithProperty): ServiceHandler;
@@ -40,7 +40,7 @@ declare type WithBasicSensorProperties<T> = T & {
 
 declare type WithConfigurableConverter<T> = T & {
   converterConfigTag: string;
-  isValidConverterConfiguration(config: unknown, tag: string, logger: Logger | undefined): boolean;
+  isValidConverterConfiguration(config: unknown, tag: string, logger: BasicLogger | undefined): boolean;
 };
 
 export class BasicSensorCreator implements ServiceCreator {

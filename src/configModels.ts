@@ -142,18 +142,19 @@ export const hasOptionalStringArrays = (object: any, ...properties: string[]): b
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration => {
-  // Optional boolean exclude property
-  if (x.exclude !== undefined && typeof x.exclude !== 'boolean') {
-    return false;
+export const hasOptionalBooleans = (object: any, ...properties: string[]): boolean => {
+  for (const property of properties) {
+    if (property in object && object[property] !== undefined && typeof object[property] !== 'boolean') {
+      return false;
+    }
   }
-  // Optional boolean ignore_availability property
-  if (x.ignore_availability !== undefined && typeof x.ignore_availability !== 'boolean') {
-    return false;
-  }
+  return true;
+};
 
-  // Optional boolean ignore_z2m_online property
-  if (x.ignore_z2m_online !== undefined && typeof x.ignore_z2m_online !== 'boolean') {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration => {
+  // Optional boolean properties
+  if (!hasOptionalBooleans(x, 'exclude', 'ignore_availability', 'ignore_z2m_online')) {
     return false;
   }
 

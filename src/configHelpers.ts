@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Logger } from 'homebridge';
+import { BasicLogger } from './logger';
 
 /**
  * Check if availability is configured. Based on utils.isAvailabilityEnabledForEntity from Zigbee2MQTT code base.
@@ -30,9 +30,9 @@ export interface BooleanDeviceList {
  * Check if availability is explicitly enabled or disabled for any devices.
  * Based on utils.isAvailabilityEnabledForEntity from Zigbee2MQTT code base.
  * @param config config part of the object published to bridge/info
- * @param logger Logger
+ * @param logger BasicLogger
  */
-export function getAvailabilityConfigurationForDevices(config: Record<string, any>, logger?: Logger): BooleanDeviceList {
+export function getAvailabilityConfigurationForDevices(config: Record<string, any>, logger?: BasicLogger): BooleanDeviceList {
   const result = getAvailabilityFromDeviceConfigurations(config, logger);
 
   // Also check availability_passlist, availability_blocklist, availability_whitelist and availability_blacklist.
@@ -58,7 +58,7 @@ export function getAvailabilityConfigurationForDevices(config: Record<string, an
   return result;
 }
 
-function getAvailabilityFromDeviceConfigurations(config: Record<string, any>, logger: Logger | undefined): BooleanDeviceList {
+function getAvailabilityFromDeviceConfigurations(config: Record<string, any>, logger: BasicLogger | undefined): BooleanDeviceList {
   const result = {
     enabled: new Array<string>(),
     disabled: new Array<string>(),
@@ -80,6 +80,6 @@ function getAvailabilityFromDeviceConfigurations(config: Record<string, any>, lo
   return result;
 }
 
-function _logAvailabilityConfigForDevice(logger: Logger | undefined, device: string, enabled: boolean, source: string): void {
+function _logAvailabilityConfigForDevice(logger: BasicLogger | undefined, device: string, enabled: boolean, source: string): void {
   logger?.debug(`Availability feature is ${enabled ? 'enabled' : 'disabled'} for device '${device}' (via ${source})`);
 }

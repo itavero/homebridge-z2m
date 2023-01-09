@@ -10,7 +10,8 @@ A possible configuration looks like this:
       "server": "mqtt://localhost:1883"
    },
    "log": {
-      "mqtt_publish": "debug"
+      "mqtt_publish": "debug",
+      "debug_as_info": false
    },
    "defaults": {
       "excluded_keys": [
@@ -82,6 +83,8 @@ The available log levels are `error`, `warn`, `info` and `debug`.
 
 Currently, the following can be configured:
 * `mqtt_publish`: The log level for MQTT messages that are published by the plugin. (default: `debug`)
+
+Additionally, you can have all debugging messages be output to the `info` level instead, by setting `debug_as_info` to `true`. This can be useful if you only want to see debug messages from this plugin and not from all plugins on your Homebridge instance.
 
 ### Disable QoS for published MQTT messages
 Some MQTT brokers do not have support for QoS. If the QoS Levels sent by this plugin are leading to problems, you can force the plugin to disable this for all messages (i.e. set the QoS level to 0) by setting the `disable_qos` to `true`.

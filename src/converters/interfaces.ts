@@ -1,4 +1,4 @@
-import { Characteristic, Controller, Logger, Service } from 'homebridge';
+import { Characteristic, Controller, Service } from 'homebridge';
 import { ExposesEntry } from '../z2mModels';
 import { BasicLogger } from '../logger';
 
@@ -34,7 +34,7 @@ export interface ServiceHandler {
 }
 
 export interface ConverterConfigurationRegistry {
-  registerConverterConfiguration(tag: string, validator: (config: unknown, tag: string, logger: Logger | undefined) => boolean): void;
+  registerConverterConfiguration(tag: string, validator: (config: unknown, tag: string, logger: BasicLogger | undefined) => boolean): void;
 }
 
 export interface ServiceCreator {

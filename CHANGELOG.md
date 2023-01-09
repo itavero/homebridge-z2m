@@ -9,6 +9,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Changed
 
 - Updated `config.schema.json` to have `exclude` set to `false` if it is unchecked in the Config UI. This should allow users to override a global `exclude: true` setting for specific devices, via the web interface. (see [#610](https://github.com/itavero/homebridge-z2m/issues/610))
+- Debug messages can now be output as `info`, by setting `debug_as_info` to `true` in the plugin configuration. (see docs for more information)
 
 ## [1.11.0-beta.0] - 2022-12-12
 

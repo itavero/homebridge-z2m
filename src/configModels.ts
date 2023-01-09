@@ -79,6 +79,7 @@ export const isPluginConfiguration = (
 };
 
 export interface LogConfiguration extends Record<string, unknown> {
+  debug_as_info?: boolean;
   mqtt_publish?: string;
 }
 
@@ -86,7 +87,9 @@ const allowedLogLevels = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isLogConfiguration = (x: any): x is LogConfiguration =>
-  !(x.mqtt_publish !== undefined && typeof x.mqtt_publish !== 'string' && !allowedLogLevels.includes(x.mqtt_publish));
+  !(x.mqtt_publish !== undefined && typeof x.mqtt_publish !== 'string' && !allowedLogLevels.includes(x.mqtt_publish)) &&
+  !(x.debug_as_info !== undefined && typeof x.debug_as_info !== 'boolean');
+
 export interface MqttConfiguration extends Record<string, unknown> {
   base_topic: string;
   server: string;

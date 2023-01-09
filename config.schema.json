@@ -247,6 +247,11 @@
         "title": "Logging",
         "type": "object",
         "properties": {
+          "debug_as_info": {
+            "title": "Log debug messages as info level",
+            "type": "boolean",
+            "required": false
+          },
           "mqtt_publish": {
             "$ref": "#/definitions/log_level",
             "title": "Published MQTT messages"

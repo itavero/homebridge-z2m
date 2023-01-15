@@ -22,6 +22,7 @@ import { PresenceSensorHandler } from './basic_sensors/presence';
 import { OccupancySensorHandler } from './basic_sensors/occupancy';
 import { IdentifierGenerator } from './basic_sensors/basic';
 import { DeviceTemperatureSensorHandler } from './basic_sensors/device_temperature';
+import { CarbonDioxideSensorHandler } from './basic_sensors/carbon_dioxide';
 import { BasicLogger } from '../logger';
 
 interface ExposeToHandlerFunction {
@@ -58,6 +59,7 @@ export class BasicSensorCreator implements ServiceCreator {
     WaterLeakSensorHandler,
     GasLeakSensorHandler,
     DeviceTemperatureSensorHandler,
+    CarbonDioxideSensorHandler,
   ];
 
   private static configs: WithConfigurableConverter<unknown>[] = [OccupancySensorHandler];

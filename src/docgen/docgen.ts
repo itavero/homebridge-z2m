@@ -75,21 +75,29 @@ class ServiceInfo {
 const hiddenCharacteristics = new Set<string>([hapNodeJs.Characteristic.Name.UUID]);
 const characteristicNameMapping = new Map<string, string>([['E863F10F-079E-48FF-8F27-9C2605A29F52', 'Air Pressure']]);
 
+function makeClassNameHumanReadable(name: string): string {
+  // Replace common abbreviations first
+  name = name.replace('VOC', 'VolatileOrganicCompounds');
+  name = name.replace('PM10', 'ParticulateMatter 10');
+  name = name.replace('PM2_5', 'ParticulateMatter 2.5');
+  return name.replace(/([A-Z])/g, ' $1').trim();
+}
+
 function addServiceMapping(service: WithUUID<{ new (): Service }>, page?: string): [string, ServiceInfo] {
   // Secretly also tries to add all the characteristics to the lookup table.
   try {
     const s = new service();
     for (const char of s.characteristics) {
-      characteristicNameMapping.set(char.UUID, char.constructor.name.replace(/([A-Z])/g, ' $1').trim());
+      characteristicNameMapping.set(char.UUID, makeClassNameHumanReadable(char.constructor.name));
     }
     for (const char of s.optionalCharacteristics) {
-      characteristicNameMapping.set(char.UUID, char.constructor.name.replace(/([A-Z])/g, ' $1').trim());
+      characteristicNameMapping.set(char.UUID, makeClassNameHumanReadable(char.constructor.name));
     }
   } catch (err) {
     // ignore
   }
 
-  return [service.UUID, new ServiceInfo(service.name.replace(/([A-Z])/g, ' $1').trim() ?? 'DOCGEN FAILURE', page)];
+  return [service.UUID, new ServiceInfo(makeClassNameHumanReadable(service.name), page)];
 }
 
 const sensorsDocs = 'sensors.md';
@@ -113,6 +121,7 @@ const serviceNameMapping = new Map<string, ServiceInfo>([
   addServiceMapping(hapNodeJs.Service.LeakSensor, sensorsDocs),
   ['E863F00A-079E-48FF-8F27-9C2605A29F52', new ServiceInfo('Air Pressure Sensor', sensorsDocs)],
   addServiceMapping(hapNodeJs.Service.AirQualitySensor, 'air_quality.md'),
+  addServiceMapping(hapNodeJs.Service.CarbonDioxideSensor, sensorsDocs),
 ]);
 
 // Controllers

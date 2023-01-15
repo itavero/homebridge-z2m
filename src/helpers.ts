@@ -32,7 +32,7 @@ export function copyExposesRangeToCharacteristic(exposes: ExposesEntry, characte
     characteristic.setProps({
       minValue: exposes.value_min,
       maxValue: exposes.value_max,
-      minStep: exposes.value_step,
+      minStep: exposes.value_step ?? 1,
     });
     return true;
   }

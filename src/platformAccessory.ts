@@ -16,6 +16,7 @@ import {
 import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
 import { QoS } from 'mqtt';
 import { sanitizeAndFilterExposesEntries } from './helpers';
+import { EXP_AVAILABILITY } from './experimental';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;
@@ -149,24 +150,35 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   private updateErrorStateOnMainCharacteristics(status: HAPStatus): void {
-    this.log.debug(`Update "error" status for characteristics of ${this.displayName} to ${status}`);
-    const error = new this.platform.api.hap.HapStatusError(status);
-    for (const handler of this.serviceHandlers.values()) {
-      for (const characteristic of handler.mainCharacteristics) {
-        characteristic?.updateValue(error);
+    const availabilityIsEnabled = this.isExperimentalFeatureEnabled(EXP_AVAILABILITY);
+    this.log.debug(
+      `availability (${availabilityIsEnabled ? 'EN' : 'DIS'}): ${this.displayName}: change status of characteristics to ${status}`
+    );
+    if (availabilityIsEnabled) {
+      const error = new this.platform.api.hap.HapStatusError(status);
+      for (const handler of this.serviceHandlers.values()) {
+        for (const characteristic of handler.mainCharacteristics) {
+          characteristic?.updateValue(error);
+        }
       }
     }
   }
 
   private sendLastValueOnMainCharacteristics(): void {
-    this.log.debug(`Send last value for main characteristics of ${this.displayName}`);
-    for (const handler of this.serviceHandlers.values()) {
-      for (const characteristic of handler.mainCharacteristics) {
-        if (characteristic === undefined) {
-          continue;
-        }
-        if (characteristic.value !== undefined && characteristic.value !== null) {
-          characteristic.sendEventNotification(characteristic.value);
+    const availabilityIsEnabled = this.isExperimentalFeatureEnabled(EXP_AVAILABILITY);
+    this.log.debug(
+      `availability (${availabilityIsEnabled ? 'EN' : 'DIS'}): ${this.displayName}: send last known value of main characteristics`
+    );
+    if (availabilityIsEnabled) {
+      this.log.debug(`Send last value for main characteristics of ${this.displayName}`);
+      for (const handler of this.serviceHandlers.values()) {
+        for (const characteristic of handler.mainCharacteristics) {
+          if (characteristic === undefined) {
+            continue;
+          }
+          if (characteristic.value !== undefined && characteristic.value !== null) {
+            characteristic.sendEventNotification(characteristic.value);
+          }
         }
       }
     }

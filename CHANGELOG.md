@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Changed
+
+- Moved the Availability feature behind an experimental feature flag (`AVAILABILITY`), as it is not working reliably yet. (see [#593](https://github.com/itavero/homebridge-z2m/issues/593])
+
 ## [1.11.0-beta.1] - 2023-01-09
 
 ### Changed

@@ -534,7 +534,7 @@ class LightHandler implements ServiceHandler {
         if (change < 1) {
           this.accessory.log.debug(
             `adaptive_lighting: ${this.accessory.displayName}: skipped ${this.colorTempExpose.property} (new: ${value}; ` +
-              `old: ${this.lastAdaptiveLightingTemperature}`
+              `old: ${this.lastAdaptiveLightingTemperature})`
           );
           return false;
         }

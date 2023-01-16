@@ -13,6 +13,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Changed
 
 - Moved the Availability feature behind an experimental feature flag (`AVAILABILITY`), as it is not working reliably yet. (see [#593](https://github.com/itavero/homebridge-z2m/issues/593])
+- Added additional options for Adaptive Lighting, to have it only update the color temperature when the light is on and to have it send a `transition` when updating the color temperature. These options are **not** yet available via the config user interface. (see [#590](https://github.com/itavero/homebridge-z2m/discussions/590))
 
 ## [1.11.0-beta.1] - 2023-01-09
 

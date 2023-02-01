@@ -16,7 +16,10 @@ the TuYa TS0601_air_quality_sensor
 
 * [Air Quality Sensor](../../air_quality.md)
   * Air Quality
-  * V O C Density
+  * Volatile Organic Compounds Density
+* [Carbon Dioxide Sensor](../../sensors.md)
+  * Carbon Dioxide Detected
+  * Carbon Dioxide Level
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
 * [Temperature Sensor](../../sensors.md)

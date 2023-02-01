@@ -115,6 +115,7 @@
             "access": 7
           }
         ],
+        "access": 7,
         "description": "Color of this light in the CIE 1931 color space (x/y)",
         "endpoint": "l1"
       }

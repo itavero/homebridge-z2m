@@ -16,9 +16,9 @@ the HEIMAN HS2AQ-EM
 
 * [Air Quality Sensor](../../air_quality.md)
   * Air Quality
-  * P M10 Density
-  * P M2_5 Density
-  * V O C Density
+  * Particulate Matter 10 Density
+  * Particulate Matter 2.5 Density
+  * Volatile Organic Compounds Density
 * [Battery](../../battery.md)
   * Battery Level
   * Charging State

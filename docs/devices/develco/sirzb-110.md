@@ -33,7 +33,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "property": "battery",
     "access": 1,
     "unit": "%",
-    "description": "Remaining battery in %",
+    "description": "Remaining battery in %, can take up to 24 hours before reported.",
     "value_min": 0,
     "value_max": 100
   },
@@ -128,7 +128,8 @@ This is the information provided by Zigbee2MQTT for this device:
         "unit": "s",
         "description": "Duration in seconds of the alarm"
       }
-    ]
+    ],
+    "access": 2
   },
   {
     "type": "composite",
@@ -168,7 +169,8 @@ This is the information provided by Zigbee2MQTT for this device:
         "value_off": false,
         "description": "Turn on/off the strobe (light) for Squawk"
       }
-    ]
+    ],
+    "access": 2
   },
   {
     "type": "numeric",

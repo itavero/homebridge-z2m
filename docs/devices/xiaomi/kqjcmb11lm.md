@@ -16,7 +16,10 @@ the Xiaomi KQJCMB11LM
 
 * [Air Quality Sensor](../../air_quality.md)
   * Air Quality
-  * P M2_5 Density
+  * Particulate Matter 2.5 Density
+* [Carbon Dioxide Sensor](../../sensors.md)
+  * Carbon Dioxide Detected
+  * Carbon Dioxide Level
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
 * [Temperature Sensor](../../sensors.md)

@@ -16,6 +16,9 @@ the DIYRuZ DIYRuZ_AirSense
 
 * [Air Pressure Sensor](../../sensors.md)
   * Air Pressure
+* [Carbon Dioxide Sensor](../../sensors.md)
+  * Carbon Dioxide Detected
+  * Carbon Dioxide Level
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
 * [Temperature Sensor](../../sensors.md)

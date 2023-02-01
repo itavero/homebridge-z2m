@@ -21,10 +21,11 @@
     "access": 7,
     "values": [
       "off",
-      "previous",
-      "on"
+      "on",
+      "toggle",
+      "previous"
     ],
-    "description": "Controls the behaviour when the device is powered on"
+    "description": "Controls the behavior when the device is powered on after power loss"
   },
   {
     "type": "numeric",

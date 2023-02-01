@@ -18,6 +18,10 @@ the Titan Products TPZRCO2HT-Z3
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Carbon Dioxide Sensor](../../sensors.md)
+  * Carbon Dioxide Detected
+  * Carbon Dioxide Level
+  * Status Low Battery
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
   * Status Low Battery

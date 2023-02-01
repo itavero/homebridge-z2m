@@ -16,7 +16,7 @@ the Develco AQSZB-110
 
 * [Air Quality Sensor](../../air_quality.md)
   * Air Quality
-  * V O C Density
+  * Volatile Organic Compounds Density
 * [Battery](../../battery.md)
   * Battery Level
   * Charging State

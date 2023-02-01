@@ -16,8 +16,11 @@ the TuYa TS0601_smart_air_house_keeper
 
 * [Air Quality Sensor](../../air_quality.md)
   * Air Quality
-  * P M2_5 Density
-  * V O C Density
+  * Particulate Matter 2.5 Density
+  * Volatile Organic Compounds Density
+* [Carbon Dioxide Sensor](../../sensors.md)
+  * Carbon Dioxide Detected
+  * Carbon Dioxide Level
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
 * [Temperature Sensor](../../sensors.md)

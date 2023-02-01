@@ -20,6 +20,8 @@ the Xiaomi SRTS-A01
   * Status Low Battery
 * [Switch](../../switch.md)
   * On
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 * [Thermostat](../../climate.md)
   * Current Heating Cooling State
   * Current Temperature

@@ -33,7 +33,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "property": "battery",
     "access": 1,
     "unit": "%",
-    "description": "Remaining battery in %",
+    "description": "Remaining battery in %, can take up to 24 hours before reported.",
     "value_min": 0,
     "value_max": 100
   },
@@ -47,7 +47,8 @@ This is the information provided by Zigbee2MQTT for this device:
       "*_double",
       "*_triple",
       "*_quadruple",
-      "*_release"
+      "*_release",
+      "*_hold"
     ],
     "description": "Triggered action (e.g. a button click)"
   },

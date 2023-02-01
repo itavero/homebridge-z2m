@@ -118,7 +118,8 @@ This is the information provided by Zigbee2MQTT for this device:
         "unit": "s",
         "description": "Duration in seconds of the alarm"
       }
-    ]
+    ],
+    "access": 2
   },
   {
     "type": "numeric",

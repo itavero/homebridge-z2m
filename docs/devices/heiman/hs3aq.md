@@ -18,6 +18,9 @@ the HEIMAN HS3AQ
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Carbon Dioxide Sensor](../../sensors.md)
+  * Carbon Dioxide Detected
+  * Carbon Dioxide Level
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
 * [Temperature Sensor](../../sensors.md)

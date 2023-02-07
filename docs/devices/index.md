@@ -25,7 +25,7 @@ span.vendor {
 </style>
 
 # Device support
-This page lists the devices currently supported by Zigbee2MQTT v1.30.0 (which depends on zigbee-herdsman-converters v15.0.38).
+This page lists the devices currently supported by Zigbee2MQTT v1.30.1 (which depends on zigbee-herdsman-converters v15.0.38-hotfix.0).
 Using an automated script, we have checked which HomeKit Services (and Characteristics) would be created for each of these devices.
 That way you have some kind of idea of what kind of devices are supported.
 

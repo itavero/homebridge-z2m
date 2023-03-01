@@ -75,7 +75,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "name": "duration",
     "property": "duration",
     "access": 3,
-    "unit": "second",
+    "unit": "s",
     "value_min": 0,
     "value_max": 1800
   },

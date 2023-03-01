@@ -3,7 +3,7 @@
     "type": "numeric",
     "name": "battery",
     "property": "battery",
-    "access": 1,
+    "access": 5,
     "unit": "%",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
     "value_min": 0,

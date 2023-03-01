@@ -17,6 +17,10 @@ the TuYa TS0601_co2_sensor
 * [Carbon Dioxide Sensor](../../sensors.md)
   * Carbon Dioxide Detected
   * Carbon Dioxide Level
+* [Humidity Sensor](../../sensors.md)
+  * Current Relative Humidity
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 
 # Related

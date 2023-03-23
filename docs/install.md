@@ -11,7 +11,7 @@ First of all, let's clarify a few names / terminology:
 
 ## Setup Zigbee2MQTT and MQTT broker
 
-If you already have a working installation of [Zigbee2MQTT]](https://www.zigbee2mqtt.io) v1.17.0 or newer, you can skip this step and continue with the next one.
+If you already have a working installation of [Zigbee2MQTT](https://www.zigbee2mqtt.io) v1.17.0 or newer, you can skip this step and continue with the next one.
 
 If you are new to Zigbee2MQTT, it is recommended to follow the [Getting Started](https://www.zigbee2mqtt.io/guide/getting-started/) steps on their website.
 

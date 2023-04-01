@@ -16,10 +16,13 @@ the GS BRHM8E27W70-I1
 
 * [Lightbulb](../../light.md)
   * Brightness
+  * Color Temperature
   * Hue
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from GS](../index.md#gs)

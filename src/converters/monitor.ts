@@ -145,6 +145,11 @@ export class NumericCharacteristicMonitor extends BaseCharacteristicMonitor {
     }
     const percentage = (input - this.input_min) / (this.input_max - this.input_min);
 
-    return out_minimum + percentage * (out_maximum - out_minimum);
+    const result = out_minimum + percentage * (out_maximum - out_minimum);
+    if (result < 1 && result > 0) {
+      return Math.ceil(result);
+    }
+    
+    return result;
   }
 }

@@ -149,7 +149,6 @@ export class NumericCharacteristicMonitor extends BaseCharacteristicMonitor {
     if (result < 1 && result > 0) {
       return Math.ceil(result);
     }
-    
     return result;
   }
 }

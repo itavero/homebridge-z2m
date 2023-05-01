@@ -25,11 +25,11 @@ span.vendor {
 </style>
 
 # Device support
-This page lists the devices currently supported by Zigbee2MQTT v1.30.3 (which depends on zigbee-herdsman-converters v15.0.78).
+This page lists the devices currently supported by Zigbee2MQTT v1.30.4 (which depends on zigbee-herdsman-converters v15.0.100).
 Using an automated script, we have checked which HomeKit Services (and Characteristics) would be created for each of these devices.
 That way you have some kind of idea of what kind of devices are supported.
 
-Currently there are **2716 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
+Currently there are **2772 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
 Unfortunately there are still 94 devices that are not (yet) supported by this plugin, but are supported by Zigbee2MQTT (and expose more than just a _link quality_).
 
 ## A
@@ -188,6 +188,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 <span class="vendor">[Hampton Bay](index.md#hampton_bay)</span>
 <span class="vendor">[Haozee](index.md#haozee)</span>
 <span class="vendor">[HEIMAN](index.md#heiman)</span>
+<span class="vendor">[Heimgard Technologies](index.md#heimgard_technologies)</span>
 <span class="vendor">[Hej](index.md#hej)</span>
 <span class="vendor">[HFH Solutions](index.md#hfh_solutions)</span>
 <span class="vendor">[HiHome](index.md#hihome)</span>
@@ -196,7 +197,6 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 <span class="vendor">[Hive](index.md#hive)</span>
 <span class="vendor">[HKGK](index.md#hkgk)</span>
 <span class="vendor">[HOCH](index.md#hoch)</span>
-<span class="vendor">[Home Control AS](index.md#home_control_as)</span>
 <span class="vendor">[Hommyn](index.md#hommyn)</span>
 <span class="vendor">[Honyar](index.md#honyar)</span>
 <span class="vendor">[HORNBACH](index.md#hornbach)</span>
@@ -212,6 +212,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 <span class="vendor">[IKEA](index.md#ikea)</span>
 <span class="vendor">[iLightsIn](index.md#ilightsin)</span>
 <span class="vendor">[Iluminize](index.md#iluminize)</span>
+<span class="vendor">[iluminize](index.md#iluminize)</span>
 <span class="vendor">[ilux](index.md#ilux)</span>
 <span class="vendor">[Immax](index.md#immax)</span>
 <span class="vendor">[Innr](index.md#innr)</span>
@@ -242,6 +243,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 <span class="vendor">[Keen Home](index.md#keen_home)</span>
 <span class="vendor">[KlikAanKlikUit](index.md#klikaanklikuit)</span>
 <span class="vendor">[KMPCIL](index.md#kmpcil)</span>
+<span class="vendor">[KnockautX](index.md#knockautx)</span>
 <span class="vendor">[Konke](index.md#konke)</span>
 <span class="vendor">[Ksentry Electronics](index.md#ksentry_electronics)</span>
 <span class="vendor">[KTNNKG](index.md#ktnnkg)</span>
@@ -296,6 +298,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 <span class="vendor">[MiBoxer](index.md#miboxer)</span>
 <span class="vendor">[Miboxer](index.md#miboxer)</span>
 <span class="vendor">[Micro Matic Norge AS](index.md#micro_matic_norge_as)</span>
+<span class="vendor">[Milfra](index.md#milfra)</span>
 <span class="vendor">[MODEMIX](index.md#modemix)</span>
 <span class="vendor">[Moes](index.md#moes)</span>
 <span class="vendor">[Müller Licht](index.md#muller_licht)</span>
@@ -343,6 +346,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 <div style="clear:both" />
 <span class="vendor">[Paul Neuhaus](index.md#paul_neuhaus)</span>
 <span class="vendor">[Paulmann](index.md#paulmann)</span>
+<span class="vendor">[pcblab.io](index.md#pcblab_io)</span>
 <span class="vendor">[PEQ](index.md#peq)</span>
 <span class="vendor">[Perenio](index.md#perenio)</span>
 <span class="vendor">[Philips](index.md#philips)</span>
@@ -425,6 +429,8 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 <span class="vendor">[The Light Group](index.md#the_light_group)</span>
 <span class="vendor">[Third Reality](index.md#third_reality)</span>
 <span class="vendor">[Titan Products](index.md#titan_products)</span>
+<span class="vendor">[TLW Global](index.md#tlw_global)</span>
+<span class="vendor">[TONGOU](index.md#tongou)</span>
 <span class="vendor">[Tongou](index.md#tongou)</span>
 <span class="vendor">[TP-Link](index.md#tp-link)</span>
 <span class="vendor">[Trio2sys](index.md#trio2sys)</span>
@@ -463,6 +469,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 <span class="vendor">[Waxman](index.md#waxman)</span>
 <span class="vendor">[WDYK](index.md#wdyk)</span>
 <span class="vendor">[Weiser](index.md#weiser)</span>
+<span class="vendor">[Wenzhou Taiye Electric](index.md#wenzhou_taiye_electric)</span>
 <span class="vendor">[WETEN](index.md#weten)</span>
 <span class="vendor">[Wisdom](index.md#wisdom)</span>
 <span class="vendor">[Woolley](index.md#woolley)</span>
@@ -491,6 +498,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 ## Z
 <div style="clear:both" />
 <span class="vendor">[Zemismart](index.md#zemismart)</span>
+<span class="vendor">[ZemiSmart](index.md#zemismart)</span>
 <span class="vendor">[Zen](index.md#zen)</span>
 <span class="vendor">[Zipato](index.md#zipato)</span>
 <div style="clear:both" />
@@ -610,12 +618,12 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | Model | Description |
 | ----- | ----------- |
 | [141L100RC](aldi/141l100rc.md) | Aldi MEGOS switch and dimming light remote control |
-| [C422AC11D41H140.0W](aldi/c422ac11d41h140_0w.md) | Aldi MEGOS LED panel RGB+CCT 40W 3600lm 62 x 62 cm |
-| [C422AC14D41H140.0W](aldi/c422ac14d41h140_0w.md) | Aldi MEGOS LED panel RGB+CCT 40W 3600lm 30 x 120 cm |
-| [F122SB62H22A4.5W](aldi/f122sb62h22a4_5w.md) | Aldi LIGHTWAY smart home LED-lamp - filament |
-| [L122AA63H11A6.5W](aldi/l122aa63h11a6_5w.md) | Aldi LIGHTWAY smart home LED-lamp - candle |
-| [L122CB63H11A9.0W](tuya/ts0505b.md) | Aldi LIGHTWAY smart home LED-lamp - bulb (white-label of TuYa TS0505B) |
-| [L122FF63H11A5.0W](aldi/l122ff63h11a5_0w.md) | Aldi LIGHTWAY smart home LED-lamp - spot |
+| [C422AC11D41H140.0W](tuya/ts0505b_1.md) | Aldi MEGOS LED panel RGB+CCT 40W 3600lm 62 x 62 cm (white-label of TuYa TS0505B_1) |
+| [C422AC14D41H140.0W](tuya/ts0505b_1.md) | Aldi MEGOS LED panel RGB+CCT 40W 3600lm 30 x 120 cm (white-label of TuYa TS0505B_1) |
+| [F122SB62H22A4.5W](tuya/ts0502b.md) | Aldi LIGHTWAY smart home LED-lamp - filament (white-label of TuYa TS0502B) |
+| [L122AA63H11A6.5W](tuya/ts0505b_1.md) | Aldi LIGHTWAY smart home LED-lamp - candle (white-label of TuYa TS0505B_1) |
+| [L122CB63H11A9.0W](tuya/ts0505b_1.md) | Aldi LIGHTWAY smart home LED-lamp - bulb (white-label of TuYa TS0505B_1) |
+| [L122FF63H11A5.0W](tuya/ts0505b_1.md) | Aldi LIGHTWAY smart home LED-lamp - spot (white-label of TuYa TS0505B_1) |
 
 
 # Alecto {#alecto}
@@ -672,6 +680,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 
 | Model | Description |
 | ----- | ----------- |
+| [1005005194831629](tuya/ts0601_contact_temperature_humidity_sensor.md) | Aubess Contact, temperature and humidity sensor (white-label of TuYa TS0601_contact_temperature_humidity_sensor) |
 | [TMZ02](tuya/whd02.md) | Aubess Wall switch module (white-label of TuYa WHD02) |
 | [TMZ02L-16A-B](tuya/ts0011_switch_module.md) | Aubess 1 gang switch module - (without neutral) (white-label of TuYa TS0011_switch_module) |
 | [TS011F_plug_1](tuya/ts011f_plug_1.md) | Aubess Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
@@ -833,6 +842,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | Model | Description |
 | ----- | ----------- |
 | [8750001213](bosch/8750001213.md) | Bosch Twinguard |
+| [BMCT-SLZ](bosch/bmct-slz.md) | Bosch Bosch Light/shutter control unit II |
 | [BSD-2](bosch/bsd-2.md) | Bosch Smoke alarm detector |
 | [BSEN-C2](bosch/bsen-c2.md) | Bosch Door/window contact II |
 | [BSP-EZ2](bosch/bsp-ez2.md) | Bosch Plug compact FR |
@@ -1210,6 +1220,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [SPLZB-131](develco/splzb-131.md) | Develco Power plug |
 | [SPLZB-132](develco/splzb-132.md) | Develco Power plug |
 | [SPLZB-134](develco/splzb-134.md) | Develco Power plug (type G) |
+| [SPLZB-137](develco/splzb-137.md) | Develco Power plug |
 | [WISZB-120](develco/wiszb-120.md) | Develco Window sensor |
 | [WISZB-121](develco/wiszb-121.md) | Develco Window sensor |
 | [WISZB-137](develco/wiszb-137.md) | Develco Vibration sensor |
@@ -1540,7 +1551,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 
 | Model | Description |
 | ----- | ----------- |
-| [FE-GU10-5W](tuya/ts0505b.md) | Feconn Zigbee GU10 5W smart bulb (white-label of TuYa TS0505B) |
+| [FE-GU10-5W](tuya/ts0505b_1.md) | Feconn Zigbee GU10 5W smart bulb (white-label of TuYa TS0505B_1) |
 
 
 # Feibit {#feibit}
@@ -1609,7 +1620,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 
 | Model | Description |
 | ----- | ----------- |
-| [Garza-Standard-A60](garza_smart/garza-standard-a60.md) | Garza Smart Standard A60 bulb |
+| [Garza-Standard-A60](tuya/ts0505b_1.md) | Garza Smart Standard A60 bulb (white-label of TuYa TS0505B_1) |
 
 
 # GE {#ge}
@@ -1708,6 +1719,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [GL-C-009](gledopto/gl-c-009.md) | Gledopto Zigbee LED Controller W |
 | [GL-C-009P](gledopto/gl-c-009p.md) | Gledopto Zigbee LED Controller W (pro) |
 | [GL-C-009S](gledopto/gl-c-009s.md) | Gledopto Zigbee LED Controller W (plus) |
+| [GL-C-103P](gledopto/gl-c-103p.md) | Gledopto Zigbee LED controller (pro) |
 | [GL-D-002P](gledopto/gl-d-002p.md) | Gledopto Zigbee 6W Downlight RGB+CCT (pro CRI>90) |
 | [GL-D-003P](gledopto/gl-d-003p.md) | Gledopto Zigbee 6W Downlight RGB+CCT (pro) |
 | [GL-D-003Z](gledopto/gl-d-003z.md) | Gledopto Zigbee 6W Downlight RGB+CCT |
@@ -1859,6 +1871,17 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [SWHM-I1](heiman/swhm-i1.md) | HEIMAN Water leakage sensor |
 
 
+# Heimgard Technologies {#heimgard_technologies}
+
+| Model | Description |
+| ----- | ----------- |
+| [HC-IWDIM-1](heimgard_technologies/hc-iwdim-1.md) | Heimgard Technologies Dimmer |
+| [HC-IWSWI-1](heimgard_technologies/hc-iwswi-1.md) | Heimgard Technologies In wall light switch |
+| [HC-SLM-1](heimgard_technologies/hc-slm-1.md) | Heimgard Technologies Wattle door lock pro |
+| [HT-MOT-2](heimgard_technologies/ht-mot-2.md) | Heimgard Technologies Motion sensor |
+| [HT-SLM-2](heimgard_technologies/ht-slm-2.md) | Heimgard Technologies Doorlock with fingerprint |
+
+
 # Hej {#hej}
 
 | Model | Description |
@@ -1943,13 +1966,6 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | Model | Description |
 | ----- | ----------- |
 | [ZJSBL7-100Z](tuya/ts0601_rcbo.md) | HOCH DIN mount RCBO with smart energy metering (white-label of TuYa TS0601_rcbo) |
-
-
-# Home Control AS {#home_control_as}
-
-| Model | Description |
-| ----- | ----------- |
-| [HC-SLM-1](home_control_as/hc-slm-1.md) | Home Control AS Heimgard (Wattle) door lock pro |
 
 
 # Hommyn {#hommyn}
@@ -2142,7 +2158,15 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [5120.1200](iluminize/5120_1200.md) | Iluminize Zigbee 3.0 switch mini 1x230V with neutral, 200W/400W |
 | [5120.1210](iluminize/5120_1210.md) | Iluminize Zigbee 3.0 switch mini 1x230V without neutral, 200W/400W |
 | [5120.2110](iluminize/5120_2110.md) | Iluminize ZigBee 3.0 dimming actuator mini 1x 230V |
+| [5123.1110](iluminize/5123_1110.md) | Iluminize Zigbee 3.0 controller with adjustable current 250-1500mA, max. 50W / 48V SELV |
 | [5128.10](iluminize/5128_10.md) | Iluminize Zigbee 3.0 switch shutter SW with level control |
+
+
+# iluminize {#iluminize}
+
+| Model | Description |
+| ----- | ----------- |
+| [5120.2210](iluminize/5120_2210.md) | iluminize Zigbee 3.0 actuator mini 1x 230V |
 
 
 # ilux {#ilux}
@@ -2417,6 +2441,13 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [KMPCIL-tag-001](kmpcil/kmpcil-tag-001.md) | KMPCIL Arrival sensor |
 
 
+# KnockautX {#knockautx}
+
+| Model | Description |
+| ----- | ----------- |
+| [SMOAL024](tuya/ts0601_smoke_3.md) | KnockautX Photoelectric smoke detector (white-label of TuYa TS0601_smoke_3) |
+
+
 # Konke {#konke}
 
 | Model | Description |
@@ -2525,6 +2556,8 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [4058075485174](ledvance/4058075485174.md) | LEDVANCE SMART+ Lighting - Classic E14 tunable white |
 | [4058075728981](ledvance/4058075728981.md) | LEDVANCE SMART+ Classic A E27 dimmable white |
 | [4058075729001](ledvance/4058075729001.md) | LEDVANCE SMART+ CL A60 E27 Tunable white |
+| [4058075729025](ledvance/4058075729025.md) | LEDVANCE SMART+ lamp E27 RGBTW |
+| [4058075729049](ledvance/4058075729049.md) | LEDVANCE SMART+ lamp B22D RGBTW |
 | [4058075729063](ledvance/4058075729063.md) | LEDVANCE SMART+ Classic B40 E14 dimmable white |
 | [4058075729100](ledvance/4058075729100.md) | LEDVANCE SMART+ Classic P40 E14 dimmable white |
 | [4058075729124](ledvance/4058075729124.md) | LEDVANCE SMART+ CL P40 E14 Tunable white |
@@ -2554,7 +2587,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [AC33905](ledvance/ac33905.md) | LEDVANCE SMART+ spot GU10 tunable white |
 | [AC33906](ledvance/ac33906.md) | LEDVANCE SMART+ spot GU10 multicolor RGBW |
 | [GPDRPLOP401100CE](ledvance/gpdrplop401100ce.md) | LEDVANCE Panel TW LED 625 UGR19 |
-| [SMARTZBA60RGBW](ledvance/smartzba60rgbw.md) | LEDVANCE SMART+ lamp E26 RGBW |
+| [SMARTZBA60RGBW](ledvance/smartzba60rgbw.md) | LEDVANCE SMART+ lamp B22D RGBTW |
 
 
 # Leedarson {#leedarson}
@@ -2677,47 +2710,51 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 
 | Model | Description |
 | ----- | ----------- |
-| [14147206L](lidl/14147206l.md) | Lidl Livarno Lux ceiling light |
-| [14148906L](lidl/14148906l.md) | Lidl Livarno Lux mood light RGB+CCT |
-| [14149505L/14149506L_1](lidl/14149505l_14149506l_1.md) | Lidl Livarno Lux light bar RGB+CCT (black/white) |
-| [14149505L/14149506L_2](lidl/14149505l_14149506l_2.md) | Lidl Livarno Lux light bar RGB+CCT (black/white) |
-| [14153706L](tuya/ts0505b.md) | Lidl Livarno smart LED ceiling light (white-label of TuYa TS0505B) |
+| [14147206L](tuya/ts0502a.md) | Lidl Livarno Lux ceiling light (white-label of TuYa TS0502A) |
+| [14148906L](tuya/ts0505a.md) | Lidl Livarno Lux mood light RGB+CCT (white-label of TuYa TS0505A) |
+| [14149505L/14149506L_1](tuya/ts0505a.md) | Lidl Livarno Lux light bar RGB+CCT (black/white) (white-label of TuYa TS0505A) |
+| [14149505L/14149506L_2](tuya/ts0505b_2.md) | Lidl Livarno Lux light bar RGB+CCT (black/white) (white-label of TuYa TS0505B_2) |
+| [14153706L](tuya/ts0505b_1.md) | Lidl Livarno smart LED ceiling light (white-label of TuYa TS0505B_1) |
 | [14153806L](lidl/14153806l.md) | Lidl Livarno smart LED ceiling light |
-| [14153905L](lidl/14153905l.md) | Lidl Livarno Home LED floor lamp |
-| [14156408L](lidl/14156408l.md) | Lidl Livarno Lux smart LED ceiling light |
-| [14156506L](lidl/14156506l.md) | Lidl Livarno Lux smart LED mood light |
-| [14158704L](lidl/14158704l.md) | Lidl Livarno Home LED floor lamp, RGBW |
-| [14158804L](lidl/14158804l.md) | Lidl Livarno Home LED desk lamp RGBW |
+| [14153905L](tuya/ts0502a.md) | Lidl Livarno Home LED floor lamp (white-label of TuYa TS0502A) |
+| [14156408L](tuya/ts0502b.md) | Lidl Livarno Lux smart LED ceiling light (white-label of TuYa TS0502B) |
+| [14156506L](tuya/ts0505b_1.md) | Lidl Livarno Lux smart LED mood light (white-label of TuYa TS0505B_1) |
+| [14158704L](tuya/ts0505b_1.md) | Lidl Livarno Home LED floor lamp, RGBW (white-label of TuYa TS0505B_1) |
+| [14158804L](tuya/ts0505b_1.md) | Lidl Livarno Home LED desk lamp RGBW (white-label of TuYa TS0505B_1) |
 | [368308_2010](lidl/368308_2010.md) | Lidl Silvercrest radiator valve with thermostat |
+| [399629_2110](tuya/ts0505b_2.md) | Lidl Livarno Lux Ceiling Panel RGB+CCT (white-label of TuYa TS0505B_2) |
 | [FB20-002](lidl/fb20-002.md) | Lidl Livarno Lux switch and dimming light remote control |
 | [FB21-001](lidl/fb21-001.md) | Lidl Livarno Lux switch and dimming light remote control |
-| [HG06104A](lidl/hg06104a.md) | Lidl Livarno Lux smart LED light strip 2.5m |
-| [HG06106A](lidl/hg06106a.md) | Lidl Livarno Lux GU10 spot RGB |
-| [HG06106B](lidl/hg06106b.md) | Lidl Livarno Lux E14 candle RGB |
-| [HG06106C](lidl/hg06106c.md) | Lidl Livarno Lux E27 bulb RGB |
+| [HG06104A](tuya/ts0505a.md) | Lidl Livarno Lux smart LED light strip 2.5m (white-label of TuYa TS0505A) |
+| [HG06106A](tuya/ts0505a.md) | Lidl Livarno Lux GU10 spot RGB (white-label of TuYa TS0505A) |
+| [HG06106B](tuya/ts0505a.md) | Lidl Livarno Lux E14 candle RGB (white-label of TuYa TS0505A) |
+| [HG06106C](tuya/ts0505a.md) | Lidl Livarno Lux E27 bulb RGB (white-label of TuYa TS0505A) |
 | [HG06335/HG07310](lidl/hg06335_hg07310.md) | Lidl Silvercrest smart motion sensor |
 | [HG06336](lidl/hg06336.md) | Lidl Silvercrest smart window and door sensor |
 | [HG06337](lidl/hg06337.md) | Lidl Silvercrest smart plug (EU, CH, FR, BS, DK) |
 | [HG06338](lidl/hg06338.md) | Lidl Silvercrest 3 gang switch, with 4 USB (EU, FR, CZ, BS) |
-| [HG06462A](lidl/hg06462a.md) | Lidl Livarno Lux E27 A60 filament bulb |
-| [HG06463A](lidl/hg06463a.md) | Lidl Livarno Lux E27 ST64 filament bulb |
-| [HG06463B](lidl/hg06463b.md) | Lidl Livarno Lux E27 G95 filament bulb |
+| [HG06462A](tuya/ts0501a.md) | Lidl Livarno Lux E27 A60 filament bulb (white-label of TuYa TS0501A) |
+| [HG06463A](tuya/ts0501a.md) | Lidl Livarno Lux E27 ST64 filament bulb (white-label of TuYa TS0501A) |
+| [HG06463B](tuya/ts0501a.md) | Lidl Livarno Lux E27 G95 filament bulb (white-label of TuYa TS0501A) |
 | [HG06467](lidl/hg06467.md) | Lidl Melinera smart LED string lights |
-| [HG06492A](lidl/hg06492a.md) | Lidl Livarno Lux GU10 spot CCT |
-| [HG06492B](lidl/hg06492b.md) | Lidl Livarno Lux E14 candle CCT |
-| [HG06492C](lidl/hg06492c.md) | Lidl Livarno Lux E27 bulb CCT |
+| [HG06492A](tuya/ts0502a.md) | Lidl Livarno Lux GU10 spot CCT (white-label of TuYa TS0502A) |
+| [HG06492B](tuya/ts0502a.md) | Lidl Livarno Lux E14 candle CCT (white-label of TuYa TS0502A) |
+| [HG06492C](tuya/ts0502a.md) | Lidl Livarno Lux E27 bulb CCT (white-label of TuYa TS0502A) |
 | [HG06619](lidl/hg06619.md) | Lidl Silvercrest outdoor plug |
 | [HG06620](lidl/hg06620.md) | Lidl Silvercrest garden spike with 2 sockets |
 | [HG06668](lidl/hg06668.md) | Lidl Silvercrest smart wireless door bell button |
-| [HG07834A](lidl/hg07834a.md) | Lidl Livarno Lux GU10 spot RGB |
-| [HG07834B](lidl/hg07834b.md) | Lidl Livarno Lux E14 candle RGB |
-| [HG07834C](lidl/hg07834c.md) | Lidl Livarno Lux E27 bulb RGB |
-| [HG08008](lidl/hg08008.md) | Lidl Livarno Home LED ceiling light |
-| [HG08010](lidl/hg08010.md) | Lidl Livarno Home outdoor spotlight |
-| [HG08131C](lidl/hg08131c.md) | Lidl Livarno Home outdoor E27 bulb in set with flare |
+| [HG07834A](tuya/ts0505b_1.md) | Lidl Livarno Lux GU10 spot RGB (white-label of TuYa TS0505B_1) |
+| [HG07834B](tuya/ts0505b_1.md) | Lidl Livarno Lux E14 candle RGB (white-label of TuYa TS0505B_1) |
+| [HG07834C](tuya/ts0505b_1.md) | Lidl Livarno Lux E27 bulb RGB (white-label of TuYa TS0505B_1) |
+| [HG08007](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor LED band (white-label of TuYa TS0505B_1) |
+| [HG08008](tuya/ts0505b_1.md) | Lidl Livarno Home LED ceiling light (white-label of TuYa TS0505B_1) |
+| [HG08008](tuya/ts0505b_1.md) | Lidl Livarno Home LED ceiling light (white-label of TuYa TS0505B_1) |
+| [HG08010](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor spotlight (white-label of TuYa TS0505B_1) |
+| [HG08010](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor spotlight (white-label of TuYa TS0505B_1) |
+| [HG08131C](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor E27 bulb in set with flare (white-label of TuYa TS0505B_1) |
 | [HG08164](lidl/hg08164.md) | Lidl Silvercrest smart button |
-| [HG08383A](lidl/hg08383a.md) | Lidl Livarno outdoor LED light chain |
-| [HG08383B](lidl/hg08383b.md) | Lidl Livarno outdoor LED light chain |
+| [HG08383A](tuya/ts0505b_1.md) | Lidl Livarno outdoor LED light chain (white-label of TuYa TS0505B_1) |
+| [HG08383B](tuya/ts0505b_1.md) | Lidl Livarno outdoor LED light chain (white-label of TuYa TS0505B_1) |
 | [HG08633](lidl/hg08633.md) | Lidl Livarno gardenspot RGB |
 | [HG08673](lidl/hg08673.md) | Lidl Silvercrest smart plug with power monitoring (EU, FR) |
 | [PSBZS A1](lidl/psbzs_a1.md) | Lidl Parkside smart watering timer |
@@ -2916,6 +2953,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | Model | Description |
 | ----- | ----------- |
 | [ATMS1602Z](tuya/ts011f_din_smart_relay.md) | MatSee Plus Din smart relay (with power monitoring) (white-label of TuYa TS011F_din_smart_relay) |
+| [DAC2161C](tuya/ts0601_din_2.md) | MatSee Plus Smart Zigbee energy meter 80A din rail (white-label of TuYa TS0601_din_2) |
 | [PJ-ZGD01](tuya/pj-zgd01.md) | MatSee Plus Garage door opener (white-label of TuYa PJ-ZGD01) |
 | [PJ-ZSW01](tuya/ts011f_plug_1.md) | MatSee Plus Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
 
@@ -2957,9 +2995,9 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 
 | Model | Description |
 | ----- | ----------- |
-| [S9E27LED9W-RGB-Z](tuya/ts0505b.md) | Mercator Ikuü Zigbee RGB+CCT light (white-label of TuYa TS0505B) |
+| [S9E27LED9W-RGB-Z](tuya/ts0505b_1.md) | Mercator Ikuü Zigbee RGB+CCT light (white-label of TuYa TS0505B_1) |
 | [SMA02P](tuya/ts0202.md) | Mercator Ikuü Motion sensor (white-label of TuYa TS0202) |
-| [SMD4106W-RGB-ZB](tuya/ts0505b.md) | Mercator Ikuü Zigbee RGB+CCT light (white-label of TuYa TS0505B) |
+| [SMD4106W-RGB-ZB](tuya/ts0505b_1.md) | Mercator Ikuü Zigbee RGB+CCT light (white-label of TuYa TS0505B_1) |
 | [SMD9300](tuya/ts0502b.md) | Mercator Ikuü Donovan Panel Light (white-label of TuYa TS0502B) |
 | [SMI7040](tuya/ts0502b.md) | Mercator Ikuü Ford Batten Light (white-label of TuYa TS0502B) |
 | [SSW01](tuya/ts0011.md) | Mercator Ikuü Smart light switch - 1 gang (white-label of TuYa TS0011) |
@@ -2971,18 +3009,19 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 
 | Model | Description |
 | ----- | ----------- |
-| [FUT066Z](miboxer/fut066z.md) | MiBoxer RGB+CCT LED Downlight |
+| [FUT066Z](tuya/ts0505b_1.md) | MiBoxer RGB+CCT LED Downlight (white-label of TuYa TS0505B_1) |
 | [FUT089Z](miboxer/fut089z.md) | MiBoxer RGB+CCT Remote |
+| [PIR1-ZB](tuya/ts0202.md) | MiBoxer PIR Sensor (white-label of TuYa TS0202) |
 
 
 # Miboxer {#miboxer}
 
 | Model | Description |
 | ----- | ----------- |
-| [FUT035Z](miboxer/fut035z.md) | Miboxer Dual white LED controller |
-| [FUT036Z](miboxer/fut036z.md) | Miboxer Single color LED controller |
+| [FUT035Z](tuya/ts0502b.md) | Miboxer Dual white LED controller (white-label of TuYa TS0502B) |
+| [FUT036Z](tuya/ts0501b.md) | Miboxer Single color LED controller (white-label of TuYa TS0501B) |
 | [FUT038Z](miboxer/fut038z.md) | Miboxer RGBW LED controller |
-| [FUT039Z](miboxer/fut039z.md) | Miboxer RGB+CCT LED controller |
+| [FUT039Z](tuya/ts0505b_1.md) | Miboxer RGB+CCT LED controller (white-label of TuYa TS0505B_1) |
 
 
 # Micro Matic Norge AS {#micro_matic_norge_as}
@@ -2990,6 +3029,13 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | Model | Description |
 | ----- | ----------- |
 | [ZB250](micro_matic_norge_as/zb250.md) | Micro Matic Norge AS Zigbee dimmer for LED |
+
+
+# Milfra {#milfra}
+
+| Model | Description |
+| ----- | ----------- |
+| [M11Z](tuya/ts011f_switch_5_gang.md) | Milfra 2 gang 2 usb 1 wall ac outlet (white-label of TuYa TS011F_switch_5_gang) |
 
 
 # MODEMIX {#modemix}
@@ -3004,7 +3050,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 
 | Model | Description |
 | ----- | ----------- |
-| [AM43-0.45/40-ES-EB](tuya/ts0601_cover_1.md) | Moes Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
+| [AM43-0.45/40-ES-EB](tuya/ts0601_cover_4.md) | Moes Roller blind/shades drive motor (white-label of TuYa TS0601_cover_4) |
 | [BHT-002-GCLZB](moes/bht-002-gclzb.md) | Moes Moes BHT series Thermostat |
 | [BRT-100-TRV](moes/brt-100-trv.md) | Moes Thermostatic radiator valve |
 | [EDM-1ZBB-EU](tuya/ts0601_dimmer.md) | Moes Zigbee smart dimmer (white-label of TuYa TS0601_dimmer) |
@@ -3012,7 +3058,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [HY369RT](tuya/ts0601_thermostat.md) | Moes Radiator valve with thermostat (white-label of TuYa TS0601_thermostat) |
 | [MS-104BZ](moes/ms-104bz.md) | Moes Smart light switch module (2 gang) |
 | [MS-104Z](moes/ms-104z.md) | Moes Smart light switch module (1 gang) |
-| [MS-105B](moes/ms-105b.md) | Moes Smart dimmer module (2 gang) |
+| [MS-105B](tuya/ts0601_dimmer_2.md) | Moes 2 gang smart dimmer (white-label of TuYa TS0601_dimmer_2) |
 | [MS-105Z](tuya/ts0601_dimmer_1.md) | Moes 1 gang smart dimmer (white-label of TuYa TS0601_dimmer_1) |
 | [MS-108ZR](moes/ms-108zr.md) | Moes Zigbee + RF curtain switch module |
 | [TV01-ZB](tuya/tv02-zigbee.md) | Moes Thermostat radiator valve (white-label of TuYa TV02-Zigbee) |
@@ -3078,7 +3124,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 
 | Model | Description |
 | ----- | ----------- |
-| [MS-SP-LE27WRGB](mycket/ms-sp-le27wrgb.md) | Mycket E27 RGBW bulb |
+| [MS-SP-LE27WRGB](tuya/ts0505a.md) | Mycket E27 RGBW bulb (white-label of TuYa TS0505A) |
 
 
 # Namron {#namron}
@@ -3097,7 +3143,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [3802967](namron/3802967.md) | Namron Led bulb 6w RGBW |
 | [3802968](namron/3802968.md) | Namron LED Filament Flex 5W CCT E27 Clear |
 | [4512700](namron/4512700.md) | Namron ZigBee dimmer 400W |
-| [4512701](namron/4512701.md) | Namron Zigbee 1 channel switch K2 |
+| [4512701](namron/4512701.md) | Namron Zigbee 1 channel switch K2 (White) |
 | [4512702](namron/4512702.md) | Namron Zigbee 1 channel switch K4 |
 | [4512703](namron/4512703.md) | Namron Zigbee 4 channel switch K8 (white) |
 | [4512704](namron/4512704.md) | Namron Zigbee switch 400W |
@@ -3107,6 +3153,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [4512719](namron/4512719.md) | Namron Zigbee 2 channel switch K4 (white) |
 | [4512721](namron/4512721.md) | Namron Zigbee 4 channel switch K8 (black) |
 | [4512726](namron/4512726.md) | Namron Zigbee 4 in 1 dimmer |
+| [4512728](namron/4512728.md) | Namron Zigbee 1 channel switch K2 (Black) |
 | [4512729](namron/4512729.md) | Namron Zigbee 2 channel switch K4 (black) |
 | [4512733](namron/4512733.md) | Namron ZigBee dimmer 2-pol 400W |
 | [4512735](namron/4512735.md) | Namron Multiprise with 4 AC outlets and 2 USB super charging ports (16A) |
@@ -3129,7 +3176,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | Model | Description |
 | ----- | ----------- |
 | [ZBHTR10WT](siterwell/gs361a-h04.md) | Nedis Thermostatic Radiator Valve Controller (white-label of Siterwell GS361A-H04) |
-| [ZBLC1E14](tuya/ts0505b.md) | Nedis Zigbee RGB+CCT light (white-label of TuYa TS0505B) |
+| [ZBLC1E14](tuya/ts0505b_1.md) | Nedis Zigbee RGB+CCT light (white-label of TuYa TS0505B_1) |
 | [ZBRC10WT](tuya/ts0215a_remote.md) | Nedis Security remote control (white-label of TuYa TS0215A_remote) |
 | [ZBSM10WT](tuya/rh3040.md) | Nedis PIR sensor (white-label of TuYa RH3040) |
 
@@ -3173,6 +3220,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | Model | Description |
 | ----- | ----------- |
 | [170-33505/170-34605](niko/170-33505_170-34605.md) | Niko Connected socket outlet |
+| [552-720X4](niko/552-720x4.md) | Niko Battery switch with 4 buttons |
 | [552-721X1](niko/552-721x1.md) | Niko Single connectable switch |
 | [552-721X2](niko/552-721x2.md) | Niko Double connectable switch |
 | [552-72201](niko/552-72201.md) | Niko Connectable dimmer |
@@ -3232,6 +3280,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [A1Z](tuya/ts011f_plug_1.md) | Nous Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
 | [E5](nous/e5.md) | Nous Temperature & humidity |
 | [E6](nous/e6.md) | Nous Temperature & humidity LCD sensor |
+| [L13Z](tuya/ts0002_switch_module.md) | Nous 2 gang switch module (white-label of TuYa TS0002_switch_module) |
 | [SZ-T04](nous/sz-t04.md) | Nous Temperature and humidity sensor with clock |
 
 
@@ -3500,6 +3549,13 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [94191](paulmann/94191.md) | Paulmann Plug & shine LED strip |
 
 
+# pcblab.io {#pcblab_io}
+
+| Model | Description |
+| ----- | ----------- |
+| [RR620ZB](tuya/ts0002_switch_module.md) | pcblab.io 2 gang Zigbee switch module (white-label of TuYa TS0002_switch_module) |
+
+
 # PEQ {#peq}
 
 | Model | Description |
@@ -3754,6 +3810,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [915005987001](philips/915005987001.md) | Philips Hue White and color ambiance Gradient Signe table lamp (black) |
 | [915005987101](philips/915005987101.md) | Philips Hue Gradient Signe floor lamp (white) |
 | [915005987301](philips/915005987301.md) | Philips Hue Gradient Signe table lamp (white) |
+| [915005987401](philips/915005987401.md) | Philips Hue White and color ambiance Gradient Signe table lamp (black) |
 | [915005987501](philips/915005987501.md) | Philips Hue Gradient Signe floor lamp (white) |
 | [915005987601](philips/915005987601.md) | Philips Hue Gradient Signe floor lamp (black) |
 | [915005987701](philips/915005987701.md) | Philips Hue Gradient Signe floor lamp (wood) |
@@ -3848,7 +3905,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [9290024683](philips/9290024683.md) | Philips Hue white ambiance A19 1100lm with Bluetooth |
 | [9290024684](philips/9290024684.md) | Philips Hue white ambiance E27 1100lm with Bluetooth |
 | [9290024687](philips/9290024687.md) | Philips Hue White and Color Ambiance A19 1100 lumen |
-| [9290024689](philips/9290024689.md) | Philips Hue white and color ambiance B22 1100lm |
+| [9290024688](philips/9290024688.md) | Philips Hue white and color ambiance E27 1100lm |
 | [9290024691](philips/9290024691.md) | Philips Hue white single filament bulb A19 E26 with Bluetooth (1100 Lumen) |
 | [9290024691A](philips/9290024691a.md) | Philips Hue white single filament bulb A19 E26 with Bluetooth (1100 Lumen) |
 | [929002469202](philips/929002469202.md) | Philips Hue white A60 bulb E27 1050lm with Bluetooth |
@@ -3907,6 +3964,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [929003055801](philips/929003055801.md) | Philips Hue white ambiance bathroom ceiling light Adore with Bluetooth |
 | [929003055901](philips/929003055901.md) | Philips Hue white ambiance bathroom ceiling light Adore with Bluetooth |
 | [929003056001](philips/929003056001.md) | Philips Hue white ambiance Adore bathroom mirror light with Bluetooth |
+| [929003056701](philips/929003056701.md) | Philips Hue white ambiance Adore ceiling light |
 | [929003056901](philips/929003056901.md) | Philips Hue Struana 27W |
 | [9290030674](philips/9290030674.md) | Philips Hue motion outdoor sensor |
 | [9290030675](philips/9290030675.md) | Philips Hue motion sensor |
@@ -3934,6 +3992,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [929003526301](philips/929003526301.md) | Philips Hue White & Color Ambiance Xamento M |
 | [929003531702](philips/929003531702.md) | Philips Hue Bluetooth white & color ambiance ceiling lamp Infuse medium |
 | [929003535301](philips/929003535301.md) | Philips Hue Festavia gradient light string 250 |
+| [929003553001](philips/929003553001.md) | Philips Hue outdoor Resonate downward wall lamp |
 | [LWG004](philips/lwg004.md) | Philips Hue white GU10 bluetooth |
 
 
@@ -4174,6 +4233,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [EER50000](schneider_electric/eer50000.md) | Schneider Electric Wiser H-Relay (HACT) |
 | [EER51000](schneider_electric/eer51000.md) | Schneider Electric Wiser thermostat (RTS) |
 | [EER53000](schneider_electric/eer53000.md) | Schneider Electric Wiser radiator thermostat (VACT) |
+| [EKO07259](schneider_electric/eko07259.md) | Schneider Electric Smart thermostat |
 | [EKO09716](schneider_electric/eko09716.md) | Schneider Electric Zigbee smart socket with power meter |
 | [EKO09738](schneider_electric/eko09738.md) | Schneider Electric Zigbee smart socket with power meter |
 | [MEG5113-0300/MEG5165-0000](schneider_electric/meg5113-0300_meg5165-0000.md) | Schneider Electric Merten MEG5165 PlusLink Shutter insert with Merten Wiser System M Push Button (1fold) |
@@ -4189,6 +4249,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [WDE002334](schneider_electric/wde002334.md) | Schneider Electric Rotary dimmer |
 | [WDE002386](schneider_electric/wde002386.md) | Schneider Electric Push button dimmer |
 | [WDE002906](schneider_electric/wde002906.md) | Schneider Electric Wiser wireless switch 1-gang or 2-gang |
+| [WDE002960](schneider_electric/wde002960.md) | Schneider Electric Push button dimmer |
 | [WDE002961](schneider_electric/wde002961.md) | Schneider Electric Rotary dimmer |
 | [WV704R0A0902](schneider_electric/wv704r0a0902.md) | Schneider Electric Wiser radiator thermostat |
 
@@ -4301,6 +4362,11 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [SBM300ZB1](shinasystem/sbm300zb1.md) | ShinaSystem SiHAS remote control |
 | [SBM300ZB2](shinasystem/sbm300zb2.md) | ShinaSystem SiHAS remote control 2 button |
 | [SBM300ZB3](shinasystem/sbm300zb3.md) | ShinaSystem SiHAS remote control 3 button |
+| [SBM300ZB4](shinasystem/sbm300zb4.md) | ShinaSystem SiHAS remote control 4 button |
+| [SBM300ZC1](shinasystem/sbm300zc1.md) | ShinaSystem SiHAS remote control |
+| [SBM300ZC2](shinasystem/sbm300zc2.md) | ShinaSystem SiHAS remote control 2 button |
+| [SBM300ZC3](shinasystem/sbm300zc3.md) | ShinaSystem SiHAS remote control 3 button |
+| [SBM300ZC4](shinasystem/sbm300zc4.md) | ShinaSystem SiHAS remote control 4 button |
 | [TSM-300ZB](shinasystem/tsm-300zb.md) | ShinaSystem SiHAS temperature/humidity sensor |
 | [USM-300ZB](shinasystem/usm-300zb.md) | ShinaSystem SiHAS multipurpose sensor |
 
@@ -4633,6 +4699,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [74282](sylvania/74282.md) | Sylvania Smart Home adjustable white MR16 LED bulb |
 | [74283](sylvania/74283.md) | Sylvania LIGHTIFY LED soft white dimmable A19 |
 | [74388](sylvania/74388.md) | Sylvania Smart+ contact and temperature sensor |
+| [74453](sylvania/74453.md) | Sylvania LIGHTIFY LED soft white BR30 |
 | [74580](sylvania/74580.md) | Sylvania Smart Home soft white PAR38 outdoor bulb |
 | [74696](sylvania/74696.md) | Sylvania LIGHTIFY LED soft white dimmable A19 |
 | [75541](sylvania/75541.md) | Sylvania SMART+ Outdoor Accent RGB lighting kit |
@@ -4729,6 +4796,22 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [TPZRCO2HT-Z3](titan_products/tpzrco2ht-z3.md) | Titan Products Room CO2, humidity & temperature sensor |
 
 
+# TLW Global {#tlw_global}
+
+| Model | Description |
+| ----- | ----------- |
+| [K10-1220Z](tlw_global/k10-1220z.md) | TLW Global 12V LED smart driver 15W with 6-port micro plug connector |
+| [K10-1230Z](tlw_global/k10-1230z.md) | TLW Global 12V LED smart driver 30W with 6-port micro plug connector |
+| [K10-1250Z](tlw_global/k10-1250z.md) | TLW Global 12V LED smart driver 50W with 6-port micro plug connector |
+
+
+# TONGOU {#tongou}
+
+| Model | Description |
+| ----- | ----------- |
+| [TO-Q-SY2-163JZT](tuya/ts011f_with_threshold.md) | TONGOU Smart circuit breaker (white-label of TuYa TS011F_with_threshold) |
+
+
 # Tongou {#tongou}
 
 | Model | Description |
@@ -4770,7 +4853,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | Model | Description |
 | ----- | ----------- |
 | [40ZH-O](tuya/40zh-o.md) | TuYa Motion sensor |
-| [A5C-21F7-01](tuya/ts0505b.md) | TuYa Zigbee RGB+CCT light (white-label of TuYa TS0505B) |
+| [A5C-21F7-01](tuya/ts0505b_1.md) | TuYa Zigbee RGB+CCT light (white-label of TuYa TS0505B_1) |
 | [ATMS1601Z](tuya/atms1601z.md) | TuYa Din smart relay (without power monitoring) |
 | [CK-BL702-AL-01](tuya/ck-bl702-al-01.md) | TuYa Zigbee LED bulb |
 | [D3-DPWK-TY](tuya/d3-dpwk-ty.md) | TuYa HVAC controller |
@@ -4781,7 +4864,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [GDC311ZBQ1](tuya/gdc311zbq1.md) | TuYa LoraTap garage door opener with wireless sensor |
 | [gq8b1uv](tuya/gq8b1uv.md) | TuYa Zigbee smart dimmer |
 | [GTZ02](siterwell/gs361a-h04.md) | TuYa Głowica termostatyczna (white-label of Siterwell GS361A-H04) |
-| [HG08007](tuya/hg08007.md) | TuYa Livarno Home outdoor LED band |
+| [HG08007](tuya/ts0505b_1.md) | TuYa Livarno Home outdoor LED band (white-label of TuYa TS0505B_1) |
 | [HY08WE](tuya/hy08we.md) | TuYa Wall-mount thermostat |
 | [iH-F001](tuya/ts0203.md) | TuYa Door sensor (white-label of TuYa TS0203) |
 | [IH-K009](tuya/ih-k009.md) | TuYa Temperature & humidity sensor |
@@ -4799,6 +4882,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [S-LUX-ZB](tuya/s-lux-zb.md) | TuYa Light sensor |
 | [SA12IZL](tuya/sa12izl.md) | TuYa Smart smoke alarm |
 | [SM-AW713Z](tuya/ts0111_valve.md) | TuYa Smart water/gas valve (white-label of TuYa TS0111_valve) |
+| [SM0001](tuya/sm0001.md) | TuYa Switch |
 | [SM0201](tuya/sm0201.md) | TuYa Temperature & humidity sensor with LED screen |
 | [SNTZ007](tuya/sntz007.md) | TuYa Rechargeable Zigbee contact sensor |
 | [SNTZ009](tuya/sntz009.md) | TuYa Water leak sensor |
@@ -4832,6 +4916,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [TS0046](tuya/ts0046.md) | TuYa Wireless switch with 6 buttons |
 | [TS0049](tuya/ts0049.md) | TuYa Water valve |
 | [TS004F](tuya/ts004f.md) | TuYa Wireless switch with 4 buttons |
+| [TS0052](tuya/ts0052.md) | TuYa Zigbee dimmer module 1 channel |
 | [TS0101](tuya/ts0101.md) | TuYa Zigbee Socket |
 | [TS0108](tuya/ts0108.md) | TuYa Socket with 2 USB |
 | [TS0111](tuya/ts0111.md) | TuYa Socket |
@@ -4839,6 +4924,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [TS0115](tuya/ts0115.md) | TuYa Multiprise with 4 AC outlets and 2 USB super charging ports (10A or 16A) |
 | [TS011F_2_gang_2_usb_wall](tuya/ts011f_2_gang_2_usb_wall.md) | TuYa 2 gang 2 usb wall outlet |
 | [TS011F_2_gang_wall](tuya/ts011f_2_gang_wall.md) | TuYa 2 gang wall outlet |
+| [TS011F_3_gang](tuya/ts011f_3_gang.md) | TuYa 3 gang wall ac outlet |
 | [TS011F_circuit_breaker](tuya/ts011f_circuit_breaker.md) | TuYa Circuit breaker |
 | [TS011F_din_smart_relay](tuya/ts011f_din_smart_relay.md) | TuYa Din smart relay (with power monitoring) |
 | [TS011F_plug_1](tuya/ts011f_plug_1.md) | TuYa Smart plug (with power monitoring) |
@@ -4846,7 +4932,9 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [TS011F_plug_3](tuya/ts011f_plug_3.md) | TuYa Smart plug (with power monitoring by polling) |
 | [TS011F_relay_switch](tuya/ts011f_relay_switch.md) | TuYa Dry contact relay switch |
 | [TS011F_socket_module](tuya/ts011f_socket_module.md) | TuYa Socket module |
+| [TS011F_switch_5_gang](tuya/ts011f_switch_5_gang.md) | TuYa 2 gang 2 usb 1 wall ac outlet |
 | [TS011F_wall_outlet](tuya/ts011f_wall_outlet.md) | TuYa In-wall outlet |
+| [TS011F_with_threshold](tuya/ts011f_with_threshold.md) | TuYa Din rail switch with power monitoring and threshold settings |
 | [TS0121_plug](tuya/ts0121_plug.md) | TuYa 10A UK or 16A EU smart plug |
 | [TS0201](tuya/ts0201.md) | TuYa Temperature & humidity sensor with display |
 | [TS0202](tuya/ts0202.md) | TuYa Motion sensor |
@@ -4874,13 +4962,18 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [TS0504B](tuya/ts0504b.md) | TuYa Zigbee RGBW light |
 | [TS0505A](tuya/ts0505a.md) | TuYa RGB+CCT light controller |
 | [TS0505A_led](tuya/ts0505a_led.md) | TuYa RGB+CCT LED |
-| [TS0505B](tuya/ts0505b.md) | TuYa Zigbee RGB+CCT light |
+| [TS0505B_1](tuya/ts0505b_1.md) | TuYa Zigbee RGB+CCT light |
+| [TS0505B_2](tuya/ts0505b_2.md) | TuYa Zigbee RGB+CCT light |
 | [TS0601_3_phase_clamp_meter](tuya/ts0601_3_phase_clamp_meter.md) | TuYa 3-phase clamp power meter |
+| [TS0601_3_phase_clamp_meter_relay](tuya/ts0601_3_phase_clamp_meter_relay.md) | TuYa 3-phase clamp power meter with relay |
 | [TS0601_air_quality_sensor](tuya/ts0601_air_quality_sensor.md) | TuYa Air quality sensor |
 | [TS0601_clamp_meter](tuya/ts0601_clamp_meter.md) | TuYa Clamp meter |
 | [TS0601_co2_sensor](tuya/ts0601_co2_sensor.md) | TuYa NDIR co2 sensor |
+| [TS0601_contact_temperature_humidity_sensor](tuya/ts0601_contact_temperature_humidity_sensor.md) | TuYa Contact, temperature and humidity sensor |
 | [TS0601_cover_1](tuya/ts0601_cover_1.md) | TuYa Curtain motor/roller blind motor/window pusher/tubular motor |
 | [TS0601_cover_2](tuya/ts0601_cover_2.md) | TuYa Curtain motor fixed speed |
+| [TS0601_cover_3](tuya/ts0601_cover_3.md) | TuYa Cover motor |
+| [TS0601_cover_4](tuya/ts0601_cover_4.md) | TuYa Cover |
 | [TS0601_dimmer](tuya/ts0601_dimmer.md) | TuYa Zigbee smart dimmer |
 | [TS0601_dimmer_1](tuya/ts0601_dimmer_1.md) | TuYa 1 gang smart dimmer |
 | [TS0601_dimmer_2](tuya/ts0601_dimmer_2.md) | TuYa 2 gang smart dimmer |
@@ -4900,15 +4993,18 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [TS0601_smart_air_house_keeper](tuya/ts0601_smart_air_house_keeper.md) | TuYa Smart air house keeper |
 | [TS0601_smart_CO_air_box](tuya/ts0601_smart_co_air_box.md) | TuYa Smart air box (carbon monoxide) |
 | [TS0601_smart_human_presence_sensor](tuya/ts0601_smart_human_presence_sensor.md) | TuYa Smart Human presence sensor |
-| [TS0601_smoke](tuya/ts0601_smoke.md) | TuYa Smoke sensor |
 | [TS0601_smoke_1](tuya/ts0601_smoke_1.md) | TuYa Smoke sensor |
 | [TS0601_smoke_2](tuya/ts0601_smoke_2.md) | TuYa Photoelectric smoke detector |
+| [TS0601_smoke_3](tuya/ts0601_smoke_3.md) | TuYa Photoelectric smoke detector |
+| [TS0601_smoke_4](tuya/ts0601_smoke_4.md) | TuYa Smoke sensor |
+| [TS0601_smoke_5](tuya/ts0601_smoke_5.md) | TuYa Smoke sensor |
 | [TS0601_soil](tuya/ts0601_soil.md) | TuYa Soil sensor |
 | [TS0601_switch](tuya/ts0601_switch.md) | TuYa 1, 2, 3 or 4 gang switch |
 | [TS0601_switch_2_gang](tuya/ts0601_switch_2_gang.md) | TuYa 2 gang switch |
 | [TS0601_switch_3_gang](tuya/ts0601_switch_3_gang.md) | TuYa 3 gang switch |
 | [TS0601_switch_4_gang](tuya/ts0601_switch_4_gang.md) | TuYa 4 gang switch |
 | [TS0601_switch_5_gang](tuya/ts0601_switch_5_gang.md) | TuYa 5 gang switch |
+| [TS0601_switch_6_gang](tuya/ts0601_switch_6_gang.md) | TuYa 6 gang switch |
 | [TS0601_temperature_humidity_sensor](tuya/ts0601_temperature_humidity_sensor.md) | TuYa Temperature & humidity sensor |
 | [TS0601_thermostat](tuya/ts0601_thermostat.md) | TuYa Radiator valve with thermostat |
 | [TS0601_thermostat_1](tuya/ts0601_thermostat_1.md) | TuYa Thermostatic radiator valve |
@@ -4916,6 +5012,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [TS0601_thermostat_3](tuya/ts0601_thermostat_3.md) | TuYa Thermostatic radiator valve |
 | [TS0601_vibration_sensor](tuya/ts0601_vibration_sensor.md) | TuYa Smart vibration sensor |
 | [TS0601_water_sensor](tuya/ts0601_water_sensor.md) | TuYa Water leak sensor |
+| [TS0726](tuya/ts0726.md) | TuYa 4 gang switch with neutral wire |
 | [TS1101_dimmer_module_1ch](tuya/ts1101_dimmer_module_1ch.md) | TuYa Zigbee dimmer module 1 channel |
 | [TS1101_dimmer_module_2ch](tuya/ts1101_dimmer_module_2ch.md) | TuYa Zigbee dimmer module 2 channel |
 | [TS110E_1gang_1](tuya/ts110e_1gang_1.md) | TuYa 1 channel dimmer |
@@ -5007,7 +5104,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 
 | Model | Description |
 | ----- | ----------- |
-| [TH008L10RGBCCT](ur_lighting/th008l10rgbcct.md) | UR Lighting 10W RGB+CCT downlight |
+| [TH008L10RGBCCT](tuya/ts0505b_1.md) | UR Lighting 10W RGB+CCT downlight (white-label of TuYa TS0505B_1) |
 
 
 # UseeLink {#useelink}
@@ -5132,6 +5229,13 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | ----- | ----------- |
 | [9GED18000-009](weiser/9ged18000-009.md) | Weiser SmartCode 10 |
 | [9GED21500-005](weiser/9ged21500-005.md) | Weiser SmartCode 10 Touch |
+
+
+# Wenzhou Taiye Electric {#wenzhou_taiye_electric}
+
+| Model | Description |
+| ----- | ----------- |
+| [TAC7361C BI](tuya/ts0601_3_phase_clamp_meter_relay.md) | Wenzhou Taiye Electric 3-phase clamp power meter with relay (white-label of TuYa TS0601_3_phase_clamp_meter_relay) |
 
 
 # WETEN {#weten}
@@ -5267,6 +5371,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [WXKG02LM_rev2](xiaomi/wxkg02lm_rev2.md) | Xiaomi Aqara double key wireless wall switch (2018 model) |
 | [WXKG03LM_rev1](xiaomi/wxkg03lm_rev1.md) | Xiaomi Aqara single key wireless wall switch (2016 model) |
 | [WXKG03LM_rev2](xiaomi/wxkg03lm_rev2.md) | Xiaomi Aqara single key wireless wall switch (2018 model) |
+| [WXKG04LM](xiaomi/wxkg04lm.md) | Xiaomi Aqara T1 double rocker wireless remote switch |
 | [WXKG06LM](xiaomi/wxkg06lm.md) | Xiaomi Aqara D1 single key wireless wall switch |
 | [WXKG07LM](xiaomi/wxkg07lm.md) | Xiaomi Aqara D1 double key wireless wall switch |
 | [WXKG11LM](xiaomi/wxkg11lm.md) | Xiaomi Aqara wireless switch |
@@ -5336,7 +5441,6 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | Model | Description |
 | ----- | ----------- |
 | [DAC2161C](tuya/ts0601_din_3.md) | XOCA Zigbee DIN energy meter (white-label of TuYa TS0601_din_3) |
-| [DAC2161C](tuya/ts0601_din_2.md) | XOCA Zigbee DIN energy meter (white-label of TuYa TS0601_din_2) |
 
 
 # Yale {#yale}
@@ -5425,7 +5529,7 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [HGZB-DLC4-N15B](zemismart/hgzb-dlc4-n15b.md) | Zemismart RGB LED downlight |
 | [LXN56-SS27LX1.1](zemismart/lxn56-ss27lx1_1.md) | Zemismart Smart light switch - 2 gang with neutral wire |
 | [LXZB-12A](zemismart/lxzb-12a.md) | Zemismart RGB LED downlight |
-| [LXZB-ZB-09A](tuya/ts0505b.md) | Zemismart Zemismart LED Surface Mounted Downlight 9W RGBW (white-label of TuYa TS0505B) |
+| [LXZB-ZB-09A](tuya/ts0505b_1.md) | Zemismart Zemismart LED Surface Mounted Downlight 9W RGBW (white-label of TuYa TS0505B_1) |
 | [M2805EGBZTN](tuya/ts0601_cover_1.md) | Zemismart Tubular motor (white-label of TuYa TS0601_cover_1) |
 | [M515EGB](tuya/ts0601_cover_1.md) | Zemismart Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
 | [M515EGBZTN](zemismart/m515egbztn.md) | Zemismart Roller shade driver |
@@ -5438,12 +5542,20 @@ Unfortunately there are still 94 devices that are not (yet) supported by this pl
 | [ZM-CSW032-D](zemismart/zm-csw032-d.md) | Zemismart Curtain/roller blind switch |
 | [ZM-L03E-Z](zemismart/zm-l03e-z.md) | Zemismart Smart light switch - 3 gang with neutral wire |
 | [ZM-RM02](zemismart/zm-rm02.md) | Zemismart Smart 6 key scene switch |
+| [ZM16EL-03/33](tuya/ts0601_cover_3.md) | Zemismart Cover motor (white-label of TuYa TS0601_cover_3) |
 | [ZM25RX-08/30](zemismart/zm25rx-08_30.md) | Zemismart Tubular motor |
 | [ZM25TQ](zemismart/zm25tq.md) | Zemismart Tubular motor |
 | [ZM79E-DT](tuya/ts0601_cover_1.md) | Zemismart Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
 | [ZM85EL-2Z](tuya/ts0601_cover_1.md) | Zemismart Roman Rod I type curtains track (white-label of TuYa TS0601_cover_1) |
 | [ZW-EU-01](nue_3a/hgzb-01.md) | Zemismart Smart light relay - 1 gang (white-label of Nue / 3A HGZB-01) |
 | [ZW-EU-02](nue_3a/lxn59-2s7lx1_0.md) | Zemismart Smart light relay - 2 gang (white-label of Nue / 3A LXN59-2S7LX1.0) |
+
+
+# ZemiSmart {#zemismart}
+
+| Model | Description |
+| ----- | ----------- |
+| [ZM-H7](tuya/sm0001.md) | ZemiSmart Hand wave wall smart switch (white-label of TuYa SM0001) |
 
 
 # Zen {#zen}

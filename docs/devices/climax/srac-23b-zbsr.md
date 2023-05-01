@@ -122,6 +122,47 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 2
   },
   {
+    "type": "composite",
+    "property": "squawk",
+    "name": "squawk",
+    "features": [
+      {
+        "type": "enum",
+        "name": "state",
+        "property": "state",
+        "access": 2,
+        "values": [
+          "system_is_armed",
+          "system_is_disarmed"
+        ],
+        "description": "Set Squawk state"
+      },
+      {
+        "type": "enum",
+        "name": "level",
+        "property": "level",
+        "access": 2,
+        "values": [
+          "low",
+          "medium",
+          "high",
+          "very_high"
+        ],
+        "description": "Sound level"
+      },
+      {
+        "type": "binary",
+        "name": "strobe",
+        "property": "strobe",
+        "access": 2,
+        "value_on": true,
+        "value_off": false,
+        "description": "Turn on/off the strobe (light) for Squawk"
+      }
+    ],
+    "access": 2
+  },
+  {
     "type": "numeric",
     "name": "max_duration",
     "property": "max_duration",

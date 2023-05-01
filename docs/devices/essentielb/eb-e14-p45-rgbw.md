@@ -17,7 +17,9 @@ the EssentielB EB-E14-P45-RGBW
 * [Lightbulb](../../light.md)
   * Brightness
   * Color Temperature
+  * Hue
   * On
+  * Saturation
 
 ## Other features
 * [Adaptive Lighting](../../light.md)

@@ -21,6 +21,8 @@ these devices
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
 * [Stateless Programmable Switch](../../action.md)
   * Programmable Switch Event
   * Service Label Index

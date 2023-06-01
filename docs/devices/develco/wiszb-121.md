@@ -21,6 +21,7 @@ the Develco WISZB-121
 * [Contact Sensor](../../sensors.md)
   * Contact Sensor State
   * Status Low Battery
+  * Status Tampered
 
 
 # Related

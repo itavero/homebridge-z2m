@@ -25,21 +25,6 @@
   },
   {
     "type": "enum",
-    "name": "effect",
-    "property": "effect",
-    "access": 2,
-    "values": [
-      "blink",
-      "breathe",
-      "okay",
-      "channel_change",
-      "finish_effect",
-      "stop_effect"
-    ],
-    "description": "Triggers an effect on the light (e.g. make light blink for a few seconds)"
-  },
-  {
-    "type": "enum",
     "name": "power_on_behavior",
     "property": "power_on_behavior",
     "access": 7,
@@ -50,6 +35,22 @@
       "previous"
     ],
     "description": "Controls the behavior when the device is powered on after power loss"
+  },
+  {
+    "type": "enum",
+    "name": "effect",
+    "property": "effect",
+    "access": 2,
+    "values": [
+      "blink",
+      "breathe",
+      "okay",
+      "channel_change",
+      "candle",
+      "finish_effect",
+      "stop_effect",
+      "stop_hue_effect"
+    ]
   },
   {
     "type": "numeric",

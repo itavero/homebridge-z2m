@@ -17,7 +17,9 @@ the ADEO BD05C-FL-21-G-ENK
 * [Lightbulb](../../light.md)
   * Brightness
   * Color Temperature
+  * Hue
   * On
+  * Saturation
 
 ## Other features
 * [Adaptive Lighting](../../light.md)

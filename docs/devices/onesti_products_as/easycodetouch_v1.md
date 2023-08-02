@@ -21,9 +21,6 @@ the Onesti Products AS easyCodeTouch_v1
 * [Lock Mechanism](../../lock.md)
   * Lock Current State
   * Lock Target State
-* [Stateless Programmable Switch](../../action.md)
-  * Programmable Switch Event
-  * Service Label Index
 
 
 # Related

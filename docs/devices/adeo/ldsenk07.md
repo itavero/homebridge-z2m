@@ -31,10 +31,12 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "composite",
     "property": "warning",
     "name": "warning",
+    "label": "Warning",
     "features": [
       {
         "type": "enum",
         "name": "mode",
+        "label": "Mode",
         "property": "mode",
         "access": 2,
         "values": [
@@ -51,6 +53,7 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "enum",
         "name": "level",
+        "label": "Level",
         "property": "level",
         "access": 2,
         "values": [
@@ -64,6 +67,7 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "enum",
         "name": "strobe_level",
+        "label": "Strobe level",
         "property": "strobe_level",
         "access": 2,
         "values": [
@@ -77,6 +81,7 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "binary",
         "name": "strobe",
+        "label": "Strobe",
         "property": "strobe",
         "access": 2,
         "value_on": true,
@@ -86,6 +91,7 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "numeric",
         "name": "strobe_duty_cycle",
+        "label": "Strobe duty cycle",
         "property": "strobe_duty_cycle",
         "access": 2,
         "value_max": 10,
@@ -95,6 +101,7 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "numeric",
         "name": "duration",
+        "label": "Duration",
         "property": "duration",
         "access": 2,
         "unit": "s",
@@ -106,6 +113,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -116,6 +124,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "battery_low",
+    "label": "Battery low",
     "property": "battery_low",
     "access": 1,
     "value_on": true,
@@ -125,6 +134,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "tamper",
+    "label": "Tamper",
     "property": "tamper",
     "access": 1,
     "value_on": true,
@@ -134,6 +144,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

@@ -33,6 +33,7 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "binary",
         "name": "state",
+        "label": "State",
         "property": "learn_ir_code",
         "access": 2,
         "value_on": "ON",
@@ -44,6 +45,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "text",
     "name": "learned_ir_code",
+    "label": "Learned ir code",
     "property": "learned_ir_code",
     "access": 1,
     "description": "The IR code learned by device"
@@ -51,6 +53,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "text",
     "name": "ir_code_to_send",
+    "label": "Ir code to send",
     "property": "ir_code_to_send",
     "access": 2,
     "description": "The IR code to send by device"
@@ -58,6 +61,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -68,6 +72,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "voltage",
+    "label": "Voltage",
     "property": "voltage",
     "access": 1,
     "unit": "mV",
@@ -76,6 +81,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

@@ -2,6 +2,7 @@
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -12,6 +13,7 @@
   {
     "type": "binary",
     "name": "presence",
+    "label": "Presence",
     "property": "presence",
     "access": 1,
     "value_on": true,
@@ -21,6 +23,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

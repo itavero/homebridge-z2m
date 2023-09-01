@@ -17,9 +17,7 @@ the ADEO IA-CDZFB2AA007NA-MZN-02
 * [Lightbulb](../../light.md)
   * Brightness
   * Color Temperature
-  * Hue
   * On
-  * Saturation
 
 ## Other features
 * [Adaptive Lighting](../../light.md)

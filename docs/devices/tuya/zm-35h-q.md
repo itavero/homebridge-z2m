@@ -24,7 +24,6 @@ these devices
 * [Occupancy Sensor](../../sensors.md)
   * Occupancy Detected
   * Status Low Battery
-  * Status Tampered
 
 
 # Related

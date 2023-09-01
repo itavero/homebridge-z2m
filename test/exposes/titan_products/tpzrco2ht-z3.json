@@ -2,6 +2,7 @@
   {
     "type": "numeric",
     "name": "voltage",
+    "label": "Voltage",
     "property": "voltage",
     "access": 1,
     "unit": "mV",
@@ -10,6 +11,7 @@
   {
     "type": "binary",
     "name": "battery_low",
+    "label": "Battery low",
     "property": "battery_low",
     "access": 1,
     "value_on": true,
@@ -19,6 +21,7 @@
   {
     "type": "numeric",
     "name": "humidity",
+    "label": "Humidity",
     "property": "humidity",
     "access": 1,
     "unit": "%",
@@ -27,6 +30,7 @@
   {
     "type": "numeric",
     "name": "temperature",
+    "label": "Temperature",
     "property": "temperature",
     "access": 1,
     "unit": "°C",
@@ -35,6 +39,7 @@
   {
     "type": "numeric",
     "name": "co2",
+    "label": "CO2",
     "property": "co2",
     "access": 1,
     "unit": "ppm",
@@ -43,6 +48,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

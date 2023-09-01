@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "water_flow",
+    "label": "Water flow",
     "property": "water_flow",
     "access": 1,
     "unit": "%",
@@ -39,6 +40,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "last_watering_duration",
+    "label": "Last watering duration",
     "property": "last_watering_duration",
     "access": 1,
     "unit": "sec",
@@ -48,6 +50,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "remaining_watering_time",
+    "label": "Remaining watering time",
     "property": "remaining_watering_time",
     "access": 1,
     "unit": "sec",
@@ -57,6 +60,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "valve_state",
+    "label": "Valve state",
     "property": "valve_state",
     "access": 3,
     "value_min": 0,
@@ -68,6 +72,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "shutdown_timer",
+    "label": "Shutdown timer",
     "property": "shutdown_timer",
     "access": 3,
     "value_min": 0,
@@ -78,6 +83,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "valve_state_auto_shutdown",
+    "label": "Valve state auto shutdown",
     "property": "valve_state_auto_shutdown",
     "access": 3,
     "value_min": 0,
@@ -89,6 +95,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -99,6 +106,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

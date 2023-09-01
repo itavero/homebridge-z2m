@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "power",
+    "label": "Power",
     "property": "power",
     "access": 1,
     "unit": "W",
@@ -38,6 +39,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "energy",
+    "label": "Energy",
     "property": "energy",
     "access": 1,
     "unit": "kWh",
@@ -46,6 +48,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "battery_low",
+    "label": "Battery low",
     "property": "battery_low",
     "access": 1,
     "value_on": true,
@@ -55,6 +58,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "pulse_configuration",
+    "label": "Pulse configuration",
     "property": "pulse_configuration",
     "access": 7,
     "value_min": 0,
@@ -64,6 +68,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "interface_mode",
+    "label": "Interface mode",
     "property": "interface_mode",
     "access": 7,
     "values": [
@@ -81,6 +86,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "current_summation",
+    "label": "Current summation",
     "property": "current_summation",
     "access": 2,
     "description": "Current summation value sent to the display. e.g. 570 = 0,570 kWh",
@@ -90,6 +96,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "check_meter",
+    "label": "Check meter",
     "property": "check_meter",
     "access": 1,
     "value_on": true,
@@ -99,6 +106,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

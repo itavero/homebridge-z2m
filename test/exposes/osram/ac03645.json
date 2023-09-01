@@ -5,6 +5,7 @@
       {
         "type": "binary",
         "name": "state",
+        "label": "State",
         "property": "state",
         "access": 7,
         "value_on": "ON",
@@ -15,6 +16,7 @@
       {
         "type": "numeric",
         "name": "brightness",
+        "label": "Brightness",
         "property": "brightness",
         "access": 7,
         "value_min": 0,
@@ -24,6 +26,7 @@
       {
         "type": "numeric",
         "name": "color_temp",
+        "label": "Color temp",
         "property": "color_temp",
         "access": 7,
         "unit": "mired",
@@ -62,16 +65,19 @@
         "type": "composite",
         "property": "color",
         "name": "color_xy",
+        "label": "Color (X/Y)",
         "features": [
           {
             "type": "numeric",
             "name": "x",
+            "label": "X",
             "property": "x",
             "access": 7
           },
           {
             "type": "numeric",
             "name": "y",
+            "label": "Y",
             "property": "y",
             "access": 7
           }
@@ -83,16 +89,19 @@
         "type": "composite",
         "property": "color",
         "name": "color_hs",
+        "label": "Color (HS)",
         "features": [
           {
             "type": "numeric",
             "name": "hue",
+            "label": "Hue",
             "property": "hue",
             "access": 7
           },
           {
             "type": "numeric",
             "name": "saturation",
+            "label": "Saturation",
             "property": "saturation",
             "access": 7
           }
@@ -105,6 +114,7 @@
   {
     "type": "enum",
     "name": "effect",
+    "label": "Effect",
     "property": "effect",
     "access": 2,
     "values": [
@@ -120,6 +130,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

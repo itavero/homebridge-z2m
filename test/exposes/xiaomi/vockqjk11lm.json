@@ -2,6 +2,7 @@
   {
     "type": "numeric",
     "name": "temperature",
+    "label": "Temperature",
     "property": "temperature",
     "access": 1,
     "unit": "°C",
@@ -10,6 +11,7 @@
   {
     "type": "numeric",
     "name": "humidity",
+    "label": "Humidity",
     "property": "humidity",
     "access": 1,
     "unit": "%",
@@ -18,6 +20,7 @@
   {
     "type": "numeric",
     "name": "voc",
+    "label": "VOC",
     "property": "voc",
     "access": 1,
     "unit": "ppb",
@@ -26,6 +29,7 @@
   {
     "type": "numeric",
     "name": "device_temperature",
+    "label": "Device temperature",
     "property": "device_temperature",
     "access": 1,
     "unit": "°C",
@@ -34,6 +38,7 @@
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -44,6 +49,7 @@
   {
     "type": "numeric",
     "name": "voltage",
+    "label": "Voltage",
     "property": "voltage",
     "access": 1,
     "unit": "mV",
@@ -52,6 +58,7 @@
   {
     "type": "enum",
     "name": "display_unit",
+    "label": "Display unit",
     "property": "display_unit",
     "access": 7,
     "values": [
@@ -65,6 +72,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

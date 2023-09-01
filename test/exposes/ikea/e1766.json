@@ -2,6 +2,7 @@
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 5,
     "unit": "%",
@@ -12,6 +13,7 @@
   {
     "type": "enum",
     "name": "action",
+    "label": "Action",
     "property": "action",
     "access": 1,
     "values": [
@@ -24,6 +26,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

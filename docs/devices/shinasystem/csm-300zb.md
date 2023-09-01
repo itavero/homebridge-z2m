@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -40,6 +41,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "voltage",
+    "label": "Voltage",
     "property": "voltage",
     "access": 1,
     "unit": "mV",
@@ -48,6 +50,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "status",
+    "label": "Status",
     "property": "status",
     "access": 1,
     "values": [
@@ -60,6 +63,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "people",
+    "label": "People",
     "property": "people",
     "access": 7,
     "value_min": 0,
@@ -69,6 +73,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

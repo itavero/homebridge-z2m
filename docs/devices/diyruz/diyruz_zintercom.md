@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "state",
+    "label": "State",
     "property": "state",
     "access": 1,
     "values": [
@@ -44,6 +45,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "mode",
+    "label": "Mode",
     "property": "mode",
     "access": 7,
     "values": [
@@ -57,6 +59,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "sound",
+    "label": "Sound",
     "property": "sound",
     "access": 7,
     "value_on": "ON",
@@ -66,6 +69,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "time_ring",
+    "label": "Time ring",
     "property": "time_ring",
     "access": 7,
     "unit": "sec",
@@ -76,6 +80,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "time_talk",
+    "label": "Time talk",
     "property": "time_talk",
     "access": 7,
     "unit": "sec",
@@ -86,6 +91,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "time_open",
+    "label": "Time open",
     "property": "time_open",
     "access": 7,
     "unit": "sec",
@@ -96,6 +102,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "time_bell",
+    "label": "Time bell",
     "property": "time_bell",
     "access": 7,
     "unit": "sec",
@@ -106,6 +113,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "time_report",
+    "label": "Time report",
     "property": "time_report",
     "access": 7,
     "unit": "min",
@@ -116,6 +124,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -126,6 +135,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

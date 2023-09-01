@@ -30,6 +30,7 @@ these devices
 * [Leak Sensor](../../sensors.md)
   * Leak Detected
   * Status Low Battery
+  * Status Tampered
 
 
 # Related

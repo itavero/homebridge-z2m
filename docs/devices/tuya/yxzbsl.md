@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "alarm",
+    "label": "Alarm",
     "property": "alarm",
     "access": 3,
     "value_on": "ON",
@@ -39,6 +40,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "type",
+    "label": "Type",
     "property": "type",
     "access": 3,
     "values": [
@@ -52,12 +54,13 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "volume",
+    "label": "Volume",
     "property": "volume",
     "access": 3,
     "values": [
       "mute",
       "low",
-      "medium",
+      "middle",
       "high"
     ],
     "description": "Volume of the alarm"
@@ -65,6 +68,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "ringtone",
+    "label": "Ringtone",
     "property": "ringtone",
     "access": 3,
     "values": [
@@ -87,6 +91,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "power_type",
+    "label": "Power type",
     "property": "power_type",
     "access": 1,
     "values": [
@@ -98,6 +103,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "duration",
+    "label": "Duration",
     "property": "duration",
     "access": 3,
     "value_min": 1,
@@ -109,6 +115,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "battery_level",
+    "label": "Battery level",
     "property": "battery_level",
     "access": 1,
     "values": [
@@ -121,6 +128,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -131,6 +139,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

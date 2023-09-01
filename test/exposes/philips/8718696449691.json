@@ -5,6 +5,7 @@
       {
         "type": "binary",
         "name": "state",
+        "label": "State",
         "property": "state",
         "access": 7,
         "value_on": "ON",
@@ -15,6 +16,7 @@
       {
         "type": "numeric",
         "name": "brightness",
+        "label": "Brightness",
         "property": "brightness",
         "access": 7,
         "value_min": 0,
@@ -26,6 +28,7 @@
   {
     "type": "enum",
     "name": "power_on_behavior",
+    "label": "Power-on behavior",
     "property": "power_on_behavior",
     "access": 7,
     "values": [
@@ -39,6 +42,7 @@
   {
     "type": "enum",
     "name": "effect",
+    "label": "Effect",
     "property": "effect",
     "access": 2,
     "values": [
@@ -55,6 +59,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

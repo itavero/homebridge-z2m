@@ -5,6 +5,7 @@
       {
         "type": "enum",
         "name": "state",
+        "label": "State",
         "property": "state",
         "access": 3,
         "values": [
@@ -16,6 +17,7 @@
       {
         "type": "numeric",
         "name": "position",
+        "label": "Position",
         "property": "position",
         "access": 7,
         "value_min": 0,
@@ -28,6 +30,7 @@
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 5,
     "unit": "%",
@@ -38,6 +41,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

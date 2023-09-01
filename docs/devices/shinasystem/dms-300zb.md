@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -40,6 +41,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "voltage",
+    "label": "Voltage",
     "property": "voltage",
     "access": 1,
     "unit": "mV",
@@ -48,6 +50,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "occupancy_in",
+    "label": "Occupancy in",
     "property": "occupancy_in",
     "access": 1,
     "value_on": true,
@@ -57,6 +60,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "occupancy_out",
+    "label": "Occupancy out",
     "property": "occupancy_out",
     "access": 1,
     "value_on": true,
@@ -66,6 +70,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "occupancy_or",
+    "label": "Occupancy or",
     "property": "occupancy_or",
     "access": 1,
     "value_on": true,
@@ -75,6 +80,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "occupancy_and",
+    "label": "Occupancy and",
     "property": "occupancy_and",
     "access": 1,
     "value_on": true,
@@ -84,6 +90,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "occupancy_timeout",
+    "label": "Occupancy timeout",
     "property": "occupancy_timeout",
     "access": 7,
     "unit": "second",
@@ -93,6 +100,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

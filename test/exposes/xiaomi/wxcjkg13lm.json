@@ -2,6 +2,7 @@
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -12,6 +13,7 @@
   {
     "type": "numeric",
     "name": "voltage",
+    "label": "Voltage",
     "property": "voltage",
     "access": 1,
     "unit": "mV",
@@ -20,6 +22,7 @@
   {
     "type": "enum",
     "name": "action",
+    "label": "Action",
     "property": "action",
     "access": 1,
     "values": [
@@ -59,6 +62,7 @@
   {
     "type": "enum",
     "name": "operation_mode",
+    "label": "Operation mode",
     "property": "operation_mode",
     "access": 7,
     "values": [
@@ -70,6 +74,7 @@
   {
     "type": "numeric",
     "name": "power_outage_count",
+    "label": "Power outage count",
     "property": "power_outage_count",
     "access": 1,
     "description": "Number of power outages"
@@ -77,6 +82,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

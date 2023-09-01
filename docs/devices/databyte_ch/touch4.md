@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -40,6 +41,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",
@@ -50,6 +52,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "key_1",
+    "label": "Key 1",
     "property": "key_1",
     "access": 1,
     "value_on": "ON",
@@ -58,6 +61,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "key_2",
+    "label": "Key 2",
     "property": "key_2",
     "access": 1,
     "value_on": "ON",
@@ -66,6 +70,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "key_3",
+    "label": "Key 3",
     "property": "key_3",
     "access": 1,
     "value_on": "ON",
@@ -74,6 +79,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "key_4",
+    "label": "Key 4",
     "property": "key_4",
     "access": 1,
     "value_on": "ON",

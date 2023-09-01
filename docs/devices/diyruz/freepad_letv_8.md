@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -40,6 +41,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "action",
+    "label": "Action",
     "property": "action",
     "access": 1,
     "values": [
@@ -54,6 +56,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_type",
+    "label": "Switch type",
     "property": "switch_type_button_1",
     "access": 7,
     "values": [
@@ -66,6 +69,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_actions",
+    "label": "Switch actions",
     "property": "switch_actions_button_1",
     "access": 7,
     "values": [
@@ -78,6 +82,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_type",
+    "label": "Switch type",
     "property": "switch_type_button_2",
     "access": 7,
     "values": [
@@ -90,6 +95,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_actions",
+    "label": "Switch actions",
     "property": "switch_actions_button_2",
     "access": 7,
     "values": [
@@ -102,6 +108,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_type",
+    "label": "Switch type",
     "property": "switch_type_button_3",
     "access": 7,
     "values": [
@@ -114,6 +121,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_actions",
+    "label": "Switch actions",
     "property": "switch_actions_button_3",
     "access": 7,
     "values": [
@@ -126,6 +134,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_type",
+    "label": "Switch type",
     "property": "switch_type_button_4",
     "access": 7,
     "values": [
@@ -138,6 +147,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_actions",
+    "label": "Switch actions",
     "property": "switch_actions_button_4",
     "access": 7,
     "values": [
@@ -150,6 +160,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_type",
+    "label": "Switch type",
     "property": "switch_type_button_5",
     "access": 7,
     "values": [
@@ -162,6 +173,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_actions",
+    "label": "Switch actions",
     "property": "switch_actions_button_5",
     "access": 7,
     "values": [
@@ -174,6 +186,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_type",
+    "label": "Switch type",
     "property": "switch_type_button_6",
     "access": 7,
     "values": [
@@ -186,6 +199,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_actions",
+    "label": "Switch actions",
     "property": "switch_actions_button_6",
     "access": 7,
     "values": [
@@ -198,6 +212,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_type",
+    "label": "Switch type",
     "property": "switch_type_button_7",
     "access": 7,
     "values": [
@@ -210,6 +225,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_actions",
+    "label": "Switch actions",
     "property": "switch_actions_button_7",
     "access": 7,
     "values": [
@@ -222,6 +238,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_type",
+    "label": "Switch type",
     "property": "switch_type_button_8",
     "access": 7,
     "values": [
@@ -234,6 +251,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "switch_actions",
+    "label": "Switch actions",
     "property": "switch_actions_button_8",
     "access": 7,
     "values": [
@@ -246,6 +264,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

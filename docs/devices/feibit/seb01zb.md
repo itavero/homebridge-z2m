@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "sos",
+    "label": "SOS",
     "property": "sos",
     "access": 1,
     "value_on": true,
@@ -39,6 +40,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "battery_low",
+    "label": "Battery low",
     "property": "battery_low",
     "access": 1,
     "value_on": true,
@@ -48,6 +50,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "tamper",
+    "label": "Tamper",
     "property": "tamper",
     "access": 1,
     "value_on": true,
@@ -57,6 +60,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -67,6 +71,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

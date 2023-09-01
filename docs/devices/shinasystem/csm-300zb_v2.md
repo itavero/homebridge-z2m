@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
@@ -40,6 +41,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "voltage",
+    "label": "Voltage",
     "property": "voltage",
     "access": 1,
     "unit": "mV",
@@ -48,6 +50,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "status",
+    "label": "Status",
     "property": "status",
     "access": 1,
     "values": [
@@ -60,6 +63,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "people",
+    "label": "People",
     "property": "people",
     "access": 7,
     "value_min": 0,
@@ -69,6 +73,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "rf_pairing_on",
+    "label": "Rf pairing on",
     "property": "rf_pairing_on",
     "access": 2,
     "values": [
@@ -79,6 +84,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "counting_freeze",
+    "label": "Counting freeze",
     "property": "counting_freeze",
     "access": 2,
     "value_on": "ON",
@@ -88,6 +94,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "tof_init",
+    "label": "Tof init",
     "property": "tof_init",
     "access": 2,
     "values": [
@@ -98,6 +105,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "led_state",
+    "label": "Led state",
     "property": "led_state",
     "access": 2,
     "value_on": "enable",
@@ -107,6 +115,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "rf_state",
+    "label": "Rf state",
     "property": "rf_state",
     "access": 2,
     "value_on": "enable",
@@ -116,6 +125,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "transaction",
+    "label": "Transaction",
     "property": "transaction",
     "access": 2,
     "values": [
@@ -131,6 +141,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "fast_in",
+    "label": "Fast in",
     "property": "fast_in",
     "access": 2,
     "value_on": "enable",
@@ -140,6 +151,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "fast_out",
+    "label": "Fast out",
     "property": "fast_out",
     "access": 2,
     "value_on": "enable",
@@ -149,6 +161,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

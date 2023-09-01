@@ -2,6 +2,7 @@
   {
     "type": "binary",
     "name": "battery_low",
+    "label": "Battery low",
     "property": "battery_low",
     "access": 1,
     "value_on": true,
@@ -14,13 +15,15 @@
       {
         "type": "binary",
         "name": "state",
+        "label": "State",
         "property": "child_lock",
         "access": 3,
         "value_on": "LOCK",
         "value_off": "UNLOCK",
         "description": "Enables/disables physical input on the device"
       }
-    ]
+    ],
+    "label": "Child lock"
   },
   {
     "type": "switch",
@@ -28,13 +31,15 @@
       {
         "type": "binary",
         "name": "state",
+        "label": "State",
         "property": "away_mode",
         "access": 3,
         "value_on": "ON",
         "value_off": "OFF",
         "description": "Enable/disable away mode"
       }
-    ]
+    ],
+    "label": "Away mode"
   },
   {
     "type": "climate",
@@ -42,6 +47,7 @@
       {
         "type": "numeric",
         "name": "current_heating_setpoint",
+        "label": "Current heating setpoint",
         "property": "current_heating_setpoint",
         "access": 3,
         "value_min": 5,
@@ -53,6 +59,7 @@
       {
         "type": "numeric",
         "name": "local_temperature",
+        "label": "Local temperature",
         "property": "local_temperature",
         "access": 1,
         "unit": "°C",
@@ -61,6 +68,7 @@
       {
         "type": "enum",
         "name": "system_mode",
+        "label": "System mode",
         "property": "system_mode",
         "access": 3,
         "values": [
@@ -73,6 +81,7 @@
       {
         "type": "enum",
         "name": "running_state",
+        "label": "Running state",
         "property": "running_state",
         "access": 1,
         "values": [
@@ -86,6 +95,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

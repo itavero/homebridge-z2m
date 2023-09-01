@@ -5,6 +5,7 @@
       {
         "type": "binary",
         "name": "state",
+        "label": "State",
         "property": "state_l1",
         "access": 7,
         "value_on": "ON",
@@ -22,6 +23,7 @@
       {
         "type": "binary",
         "name": "state",
+        "label": "State",
         "property": "state_l2",
         "access": 7,
         "value_on": "ON",
@@ -36,6 +38,7 @@
   {
     "type": "enum",
     "name": "action",
+    "label": "Action",
     "property": "action",
     "access": 1,
     "values": [
@@ -59,6 +62,7 @@
   {
     "type": "enum",
     "name": "power_on_behavior",
+    "label": "Power-on behavior",
     "property": "power_on_behavior_l1",
     "access": 7,
     "values": [
@@ -72,6 +76,7 @@
   {
     "type": "enum",
     "name": "power_on_behavior",
+    "label": "Power-on behavior",
     "property": "power_on_behavior_l2",
     "access": 7,
     "values": [
@@ -85,6 +90,7 @@
   {
     "type": "numeric",
     "name": "power",
+    "label": "Power",
     "property": "power",
     "access": 5,
     "unit": "W",
@@ -93,6 +99,7 @@
   {
     "type": "numeric",
     "name": "energy",
+    "label": "Energy",
     "property": "energy",
     "access": 5,
     "unit": "kWh",
@@ -101,6 +108,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

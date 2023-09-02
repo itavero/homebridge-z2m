@@ -75,7 +75,7 @@
   ],
   "dependencies": {
     "color-convert": "^2.0.1",
-    "mqtt": "^4.2.1",
+    "mqtt": "^5.0.4",
     "semver": "^7.3.2"
   },
   "devDependencies": {

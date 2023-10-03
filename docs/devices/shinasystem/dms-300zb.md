@@ -93,7 +93,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "label": "Occupancy timeout",
     "property": "occupancy_timeout",
     "access": 7,
-    "unit": "second",
+    "unit": "s",
     "value_min": 0,
     "value_max": 3600
   },

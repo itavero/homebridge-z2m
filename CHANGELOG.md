@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Changed
+
+- Drop support for unsupported Node.js version. Now only testing against v18 and v20.
+
 ## [1.11.0-beta.2] - 2023-01-16
 
 ### Added

@@ -20,6 +20,7 @@ the Xiaomi MCCGQ12LM
   * Status Low Battery
 * [Contact Sensor](../../sensors.md)
   * Contact Sensor State
+  * Status Low Battery
 
 
 # Related

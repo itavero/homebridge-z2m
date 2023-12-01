@@ -18,6 +18,8 @@ the Xiaomi ZNLDP12LM
   * Brightness
   * Color Temperature
   * On
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
 ## Other features
 * [Adaptive Lighting](../../light.md)

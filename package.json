@@ -36,16 +36,21 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest --coverage && eslint --max-warnings=0 '**/*.ts'",
+    "test": "jest --coverage && eslint --max-warnings=0 'src/**/*.ts' 'test/**/*.ts'",
     "coverage": "jest --coverage && open coverage/lcov-report/index.html",
     "watch:test": "jest --watch",
-    "lint": "eslint '**/*.ts' --fix --max-warnings=0",
+    "lint": "eslint --max-warnings=0 'src/**/*.ts' 'test/**/*.ts'",
+    "lint-fix": "eslint --fix --max-warnings=0 'src/**/*.ts' 'test/**/*.ts'",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && npm link && homebridge -I -D",
     "check-release": "release-it --dry-run -VV",
     "release": "release-it",
     "check-pre-release": "release-it --dry-run -VV --npm.tag=next",
-    "pre-release": "release-it --npm.tag=next"
+    "pre-release": "release-it --npm.tag=next",
+    "beta-release": "release-it --preRelease=beta --npm.tag=next",
+    "check-beta-release": "release-it --dry-run -VV --preRelease=beta --npm.tag=next",
+    "rc-release": "release-it --preRelease=rc --npm.tag=next",
+    "check-rc-release": "release-it --dry-run -VV --preRelease=rc --npm.tag=next"
   },
   "keywords": [
     "homebridge-plugin",
@@ -55,6 +60,7 @@
     "xiaomi",
     "aqara",
     "philips",
+    "signify",
     "hue",
     "ikea",
     "tradfri",
@@ -63,7 +69,9 @@
     "lonsonho",
     "osram",
     "innr",
-    "gledopto"
+    "gledopto",
+    "sonoff",
+    "lidl"
   ],
   "dependencies": {
     "color-convert": "^2.0.1",
@@ -71,7 +79,7 @@
     "semver": "^7.3.2"
   },
   "devDependencies": {
-    "@release-it/keep-a-changelog": "^3.0.0",
+    "@release-it/keep-a-changelog": "^5.0.0",
     "@types/color-convert": "^2.0.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^18.0.0",
@@ -87,8 +95,8 @@
     "jest-sonar": "^0.2.11",
     "jest-when": "^3.0.1",
     "nodemon": "^2.0.7",
-    "release-it": "^15.0.0",
-    "rimraf": "^3.0.2",
+    "release-it": "^17.0.1",
+    "rimraf": "^5.0.0",
     "ts-jest": "^27.0.2",
     "ts-node": "^10.8.1",
     "typescript": "^4.1.3"

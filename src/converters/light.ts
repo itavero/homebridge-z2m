@@ -385,6 +385,12 @@ class LightHandler implements ServiceHandler {
   }
 
   private handleSetBrightness(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
+    if (typeof value !== 'number') {
+      this.accessory.log.warn(`Received non-numeric brightness value for ${this.accessory.displayName}: ${value}`);
+      callback(new Error('non-numeric brightness not supported'));
+      return;
+    }
+
     if (this.brightnessExpose !== undefined) {
       const data = {};
       if (value <= 0) {

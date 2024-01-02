@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Fixed
+
+- Type checks on Z2M models now explicitly check that the input is not null or undefined, to prevent crashes when we get unexpected data (see [#794](https://github.com/itavero/homebridge-z2m/issues/794))
+
 ## [1.9.2] - 2022-10-01
 
 ### Fixed

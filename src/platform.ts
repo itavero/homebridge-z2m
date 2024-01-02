@@ -10,7 +10,8 @@ import {
 import * as mqtt from 'mqtt';
 import * as fs from 'fs';
 import {
-  DeviceListEntry, DeviceListEntryForGroup, ExposesEntry, exposesGetOverlap, GroupListEntry, isDeviceListEntry, isDeviceListEntryForGroup,
+  DeviceListEntry, DeviceListEntryForGroup, ExposesEntry, exposesGetOverlap, GroupListEntry, isDeviceDefinition, isDeviceListEntry,
+  isDeviceListEntryForGroup,
 } from './z2mModels';
 import * as semver from 'semver';
 import { errorToString } from './helpers';
@@ -422,7 +423,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private createOrUpdateAccessory(device: DeviceListEntry) {
-    if (!device.supported || device.definition === undefined || this.isDeviceExcluded(device)) {
+    if (!device.supported || !isDeviceDefinition(device.definition) || this.isDeviceExcluded(device)) {
       return;
     }
     const uuid_input = isDeviceListEntryForGroup(device) ? `group-${device.group_id}` : device.ieee_address;

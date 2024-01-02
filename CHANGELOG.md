@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.9.3-rc.0] - 2024-01-02
+
 ### Fixed
 
 - Type checks on Z2M models now explicitly check that the input is not null or undefined, to prevent crashes when we get unexpected data. (see [#794](https://github.com/itavero/homebridge-z2m/issues/794))
@@ -345,7 +347,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.3-rc.0...HEAD
+[1.9.3-rc.0]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...v1.9.3-rc.0
 [1.9.2]: https://github.com/itavero/homebridge-z2m/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/itavero/homebridge-z2m/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/itavero/homebridge-z2m/compare/v1.8.0...v1.9.0

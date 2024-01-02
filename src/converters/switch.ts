@@ -76,7 +76,11 @@ class SwitchHandler implements ServiceHandler {
   private monitor: CharacteristicMonitor;
   private stateExpose: ExposesEntryWithBinaryProperty;
 
-  constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory, exposeAsOutlet: boolean) {
+  constructor(
+    expose: ExposesEntryWithFeatures,
+    private readonly accessory: BasicAccessory,
+    exposeAsOutlet: boolean
+  ) {
     const endpoint = expose.endpoint;
     const serviceTypeName = exposeAsOutlet ? 'Outlet' : 'Switch';
 

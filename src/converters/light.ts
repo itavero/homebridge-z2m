@@ -569,7 +569,10 @@ class LightHandler implements ServiceHandler {
 }
 
 class ColorTemperatureToHueSatMonitor implements CharacteristicMonitor {
-  constructor(private readonly service: Service, private readonly key_temp: string) {}
+  constructor(
+    private readonly service: Service,
+    private readonly key_temp: string
+  ) {}
 
   callback(state: Record<string, unknown>): void {
     if (

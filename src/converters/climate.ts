@@ -119,7 +119,10 @@ class ThermostatHandler implements ServiceHandler {
   private currentStateExpose?: ExposesEntryWithEnumProperty;
   private targetModeFromHomeKitMapping?: Map<CharacteristicValue, string>;
 
-  constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
+  constructor(
+    expose: ExposesEntryWithFeatures,
+    private readonly accessory: BasicAccessory
+  ) {
     const endpoint = expose.endpoint;
     this.identifier = ThermostatHandler.generateIdentifier(endpoint);
 

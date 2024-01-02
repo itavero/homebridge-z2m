@@ -56,7 +56,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private availabilityEnabledDevices = new Array<string>();
   private availabilityDisabledDevices = new Array<string>();
 
-  constructor(logger: Logger, config: PlatformConfig, public readonly api: API) {
+  constructor(
+    logger: Logger,
+    config: PlatformConfig,
+    public readonly api: API
+  ) {
     // Prepare internal states, variables and such
     this.onMessage = this.onMessage.bind(this);
     this.didReceiveDevices = false;

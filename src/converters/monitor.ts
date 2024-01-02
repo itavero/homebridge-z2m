@@ -31,7 +31,10 @@ abstract class BaseCharacteristicMonitor implements CharacteristicMonitor {
 }
 
 export class NestedCharacteristicMonitor implements CharacteristicMonitor {
-  constructor(private readonly key: string, private readonly monitors: CharacteristicMonitor[]) {
+  constructor(
+    private readonly key: string,
+    private readonly monitors: CharacteristicMonitor[]
+  ) {
     if (monitors.length === 0) {
       throw new RangeError(`No monitors passed to NestedCharacteristicMonitor for key ${key}.`);
     }

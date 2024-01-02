@@ -193,7 +193,11 @@ class AirQualitySensorHandler implements ServiceHandler {
 
   public mainCharacteristics: Characteristic[] = [];
 
-  constructor(endpoint: string | undefined, exposes: ExposesEntryWithProperty[], private readonly accessory: BasicAccessory) {
+  constructor(
+    endpoint: string | undefined,
+    exposes: ExposesEntryWithProperty[],
+    private readonly accessory: BasicAccessory
+  ) {
     this.identifier = AirQualitySensorHandler.generateIdentifier(endpoint);
 
     const serviceName = accessory.getDefaultServiceDisplayName(endpoint);

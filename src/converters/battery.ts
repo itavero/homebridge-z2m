@@ -54,7 +54,11 @@ class BatteryHandler implements ServiceHandler {
   private batteryLevelExpose: ExposesEntryWithNumericRangeProperty | undefined;
   private batteryLowExpose: ExposesEntryWithBinaryProperty | undefined;
 
-  constructor(endpoint: string | undefined, exposes: ExposesEntryWithProperty[], private readonly accessory: BasicAccessory) {
+  constructor(
+    endpoint: string | undefined,
+    exposes: ExposesEntryWithProperty[],
+    private readonly accessory: BasicAccessory
+  ) {
     this.identifier = BatteryHandler.generateIdentifier(endpoint);
 
     const serviceName = accessory.getDefaultServiceDisplayName(endpoint);

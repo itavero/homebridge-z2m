@@ -65,7 +65,10 @@ class LockHandler implements ServiceHandler {
   private stateExpose: ExposesEntryWithBinaryProperty;
   private lockStateExpose: ExposesEntryWithEnumProperty;
 
-  constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
+  constructor(
+    expose: ExposesEntryWithFeatures,
+    private readonly accessory: BasicAccessory
+  ) {
     const endpoint = expose.endpoint;
     this.identifier = LockHandler.generateIdentifier(endpoint);
 

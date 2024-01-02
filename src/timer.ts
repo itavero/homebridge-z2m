@@ -1,7 +1,10 @@
 export class ExtendedTimer {
   private interval: number;
   private timeout: NodeJS.Timeout | undefined;
-  constructor(private readonly callback: () => void, interval = 1000) {
+  constructor(
+    private readonly callback: () => void,
+    interval = 1000
+  ) {
     this.interval = interval;
     this.timeout = undefined;
   }

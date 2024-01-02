@@ -89,6 +89,10 @@ class VolatileOrganicCompoundsProperty extends PassthroughAirQualityProperty {
   }
 
   convertToAirQuality(sensorValue: CharacteristicValue): number | undefined {
+    if (typeof sensorValue !== 'number') {
+      return undefined;
+    }
+
     if (sensorValue <= 333) {
       return hap.Characteristic.AirQuality.EXCELLENT;
     }
@@ -120,6 +124,10 @@ class ParticulateMatter10Property extends PassthroughAirQualityProperty {
   }
 
   convertToAirQuality(sensorValue: CharacteristicValue): number | undefined {
+    if (typeof sensorValue !== 'number') {
+      return undefined;
+    }
+
     if (sensorValue <= 25) {
       return hap.Characteristic.AirQuality.EXCELLENT;
     }
@@ -151,6 +159,10 @@ class ParticulateMatter2Dot5Property extends PassthroughAirQualityProperty {
   }
 
   convertToAirQuality(sensorValue: CharacteristicValue): number | undefined {
+    if (typeof sensorValue !== 'number') {
+      return undefined;
+    }
+
     if (sensorValue <= 15) {
       return hap.Characteristic.AirQuality.EXCELLENT;
     }

@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export declare type MqttValue = string | boolean | number;
 
+const isNullOrUndefined = (x: unknown): x is null | undefined =>
+  x === null || x === undefined;
+
 export interface ExposesEntry {
   type: string;
   name?: string;
@@ -38,18 +41,20 @@ export enum ExposesKnownTypes {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isExposesEntry = (x: any): x is ExposesEntry => {
-  if (x === undefined || x.type === undefined) {
+  if (isNullOrUndefined(x) || isNullOrUndefined(x.type)) {
     return false;
   }
 
-  return (x.name !== undefined
-    || x.property !== undefined
-    || x.access !== undefined
-    || x.endpoint !== undefined
-    || x.values !== undefined
-    || (x.value_off !== undefined && x.value_on !== undefined)
-    || (x.value_min !== undefined && x.value_max !== undefined)
-    || Array.isArray(x.features));
+  return (
+    x.name !== undefined ||
+    x.property !== undefined ||
+    x.access !== undefined ||
+    x.endpoint !== undefined ||
+    x.values !== undefined ||
+    (x.value_off !== undefined && x.value_on !== undefined) ||
+    (x.value_min !== undefined && x.value_max !== undefined) ||
+    Array.isArray(x.features)
+  );
 };
 
 export interface ExposesEntryWithFeatures extends ExposesEntry {
@@ -62,7 +67,8 @@ export interface ExposesEntryWithProperty extends ExposesEntry {
   access: number;
 }
 
-export interface ExposesEntryWithNumericRangeProperty extends ExposesEntryWithProperty {
+export interface ExposesEntryWithNumericRangeProperty
+  extends ExposesEntryWithProperty {
   name: string;
   property: string;
   access: number;
@@ -70,7 +76,8 @@ export interface ExposesEntryWithNumericRangeProperty extends ExposesEntryWithPr
   value_max: number;
 }
 
-export interface ExposesEntryWithBinaryProperty extends ExposesEntryWithProperty {
+export interface ExposesEntryWithBinaryProperty
+  extends ExposesEntryWithProperty {
   name: string;
   property: string;
   access: number;
@@ -85,38 +92,71 @@ export interface ExposesEntryWithEnumProperty extends ExposesEntryWithProperty {
   values: string[];
 }
 
-export const exposesHasFeatures = (x: ExposesEntry): x is ExposesEntryWithFeatures => ('features' in x);
-export const exposesHasProperty = (x: ExposesEntry): x is ExposesEntryWithProperty => (x.name !== undefined
-  && x.property !== undefined && x.access !== undefined);
-export const exposesHasNumericProperty = (x: ExposesEntry): x is ExposesEntryWithProperty => (exposesHasProperty(x)
-  && x.type === ExposesKnownTypes.NUMERIC);
-export const exposesHasNumericRangeProperty = (x: ExposesEntry): x is ExposesEntryWithNumericRangeProperty => (exposesHasNumericProperty(x)
-  && x.value_min !== undefined && x.value_max !== undefined);
-export const exposesHasBinaryProperty = (x: ExposesEntry): x is ExposesEntryWithBinaryProperty => (exposesHasProperty(x)
-  && x.type === ExposesKnownTypes.BINARY && x.value_on !== undefined && x.value_off !== undefined);
-export const exposesHasEnumProperty = (x: ExposesEntry): x is ExposesEntryWithEnumProperty => (exposesHasProperty(x)
-  && x.type === ExposesKnownTypes.ENUM && x.values !== undefined && x.values.length > 0);
+export const exposesHasFeatures = (
+  x: ExposesEntry,
+): x is ExposesEntryWithFeatures => 'features' in x;
+export const exposesHasProperty = (
+  x: ExposesEntry,
+): x is ExposesEntryWithProperty =>
+  x.name !== undefined && x.property !== undefined && x.access !== undefined;
+export const exposesHasNumericProperty = (
+  x: ExposesEntry,
+): x is ExposesEntryWithProperty =>
+  exposesHasProperty(x) && x.type === ExposesKnownTypes.NUMERIC;
+export const exposesHasNumericRangeProperty = (
+  x: ExposesEntry,
+): x is ExposesEntryWithNumericRangeProperty =>
+  exposesHasNumericProperty(x) &&
+  x.value_min !== undefined &&
+  x.value_max !== undefined;
+export const exposesHasBinaryProperty = (
+  x: ExposesEntry,
+): x is ExposesEntryWithBinaryProperty =>
+  exposesHasProperty(x) &&
+  x.type === ExposesKnownTypes.BINARY &&
+  x.value_on !== undefined &&
+  x.value_off !== undefined;
+export const exposesHasEnumProperty = (
+  x: ExposesEntry,
+): x is ExposesEntryWithEnumProperty =>
+  exposesHasProperty(x) &&
+  x.type === ExposesKnownTypes.ENUM &&
+  x.values !== undefined &&
+  x.values.length > 0;
 
 export function exposesCanBeSet(entry: ExposesEntry): boolean {
-  return (entry.access !== undefined) && ((entry.access & ExposesAccessLevel.SET) !== 0);
+  return (
+    entry.access !== undefined && (entry.access & ExposesAccessLevel.SET) !== 0
+  );
 }
 
 export function exposesCanBeGet(entry: ExposesEntry): boolean {
-  return (entry.access !== undefined) && ((entry.access & ExposesAccessLevel.GET) !== 0);
+  return (
+    entry.access !== undefined && (entry.access & ExposesAccessLevel.GET) !== 0
+  );
 }
 
 export function exposesIsPublished(entry: ExposesEntry): boolean {
-  return (entry.access !== undefined) && ((entry.access & ExposesAccessLevel.PUBLISHED) !== 0);
+  return (
+    entry.access !== undefined &&
+    (entry.access & ExposesAccessLevel.PUBLISHED) !== 0
+  );
 }
 
 export interface ExposesPredicate {
   (expose: ExposesEntry): boolean;
 }
 
-export function exposesHasAllRequiredFeatures(entry: ExposesEntryWithFeatures, features: ExposesPredicate[],
-  isPropertyExcluded: ((property: string | undefined) => boolean) = () => false): boolean {
+export function exposesHasAllRequiredFeatures(
+  entry: ExposesEntryWithFeatures,
+  features: ExposesPredicate[],
+  isPropertyExcluded: (property: string | undefined) => boolean = () => false,
+): boolean {
   for (const f of features) {
-    if (entry.features.findIndex(e => f(e) && !isPropertyExcluded(e.property)) < 0) {
+    if (
+      entry.features.findIndex((e) => f(e) && !isPropertyExcluded(e.property)) <
+      0
+    ) {
       // given feature not found
       return false;
     }
@@ -126,13 +166,21 @@ export function exposesHasAllRequiredFeatures(entry: ExposesEntryWithFeatures, f
   return true;
 }
 
-export function exposesGetOverlap(first: ExposesEntry[], second: ExposesEntry[]): ExposesEntry[] {
+export function exposesGetOverlap(
+  first: ExposesEntry[],
+  second: ExposesEntry[],
+): ExposesEntry[] {
   const result: ExposesEntry[] = [];
 
   const secondNormalized = normalizeExposes(second);
 
   for (const entry of normalizeExposes(first)) {
-    const match = secondNormalized.find((x) => x.name === entry.name && x.property === entry.property && x.type === entry.type);
+    const match = secondNormalized.find(
+      (x) =>
+        x.name === entry.name &&
+        x.property === entry.property &&
+        x.type === entry.type,
+    );
     if (match !== undefined) {
       const merged = exposesGetMergedEntry(entry, match);
       if (merged !== undefined) {
@@ -173,13 +221,16 @@ function exposesRemoveEndpoint(entry: ExposesEntry): ExposesEntry {
   return result;
 }
 
-export function exposesGetMergedEntry(first: ExposesEntry, second: ExposesEntry): ExposesEntry | undefined {
+export function exposesGetMergedEntry(
+  first: ExposesEntry,
+  second: ExposesEntry,
+): ExposesEntry | undefined {
   const result: ExposesEntry | ExposesEntryWithFeatures = {
     type: first.type,
   };
   for (const member in first) {
     if (!Array.isArray(first[member])) {
-      if ((member in second) && (second[member] === first[member])) {
+      if (member in second && second[member] === first[member]) {
         result[member] = first[member];
       }
     }
@@ -203,7 +254,10 @@ export function exposesGetMergedEntry(first: ExposesEntry, second: ExposesEntry)
       }
       break;
     case ExposesKnownTypes.BINARY:
-      if (first.value_on !== second.value_on || first.value_off !== second.value_off) {
+      if (
+        first.value_on !== second.value_on ||
+        first.value_off !== second.value_off
+      ) {
         return undefined;
       }
       break;
@@ -225,9 +279,13 @@ export function exposesGetMergedEntry(first: ExposesEntry, second: ExposesEntry)
   if (exposesHasFeatures(first) && exposesHasFeatures(second)) {
     result['features'] = [];
     for (const feature of first.features) {
-      const match = second.features.find((x) => x.name === feature.name && x.property === feature.property && x.type === feature.type);
+      const match = second.features.find(
+        (x) =>
+          x.name === feature.name &&
+          x.property === feature.property &&
+          x.type === feature.type,
+      );
       if (match !== undefined) {
-
         const merged = exposesGetMergedEntry(feature, match);
         if (merged !== undefined) {
           result['features'].push(merged);
@@ -240,22 +298,29 @@ export function exposesGetMergedEntry(first: ExposesEntry, second: ExposesEntry)
   return result;
 }
 
-export function exposesAreEqual(first: ExposesEntry, second: ExposesEntry): boolean {
-  if (first.type !== second.type
-    || first.name !== second.name
-    || first.property !== second.property
-    || first.access !== second.access
-    || first.endpoint !== second.endpoint
-    || first.value_min !== second.value_min
-    || first.value_max !== second.value_max
-    || first.value_off !== second.value_off
-    || first.value_on !== second.value_on
-    || first.values?.length !== second.values?.length) {
+export function exposesAreEqual(
+  first: ExposesEntry,
+  second: ExposesEntry,
+): boolean {
+  if (
+    first.type !== second.type ||
+    first.name !== second.name ||
+    first.property !== second.property ||
+    first.access !== second.access ||
+    first.endpoint !== second.endpoint ||
+    first.value_min !== second.value_min ||
+    first.value_max !== second.value_max ||
+    first.value_off !== second.value_off ||
+    first.value_on !== second.value_on ||
+    first.values?.length !== second.values?.length
+  ) {
     return false;
   }
 
   if (first.values !== undefined && second?.values !== undefined) {
-    const missing = first.values.filter(v => !(second.values?.includes(v) ?? false));
+    const missing = first.values.filter(
+      (v) => !(second.values?.includes(v) ?? false),
+    );
     if (missing.length > 0) {
       return false;
     }
@@ -272,13 +337,16 @@ export function exposesAreEqual(first: ExposesEntry, second: ExposesEntry): bool
   return true;
 }
 
-export function exposesCollectionsAreEqual(first: ExposesEntry[], second: ExposesEntry[]): boolean {
+export function exposesCollectionsAreEqual(
+  first: ExposesEntry[],
+  second: ExposesEntry[],
+): boolean {
   if (first.length !== second.length) {
     return false;
   }
 
   for (const firstEntry of first) {
-    if (second.findIndex(e => exposesAreEqual(firstEntry, e)) < 0) {
+    if (second.findIndex((e) => exposesAreEqual(firstEntry, e)) < 0) {
       return false;
     }
   }
@@ -291,7 +359,8 @@ export interface DeviceDefinition {
   exposes: ExposesEntry[];
 }
 
-export const isDeviceDefinition = (x: any): x is DeviceDefinition => (x.vendor && x.model && Array.isArray(x.exposes));
+export const isDeviceDefinition = (x: any): x is DeviceDefinition =>
+  !isNullOrUndefined(x) && x.vendor && x.model && Array.isArray(x.exposes);
 
 export interface DeviceListEntry {
   definition?: DeviceDefinition | null;
@@ -306,32 +375,51 @@ export interface DeviceListEntryForGroup extends DeviceListEntry {
   group_id: number;
 }
 
-const isNullOrUndefined = (x: unknown): x is null | undefined => (x === null || x === undefined);
-
-export const isDeviceListEntry = (x: any): x is DeviceListEntry => (x.ieee_address && x.friendly_name && x.supported);
-export const isDeviceListEntryForGroup = (x: any): x is DeviceListEntryForGroup => {
-  return (isDeviceListEntry(x) && 'group_id' in x && typeof x['group_id'] === 'number');
+export const isDeviceListEntry = (x: any): x is DeviceListEntry =>
+  !isNullOrUndefined(x) && x.ieee_address && x.friendly_name && x.supported;
+export const isDeviceListEntryForGroup = (
+  x: any,
+): x is DeviceListEntryForGroup => {
+  return (
+    isDeviceListEntry(x) && 'group_id' in x && typeof x['group_id'] === 'number'
+  );
 };
-export function deviceListEntriesAreEqual(first: DeviceListEntry | undefined, second: DeviceListEntry | undefined): boolean {
+export function deviceListEntriesAreEqual(
+  first: DeviceListEntry | undefined,
+  second: DeviceListEntry | undefined,
+): boolean {
   if (first === undefined || second === undefined) {
-    return (first === undefined && second === undefined);
+    return first === undefined && second === undefined;
   }
 
-  if (first.friendly_name !== second.friendly_name
-    || first.ieee_address !== second.ieee_address
-    || first.supported !== second.supported
-    || first.software_build_id !== second.software_build_id
-    || first.date_code !== second.date_code) {
+  if (
+    first.friendly_name !== second.friendly_name ||
+    first.ieee_address !== second.ieee_address ||
+    first.supported !== second.supported ||
+    first.software_build_id !== second.software_build_id ||
+    first.date_code !== second.date_code
+  ) {
     return false;
   }
 
-  if (isNullOrUndefined(first.definition) || isNullOrUndefined(second.definition)) {
-    return isNullOrUndefined(first.definition) && isNullOrUndefined(second.definition);
+  if (
+    isNullOrUndefined(first.definition) ||
+    isNullOrUndefined(second.definition)
+  ) {
+    return (
+      isNullOrUndefined(first.definition) &&
+      isNullOrUndefined(second.definition)
+    );
   }
 
-  return (first.definition.model === second.definition.model
-    && first.definition.vendor === second.definition.vendor
-    && exposesCollectionsAreEqual(first.definition.exposes, second.definition.exposes));
+  return (
+    first.definition.model === second.definition.model &&
+    first.definition.vendor === second.definition.vendor &&
+    exposesCollectionsAreEqual(
+      first.definition.exposes,
+      second.definition.exposes,
+    )
+  );
 }
 
 export interface GroupMember {
@@ -339,11 +427,13 @@ export interface GroupMember {
   endpoint: number;
 }
 
-export const isGroupMember = (x: any): x is GroupMember => (x.ieee_address && x.endpoint);
+export const isGroupMember = (x: any): x is GroupMember =>
+  !isNullOrUndefined(x) && x.ieee_address && x.endpoint;
 export interface GroupListEntry {
   friendly_name: string;
   id: number;
   members: GroupMember[];
 }
 
-export const isGroupListEntry = (x: any): x is GroupListEntry => (x.id && x.friendly_name && x.members);
+export const isGroupListEntry = (x: any): x is GroupListEntry =>
+  !isNullOrUndefined(x) && x.id && x.friendly_name && x.members;

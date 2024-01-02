@@ -8,7 +8,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Fixed
 
-- Type checks on Z2M models now explicitly check that the input is not null or undefined, to prevent crashes when we get unexpected data (see [#794](https://github.com/itavero/homebridge-z2m/issues/794))
+- Type checks on Z2M models now explicitly check that the input is not null or undefined, to prevent crashes when we get unexpected data. (see [#794](https://github.com/itavero/homebridge-z2m/issues/794))
+- When creating or updating an accessory, previously it was only checked if the device definition was not undefined. Now we check if it seems to be a valid device definition. (see [#794](https://github.com/itavero/homebridge-z2m/issues/794))
 
 ## [1.9.2] - 2022-10-01
 

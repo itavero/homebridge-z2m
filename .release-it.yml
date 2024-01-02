@@ -4,7 +4,11 @@ github:
 git:
   requireCommits: true
   requireCleanWorkingDir: true
-  requireBranch: master
+  requireBranch:
+    - master
+    - main
+    - release-*
+    - hotfix-*
 
 hooks:
   "before:init":

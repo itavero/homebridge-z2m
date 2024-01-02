@@ -61,7 +61,10 @@ class CoverHandler implements ServiceHandler {
 
   public readonly mainCharacteristics: Characteristic[] = [];
 
-  constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
+  constructor(
+    expose: ExposesEntryWithFeatures,
+    private readonly accessory: BasicAccessory
+  ) {
     const endpoint = expose.endpoint;
     this.identifier = CoverHandler.generateIdentifier(endpoint);
 

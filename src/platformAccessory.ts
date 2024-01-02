@@ -98,9 +98,12 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     this.updateDeviceInformation(accessory.context.device, true);
 
     // Ask Zigbee2MQTT for a status update at least once every 4 hours.
-    this.updateTimer = new ExtendedTimer(() => {
-      this.queueAllKeysForGet();
-    }, 4 * 60 * 60 * 1000);
+    this.updateTimer = new ExtendedTimer(
+      () => {
+        this.queueAllKeysForGet();
+      },
+      4 * 60 * 60 * 1000
+    );
 
     // Immediately request an update to start off.
     this.queueAllKeysForGet();

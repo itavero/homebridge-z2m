@@ -55,7 +55,11 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
   private readonly monitor: CharacteristicMonitor;
   public readonly mainCharacteristics: Characteristic[] = [];
 
-  constructor(accessory: BasicAccessory, private readonly actionExpose: ExposesEntryWithEnumProperty, mapping: SwitchActionMapping) {
+  constructor(
+    accessory: BasicAccessory,
+    private readonly actionExpose: ExposesEntryWithEnumProperty,
+    mapping: SwitchActionMapping
+  ) {
     this.identifier = StatelessProgrammableSwitchHandler.generateIdentifier(actionExpose.endpoint, mapping.subType);
 
     // Create service

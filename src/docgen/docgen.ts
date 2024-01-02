@@ -70,7 +70,10 @@ function generateZigbee2MqttLink(device: any) {
 
 // Service names / links
 class ServiceInfo {
-  constructor(readonly serviceName: string, readonly page: string | undefined = undefined) {}
+  constructor(
+    readonly serviceName: string,
+    readonly page: string | undefined = undefined
+  ) {}
 }
 const hiddenCharacteristics = new Set<string>([hapNodeJs.Characteristic.Name.UUID]);
 const characteristicNameMapping = new Map<string, string>([['E863F10F-079E-48FF-8F27-9C2605A29F52', 'Air Pressure']]);
@@ -126,7 +129,10 @@ const serviceNameMapping = new Map<string, ServiceInfo>([
 
 // Controllers
 class ControllerMapping {
-  constructor(readonly displayName: string, readonly page: string) {}
+  constructor(
+    readonly displayName: string,
+    readonly page: string
+  ) {}
 }
 const controllerMapping = new Map<string, ControllerMapping>([
   ['AdaptiveLightingController', new ControllerMapping('Adaptive Lighting', 'light.md')],

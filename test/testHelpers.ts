@@ -169,7 +169,11 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
   readonly characteristics: Map<string, TestCharacteristic> = new Map<string, TestCharacteristic>();
   readonly addedCharacteristicUUIDs = new Set<string>();
 
-  constructor(readonly serviceUuid: string, readonly subType: string | undefined, readonly serviceIdentifier: string) {
+  constructor(
+    readonly serviceUuid: string,
+    readonly subType: string | undefined,
+    readonly serviceIdentifier: string
+  ) {
     this.serviceMock = mock<Service>();
     this.serviceMock.testCharacteristic.mockImplementation((c) => {
       if (typeof c === 'string') {

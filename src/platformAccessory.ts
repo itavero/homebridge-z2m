@@ -14,7 +14,7 @@ import {
   isDeviceListEntryForGroup,
 } from './z2mModels';
 import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
-import { QoS } from 'mqtt';
+import { QoS } from 'mqtt-packet';
 import { sanitizeAndFilterExposesEntries } from './helpers';
 import { EXP_AVAILABILITY } from './experimental';
 

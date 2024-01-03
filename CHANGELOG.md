@@ -8,7 +8,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Changed
 
-- Drop support for unsupported Node.js version. Now only testing against v18 and v20.
+- Drop support for unsupported Node.js version. Now only testing against v18 and v20 (current LTS releases).
+- Updated several dependencies, including [mqtt](https://www.npmjs.com/package/mqtt).
 
 ### Fixed
 

@@ -4,7 +4,7 @@
 /* eslint-disable max-len */
 import fs from 'fs';
 import path from 'path';
-import * as herdsman from 'zigbee-herdsman-converters';
+import { Definition, Expose, definitions } from 'zigbee-herdsman-converters';
 import { BasicServiceCreatorManager } from '../converters/creators';
 import { DocsAccessory } from './docs_accessory';
 import { ExposesEntry } from '../z2mModels';
@@ -17,6 +17,13 @@ const docs_base_path = path.join(__dirname, '..', '..', 'docs', 'devices');
 const exposes_base_path = path.join(__dirname, '..', '..', 'exposes');
 const test_exposes_base_path = path.join(__dirname, '..', '..', 'test', 'exposes');
 setHap(hapNodeJs);
+
+// Helper type for handling white label device definition
+type ExtendedDeviceDefinition = Definition & {
+  isWhiteLabel?: boolean;
+  whiteLabelOf?: Definition;
+  exposes: Expose[];
+};
 
 // Clean devices directory
 for (const file of fs.readdirSync(docs_base_path, { withFileTypes: true })) {
@@ -62,7 +69,7 @@ function normalizeNameForAnchor(model: string): string {
     .toLocaleLowerCase();
 }
 
-function generateZigbee2MqttLink(device: any) {
+function generateZigbee2MqttLink(device: ExtendedDeviceDefinition) {
   const find = '[/| |:]';
   const re = new RegExp(find, 'g');
   return 'https://www.zigbee2mqtt.io/devices/' + encodeURIComponent(device.model.replace(re, '_')) + '.html';
@@ -200,8 +207,8 @@ function serviceInfoToMarkdown(info: Map<string, string[]>): string {
   return result;
 }
 
-function generateDevicePage(basePath: string, device: any, services: Map<string, string[]>, controllers: string[]) {
-  if (device.whiteLabelOf) {
+function generateDevicePage(basePath: string, device: ExtendedDeviceDefinition, services: Map<string, string[]>, controllers: string[]) {
+  if (device.isWhiteLabel) {
     // Don't generate device page for white label products.
     return;
   }
@@ -319,8 +326,8 @@ function controllersToMarkdownList(controllers: string[]) {
   return result;
 }
 
-function generateExposesJson(basePath: string, device: any) {
-  if (device.whiteLabelOf) {
+function generateExposesJson(basePath: string, device: ExtendedDeviceDefinition) {
+  if (device.isWhiteLabel) {
     // Don't generate device page for white label products.
     return;
   }
@@ -329,39 +336,49 @@ function generateExposesJson(basePath: string, device: any) {
     fs.mkdirSync(directory, { recursive: true });
   }
   const fileName = path.join(directory, `${normalizeName(device.model)}.json`);
-  fs.writeFileSync(fileName, JSON.stringify(device.exposes, null, 2));
+
+  try {
+    fs.writeFileSync(fileName, JSON.stringify(device.exposes, null, 2));
+  } catch (err) {
+    console.log(`Problem writing ${fileName}: ${err}`);
+  }
 }
 
-// Filter out devices that only expose a `linkquality`
-// and add white label devices
-const allDevices = herdsman.definitions.filter(
-  (d) => typeof d.exposes === 'function' || d.exposes.find((e) => e.name !== 'linkquality') !== undefined
-);
-for (const device of allDevices) {
-  if (typeof device.exposes === 'function') {
-    // Call function to generate array of exposes information.
-    console.log(`Generating exposes array for ${device.vendor} ${device.model}`);
-    device.exposes = device.exposes();
-  }
+//////////
+const allDevices: ExtendedDeviceDefinition[] = [
+  ...definitions
+    .filter((d) => typeof d.exposes === 'function' || d.exposes?.find((e) => e.name !== 'linkquality') !== undefined)
+    .map((d) => {
+      if (typeof d.exposes === 'function') {
+        // Call function to generate array of exposes information.
+        console.log(`Generating exposes array for ${d.vendor} ${d.model}`);
+        d.exposes = d.exposes(undefined, undefined);
+      }
+      return d as ExtendedDeviceDefinition;
+    }),
+];
 
-  if (device.whiteLabel) {
-    for (const whiteLabel of device.whiteLabel) {
-      const whiteLabelDevice = {
-        ...device,
+for (const definition of allDevices) {
+  if (definition.whiteLabel) {
+    for (const whiteLabel of definition.whiteLabel) {
+      const whiteLabelDefinition = {
+        ...definition,
         model: whiteLabel.model,
         vendor: whiteLabel.vendor,
-        description: whiteLabel.description,
-        whiteLabelOf: device,
+        description: whiteLabel.description ?? definition.description,
+        isWhiteLabel: true,
+        whiteLabelOf: definition,
       };
 
-      delete whiteLabelDevice.whiteLabel;
-      allDevices.push(whiteLabelDevice);
+      delete whiteLabelDefinition.whiteLabel;
+
+      allDevices.push(whiteLabelDefinition);
     }
   }
 }
 
 // Check services for all non white label devices
-function checkServicesAndCharacteristics(device: any): DocsAccessory {
+function checkServicesAndCharacteristics(device: ExtendedDeviceDefinition): DocsAccessory {
   const exposes = device.exposes.map((e) => e as ExposesEntry);
   const accessory = new DocsAccessory(`${device.vendor} ${device.model}`);
   BasicServiceCreatorManager.getInstance().createHomeKitEntitiesFromExposes(accessory, exposes);
@@ -370,7 +387,7 @@ function checkServicesAndCharacteristics(device: any): DocsAccessory {
 
 allDevices.forEach((d) => {
   try {
-    if (d.whiteLabelOf === undefined) {
+    if (d.isWhiteLabel !== true) {
       generateExposesJson(exposes_base_path, d);
       const accessory = checkServicesAndCharacteristics(d);
       const services = accessory.getServicesAndCharacteristics();
@@ -390,14 +407,14 @@ function update_test_input(test_resources: string, json_source: string) {
       const src = path.join(json_source, file.name);
       if (file.isDirectory()) {
         if (!fs.existsSync(src)) {
-          console.log(`TEST INPUT: Source for ${dst} can not be found. Removing old files.`);
+          console.log(`TEST INPUT: Source for ${dst} can NOT be FOUND. Removing old files.`);
           fs.rmdirSync(dst, { recursive: true });
         } else {
           update_test_input(dst, src);
         }
       } else if (file.isFile()) {
         if (!fs.existsSync(src)) {
-          console.log(`TEST INPUT: Source for ${dst} can not be found. Removing old file.`);
+          console.log(`TEST INPUT: Source for ${dst} can NOT be FOUND. Removing old file.`);
           fs.unlinkSync(dst);
         } else {
           // Overwrite with new version
@@ -411,12 +428,12 @@ function update_test_input(test_resources: string, json_source: string) {
 update_test_input(test_exposes_base_path, exposes_base_path);
 
 // Group devices per vendor
-const devices: Map<string, any[]> = allDevices
+const devices: Map<string, ExtendedDeviceDefinition[]> = allDevices
   .map((d) => {
     d.vendor = d.vendor.trim();
     return d;
   })
-  .reduce((map: Map<string, any[]>, dev: any): Map<string, any[]> => {
+  .reduce((map: Map<string, ExtendedDeviceDefinition[]>, dev: ExtendedDeviceDefinition): Map<string, ExtendedDeviceDefinition[]> => {
     if (dev.vendor.length === 0) {
       console.log(dev);
     }
@@ -427,7 +444,7 @@ const devices: Map<string, any[]> = allDevices
       map.set(dev.vendor, [dev]);
     }
     return map;
-  }, new Map<string, any[]>());
+  }, new Map<string, ExtendedDeviceDefinition[]>());
 
 const vendors = [...devices.keys()].sort((a, b) => {
   return a.toLowerCase().localeCompare(b.toLowerCase());
@@ -505,7 +522,7 @@ for (const vendor of vendors) {
       '/' +
       normalizeName(d.whiteLabelOf ? d.whiteLabelOf.model : d.model) +
       '.md';
-    let description = d.description || d.whiteLabelOf.description;
+    let description = d.description || d.whiteLabelOf?.description || '';
     if (d.whiteLabelOf) {
       description = `${description} (white-label of ${d.whiteLabelOf.vendor} ${d.whiteLabelOf.model})`;
     }

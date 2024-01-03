@@ -18,52 +18,10 @@ the iCasa ICZB-KPD18S
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 
-
-
-## Exposes
-
-This is the information provided by Zigbee2MQTT for this device:
-
-```json
-[
-  {
-    "type": "numeric",
-    "name": "battery",
-    "property": "battery",
-    "access": 1,
-    "unit": "%",
-    "description": "Remaining battery in %",
-    "value_min": 0,
-    "value_max": 100
-  },
-  {
-    "type": "enum",
-    "name": "action",
-    "property": "action",
-    "access": 1,
-    "values": [
-      "on",
-      "recall_*",
-      "off",
-      "brightness_stop",
-      "brightness_move_up",
-      "brightness_move_down"
-    ],
-    "description": "Triggered action (e.g. a button click)"
-  },
-  {
-    "type": "numeric",
-    "name": "linkquality",
-    "property": "linkquality",
-    "access": 1,
-    "unit": "lqi",
-    "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
-  }
-]
-```
 
 # Related
 * [Other devices from iCasa](../index.md#icasa)

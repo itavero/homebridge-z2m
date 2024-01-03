@@ -21,6 +21,8 @@ the ADEO IG-CDZOTAAG014RA-MAN
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from ADEO](../index.md#adeo)

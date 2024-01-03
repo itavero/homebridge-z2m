@@ -19,6 +19,8 @@ the Leedarson ZA806SQ1TCF
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Leedarson](../index.md#leedarson)

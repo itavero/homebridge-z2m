@@ -19,6 +19,8 @@ the ADEO IG-CDZFB2G009RA-MZN-02
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from ADEO](../index.md#adeo)

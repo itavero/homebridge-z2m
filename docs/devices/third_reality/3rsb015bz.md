@@ -20,6 +20,7 @@ the Third Reality 3RSB015BZ
   * Status Low Battery
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

@@ -1,43 +1,42 @@
-import { Logger, Service } from 'homebridge';
+import { Characteristic, Controller, Service } from 'homebridge';
 import { ExposesEntry } from '../z2mModels';
 import { BasicLogger } from '../logger';
 
 export interface BasicAccessory {
-    log: BasicLogger;
+  log: BasicLogger;
 
-    displayName: string;
+  displayName: string;
 
-    getDefaultServiceDisplayName(subType: string | undefined): string;
+  getDefaultServiceDisplayName(subType: string | undefined): string;
 
-    getOrAddService(service: Service): Service;
+  getOrAddService(service: Service): Service;
 
-    queueDataForSetAction(data: Record<string, unknown>): void;
+  queueDataForSetAction(data: Record<string, unknown>): void;
 
-    queueKeyForGetAction(key: string | string[]): void;
+  queueKeyForGetAction(key: string | string[]): void;
 
-    isPropertyExcluded(property: string | undefined): boolean;
+  registerServiceHandler(handler: ServiceHandler): void;
 
-    isValueAllowedForProperty(property: string, value: string): boolean;
+  isServiceHandlerIdKnown(identifier: string): boolean;
 
-    registerServiceHandler(handler: ServiceHandler): void;
+  isExperimentalFeatureEnabled(feature: string): boolean;
 
-    isServiceHandlerIdKnown(identifier: string): boolean;
+  getConverterConfiguration(tag: string): unknown | undefined;
 
-    isExperimentalFeatureEnabled(feature: string): boolean;
-
-    getConverterConfiguration(tag: string): unknown | undefined;
+  configureController(controller: Controller): void;
 }
 
 export interface ServiceHandler {
-    identifier: string;
-    getableKeys: string[];
-    updateState(state: Record<string, unknown>): void;
+  mainCharacteristics: (Characteristic | undefined)[];
+  identifier: string;
+  getableKeys: string[];
+  updateState(state: Record<string, unknown>): void;
 }
 
 export interface ConverterConfigurationRegistry {
-    registerConverterConfiguration(tag: string, validator: (config: unknown, tag: string, logger: Logger | undefined) => boolean): void;
+  registerConverterConfiguration(tag: string, validator: (config: unknown, tag: string, logger: BasicLogger | undefined) => boolean): void;
 }
 
 export interface ServiceCreator {
-    createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
+  createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
 }

@@ -19,6 +19,8 @@ the EcoSmart A9BR3065WESDZ02
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from EcoSmart](../index.md#ecosmart)

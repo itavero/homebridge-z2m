@@ -30,6 +30,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "battery_low",
+    "label": "Battery low",
     "property": "battery_low",
     "access": 1,
     "value_on": true,
@@ -39,6 +40,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "alarm",
+    "label": "Alarm",
     "property": "alarm",
     "access": 3,
     "value_on": true,
@@ -47,6 +49,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "melody",
+    "label": "Melody",
     "property": "melody",
     "access": 3,
     "values": [
@@ -73,15 +76,17 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "duration",
+    "label": "Duration",
     "property": "duration",
     "access": 3,
-    "unit": "second",
+    "unit": "s",
     "value_min": 0,
     "value_max": 1800
   },
   {
     "type": "enum",
     "name": "volume",
+    "label": "Volume",
     "property": "volume",
     "access": 3,
     "values": [
@@ -93,6 +98,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battpercentage",
+    "label": "Battpercentage",
     "property": "battpercentage",
     "access": 1,
     "unit": "%"
@@ -100,6 +106,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

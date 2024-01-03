@@ -1,12 +1,6 @@
 import 'jest-chain';
 import 'jest';
-import {
-  isDeviceDefinition,
-  isDeviceListEntry,
-  isExposesEntry,
-  isGroupListEntry,
-  isGroupMember,
-} from '../src/z2mModels';
+import { isDeviceDefinition, isDeviceListEntry, isExposesEntry, isGroupListEntry, isGroupMember } from '../src/z2mModels';
 
 describe('z2mModels', () => {
   describe('isDeviceDefinition', () => {

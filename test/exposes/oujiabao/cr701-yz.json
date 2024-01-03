@@ -2,6 +2,7 @@
   {
     "type": "binary",
     "name": "gas",
+    "label": "Gas",
     "property": "gas",
     "access": 1,
     "value_on": true,
@@ -11,6 +12,7 @@
   {
     "type": "binary",
     "name": "carbon_monoxide",
+    "label": "Carbon monoxide",
     "property": "carbon_monoxide",
     "access": 1,
     "value_on": true,
@@ -20,6 +22,7 @@
   {
     "type": "binary",
     "name": "tamper",
+    "label": "Tamper",
     "property": "tamper",
     "access": 1,
     "value_on": true,
@@ -29,6 +32,7 @@
   {
     "type": "binary",
     "name": "battery_low",
+    "label": "Battery low",
     "property": "battery_low",
     "access": 1,
     "value_on": true,
@@ -38,6 +42,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

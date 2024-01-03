@@ -20,6 +20,7 @@ the Xiaomi ZNCLDJ12LM
   * Status Low Battery
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

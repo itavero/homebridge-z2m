@@ -1,22 +1,35 @@
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
-  exposesCanBeGet, exposesCanBeSet, ExposesEntry, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures, ExposesEntryWithProperty,
-  exposesHasAllRequiredFeatures, exposesHasEnumProperty, exposesHasFeatures, exposesHasProperty, exposesIsPublished, ExposesKnownTypes,
+  exposesCanBeGet,
+  exposesCanBeSet,
+  ExposesEntry,
+  ExposesEntryWithEnumProperty,
+  ExposesEntryWithFeatures,
+  ExposesEntryWithProperty,
+  exposesHasAllRequiredFeatures,
+  exposesHasEnumProperty,
+  exposesHasFeatures,
+  exposesHasProperty,
+  exposesIsPublished,
+  ExposesKnownTypes,
   ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
-import {
-  CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor,
-} from './monitor';
+import { CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor } from './monitor';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
-import { CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
 
 export class ThermostatCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    exposes.filter(e => e.type === ExposesKnownTypes.CLIMATE && exposesHasFeatures(e)
-      && ThermostatHandler.hasRequiredFeatures(accessory, e)
-      && !accessory.isServiceHandlerIdKnown(ThermostatHandler.generateIdentifier(e.endpoint)))
-      .forEach(e => this.createService(e as ExposesEntryWithFeatures, accessory));
+    exposes
+      .filter(
+        (e) =>
+          e.type === ExposesKnownTypes.CLIMATE &&
+          exposesHasFeatures(e) &&
+          ThermostatHandler.hasRequiredFeatures(accessory, e) &&
+          !accessory.isServiceHandlerIdKnown(ThermostatHandler.generateIdentifier(e.endpoint))
+      )
+      .forEach((e) => this.createService(e as ExposesEntryWithFeatures, accessory));
   }
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
@@ -24,33 +37,35 @@ export class ThermostatCreator implements ServiceCreator {
       const handler = new ThermostatHandler(expose, accessory);
       accessory.registerServiceHandler(handler);
     } catch (error) {
-      accessory.log.warn(`Failed to setup thermostat for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}":`
-        + error);
+      accessory.log.warn(
+        `Failed to setup thermostat for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}":` + error
+      );
     }
   }
 }
 
 class ThermostatHandler implements ServiceHandler {
-  private static readonly NAMES_SETPOINT = new Set([
-    'current_heating_setpoint',
-    'occupied_heating_setpoint',
-  ]);
+  private static readonly NAMES_SETPOINT = new Set(['current_heating_setpoint', 'occupied_heating_setpoint']);
 
   private static readonly NAME_TARGET_MODE = 'system_mode';
   private static readonly NAME_CURRENT_STATE = 'running_state';
   private static readonly NAME_LOCAL_TEMPERATURE = 'local_temperature';
 
-  private static readonly PREDICATE_TARGET_MODE: ExposesPredicate = (f) => f.name === ThermostatHandler.NAME_TARGET_MODE
-    && exposesHasEnumProperty(f) && exposesCanBeSet(f) && exposesIsPublished(f);
+  private static readonly PREDICATE_TARGET_MODE: ExposesPredicate = (f) =>
+    f.name === ThermostatHandler.NAME_TARGET_MODE && exposesHasEnumProperty(f) && exposesCanBeSet(f) && exposesIsPublished(f);
 
-  private static readonly PREDICATE_CURRENT_STATE: ExposesPredicate = (f) => f.name === ThermostatHandler.NAME_CURRENT_STATE
-    && exposesHasEnumProperty(f) && exposesIsPublished(f);
+  private static readonly PREDICATE_CURRENT_STATE: ExposesPredicate = (f) =>
+    f.name === ThermostatHandler.NAME_CURRENT_STATE && exposesHasEnumProperty(f) && exposesIsPublished(f);
 
-  private static readonly PREDICATE_LOCAL_TEMPERATURE: ExposesPredicate = (f) => f.name === ThermostatHandler.NAME_LOCAL_TEMPERATURE
-    && exposesHasProperty(f) && exposesIsPublished(f);
+  private static readonly PREDICATE_LOCAL_TEMPERATURE: ExposesPredicate = (f) =>
+    f.name === ThermostatHandler.NAME_LOCAL_TEMPERATURE && exposesHasProperty(f) && exposesIsPublished(f);
 
-  private static readonly PREDICATE_SETPOINT: ExposesPredicate = (f) => f.name !== undefined
-    && ThermostatHandler.NAMES_SETPOINT.has(f.name) && exposesHasProperty(f) && exposesCanBeSet(f) && exposesIsPublished(f);
+  private static readonly PREDICATE_SETPOINT: ExposesPredicate = (f) =>
+    f.name !== undefined &&
+    ThermostatHandler.NAMES_SETPOINT.has(f.name) &&
+    exposesHasProperty(f) &&
+    exposesCanBeSet(f) &&
+    exposesIsPublished(f);
 
   private static getCurrentStateFromMqttMapping(values: string[]): Map<string, CharacteristicValue> {
     const mapping = new Map<string, CharacteristicValue>();
@@ -87,15 +102,15 @@ class ThermostatHandler implements ServiceHandler {
   }
 
   public static hasRequiredFeatures(accessory: BasicAccessory, e: ExposesEntryWithFeatures): boolean {
-    if (e.features.findIndex(f => f.name === 'occupied_cooling_setpoint' && !accessory.isPropertyExcluded(f.property)) >= 0) {
+    if (e.features.findIndex((f) => f.name === 'occupied_cooling_setpoint') >= 0) {
       // For now ignore devices that have a cooling setpoint as I haven't figured our how to handle this correctly in HomeKit.
       return false;
     }
 
-    return exposesHasAllRequiredFeatures(e,
-      [ThermostatHandler.PREDICATE_SETPOINT, ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE],
-      accessory.isPropertyExcluded.bind(accessory));
+    return exposesHasAllRequiredFeatures(e, [ThermostatHandler.PREDICATE_SETPOINT, ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE]);
   }
+
+  public mainCharacteristics: Characteristic[];
 
   private monitors: CharacteristicMonitor[] = [];
   private localTemperatureExpose: ExposesEntryWithProperty;
@@ -104,31 +119,28 @@ class ThermostatHandler implements ServiceHandler {
   private currentStateExpose?: ExposesEntryWithEnumProperty;
   private targetModeFromHomeKitMapping?: Map<CharacteristicValue, string>;
 
-  constructor(expose: ExposesEntryWithFeatures, private readonly accessory: BasicAccessory) {
+  constructor(
+    expose: ExposesEntryWithFeatures,
+    private readonly accessory: BasicAccessory
+  ) {
     const endpoint = expose.endpoint;
     this.identifier = ThermostatHandler.generateIdentifier(endpoint);
 
     // Store all required features
     const possibleLocalTemp = expose.features.find(ThermostatHandler.PREDICATE_LOCAL_TEMPERATURE);
-    if (possibleLocalTemp === undefined || accessory.isPropertyExcluded(possibleLocalTemp.property)) {
+    if (possibleLocalTemp === undefined) {
       throw new Error('Local temperature feature not found.');
     }
     this.localTemperatureExpose = possibleLocalTemp as ExposesEntryWithProperty;
 
     const possibleSetpoint = expose.features.find(ThermostatHandler.PREDICATE_SETPOINT);
-    if (possibleSetpoint === undefined || accessory.isPropertyExcluded(possibleSetpoint.property)) {
+    if (possibleSetpoint === undefined) {
       throw new Error('Setpoint feature not found.');
     }
     this.setpointExpose = possibleSetpoint as ExposesEntryWithProperty;
 
     this.targetModeExpose = expose.features.find(ThermostatHandler.PREDICATE_TARGET_MODE) as ExposesEntryWithEnumProperty;
-    if (this.targetModeExpose !== undefined && accessory.isPropertyExcluded(this.targetModeExpose.property)) {
-      this.targetModeExpose = undefined;
-    }
     this.currentStateExpose = expose.features.find(ThermostatHandler.PREDICATE_CURRENT_STATE) as ExposesEntryWithEnumProperty;
-    if (this.currentStateExpose !== undefined && accessory.isPropertyExcluded(this.currentStateExpose.property)) {
-      this.currentStateExpose = undefined;
-    }
     if (this.targetModeExpose === undefined || this.currentStateExpose === undefined) {
       if (this.targetModeExpose !== undefined) {
         this.accessory.log.debug(`${accessory.displayName}: ignore ${this.targetModeExpose.property}; no current state exposed.`);
@@ -148,16 +160,16 @@ class ThermostatHandler implements ServiceHandler {
 
     // Monitor local temperature
     const currentTemperature = getOrAddCharacteristic(service, hap.Characteristic.CurrentTemperature);
+    this.mainCharacteristics = [currentTemperature];
     copyExposesRangeToCharacteristic(this.localTemperatureExpose, currentTemperature);
-    this.monitors.push(new PassthroughCharacteristicMonitor(this.localTemperatureExpose.property, service,
-      hap.Characteristic.CurrentTemperature));
+    this.monitors.push(
+      new PassthroughCharacteristicMonitor(this.localTemperatureExpose.property, service, hap.Characteristic.CurrentTemperature)
+    );
 
     // Setpoint
-    const setpoint = getOrAddCharacteristic(service, hap.Characteristic.TargetTemperature)
-      .on('set', this.handleSetSetpoint.bind(this));
+    const setpoint = getOrAddCharacteristic(service, hap.Characteristic.TargetTemperature).on('set', this.handleSetSetpoint.bind(this));
     copyExposesRangeToCharacteristic(this.setpointExpose, setpoint);
-    this.monitors.push(new PassthroughCharacteristicMonitor(this.setpointExpose.property, service,
-      hap.Characteristic.TargetTemperature));
+    this.monitors.push(new PassthroughCharacteristicMonitor(this.setpointExpose.property, service, hap.Characteristic.TargetTemperature));
 
     // Map mode/state
     if (this.targetModeExpose !== undefined && this.currentStateExpose !== undefined) {
@@ -166,15 +178,20 @@ class ThermostatHandler implements ServiceHandler {
       if (stateMapping.size === 0) {
         throw new Error('Cannot map current state');
       }
-      const stateValues = [...stateMapping.values()].map(x => x as number);
-      getOrAddCharacteristic(service, hap.Characteristic.CurrentHeatingCoolingState)
-        .setProps({
-          minValue: Math.min(...stateValues),
-          maxValue: Math.max(...stateValues),
-          validValues: stateValues,
-        });
-      this.monitors.push(new MappingCharacteristicMonitor(this.currentStateExpose.property, service,
-        hap.Characteristic.CurrentHeatingCoolingState, stateMapping));
+      const stateValues = [...stateMapping.values()].map((x) => x as number);
+      getOrAddCharacteristic(service, hap.Characteristic.CurrentHeatingCoolingState).setProps({
+        minValue: Math.min(...stateValues),
+        maxValue: Math.max(...stateValues),
+        validValues: stateValues,
+      });
+      this.monitors.push(
+        new MappingCharacteristicMonitor(
+          this.currentStateExpose.property,
+          service,
+          hap.Characteristic.CurrentHeatingCoolingState,
+          stateMapping
+        )
+      );
 
       // Target state/mode
       const targetMapping = ThermostatHandler.getTargetModeFromMqttMapping(this.targetModeExpose.values);
@@ -188,7 +205,7 @@ class ThermostatHandler implements ServiceHandler {
         this.targetModeFromHomeKitMapping.set(hk, mqtt);
       }
 
-      const targetValues = [...targetMapping.values()].map(x => x as number);
+      const targetValues = [...targetMapping.values()].map((x) => x as number);
       getOrAddCharacteristic(service, hap.Characteristic.TargetHeatingCoolingState)
         .setProps({
           minValue: Math.min(...targetValues),
@@ -196,8 +213,14 @@ class ThermostatHandler implements ServiceHandler {
           validValues: targetValues,
         })
         .on('set', this.handleSetTargetState.bind(this));
-      this.monitors.push(new MappingCharacteristicMonitor(this.targetModeExpose.property, service,
-        hap.Characteristic.TargetHeatingCoolingState, targetMapping));
+      this.monitors.push(
+        new MappingCharacteristicMonitor(
+          this.targetModeExpose.property,
+          service,
+          hap.Characteristic.TargetHeatingCoolingState,
+          targetMapping
+        )
+      );
     } else {
       // Assume heat only device
       getOrAddCharacteristic(service, hap.Characteristic.CurrentHeatingCoolingState)
@@ -245,7 +268,7 @@ class ThermostatHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitors.forEach(m => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state));
   }
 
   static generateIdentifier(endpoint: string | undefined) {
@@ -257,9 +280,11 @@ class ThermostatHandler implements ServiceHandler {
   }
 
   private handleSetTargetState(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
-    if (this.targetModeExpose !== undefined
-      && this.targetModeFromHomeKitMapping !== undefined
-      && this.targetModeFromHomeKitMapping.size > 0) {
+    if (
+      this.targetModeExpose !== undefined &&
+      this.targetModeFromHomeKitMapping !== undefined &&
+      this.targetModeFromHomeKitMapping.size > 0
+    ) {
       const mqttValue = this.targetModeFromHomeKitMapping.get(value);
       if (mqttValue !== undefined) {
         const data = {};

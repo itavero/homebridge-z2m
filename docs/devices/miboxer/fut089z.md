@@ -30,16 +30,18 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
-    "description": "Remaining battery in %",
+    "description": "Remaining battery in %, can take up to 24 hours before reported.",
     "value_min": 0,
     "value_max": 100
   },
   {
     "type": "numeric",
     "name": "voltage",
+    "label": "Voltage",
     "property": "voltage",
     "access": 1,
     "unit": "mV",
@@ -48,6 +50,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

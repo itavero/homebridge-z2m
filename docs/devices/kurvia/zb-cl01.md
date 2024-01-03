@@ -21,6 +21,8 @@ the KURVIA ZB-CL01
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from KURVIA](../index.md#kurvia)

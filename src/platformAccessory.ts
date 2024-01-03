@@ -1,13 +1,22 @@
-import { PlatformAccessory, Service } from 'homebridge';
+import { Controller, HAPStatus, PlatformAccessory, Service } from 'homebridge';
 import { Zigbee2mqttPlatform } from './platform';
 import { ExtendedTimer } from './timer';
 import { hap } from './hap';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
 import { BasicAccessory, ServiceHandler } from './converters/interfaces';
 import { BasicLogger } from './logger';
-import { deviceListEntriesAreEqual, DeviceListEntry, isDeviceDefinition, isDeviceListEntry, isDeviceListEntryForGroup } from './z2mModels';
+import {
+  deviceListEntriesAreEqual,
+  DeviceListEntry,
+  ExposesEntry,
+  isDeviceDefinition,
+  isDeviceListEntry,
+  isDeviceListEntryForGroup,
+} from './z2mModels';
 import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
 import { QoS } from 'mqtt';
+import { sanitizeAndFilterExposesEntries } from './helpers';
+import { EXP_AVAILABILITY } from './experimental';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;
@@ -20,6 +29,9 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
   private readonly pendingGetKeys: Set<string>;
   private getIsScheduled: boolean;
+
+  private availabilityEnabled: boolean;
+  private isAvailable: boolean;
 
   get log(): BasicLogger {
     return this.platform.log;
@@ -54,7 +66,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     private readonly platform: Zigbee2mqttPlatform,
     public readonly accessory: PlatformAccessory,
     private readonly additionalConfig: BaseDeviceConfiguration,
-    serviceCreatorManager?: ServiceCreatorManager,
+    serviceCreatorManager?: ServiceCreatorManager
   ) {
     // Store ServiceCreatorManager
     if (serviceCreatorManager === undefined) {
@@ -67,6 +79,10 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     if (this.additionalConfig.experimental !== undefined && this.additionalConfig.experimental.length > 0) {
       this.log.warn(`Experimental features enabled for ${this.displayName}: ${this.additionalConfig.experimental.join(', ')}`);
     }
+
+    // Set availability (always assume it is available at startup)
+    this.isAvailable = true;
+    this.availabilityEnabled = this.additionalConfig.ignore_availability === true ? false : true;
 
     // Setup delayed publishing
     this.pendingPublishData = {};
@@ -82,12 +98,93 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     this.updateDeviceInformation(accessory.context.device, true);
 
     // Ask Zigbee2MQTT for a status update at least once every 4 hours.
-    this.updateTimer = new ExtendedTimer(() => {
-      this.queueAllKeysForGet();
-    }, (4 * 60 * 60 * 1000));
+    this.updateTimer = new ExtendedTimer(
+      () => {
+        this.queueAllKeysForGet();
+      },
+      4 * 60 * 60 * 1000
+    );
 
     // Immediately request an update to start off.
     this.queueAllKeysForGet();
+  }
+
+  setAvailabilityEnabled(enabled: boolean): void {
+    const previousConfig = this.availabilityEnabled;
+    this.availabilityEnabled = this.additionalConfig.ignore_availability === true ? false : enabled;
+    if (previousConfig !== this.availabilityEnabled) {
+      this.log.debug(`Availability feature for ${this.displayName} is now ${this.availabilityEnabled ? 'enabled' : 'disabled'}`);
+    }
+    if (!this.availabilityEnabled) {
+      // Mark all services as online.
+      // We do not have to know the Zigbee2MQTT online state to do this,
+      // as this should only change when Zigbee2MQTT is also online.
+      this.updateErrorStateOnMainCharacteristics(HAPStatus.SUCCESS);
+    }
+  }
+
+  updateAvailability(available: boolean): void {
+    if (available !== this.isAvailable) {
+      this.isAvailable = available;
+      this.log.debug(`${this.displayName} is ${available ? 'available' : 'UNAVAILABLE'}`);
+      if (this.availabilityEnabled) {
+        if (this.isAvailable) {
+          this.sendLastValueOnMainCharacteristics();
+        } else {
+          this.updateErrorStateOnMainCharacteristics(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+        }
+      }
+    }
+  }
+
+  informOnZigbee2MqttOnlineStateChange(online: boolean): void {
+    if (this.additionalConfig.ignore_z2m_online === true) {
+      // Ignore this call
+      return;
+    }
+    if (online) {
+      // Ignore previous state, as this might no longer be accurate.
+      // Mark all services as available again.
+      this.sendLastValueOnMainCharacteristics();
+    } else {
+      // Zigbee2MQTT went offline. Mark all services as unavailable.
+      this.updateErrorStateOnMainCharacteristics(HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+    }
+  }
+
+  private updateErrorStateOnMainCharacteristics(status: HAPStatus): void {
+    const availabilityIsEnabled = this.isExperimentalFeatureEnabled(EXP_AVAILABILITY);
+    this.log.debug(
+      `availability (${availabilityIsEnabled ? 'EN' : 'DIS'}): ${this.displayName}: change status of characteristics to ${status}`
+    );
+    if (availabilityIsEnabled) {
+      const error = new this.platform.api.hap.HapStatusError(status);
+      for (const handler of this.serviceHandlers.values()) {
+        for (const characteristic of handler.mainCharacteristics) {
+          characteristic?.updateValue(error);
+        }
+      }
+    }
+  }
+
+  private sendLastValueOnMainCharacteristics(): void {
+    const availabilityIsEnabled = this.isExperimentalFeatureEnabled(EXP_AVAILABILITY);
+    this.log.debug(
+      `availability (${availabilityIsEnabled ? 'EN' : 'DIS'}): ${this.displayName}: send last known value of main characteristics`
+    );
+    if (availabilityIsEnabled) {
+      this.log.debug(`Send last value for main characteristics of ${this.displayName}`);
+      for (const handler of this.serviceHandlers.values()) {
+        for (const characteristic of handler.mainCharacteristics) {
+          if (characteristic === undefined) {
+            continue;
+          }
+          if (characteristic.value !== undefined && characteristic.value !== null) {
+            characteristic.sendEventNotification(characteristic.value);
+          }
+        }
+      }
+    }
   }
 
   getConverterConfiguration(tag: string): unknown | undefined {
@@ -121,15 +218,14 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     return this.serviceHandlers.has(identifier);
   }
 
-  isPropertyExcluded(property: string | undefined): boolean {
+  private isPropertyExcluded(property: string | undefined): boolean {
     if (property === undefined) {
       // Property is undefined, so it can't be excluded.
       // This is accepted so all exposes models can easily be checked.
       return false;
     }
 
-    if (Array.isArray(this.additionalConfig.included_keys)
-      && this.additionalConfig.included_keys.includes(property)) {
+    if (Array.isArray(this.additionalConfig.included_keys) && this.additionalConfig.included_keys.includes(property)) {
       // Property is explicitly included
       return false;
     }
@@ -137,20 +233,45 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     return this.additionalConfig.excluded_keys?.includes(property) ?? false;
   }
 
-  isValueAllowedForProperty(property: string, value: string): boolean {
-    const config = this.additionalConfig.values?.find(c => c.property === property);
+  private isEndpointExcluded(endpoint: string | undefined): boolean {
+    if (this.additionalConfig.excluded_endpoints === undefined || this.additionalConfig.excluded_endpoints.length === 0) {
+      // No excluded endpoints defined
+      return false;
+    }
+    return this.additionalConfig.excluded_endpoints.includes(endpoint ?? '');
+  }
+
+  private isExposesEntryExcluded(exposesEntry: ExposesEntry): boolean {
+    if (this.isPropertyExcluded(exposesEntry.property)) {
+      return true;
+    }
+
+    return this.isEndpointExcluded(exposesEntry.endpoint);
+  }
+
+  private filterValuesForExposesEntry(exposesEntry: ExposesEntry): string[] {
+    if (exposesEntry.values === undefined || exposesEntry.values.length === 0) {
+      return [];
+    }
+
+    if (exposesEntry.property === undefined) {
+      // Do not filter.
+      return exposesEntry.values;
+    }
+
+    return exposesEntry.values.filter((v) => this.isValueAllowedForProperty(exposesEntry.property ?? '', v));
+  }
+
+  private isValueAllowedForProperty(property: string, value: string): boolean {
+    const config = this.additionalConfig.values?.find((c) => c.property === property);
     if (config) {
-      if (config.include && config.include.length > 0) {
-        if (config.include.findIndex(p => this.doesValueMatchPattern(value, p)) < 0) {
-          // Value doesn't match any of the include patterns
-          return false;
-        }
+      if (config.include && config.include.length > 0 && config.include.findIndex((p) => this.doesValueMatchPattern(value, p)) < 0) {
+        // Value doesn't match any of the include patterns
+        return false;
       }
-      if (config.exclude && config.exclude.length > 0) {
-        if (config.exclude.findIndex(p => this.doesValueMatchPattern(value, p)) >= 0) {
-          // Value matches one of the exclude patterns
-          return false;
-        }
+      if (config.exclude && config.exclude.length > 0 && config.exclude.findIndex((p) => this.doesValueMatchPattern(value, p)) >= 0) {
+        // Value matches one of the exclude patterns
+        return false;
       }
     }
     return true;
@@ -173,9 +294,11 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   private queueAllKeysForGet(): void {
-    const keys = [...this.serviceHandlers.values()].map(h => h.getableKeys).reduce((a, b) => {
-      return a.concat(b);
-    }, []);
+    const keys = [...this.serviceHandlers.values()]
+      .map((h) => h.getableKeys)
+      .reduce((a, b) => {
+        return a.concat(b);
+      }, []);
     if (keys.length > 0) {
       this.queueKeyForGetAction(keys);
     }
@@ -192,8 +315,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         data[k] = 0;
       }
       // Publish using ieeeAddr, as that will never change and the friendly_name might.
-      this.platform.publishMessage(`${this.deviceTopic}/get`,
-        JSON.stringify(data), { qos: this.getMqttQosLevel(1) });
+      this.platform.publishMessage(`${this.deviceTopic}/get`, JSON.stringify(data), { qos: this.getMqttQosLevel(1) });
     }
   }
 
@@ -226,9 +348,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   getOrAddService(service: Service): Service {
     this.serviceIds.add(Zigbee2mqttAccessory.getUniqueIdForService(service));
 
-    const existingService = this.accessory.services.find(e =>
-      e.UUID === service.UUID && e.subtype === service.subtype,
-    );
+    const existingService = this.accessory.services.find((e) => e.UUID === service.UUID && e.subtype === service.subtype);
 
     if (existingService !== undefined) {
       return existingService;
@@ -249,8 +369,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   private publishPendingSetData() {
-    this.platform.publishMessage(`${this.deviceTopic}/set`, JSON.stringify(this.pendingPublishData),
-      { qos: this.getMqttQosLevel(2) });
+    this.platform.publishMessage(`${this.deviceTopic}/set`, JSON.stringify(this.pendingPublishData), { qos: this.getMqttQosLevel(2) });
     this.publishIsScheduled = false;
     this.pendingPublishData = {};
   }
@@ -264,25 +383,37 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   matchesIdentifier(id: string): boolean {
-    return (id === this.ieeeAddress || this.accessory.context.device.friendly_name === id);
+    return id === this.ieeeAddress || this.accessory.context.device.friendly_name === id;
   }
 
   updateDeviceInformation(info: DeviceListEntry | undefined, force_update = false) {
     // Overwrite exposes information if available in configuration
-    if (info !== undefined && info.definition !== undefined && info.definition !== null) {
-      if (isDeviceConfiguration(this.additionalConfig)
-        && this.additionalConfig.exposes !== undefined
-        && this.additionalConfig.exposes.length > 0) {
-        info.definition.exposes = this.additionalConfig.exposes;
-      }
+    if (
+      info?.definition !== undefined &&
+      info.definition !== null &&
+      isDeviceConfiguration(this.additionalConfig) &&
+      this.additionalConfig.exposes !== undefined &&
+      this.additionalConfig.exposes.length > 0
+    ) {
+      info.definition.exposes = this.additionalConfig.exposes;
+    }
+
+    // Filter/sanitize exposes information
+    if (info?.definition?.exposes !== undefined) {
+      info.definition.exposes = sanitizeAndFilterExposesEntries(
+        info.definition.exposes,
+        (e) => {
+          return !this.isExposesEntryExcluded(e);
+        },
+        this.filterValuesForExposesEntry.bind(this)
+      );
     }
 
     // Only update the device if a valid device list entry is passed.
     // This is done so that old, pre-v1.0.0 accessories will only get updated when new device information is received.
-    if (isDeviceListEntry(info)
-      && (force_update || !deviceListEntriesAreEqual(this.accessory.context.device, info))) {
+    if (isDeviceListEntry(info) && (force_update || !deviceListEntriesAreEqual(this.accessory.context.device, info))) {
       const oldFriendlyName = this.accessory.context.device.friendly_name;
-      const friendlyNameChanged = (force_update || info.friendly_name.localeCompare(this.accessory.context.device.friendly_name) !== 0);
+      const friendlyNameChanged = force_update || info.friendly_name.localeCompare(this.accessory.context.device.friendly_name) !== 0;
 
       // Device info has changed
       this.accessory.context.device = info;
@@ -316,7 +447,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
   private cleanStaleServices(): void {
     // Remove all services of which identifier is not known
-    const staleServices = this.accessory.services.filter(s => !this.serviceIds.has(Zigbee2mqttAccessory.getUniqueIdForService(s)));
+    const staleServices = this.accessory.services.filter((s) => !this.serviceIds.has(Zigbee2mqttAccessory.getUniqueIdForService(s)));
     staleServices.forEach((s) => {
       this.log.debug(`Clean up stale service ${s.displayName} (${s.UUID}) for accessory ${this.displayName} (${this.ieeeAddress}).`);
       this.accessory.removeService(s);
@@ -367,5 +498,9 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       name += ` ${subType}`;
     }
     return name;
+  }
+
+  configureController(controller: Controller) {
+    this.accessory.configureController(controller);
   }
 }

@@ -1,7 +1,7 @@
 import { BasicAccessory, ServiceHandler } from '../interfaces';
 import { exposesCanBeGet, ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, exposesIsPublished } from '../../z2mModels';
 import { CharacteristicMonitor, MappingCharacteristicMonitor } from '../monitor';
-import { CharacteristicValue, Service } from 'homebridge';
+import { Characteristic, CharacteristicValue, Service } from 'homebridge';
 import { getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
 
@@ -21,9 +21,14 @@ export abstract class BasicSensorHandler implements ServiceHandler {
   protected serviceName: string;
   identifier = '';
 
-  constructor(accessory: BasicAccessory, protected readonly sensorExpose: ExposesEntryWithProperty,
-    otherExposes: ExposesEntryWithBinaryProperty[], identifierGen: IdentifierGenerator, service: ServiceConstructor,
-    additionalSubType?: string | undefined) {
+  constructor(
+    accessory: BasicAccessory,
+    protected readonly sensorExpose: ExposesEntryWithProperty,
+    otherExposes: ExposesEntryWithBinaryProperty[],
+    identifierGen: IdentifierGenerator,
+    service: ServiceConstructor,
+    additionalSubType?: string | undefined
+  ) {
     const endpoint = sensorExpose.endpoint;
 
     let sub = endpoint;
@@ -42,6 +47,8 @@ export abstract class BasicSensorHandler implements ServiceHandler {
     this.tryCreateLowBattery(otherExposes, this.service);
     this.tryCreateTamper(otherExposes, this.service);
   }
+
+  abstract mainCharacteristics: (Characteristic | undefined)[];
 
   get getableKeys(): string[] {
     const keys: string[] = [];
@@ -63,34 +70,32 @@ export abstract class BasicSensorHandler implements ServiceHandler {
   }
 
   private tryCreateTamper(exposes: ExposesEntryWithBinaryProperty[], service: Service) {
-    this.tamperExpose = exposes.find(e => e.name === 'tamper' && exposesIsPublished(e));
+    this.tamperExpose = exposes.find((e) => e.name === 'tamper' && exposesIsPublished(e));
 
     if (this.tamperExpose !== undefined) {
       getOrAddCharacteristic(service, hap.Characteristic.StatusTampered);
       const mapping = new Map<CharacteristicValue, CharacteristicValue>();
       mapping.set(this.tamperExpose.value_on, hap.Characteristic.StatusTampered.TAMPERED);
       mapping.set(this.tamperExpose.value_off, hap.Characteristic.StatusTampered.NOT_TAMPERED);
-      this.monitors.push(new MappingCharacteristicMonitor(this.tamperExpose.property, service, hap.Characteristic.StatusTampered,
-        mapping));
+      this.monitors.push(new MappingCharacteristicMonitor(this.tamperExpose.property, service, hap.Characteristic.StatusTampered, mapping));
     }
   }
 
   private tryCreateLowBattery(exposes: ExposesEntryWithBinaryProperty[], service: Service) {
-    this.lowBatteryExpose = exposes.find(e => e.name === 'battery_low' && exposesIsPublished(e));
+    this.lowBatteryExpose = exposes.find((e) => e.name === 'battery_low' && exposesIsPublished(e));
 
     if (this.lowBatteryExpose !== undefined) {
       getOrAddCharacteristic(service, hap.Characteristic.StatusLowBattery);
       const mapping = new Map<CharacteristicValue, CharacteristicValue>();
       mapping.set(this.lowBatteryExpose.value_on, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW);
       mapping.set(this.lowBatteryExpose.value_off, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL);
-      this.monitors.push(new MappingCharacteristicMonitor(this.lowBatteryExpose.property, service, hap.Characteristic.StatusLowBattery,
-        mapping));
+      this.monitors.push(
+        new MappingCharacteristicMonitor(this.lowBatteryExpose.property, service, hap.Characteristic.StatusLowBattery, mapping)
+      );
     }
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitors.forEach(m => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state));
   }
 }
-
-

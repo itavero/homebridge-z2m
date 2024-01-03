@@ -20,6 +20,7 @@ the AXIS GR-ZB01-W
   * Status Low Battery
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

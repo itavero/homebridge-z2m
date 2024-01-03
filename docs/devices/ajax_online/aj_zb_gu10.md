@@ -21,6 +21,8 @@ the Ajax Online AJ_ZB_GU10
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Ajax Online](../index.md#ajax_online)

@@ -1,0 +1,92 @@
+name: Device support
+description: Request support for a particular device
+title: "[Device] "
+labels:
+  - enhancement
+body:
+  - type: input
+    id: model
+    attributes:
+      label: Device Model
+      description: |
+        The device you are requesting support for.
+        Please use the same manufacturer name and model name, as is used in Zigbee2MQTT.
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please [search](https://github.com/itavero/homebridge-z2m/issues) to see if an issue already exists for this device.
+      options:
+        - label: I have searched the existing issues and did not find an existing issue.
+          required: true
+  - type: checkboxes
+    id: supported
+    attributes:
+      label: Supported by Zigbee2MQTT?
+      description: |
+        Is this device already [supported by Zigbee2MQTT](https://www.zigbee2mqtt.io/supported-devices/) / zigbee-herdsman-converters?
+        If this is **not** the case, please add support for the device in Zigbee2MQTT first.
+        Read their manual on [How to support new devices](https://www.zigbee2mqtt.io/advanced/support-new-devices/01_support_new_devices.html) for more information.
+      options:
+        - label: Device is supported by Zigbee2MQTT
+          required: true
+  - type: textarea
+    id: features
+    attributes:
+      label: Missing features / functionality
+      description: Please describe the features/functionality of this device that are currently not exposed to HomeKit via this plugin.
+    validations:
+      required: true
+  - type: textarea
+    id: hap
+    attributes:
+      label: HomeKit Services and Characteristics
+      description: |
+        For the missing features, which HomeKit Services and Characteristics would you expect to be used.
+        The [Homebridge Plugin Development documentation](https://developers.homebridge.io/) provides a nice overview of the
+        standard HomeKit services and characteristics.
+        Note that some manufacturers also use custom services and characteristics (Elgato Eve products for instance), which could also be
+        mimicked if they have already been reverse engineered.
+    validations:
+      required: true
+  - type: textarea
+    id: exposes
+    attributes:
+      label: Exposes information from Zigbee2MQTT
+      description: |
+        Provide the device model (also known as [exposes information](https://www.zigbee2mqtt.io/guide/usage/exposes.html))
+        for this particular device, as published to `zigbee2mqtt/bridge/devices` by Zigbee2MQTT.
+      placeholder: |
+        [
+          {
+            "type": "binary",
+            "name": "led",
+            "property": "led",
+            "access": 1,
+            "value_on": true,
+            "value_off": false
+          },
+          {
+            "type": "numeric",
+            "name": "linkquality",
+            "property": "linkquality",
+            "access": 1,
+            "unit": "lqi",
+            "description": "Link quality (signal strength)",
+            "value_min": 0,
+            "value_max": 255
+          }
+        ]
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: remarks
+    attributes:
+      label: Additional information / Other remarks
+      description: |
+        In case you have any additional remarks/background information,
+        please provide it here.
+    validations:
+      required: false

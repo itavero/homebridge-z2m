@@ -30,16 +30,18 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
-    "description": "Remaining battery in %",
+    "description": "Remaining battery in %, can take up to 24 hours before reported.",
     "value_min": 0,
     "value_max": 100
   },
   {
     "type": "numeric",
     "name": "voltage",
+    "label": "Voltage",
     "property": "voltage",
     "access": 1,
     "unit": "mV",
@@ -48,6 +50,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "enum",
     "name": "status",
+    "label": "Status",
     "property": "status",
     "access": 1,
     "values": [
@@ -60,6 +63,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "people",
+    "label": "People",
     "property": "people",
     "access": 7,
     "value_min": 0,
@@ -67,8 +71,97 @@ This is the information provided by Zigbee2MQTT for this device:
     "description": "People count"
   },
   {
+    "type": "enum",
+    "name": "rf_pairing_on",
+    "label": "Rf pairing on",
+    "property": "rf_pairing_on",
+    "access": 2,
+    "values": [
+      "run"
+    ],
+    "description": "Run RF pairing mode"
+  },
+  {
+    "type": "binary",
+    "name": "counting_freeze",
+    "label": "Counting freeze",
+    "property": "counting_freeze",
+    "access": 2,
+    "value_on": "ON",
+    "value_off": "OFF",
+    "description": "Counting Freeze ON/OFF, not reporting people value when is ON"
+  },
+  {
+    "type": "enum",
+    "name": "tof_init",
+    "label": "Tof init",
+    "property": "tof_init",
+    "access": 2,
+    "values": [
+      "initial"
+    ],
+    "description": "ToF sensor initial"
+  },
+  {
+    "type": "binary",
+    "name": "led_state",
+    "label": "Led state",
+    "property": "led_state",
+    "access": 2,
+    "value_on": "enable",
+    "value_off": "disable",
+    "description": "Indicate LED enable/disable, default : enable"
+  },
+  {
+    "type": "binary",
+    "name": "rf_state",
+    "label": "Rf state",
+    "property": "rf_state",
+    "access": 2,
+    "value_on": "enable",
+    "value_off": "disable",
+    "description": "RF function enable/disable, default : disable"
+  },
+  {
+    "type": "enum",
+    "name": "transaction",
+    "label": "Transaction",
+    "property": "transaction",
+    "access": 2,
+    "values": [
+      "0ms",
+      "200ms",
+      "400ms",
+      "600ms",
+      "800ms",
+      "1,000ms"
+    ],
+    "description": "Transaction interval, default : 400ms"
+  },
+  {
+    "type": "binary",
+    "name": "fast_in",
+    "label": "Fast in",
+    "property": "fast_in",
+    "access": 2,
+    "value_on": "enable",
+    "value_off": "disable",
+    "description": "Fast process enable/disable when people 0 to 1. default : enable"
+  },
+  {
+    "type": "binary",
+    "name": "fast_out",
+    "label": "Fast out",
+    "property": "fast_out",
+    "access": 2,
+    "value_on": "enable",
+    "value_off": "disable",
+    "description": "Fast process enable/disable when people 1 to 0. default : enable"
+  },
+  {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

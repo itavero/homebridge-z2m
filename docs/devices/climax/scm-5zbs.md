@@ -16,6 +16,7 @@ the Climax SCM-5ZBS
 
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

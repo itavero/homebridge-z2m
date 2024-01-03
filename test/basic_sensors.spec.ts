@@ -12,7 +12,6 @@ describe('Basic Sensors', () => {
   });
 
   describe('Aqara T1 temperature, humidity and pressure sensor', () => {
-
     // Shared "state"
     const airPressureServiceId = 'E863F00A-079E-48FF-8F27-9C2605A29F52';
     let deviceExposes: ExposesEntry[] = [];
@@ -29,11 +28,14 @@ describe('Basic Sensors', () => {
 
         // Check service creation
         deviceTemperatureServiceId = hap.Service.TemperatureSensor.UUID + '_device_temperature';
-        newHarness.getOrAddHandler(hap.Service.TemperatureSensor, 'device_temperature')
+        newHarness
+          .getOrAddHandler(hap.Service.TemperatureSensor, 'device_temperature')
           .addExpectedCharacteristic('device_temperature', hap.Characteristic.CurrentTemperature);
-        newHarness.getOrAddHandler(hap.Service.TemperatureSensor)
+        newHarness
+          .getOrAddHandler(hap.Service.TemperatureSensor)
           .addExpectedCharacteristic('temperature', hap.Characteristic.CurrentTemperature);
-        newHarness.getOrAddHandler(hap.Service.HumiditySensor)
+        newHarness
+          .getOrAddHandler(hap.Service.HumiditySensor)
           .addExpectedCharacteristic('humidity', hap.Characteristic.CurrentRelativeHumidity);
         newHarness.getOrAddHandler(airPressureServiceId);
 
@@ -42,6 +44,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -55,11 +58,19 @@ describe('Basic Sensors', () => {
 
     test('Update device temperature', (): void => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"device_temperature":12.5}',
-        deviceTemperatureServiceId, hap.Characteristic.CurrentTemperature, 12.5);
+      harness.checkSingleUpdateState(
+        '{"device_temperature":12.5}',
+        deviceTemperatureServiceId,
+        hap.Characteristic.CurrentTemperature,
+        12.5
+      );
       harness.clearMocks();
-      harness.checkSingleUpdateState('{"device_temperature":32.1}',
-        deviceTemperatureServiceId, hap.Characteristic.CurrentTemperature, 32.1);
+      harness.checkSingleUpdateState(
+        '{"device_temperature":32.1}',
+        deviceTemperatureServiceId,
+        hap.Characteristic.CurrentTemperature,
+        32.1
+      );
     });
 
     test('Update temperature', (): void => {
@@ -98,7 +109,8 @@ describe('Basic Sensors', () => {
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
-        newHarness.getOrAddHandler(hap.Service.SmokeSensor)
+        newHarness
+          .getOrAddHandler(hap.Service.SmokeSensor)
           .addExpectedCharacteristic('smoke', hap.Characteristic.SmokeDetected)
           .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
           .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
@@ -108,6 +120,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -121,42 +134,49 @@ describe('Basic Sensors', () => {
 
     test('Status updates', (): void => {
       expect(harness).toBeDefined();
-      harness.checkUpdateState('{"battery_low":false,"smoke":false,"tamper":false}',
+      harness.checkUpdateState(
+        '{"battery_low":false,"smoke":false,"tamper":false}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
-        ]));
+        ])
+      );
       harness.clearMocks();
-      harness.checkUpdateState('{"battery_low":true,"smoke":false,"tamper":false}',
+      harness.checkUpdateState(
+        '{"battery_low":true,"smoke":false,"tamper":false}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
-        ]));
+        ])
+      );
       harness.clearMocks();
-      harness.checkUpdateState('{"battery_low":false,"smoke":true,"tamper":false}',
+      harness.checkUpdateState(
+        '{"battery_low":false,"smoke":true,"tamper":false}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
-        ]));
+        ])
+      );
       harness.clearMocks();
-      harness.checkUpdateState('{"battery_low":false,"smoke":false,"tamper":true}',
+      harness.checkUpdateState(
+        '{"battery_low":false,"smoke":false,"tamper":true}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
-        ]));
+        ])
+      );
     });
   });
 
   describe('Aqara PIR sensor', () => {
-
     describe('as Occupancy Sensor', () => {
       // Shared "state"
       let deviceExposes: ExposesEntry[] = [];
@@ -172,9 +192,11 @@ describe('Basic Sensors', () => {
 
           // Check service creation
           newHarness.addConverterConfiguration('occupancy', { type: 'occupancy' });
-          newHarness.getOrAddHandler(hap.Service.OccupancySensor)
+          newHarness
+            .getOrAddHandler(hap.Service.OccupancySensor)
             .addExpectedCharacteristic('occupancy', hap.Characteristic.OccupancyDetected);
-          newHarness.getOrAddHandler(hap.Service.LightSensor)
+          newHarness
+            .getOrAddHandler(hap.Service.LightSensor)
             .addExpectedCharacteristic('illuminance', hap.Characteristic.CurrentAmbientLightLevel);
 
           newHarness.prepareCreationMocks();
@@ -182,6 +204,7 @@ describe('Basic Sensors', () => {
           newHarness.callCreators(deviceExposes);
 
           newHarness.checkCreationExpectations();
+          newHarness.checkHasMainCharacteristics();
           newHarness.checkExpectedGetableKeys([]);
           harness = newHarness;
         }
@@ -195,22 +218,26 @@ describe('Basic Sensors', () => {
 
       test('Update occupancy', (): void => {
         expect(harness).toBeDefined();
-        harness.checkSingleUpdateState('{"occupancy":false}',
+        harness.checkSingleUpdateState(
+          '{"occupancy":false}',
           hap.Service.OccupancySensor,
-          hap.Characteristic.OccupancyDetected, hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
+          hap.Characteristic.OccupancyDetected,
+          hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED
+        );
         harness.clearMocks();
-        harness.checkSingleUpdateState('{"occupancy":true}',
+        harness.checkSingleUpdateState(
+          '{"occupancy":true}',
           hap.Service.OccupancySensor,
-          hap.Characteristic.OccupancyDetected, hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED);
+          hap.Characteristic.OccupancyDetected,
+          hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED
+        );
       });
 
       test('Update illuminance', (): void => {
         expect(harness).toBeDefined();
-        harness.checkSingleUpdateState('{"illuminance":1}', hap.Service.LightSensor,
-          hap.Characteristic.CurrentAmbientLightLevel, 1);
+        harness.checkSingleUpdateState('{"illuminance":1}', hap.Service.LightSensor, hap.Characteristic.CurrentAmbientLightLevel, 1);
         harness.clearMocks();
-        harness.checkSingleUpdateState('{"illuminance":2248}', hap.Service.LightSensor,
-          hap.Characteristic.CurrentAmbientLightLevel, 2248);
+        harness.checkSingleUpdateState('{"illuminance":2248}', hap.Service.LightSensor, hap.Characteristic.CurrentAmbientLightLevel, 2248);
       });
     });
 
@@ -232,9 +259,11 @@ describe('Basic Sensors', () => {
           motionSensorId = 'occupancy_' + hap.Service.MotionSensor.UUID;
 
           newHarness.addConverterConfiguration('occupancy', { type: 'motion' });
-          newHarness.getOrAddHandler(hap.Service.MotionSensor, 'occupancy', motionSensorId)
+          newHarness
+            .getOrAddHandler(hap.Service.MotionSensor, 'occupancy', motionSensorId)
             .addExpectedCharacteristic('occupancy', hap.Characteristic.MotionDetected);
-          newHarness.getOrAddHandler(hap.Service.LightSensor)
+          newHarness
+            .getOrAddHandler(hap.Service.LightSensor)
             .addExpectedCharacteristic('illuminance', hap.Characteristic.CurrentAmbientLightLevel);
 
           newHarness.prepareCreationMocks();
@@ -242,6 +271,7 @@ describe('Basic Sensors', () => {
           newHarness.callCreators(deviceExposes);
 
           newHarness.checkCreationExpectations();
+          newHarness.checkHasMainCharacteristics();
           newHarness.checkExpectedGetableKeys([]);
           harness = newHarness;
         }
@@ -255,13 +285,9 @@ describe('Basic Sensors', () => {
 
       test('Update motion', (): void => {
         expect(harness).toBeDefined();
-        harness.checkSingleUpdateState('{"occupancy":false}',
-          motionSensorId,
-          hap.Characteristic.MotionDetected, false);
+        harness.checkSingleUpdateState('{"occupancy":false}', motionSensorId, hap.Characteristic.MotionDetected, false);
         harness.clearMocks();
-        harness.checkSingleUpdateState('{"occupancy":true}',
-          motionSensorId,
-          hap.Characteristic.MotionDetected, true);
+        harness.checkSingleUpdateState('{"occupancy":true}', motionSensorId, hap.Characteristic.MotionDetected, true);
       });
     });
   });
@@ -280,13 +306,13 @@ describe('Basic Sensors', () => {
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
-        newHarness.getOrAddHandler(hap.Service.ContactSensor)
-          .addExpectedCharacteristic('contact', hap.Characteristic.ContactSensorState);
+        newHarness.getOrAddHandler(hap.Service.ContactSensor).addExpectedCharacteristic('contact', hap.Characteristic.ContactSensorState);
         newHarness.prepareCreationMocks();
 
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -300,11 +326,19 @@ describe('Basic Sensors', () => {
 
     test('Update contact', (): void => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"contact":false}', hap.Service.ContactSensor,
-        hap.Characteristic.ContactSensorState, hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED);
+      harness.checkSingleUpdateState(
+        '{"contact":false}',
+        hap.Service.ContactSensor,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED
+      );
       harness.clearMocks();
-      harness.checkSingleUpdateState('{"contact":true}', hap.Service.ContactSensor,
-        hap.Characteristic.ContactSensorState, hap.Characteristic.ContactSensorState.CONTACT_DETECTED);
+      harness.checkSingleUpdateState(
+        '{"contact":true}',
+        hap.Service.ContactSensor,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_DETECTED
+      );
     });
   });
 
@@ -324,7 +358,8 @@ describe('Basic Sensors', () => {
 
         // Check service creation
         waterLeakSensorId = 'water_' + hap.Service.LeakSensor.UUID;
-        newHarness.getOrAddHandler(hap.Service.LeakSensor, 'water', waterLeakSensorId)
+        newHarness
+          .getOrAddHandler(hap.Service.LeakSensor, 'water', waterLeakSensorId)
           .addExpectedCharacteristic('water_leak', hap.Characteristic.LeakDetected)
           .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery);
         newHarness.prepareCreationMocks();
@@ -332,6 +367,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -345,23 +381,32 @@ describe('Basic Sensors', () => {
 
     test('Update state', (): void => {
       expect(harness).toBeDefined();
-      harness.checkUpdateState('{"battery_low":false,"water_leak":false}', waterLeakSensorId,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+      harness.checkUpdateState(
+        '{"battery_low":false,"water_leak":false}',
+        waterLeakSensorId,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED],
-        ]));
+        ])
+      );
       harness.clearMocks();
-      harness.checkUpdateState('{"battery_low":true,"water_leak":false}', waterLeakSensorId,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+      harness.checkUpdateState(
+        '{"battery_low":true,"water_leak":false}',
+        waterLeakSensorId,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED],
-        ]));
+        ])
+      );
       harness.clearMocks();
-      harness.checkUpdateState('{"battery_low":false,"water_leak":true}', waterLeakSensorId,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+      harness.checkUpdateState(
+        '{"battery_low":false,"water_leak":true}',
+        waterLeakSensorId,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_DETECTED],
-        ]));
+        ])
+      );
     });
   });
 
@@ -381,11 +426,13 @@ describe('Basic Sensors', () => {
 
         // Check service creation
         gasLeakSensorId = 'gas_' + hap.Service.LeakSensor.UUID;
-        newHarness.getOrAddHandler(hap.Service.LeakSensor, 'gas', gasLeakSensorId)
+        newHarness
+          .getOrAddHandler(hap.Service.LeakSensor, 'gas', gasLeakSensorId)
           .addExpectedCharacteristic('gas', hap.Characteristic.LeakDetected)
           .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
           .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
-        newHarness.getOrAddHandler(hap.Service.CarbonMonoxideSensor)
+        newHarness
+          .getOrAddHandler(hap.Service.CarbonMonoxideSensor)
           .addExpectedCharacteristic('carbon_monoxide', hap.Characteristic.CarbonMonoxideDetected)
           .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
           .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
@@ -394,6 +441,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -406,55 +454,95 @@ describe('Basic Sensors', () => {
     });
     test('Update battery and tamper', (): void => {
       expect(harness).toBeDefined();
-      harness.checkUpdateState('{"battery_low":true,"tamper":false}', gasLeakSensorId,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+      harness.checkUpdateState(
+        '{"battery_low":true,"tamper":false}',
+        gasLeakSensorId,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
-        ]), false);
-      harness.checkUpdateState('{"battery_low":true,"tamper":false}', hap.Service.CarbonMonoxideSensor,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+        ]),
+        false
+      );
+      harness.checkUpdateState(
+        '{"battery_low":true,"tamper":false}',
+        hap.Service.CarbonMonoxideSensor,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
-        ]), false);
+        ]),
+        false
+      );
       harness.clearMocks();
-      harness.checkUpdateState('{"battery_low":false,"tamper":true}', gasLeakSensorId,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+      harness.checkUpdateState(
+        '{"battery_low":false,"tamper":true}',
+        gasLeakSensorId,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
-        ]), false);
-      harness.checkUpdateState('{"battery_low":false,"tamper":true}', hap.Service.CarbonMonoxideSensor,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+        ]),
+        false
+      );
+      harness.checkUpdateState(
+        '{"battery_low":false,"tamper":true}',
+        hap.Service.CarbonMonoxideSensor,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
-        ]), false);
+        ]),
+        false
+      );
       harness.clearMocks();
-      harness.checkUpdateState('{"battery_low":true,"tamper":true}', gasLeakSensorId,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+      harness.checkUpdateState(
+        '{"battery_low":true,"tamper":true}',
+        gasLeakSensorId,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
-        ]), false);
-      harness.checkUpdateState('{"battery_low":true,"tamper":true}', hap.Service.CarbonMonoxideSensor,
-        new Map<WithUUID<{ new(): Characteristic }> | string, CharacteristicValue>([
+        ]),
+        false
+      );
+      harness.checkUpdateState(
+        '{"battery_low":true,"tamper":true}',
+        hap.Service.CarbonMonoxideSensor,
+        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
-        ]), false);
+        ]),
+        false
+      );
     });
     test('Update gas', (): void => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"gas":false}', gasLeakSensorId,
-        hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED);
+      harness.checkSingleUpdateState(
+        '{"gas":false}',
+        gasLeakSensorId,
+        hap.Characteristic.LeakDetected,
+        hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED
+      );
       harness.clearMocks();
-      harness.checkSingleUpdateState('{"gas":true}', gasLeakSensorId,
-        hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_DETECTED);
+      harness.checkSingleUpdateState(
+        '{"gas":true}',
+        gasLeakSensorId,
+        hap.Characteristic.LeakDetected,
+        hap.Characteristic.LeakDetected.LEAK_DETECTED
+      );
     });
 
     test('Update carbon monoxide', (): void => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"carbon_monoxide":false}', hap.Service.CarbonMonoxideSensor,
-        hap.Characteristic.CarbonMonoxideDetected, hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_NORMAL);
+      harness.checkSingleUpdateState(
+        '{"carbon_monoxide":false}',
+        hap.Service.CarbonMonoxideSensor,
+        hap.Characteristic.CarbonMonoxideDetected,
+        hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_NORMAL
+      );
       harness.clearMocks();
-      harness.checkSingleUpdateState('{"carbon_monoxide":true}', hap.Service.CarbonMonoxideSensor,
-        hap.Characteristic.CarbonMonoxideDetected, hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_ABNORMAL);
+      harness.checkSingleUpdateState(
+        '{"carbon_monoxide":true}',
+        hap.Service.CarbonMonoxideSensor,
+        hap.Characteristic.CarbonMonoxideDetected,
+        hap.Characteristic.CarbonMonoxideDetected.CO_LEVELS_ABNORMAL
+      );
     });
   });
 
@@ -474,7 +562,8 @@ describe('Basic Sensors', () => {
 
         // Check service creation
         vibrationSensorId = 'vibration_' + hap.Service.MotionSensor.UUID;
-        newHarness.getOrAddHandler(hap.Service.MotionSensor, 'vibration', vibrationSensorId)
+        newHarness
+          .getOrAddHandler(hap.Service.MotionSensor, 'vibration', vibrationSensorId)
           .addExpectedCharacteristic('vibration', hap.Characteristic.MotionDetected)
           .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
           .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
@@ -483,6 +572,7 @@ describe('Basic Sensors', () => {
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -496,11 +586,9 @@ describe('Basic Sensors', () => {
 
     test('Update vibration', (): void => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"vibration":false}', vibrationSensorId,
-        hap.Characteristic.MotionDetected, false);
+      harness.checkSingleUpdateState('{"vibration":false}', vibrationSensorId, hap.Characteristic.MotionDetected, false);
       harness.clearMocks();
-      harness.checkSingleUpdateState('{"vibration":true}', vibrationSensorId,
-        hap.Characteristic.MotionDetected, true);
+      harness.checkSingleUpdateState('{"vibration":true}', vibrationSensorId, hap.Characteristic.MotionDetected, true);
     });
   });
 
@@ -520,13 +608,15 @@ describe('Basic Sensors', () => {
 
         // Check service creation
         presenceSensorId = 'presence_' + hap.Service.OccupancySensor.UUID;
-        newHarness.getOrAddHandler(hap.Service.OccupancySensor, 'presence', presenceSensorId)
+        newHarness
+          .getOrAddHandler(hap.Service.OccupancySensor, 'presence', presenceSensorId)
           .addExpectedCharacteristic('presence', hap.Characteristic.OccupancyDetected);
         newHarness.prepareCreationMocks();
 
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
         newHarness.checkExpectedGetableKeys([]);
         harness = newHarness;
       }
@@ -540,11 +630,19 @@ describe('Basic Sensors', () => {
 
     test('Update presence', (): void => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"presence":false}', presenceSensorId,
-        hap.Characteristic.OccupancyDetected, hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
+      harness.checkSingleUpdateState(
+        '{"presence":false}',
+        presenceSensorId,
+        hap.Characteristic.OccupancyDetected,
+        hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED
+      );
       harness.clearMocks();
-      harness.checkSingleUpdateState('{"presence":true}', presenceSensorId,
-        hap.Characteristic.OccupancyDetected, hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED);
+      harness.checkSingleUpdateState(
+        '{"presence":true}',
+        presenceSensorId,
+        hap.Characteristic.OccupancyDetected,
+        hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED
+      );
     });
   });
 });

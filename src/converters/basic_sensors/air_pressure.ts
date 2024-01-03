@@ -20,24 +20,32 @@ export class AirPressureSensorHandler extends BasicSensorHandler {
   }
 
   static get AirPressure(): Characteristic {
-    const characteristic = new hap.Characteristic(AirPressureSensorHandler.CharacteristicName, AirPressureSensorHandler.CharacteristicUUID,
+    const characteristic = new hap.Characteristic(
+      AirPressureSensorHandler.CharacteristicName,
+      AirPressureSensorHandler.CharacteristicUUID,
       {
         format: hap.Formats.UINT16,
         perms: [hap.Perms.PAIRED_READ, hap.Perms.NOTIFY],
         minValue: 700,
         maxValue: 1100,
         minStep: 1,
-      });
+      }
+    );
     characteristic.value = 1013;
     return characteristic;
   }
 
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
-    super(accessory, expose, allExposes, AirPressureSensorHandler.generateIdentifier,
-      (n, t) => AirPressureSensorHandler.AirPressureSensor(n, t));
+    super(accessory, expose, allExposes, AirPressureSensorHandler.generateIdentifier, (n, t) =>
+      AirPressureSensorHandler.AirPressureSensor(n, t)
+    );
     accessory.log.debug(`Configuring AirPressureSensor for ${this.serviceName}`);
 
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, AirPressureSensorHandler.CharacteristicName));
+  }
+
+  get mainCharacteristics(): (Characteristic | undefined)[] {
+    return [this.service.getCharacteristic(AirPressureSensorHandler.CharacteristicName)];
   }
 
   static generateIdentifier(endpoint: string | undefined) {

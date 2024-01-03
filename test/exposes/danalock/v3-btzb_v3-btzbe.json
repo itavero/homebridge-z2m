@@ -5,6 +5,7 @@
       {
         "type": "binary",
         "name": "state",
+        "label": "State",
         "property": "state",
         "access": 7,
         "value_on": "LOCK",
@@ -14,6 +15,7 @@
       {
         "type": "enum",
         "name": "lock_state",
+        "label": "Lock state",
         "property": "lock_state",
         "access": 1,
         "values": [
@@ -28,10 +30,11 @@
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
-    "description": "Remaining battery in %",
+    "description": "Remaining battery in %, can take up to 24 hours before reported.",
     "value_min": 0,
     "value_max": 100
   },
@@ -39,10 +42,12 @@
     "type": "composite",
     "property": "pin_code",
     "name": "pin_code",
+    "label": "Pin code",
     "features": [
       {
         "type": "numeric",
         "name": "user",
+        "label": "User",
         "property": "user",
         "access": 2,
         "description": "User ID to set or clear the pincode for"
@@ -50,6 +55,7 @@
       {
         "type": "enum",
         "name": "user_type",
+        "label": "User type",
         "property": "user_type",
         "access": 2,
         "values": [
@@ -64,6 +70,7 @@
       {
         "type": "binary",
         "name": "user_enabled",
+        "label": "User enabled",
         "property": "user_enabled",
         "access": 2,
         "value_on": true,
@@ -73,15 +80,18 @@
       {
         "type": "numeric",
         "name": "pin_code",
+        "label": "PIN code",
         "property": "pin_code",
         "access": 2,
         "description": "Pincode to set, set pincode to null to clear"
       }
-    ]
+    ],
+    "access": 7
   },
   {
     "type": "enum",
     "name": "action",
+    "label": "Action",
     "property": "action",
     "access": 1,
     "values": [
@@ -107,6 +117,7 @@
   {
     "type": "enum",
     "name": "action_source_name",
+    "label": "Action source name",
     "property": "action_source_name",
     "access": 1,
     "values": [
@@ -120,6 +131,7 @@
   {
     "type": "numeric",
     "name": "action_user",
+    "label": "Action user",
     "property": "action_user",
     "access": 1,
     "description": "ID of user that triggered the action on the lock"
@@ -127,6 +139,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

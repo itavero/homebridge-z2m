@@ -4,15 +4,23 @@ import { PassthroughCharacteristicMonitor } from '../monitor';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
 import { BasicSensorHandler } from './basic';
+import { Characteristic } from 'homebridge';
 
 export class DeviceTemperatureSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'device_temperature';
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
 
-  constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
+  public readonly mainCharacteristics: Characteristic[] = [];
 
-    super(accessory, expose, allExposes, DeviceTemperatureSensorHandler.generateIdentifier,
-      (n, t) => new hap.Service.TemperatureSensor(n, t), DeviceTemperatureSensorHandler.exposesName);
+  constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
+    super(
+      accessory,
+      expose,
+      allExposes,
+      DeviceTemperatureSensorHandler.generateIdentifier,
+      (n, t) => new hap.Service.TemperatureSensor(n, t),
+      DeviceTemperatureSensorHandler.exposesName
+    );
     accessory.log.debug(`Configuring Device TemperatureSensor for ${this.serviceName}`);
     const characteristic = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentTemperature);
     if (!copyExposesRangeToCharacteristic(expose, characteristic)) {
@@ -22,6 +30,7 @@ export class DeviceTemperatureSensorHandler extends BasicSensorHandler {
         maxValue: 100,
       });
     }
+    this.mainCharacteristics.push(characteristic);
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentTemperature));
   }
 

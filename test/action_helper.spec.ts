@@ -14,8 +14,20 @@ function simple_single_press(id: string, label: number) {
 
 describe('SwitchActionHelper', () => {
   test('ORVIBO CR11S8UZ', () => {
-    const input = ['button_1_click', 'button_1_hold', 'button_1_release', 'button_2_click', 'button_2_hold', 'button_2_release',
-      'button_3_click', 'button_3_hold', 'button_3_release', 'button_4_click', 'button_4_hold', 'button_4_release'];
+    const input = [
+      'button_1_click',
+      'button_1_hold',
+      'button_1_release',
+      'button_2_click',
+      'button_2_hold',
+      'button_2_release',
+      'button_3_click',
+      'button_3_hold',
+      'button_3_release',
+      'button_4_click',
+      'button_4_hold',
+      'button_4_release',
+    ];
 
     const result = SwitchActionHelper.getInstance().valuesToNumberedMappings(input);
 
@@ -50,8 +62,18 @@ describe('SwitchActionHelper', () => {
   });
 
   test('EcoDim ED-10012', () => {
-    const input = ['on_1', 'off_1', 'brightness_move_up_1', 'brightness_move_down_1', 'brightness_stop_1',
-      'on_2', 'off_2', 'brightness_move_up_2', 'brightness_move_down_2', 'brightness_stop_2'];
+    const input = [
+      'on_1',
+      'off_1',
+      'brightness_move_up_1',
+      'brightness_move_down_1',
+      'brightness_stop_1',
+      'on_2',
+      'off_2',
+      'brightness_move_up_2',
+      'brightness_move_down_2',
+      'brightness_stop_2',
+    ];
 
     const result = SwitchActionHelper.getInstance().valuesToNumberedMappings(input);
 
@@ -72,9 +94,7 @@ describe('SwitchActionHelper', () => {
   });
 
   test('Aqara wireless switch WXKG11LM', () => {
-    const input = [
-      'single', 'double', 'triple', 'quadruple', 'hold', 'release',
-    ];
+    const input = ['single', 'double', 'triple', 'quadruple', 'hold', 'release'];
 
     const result = SwitchActionHelper.getInstance().valuesToNumberedMappings(input);
 
@@ -99,12 +119,36 @@ describe('SwitchActionHelper', () => {
 
   test('Aqara Opple switch 3 bands', () => {
     const input = [
-      'button_1_hold', 'button_1_release', 'button_1_single', 'button_1_double', 'button_1_triple',
-      'button_2_hold', 'button_2_release', 'button_2_single', 'button_2_double', 'button_2_triple',
-      'button_3_hold', 'button_3_release', 'button_3_single', 'button_3_double', 'button_3_triple',
-      'button_4_hold', 'button_4_release', 'button_4_single', 'button_4_double', 'button_4_triple',
-      'button_5_hold', 'button_5_release', 'button_5_single', 'button_5_double', 'button_5_triple',
-      'button_6_hold', 'button_6_release', 'button_6_single', 'button_6_double', 'button_6_triple',
+      'button_1_hold',
+      'button_1_release',
+      'button_1_single',
+      'button_1_double',
+      'button_1_triple',
+      'button_2_hold',
+      'button_2_release',
+      'button_2_single',
+      'button_2_double',
+      'button_2_triple',
+      'button_3_hold',
+      'button_3_release',
+      'button_3_single',
+      'button_3_double',
+      'button_3_triple',
+      'button_4_hold',
+      'button_4_release',
+      'button_4_single',
+      'button_4_double',
+      'button_4_triple',
+      'button_5_hold',
+      'button_5_release',
+      'button_5_single',
+      'button_5_double',
+      'button_5_triple',
+      'button_6_hold',
+      'button_6_release',
+      'button_6_single',
+      'button_6_double',
+      'button_6_triple',
     ];
 
     const result = SwitchActionHelper.getInstance().valuesToNumberedMappings(input);
@@ -122,7 +166,7 @@ describe('SwitchActionHelper', () => {
       expect(result).toContainEqual({
         _id: `button_${x}`,
         extension: 1,
-        serviceLabelIndex: (x * 10) + 1,
+        serviceLabelIndex: x * 10 + 1,
         valueSinglePress: `button_${x}_triple`,
       });
     }
@@ -194,11 +238,7 @@ describe('SwitchActionHelper', () => {
   });
 
   test('OSRAM Smart+ switch mini', () => {
-    const input = [
-      'up', 'up_hold', 'up_release',
-      'down_release', 'down', 'down_hold',
-      'circle_click', 'circle_release', 'circle_hold', 
-    ];
+    const input = ['up', 'up_hold', 'up_release', 'down_release', 'down', 'down_hold', 'circle_click', 'circle_release', 'circle_hold'];
 
     const result = SwitchActionHelper.getInstance().valuesToNumberedMappings(input);
 
@@ -233,11 +273,7 @@ describe('SwitchActionHelper', () => {
   });
 
   test('Sengled Smart switch', () => {
-    const input = [
-      'on', 'up', 'down', 'off',
-      'on_double', 'on_long',
-      'off_double', 'off_long', 
-    ];
+    const input = ['on', 'up', 'down', 'off', 'on_double', 'on_long', 'off_double', 'off_long'];
 
     const result = SwitchActionHelper.getInstance().valuesToNumberedMappings(input);
 
@@ -265,9 +301,7 @@ describe('SwitchActionHelper', () => {
   });
 
   test('Swann Key fob remote', () => {
-    const input = [
-      'home', 'sleep', 'away', 'panic', 
-    ];
+    const input = ['home', 'sleep', 'away', 'panic'];
 
     const result = SwitchActionHelper.getInstance().valuesToNumberedMappings(input);
 
@@ -280,9 +314,15 @@ describe('SwitchActionHelper', () => {
 
   test('Xiaomi WXKG02LM_rev2', () => {
     const input = [
-      'single_left', 'single_right', 'single_both',
-      'double_left', 'double_right', 'double_both',
-      'hold_left', 'hold_right', 'hold_both',
+      'single_left',
+      'single_right',
+      'single_both',
+      'double_left',
+      'double_right',
+      'double_both',
+      'hold_left',
+      'hold_right',
+      'hold_both',
     ];
 
     const result = SwitchActionHelper.getInstance().valuesToNumberedMappings(input);
@@ -318,12 +358,7 @@ describe('SwitchActionHelper', () => {
   });
 
   test('Philips Hue Tap with only the supported values', () => {
-    const input = [
-      'recall_scene_0',
-      'recall_scene_1',
-      'recall_scene_2',
-      'toggle',
-    ];
+    const input = ['recall_scene_0', 'recall_scene_1', 'recall_scene_2', 'toggle'];
 
     const result = SwitchActionHelper.getInstance().valuesToNumberedMappings(input);
 
@@ -337,10 +372,18 @@ describe('SwitchActionHelper', () => {
 
   test('Philips Hue dimmer switch', () => {
     const input = [
-      'on-press', 'on-hold', 'on-hold-release',
-      'up-press', 'up-hold', 'up-hold-release',
-      'down-press', 'down-hold', 'down-hold-release',
-      'off-press', 'off-hold', 'off-hold-release',
+      'on-press',
+      'on-hold',
+      'on-hold-release',
+      'up-press',
+      'up-hold',
+      'up-hold-release',
+      'down-press',
+      'down-hold',
+      'down-hold-release',
+      'off-press',
+      'off-hold',
+      'off-hold-release',
     ];
 
     const result = SwitchActionHelper.getInstance().valuesToNumberedMappings(input);

@@ -20,6 +20,7 @@ the Smartwings WM25L-Z
   * Status Low Battery
 * [Window Covering](../../cover.md)
   * Current Position
+  * Hold Position
   * Position State
   * Target Position
 

@@ -1,290 +1,394 @@
 {
-   "pluginAlias": "zigbee2mqtt",
-   "pluginType": "platform",
-   "singular": true,
-   "headerDisplay": "Please use the same MQTT configuration as you have used for your Zigbee2MQTT installation. Device configurations are optional.",
-   "footerDisplay": "For more information about the [configuration options](https://z2m.dev/config.html), please refer to the [plugin website](https://z2m.dev/).",
-   "schema": {
-      "type": "object",
-      "definitions": {
-         "exclude": {
-            "type": "boolean",
-            "required": false
-         },
-         "excluded_keys": {
-            "title": "Excluded properties (keys)",
-            "type": "array",
-            "required": false,
-            "items": {
-               "type": "string",
-               "minLength": 1
-            }
-         },
-         "values": {
-            "title": "Include/exclude values",
-            "type": "array",
-            "required": false,
-            "items": {
-               "type": "object",
-               "properties": {
-                  "property": {
-                     "title": "Property (key)",
-                     "type": "string",
-                     "required": true,
-                     "minLength": 3,
-                     "placeholder": "action"
-                  },
-                  "include": {
-                     "title": "Included values",
-                     "type": "array",
-                     "required": false,
-                     "items": {
-                        "type": "string",
-                        "minLength": 1
-                     }
-                  },
-                  "exclude": {
-                     "title": "Excluded values",
-                     "type": "array",
-                     "required": false,
-                     "items": {
-                        "type": "string",
-                        "minLength": 1
-                     }
-                  }
-               }
-            }
-         },
-         "converters": {
-            "type": "object",
-            "properties": {
-               "switch": {
-                  "title": "Switch",
-                  "type": "object",
-                  "properties": {
-                     "type": {
-                        "title": "Type",
-                        "type": "string",
-                        "oneOf": [
-                           {
-                              "title": "Switch",
-                              "enum": [
-                                 "switch"
-                              ]
-                           },
-                           {
-                              "title": "Outlet",
-                              "enum": [
-                                 "outlet"
-                              ]
-                           }
-                        ]
-                     }
-                  }
-               },
-               "occupancy": {
-                  "title": "Occupancy",
-                  "type": "object",
-                  "properties": {
-                     "type": {
-                        "title": "Type",
-                        "type": "string",
-                        "oneOf": [
-                           {
-                              "title": "Occupancy",
-                              "enum": [
-                                 "occupancy"
-                              ]
-                           },
-                           {
-                              "title": "Motion",
-                              "enum": [
-                                 "motion"
-                              ]
-                           }
-                        ]
-                     }
-                  }
-               }
-            }
-         }
+  "pluginAlias": "zigbee2mqtt",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Please use the same MQTT configuration as you have used for your Zigbee2MQTT installation. Device configurations are optional.",
+  "footerDisplay": "For more information about the [configuration options](https://z2m.dev/config.html), please refer to the [plugin website](https://z2m.dev/).",
+  "schema": {
+    "type": "object",
+    "definitions": {
+      "log_level": {
+        "type": "string",
+        "default": "debug",
+        "oneOf": [
+          {
+            "title": "Debug",
+            "enum": [
+              "debug"
+            ]
+          },
+          {
+            "title": "Info",
+            "enum": [
+              "info"
+            ]
+          },
+          {
+            "title": "Warn",
+            "enum": [
+              "warn"
+            ]
+          },
+          {
+            "title": "Error",
+            "enum": [
+              "error"
+            ]
+          }
+        ],
+        "required": true
       },
-      "properties": {
-         "mqtt": {
-            "title": "MQTT",
+      "exclude": {
+        "type": "boolean",
+        "required": false
+      },
+      "excluded_keys": {
+        "title": "Excluded properties (keys)",
+        "type": "array",
+        "required": false,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "excluded_endpoints": {
+        "title": "Excluded endpoints",
+        "type": "array",
+        "required": false,
+        "items": {
+          "type": "string",
+          "minLength": 0
+        }
+      },
+      "ignore_availability": {
+        "title": "Ignore availability information",
+        "type": "boolean",
+        "required": false
+      },
+      "ignore_z2m_online": {
+        "title": "Ignore Zigbee2MQTT online status",
+        "type": "boolean",
+        "required": false
+      },
+      "values": {
+        "title": "Include/exclude values",
+        "type": "array",
+        "required": false,
+        "items": {
+          "type": "object",
+          "properties": {
+            "property": {
+              "title": "Property (key)",
+              "type": "string",
+              "required": true,
+              "minLength": 3,
+              "placeholder": "action"
+            },
+            "include": {
+              "title": "Included values",
+              "type": "array",
+              "required": false,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "exclude": {
+              "title": "Excluded values",
+              "type": "array",
+              "required": false,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      },
+      "converters": {
+        "type": "object",
+        "properties": {
+          "switch": {
+            "title": "Switch",
             "type": "object",
+            "properties": {
+              "type": {
+                "title": "Type",
+                "type": "string",
+                "oneOf": [
+                  {
+                    "title": "Switch",
+                    "enum": [
+                      "switch"
+                    ]
+                  },
+                  {
+                    "title": "Outlet",
+                    "enum": [
+                      "outlet"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "occupancy": {
+            "title": "Occupancy",
+            "type": "object",
+            "properties": {
+              "type": {
+                "title": "Type",
+                "type": "string",
+                "oneOf": [
+                  {
+                    "title": "Occupancy",
+                    "enum": [
+                      "occupancy"
+                    ]
+                  },
+                  {
+                    "title": "Motion",
+                    "enum": [
+                      "motion"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "light": {
+            "title": "Light",
+            "type": "object",
+            "properties": {
+              "adaptive_lighting": {
+                "title": "Enable Adaptive Lighting",
+                "type": "boolean",
+                "required": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "properties": {
+      "mqtt": {
+        "title": "MQTT",
+        "type": "object",
+        "required": true,
+        "properties": {
+          "base_topic": {
+            "title": "Base topic",
+            "type": "string",
             "required": true,
-            "properties": {
-               "base_topic": {
-                  "title": "Base topic",
-                  "type": "string",
-                  "required": true,
-                  "default": "zigbee2mqtt",
-                  "placeholder": "zigbee2mqtt"
-               },
-               "server": {
-                  "title": "Server",
-                  "type": "string",
-                  "required": true,
-                  "default": "mqtt://localhost:1883",
-                  "placeholder": "mqtt://localhost:1883"
-               },
-               "ca": {
-                  "title": "SSL/TLS certificate of CA",
-                  "type": "string",
-                  "required": false
-               },
-               "key": {
-                  "title": "SSL/TLS key for client-authentication",
-                  "type": "string",
-                  "required": false
-               },
-               "cert": {
-                  "title": "SSL/TLS certificate for client-authentication",
-                  "type": "string",
-                  "required": false
-               },
-               "user": {
-                  "title": "Username",
-                  "type": "string",
-                  "required": false
-               },
-               "password": {
-                  "title": "Password",
-                  "type": "string",
-                  "required": false
-               },
-               "client_id": {
-                  "title": "Client ID",
-                  "type": "string",
-                  "required": false
-               },
-               "reject_unauthorized": {
-                  "title": "Disable self-signed SSL certificates",
-                  "type": "boolean",
-                  "default": false,
-                  "required": false
-               },
-               "keepalive": {
-                  "title": "Keep Alive",
-                  "type": "integer",
-                  "default": 60,
-                  "required": false
-               },
-               "version": {
-                  "title": "MQTT version",
-                  "type": "integer",
-                  "default": 4,
-                  "minimum": 3,
-                  "maximum": 5,
-                  "required": false
-               },
-               "disable_qos": {
-                  "title": "Disable QoS",
-                  "type": "boolean",
-                  "default": false,
-                  "required": false
-               }
-            }
-         },
-         "defaults": {
-            "title": "Device defaults",
-            "type": "object",
-            "properties": {
-               "exclude": {
-                  "title": "Exclude devices by default",
-                  "default": false,
-                  "$ref": "#/definitions/exclude"
-               },
-               "excluded_keys": {
-                  "$ref": "#/definitions/excluded_keys"
-               },
-               "values": {
-                  "$ref": "#/definitions/values"
-               },
-               "converters": {
-                  "$ref": "#/definitions/converters"
-               }
-            }
-         },
-         "exclude_grouped_devices": {
-            "title": "Exclude devices that are part of a group",
+            "default": "zigbee2mqtt",
+            "placeholder": "zigbee2mqtt"
+          },
+          "server": {
+            "title": "Server",
+            "type": "string",
+            "required": true,
+            "default": "mqtt://localhost:1883",
+            "placeholder": "mqtt://localhost:1883"
+          },
+          "ca": {
+            "title": "SSL/TLS certificate of CA",
+            "type": "string",
+            "required": false
+          },
+          "key": {
+            "title": "SSL/TLS key for client-authentication",
+            "type": "string",
+            "required": false
+          },
+          "cert": {
+            "title": "SSL/TLS certificate for client-authentication",
+            "type": "string",
+            "required": false
+          },
+          "user": {
+            "title": "Username",
+            "type": "string",
+            "required": false
+          },
+          "password": {
+            "title": "Password",
+            "type": "string",
+            "required": false
+          },
+          "client_id": {
+            "title": "Client ID",
+            "type": "string",
+            "required": false
+          },
+          "reject_unauthorized": {
+            "title": "Disable self-signed SSL certificates",
             "type": "boolean",
             "default": false,
             "required": false
-         },
-         "devices": {
-            "title": "Devices",
-            "type": "array",
-            "required": false,
-            "items": {
-               "type": "object",
-               "properties": {
-                  "id": {
-                     "title": "Zigbee Identifier / Friendly name",
-                     "type": "string",
-                     "required": true,
-                     "minLength": 3,
-                     "placeholder": "0x1234567890abcdef"
-                  },
-                  "exclude": {
-                     "title": "Exclude entire device",
-                     "$ref": "#/definitions/exclude"
-                  },
-                  "excluded_keys": {
-                     "$ref": "#/definitions/excluded_keys",
-                     "condition": {
-                        "functionBody": "return !model.devices[arrayIndices].exclude;"
-                     }
-                  },
-                  "included_keys": {
-                     "title": "Included properties (keys)",
-                     "type": "array",
-                     "required": false,
-                     "items": {
-                        "type": "string",
-                        "minLength": 1
-                     },
-                     "condition": {
-                        "functionBody": "return !model.devices[arrayIndices].exclude;"
-                     }
-                  },
-                  "values": {
-                     "$ref": "#/definitions/values",
-                     "condition": {
-                        "functionBody": "return !model.devices[arrayIndices].exclude;"
-                     }
-                  },
-                  "converters": {
-                     "$ref": "#/definitions/converters",
-                     "condition": {
-                        "functionBody": "return !model.devices[arrayIndices].exclude;"
-                     }
-                  },
-                  "experimental": {
-                     "title": "Experimental feature flags",
-                     "type": "array",
-                     "required": false,
-                     "items": {
-                        "type": "string",
-                        "minLength": 1
-                     },
-                     "condition": {
-                        "functionBody": "return !model.devices[arrayIndices].exclude;"
-                     }
-                  }
-               }
+          },
+          "keepalive": {
+            "title": "Keep Alive",
+            "type": "integer",
+            "default": 60,
+            "required": false
+          },
+          "version": {
+            "title": "MQTT version",
+            "type": "integer",
+            "default": 4,
+            "minimum": 3,
+            "maximum": 5,
+            "required": false
+          },
+          "disable_qos": {
+            "title": "Disable QoS",
+            "type": "boolean",
+            "default": false,
+            "required": false
+          }
+        }
+      },
+      "log": {
+        "title": "Logging",
+        "type": "object",
+        "properties": {
+          "debug_as_info": {
+            "title": "Log debug messages as info level",
+            "type": "boolean",
+            "required": false
+          },
+          "mqtt_publish": {
+            "$ref": "#/definitions/log_level",
+            "title": "Published MQTT messages"
+          }
+        }
+      },
+      "defaults": {
+        "title": "Device defaults",
+        "type": "object",
+        "properties": {
+          "exclude": {
+            "title": "Exclude devices by default",
+            "default": false,
+            "$ref": "#/definitions/exclude"
+          },
+          "ignore_availability": {
+            "$ref": "#/definitions/ignore_availability"
+          },
+          "ignore_z2m_online": {
+            "$ref": "#/definitions/ignore_z2m_online"
+          },
+          "excluded_keys": {
+            "$ref": "#/definitions/excluded_keys"
+          },
+          "excluded_endpoints": {
+            "$ref": "#/definitions/excluded_endpoints"
+          },
+          "values": {
+            "$ref": "#/definitions/values"
+          },
+          "converters": {
+            "$ref": "#/definitions/converters"
+          }
+        }
+      },
+      "exclude_grouped_devices": {
+        "title": "Exclude devices that are part of a group",
+        "type": "boolean",
+        "default": false,
+        "required": false
+      },
+      "devices": {
+        "title": "Devices",
+        "type": "array",
+        "required": false,
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "title": "Zigbee Identifier / Friendly name",
+              "type": "string",
+              "required": true,
+              "minLength": 3,
+              "placeholder": "0x1234567890abcdef"
+            },
+            "exclude": {
+              "title": "Exclude entire device",
+              "$ref": "#/definitions/exclude",
+              "default": false
+            },
+            "ignore_availability": {
+              "$ref": "#/definitions/ignore_availability",
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
+            },
+            "ignore_z2m_online": {
+              "$ref": "#/definitions/ignore_z2m_online",
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
+            },
+            "excluded_keys": {
+              "$ref": "#/definitions/excluded_keys",
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
+            },
+            "excluded_endpoints": {
+              "$ref": "#/definitions/excluded_endpoints",
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
+            },
+            "included_keys": {
+              "title": "Included properties (keys)",
+              "type": "array",
+              "required": false,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
+            },
+            "values": {
+              "$ref": "#/definitions/values",
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
+            },
+            "converters": {
+              "$ref": "#/definitions/converters",
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
+            },
+            "experimental": {
+              "title": "Experimental feature flags",
+              "type": "array",
+              "required": false,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
             }
-         },
-         "experimental": {
-            "title": "Experimental feature flags",
-            "type": "array",
-            "required": false,
-            "items": {
-               "type": "string",
-               "minLength": 1
-            }
-         }
+          }
+        }
+      },
+      "experimental": {
+        "title": "Experimental feature flags",
+        "type": "array",
+        "required": false,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
       }
-   }
+    }
+  }
 }

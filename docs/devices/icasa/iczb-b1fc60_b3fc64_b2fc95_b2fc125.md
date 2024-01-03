@@ -19,6 +19,8 @@ the iCasa ICZB-B1FC60/B3FC64/B2FC95/B2FC125
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from iCasa](../index.md#icasa)

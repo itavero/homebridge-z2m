@@ -21,6 +21,8 @@ the Gledopto GL-S-005Z
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Gledopto](../index.md#gledopto)

@@ -9,6 +9,10 @@ A possible configuration looks like this:
       "base_topic": "zigbee2mqtt",
       "server": "mqtt://localhost:1883"
    },
+   "log": {
+      "mqtt_publish": "debug",
+      "debug_as_info": false
+   },
    "defaults": {
       "excluded_keys": [
          "lqi"
@@ -34,6 +38,9 @@ A possible configuration looks like this:
       },
       {
          "id": "0xabcd1234abcd1234",
+         "excluded_endpoints": [
+            "l2"
+         ],
          "converters": {
             "switch": {
                "type": "outlet"
@@ -70,6 +77,15 @@ Within the `mqtt` object, you can add pretty much all the configuration options 
 * `keepalive`
 * `version`
 
+# Logging
+Within the `log` object, you can configure the logging level for certain parts of the plugin.
+The available log levels are `error`, `warn`, `info` and `debug`.
+
+Currently, the following can be configured:
+* `mqtt_publish`: The log level for MQTT messages that are published by the plugin. (default: `debug`)
+
+Additionally, you can have all debugging messages be output to the `info` level instead, by setting `debug_as_info` to `true`. This can be useful if you only want to see debug messages from this plugin and not from all plugins on your Homebridge instance.
+
 ### Disable QoS for published MQTT messages
 Some MQTT brokers do not have support for QoS. If the QoS Levels sent by this plugin are leading to problems, you can force the plugin to disable this for all messages (i.e. set the QoS level to 0) by setting the `disable_qos` to `true`.
 By default, this option is set to `false`. Note: this option does **not** exist in Zigbee2MQTT itself.
@@ -80,9 +96,12 @@ This identifier should be put in the `id` property.
 
 Currently the following options are available:
 * `exclude`: if set to `true` this device will not be fully ignored.
+* `ignore_availability`: If set to `true`, the availability information provided by Zigbee2MQTT for this device will be ignored by the plugin.
+* `ignore_z2m_online`: If set to `true`, the online/offline information of Zigbee2MQTT will be ignored. This means the device might show up as available, even though Zigbee2MQTT is offline or the connection to the MQTT broker is lost.
 * `excluded_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be ignored/excluded for this device.
 * `included_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be included for this device, even if they are excluded in the global default device configuration (see below).
-* `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard. This is currently only applied in the [Stateless Programmable Switch](action.md).
+* `excluded_endpoints`: an array of endpoints that should be ignored/excluded for this device. To ignore properties without an endpoint, add `''` (empty string) to the array.
+* `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard.
 * `exposes`: An array of exposes information, using the [structures defined by Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/usage/exposes.html).
 * `converters`: An object to optionally provide additional configuration for specific converters. More information can be found in the documentation of the [converters](converters.md), if applicable.
 
@@ -142,3 +161,4 @@ In the latest (or next) release the following features can be enabled:
 | Flag | Global | Device | Description |
 | ---- | ------ | ------ | ----------- |
 | `COLOR_MODE` | ✅ | ✅ | Possible workaround/fix for issue described in issue [#208](https://github.com/itavero/homebridge-z2m/issues/208) |
+| `AVAILABILITY` | ✅ | ✅ | Enable Availability feature. Without this flag, the logic will still be executed, except for changing the status of characteristics. (see [#56](https://github.com/itavero/homebridge-z2m/issues/56) / [#593](https://github.com/itavero/homebridge-z2m/issues/593)) |

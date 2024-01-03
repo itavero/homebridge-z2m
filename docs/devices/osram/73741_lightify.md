@@ -21,6 +21,8 @@ the OSRAM 73741_LIGHTIFY
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from OSRAM](../index.md#osram)

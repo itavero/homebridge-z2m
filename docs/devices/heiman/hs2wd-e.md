@@ -30,10 +30,11 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
-    "description": "Remaining battery in %",
+    "description": "Remaining battery in %, can take up to 24 hours before reported.",
     "value_min": 0,
     "value_max": 100
   },
@@ -41,10 +42,12 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "composite",
     "property": "warning",
     "name": "warning",
+    "label": "Warning",
     "features": [
       {
         "type": "enum",
         "name": "mode",
+        "label": "Mode",
         "property": "mode",
         "access": 2,
         "values": [
@@ -61,6 +64,7 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "enum",
         "name": "level",
+        "label": "Level",
         "property": "level",
         "access": 2,
         "values": [
@@ -74,6 +78,7 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "enum",
         "name": "strobe_level",
+        "label": "Strobe level",
         "property": "strobe_level",
         "access": 2,
         "values": [
@@ -87,6 +92,7 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "binary",
         "name": "strobe",
+        "label": "Strobe",
         "property": "strobe",
         "access": 2,
         "value_on": true,
@@ -96,6 +102,7 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "numeric",
         "name": "strobe_duty_cycle",
+        "label": "Strobe duty cycle",
         "property": "strobe_duty_cycle",
         "access": 2,
         "value_max": 10,
@@ -105,16 +112,19 @@ This is the information provided by Zigbee2MQTT for this device:
       {
         "type": "numeric",
         "name": "duration",
+        "label": "Duration",
         "property": "duration",
         "access": 2,
         "unit": "s",
         "description": "Duration in seconds of the alarm"
       }
-    ]
+    ],
+    "access": 2
   },
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

@@ -1,4 +1,4 @@
 // GENERATED FILE: DO NOT EDIT MANUALLY!
-const version_zigbee2mqtt = '1.27.2';
-const version_herdsman_converters = '14.0.610';
+const version_zigbee2mqtt = '1.34.0';
+const version_herdsman_converters = '15.130.1';
 export { version_zigbee2mqtt, version_herdsman_converters };

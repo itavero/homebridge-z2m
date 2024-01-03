@@ -21,6 +21,8 @@ the Nue / 3A HGZB-DLC4-N12B
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Nue / 3A](../index.md#nue_3a)

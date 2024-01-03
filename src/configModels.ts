@@ -1,31 +1,37 @@
-import { PlatformConfig } from 'homebridge';
+import { LogLevel, PlatformConfig } from 'homebridge';
 import { ConverterConfigValidatorCollection } from './converters/creators';
 import { BasicLogger } from './logger';
 import { ExposesEntry, isExposesEntry } from './z2mModels';
 
 export interface PluginConfiguration extends PlatformConfig {
   mqtt: MqttConfiguration;
+  log?: LogConfiguration;
   defaults?: BaseDeviceConfiguration;
   experimental?: string[];
   devices?: DeviceConfiguration[];
   exclude_grouped_devices?: boolean;
 }
 
-function hasValidConverterConfigurations(config: BaseDeviceConfiguration, converterConfigValidator: ConverterConfigValidatorCollection,
-  logger: BasicLogger | undefined): boolean {
-  return (config.converters === undefined || converterConfigValidator.allConverterConfigurationsAreValid(config.converters, logger));
+function hasValidConverterConfigurations(
+  config: BaseDeviceConfiguration,
+  converterConfigValidator: ConverterConfigValidatorCollection,
+  logger: BasicLogger | undefined
+): boolean {
+  return config.converters === undefined || converterConfigValidator.allConverterConfigurationsAreValid(config.converters, logger);
 }
 
-function hasValidDeviceConfigurations(devices: unknown, converterConfigValidator: ConverterConfigValidatorCollection,
-  logger: BasicLogger | undefined): boolean {
+function hasValidDeviceConfigurations(
+  devices: unknown,
+  converterConfigValidator: ConverterConfigValidatorCollection,
+  logger: BasicLogger | undefined
+): boolean {
   if (devices !== undefined) {
     if (!Array.isArray(devices)) {
       logger?.error('Incorrect configuration: devices must be an array');
       return false;
     }
     for (const element of devices) {
-      if (!isDeviceConfiguration(element)
-        || !hasValidConverterConfigurations(element, converterConfigValidator, logger)) {
+      if (!isDeviceConfiguration(element) || !hasValidConverterConfigurations(element, converterConfigValidator, logger)) {
         logger?.error('Incorrect configuration: Entry for device is not correct: ' + JSON.stringify(element));
         return false;
       }
@@ -34,11 +40,18 @@ function hasValidDeviceConfigurations(devices: unknown, converterConfigValidator
   return true;
 }
 
-export const isPluginConfiguration = (x: PlatformConfig, converterConfigValidator: ConverterConfigValidatorCollection,
-  logger: BasicLogger | undefined = undefined): x is PluginConfiguration => {
+export const isPluginConfiguration = (
+  x: PlatformConfig,
+  converterConfigValidator: ConverterConfigValidatorCollection,
+  logger: BasicLogger | undefined = undefined
+): x is PluginConfiguration => {
   if (x.mqtt === undefined || !isMqttConfiguration(x.mqtt)) {
     logger?.error('Incorrect configuration: mqtt does not contain required fields');
     return false;
+  }
+
+  if (x.log !== undefined && !isLogConfiguration(x.log)) {
+    logger?.error('Incorrect configuration: log configuration is invalid: ' + JSON.stringify(x.log));
   }
 
   if (x.defaults !== undefined) {
@@ -65,6 +78,18 @@ export const isPluginConfiguration = (x: PlatformConfig, converterConfigValidato
   return hasValidDeviceConfigurations(x.devices, converterConfigValidator, logger);
 };
 
+export interface LogConfiguration extends Record<string, unknown> {
+  debug_as_info?: boolean;
+  mqtt_publish?: string;
+}
+
+const allowedLogLevels = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isLogConfiguration = (x: any): x is LogConfiguration =>
+  !(x.mqtt_publish !== undefined && typeof x.mqtt_publish !== 'string' && !allowedLogLevels.includes(x.mqtt_publish)) &&
+  !(x.debug_as_info !== undefined && typeof x.debug_as_info !== 'boolean');
+
 export interface MqttConfiguration extends Record<string, unknown> {
   base_topic: string;
   server: string;
@@ -80,20 +105,23 @@ export interface MqttConfiguration extends Record<string, unknown> {
   disable_qos?: boolean;
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isMqttConfiguration = (x: any): x is MqttConfiguration => (
-  x.base_topic !== undefined
-  && typeof x.base_topic === 'string'
-  && x.base_topic.length > 0
-  && x.server !== undefined
-  && typeof x.server === 'string'
-  && x.server.length > 0);
+export const isMqttConfiguration = (x: any): x is MqttConfiguration =>
+  x.base_topic !== undefined &&
+  typeof x.base_topic === 'string' &&
+  x.base_topic.length > 0 &&
+  x.server !== undefined &&
+  typeof x.server === 'string' &&
+  x.server.length > 0;
 
 export interface BaseDeviceConfiguration extends Record<string, unknown> {
   exclude?: boolean;
   excluded_keys?: string[];
+  excluded_endpoints?: string[];
   values?: PropertyValueConfiguration[];
   converters?: object;
   experimental?: string[];
+  ignore_availability?: boolean;
+  ignore_z2m_online?: boolean;
 }
 
 export interface DeviceConfiguration extends BaseDeviceConfiguration {
@@ -103,19 +131,35 @@ export interface DeviceConfiguration extends BaseDeviceConfiguration {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const hasOptionalStringArrays = (object: any, ...properties: string[]): boolean => {
+  // Check if properties exist and are string arrays
+  for (const property of properties) {
+    if (property in object && object[property] !== undefined && !isStringArray(object[property])) {
+      return false;
+    }
+  }
+  return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const hasOptionalBooleans = (object: any, ...properties: string[]): boolean => {
+  for (const property of properties) {
+    if (property in object && object[property] !== undefined && typeof object[property] !== 'boolean') {
+      return false;
+    }
+  }
+  return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration => {
-  // Optional boolean exclude property
-  if (x.exclude !== undefined && typeof x.exclude !== 'boolean') {
+  // Optional boolean properties
+  if (!hasOptionalBooleans(x, 'exclude', 'ignore_availability', 'ignore_z2m_online')) {
     return false;
   }
 
-  // Optional excluded_keys which must be an array of strings if present
-  if (x.excluded_keys !== undefined && !isStringArray(x.excluded_keys)) {
-    return false;
-  }
-
-  // Optional 'experimental' which must be an array of strings if present
-  if (x.experimental !== undefined && !isStringArray(x.experimental)) {
+  // Optional string arrays
+  if (!hasOptionalStringArrays(x, 'excluded_keys', 'excluded_endpoints', 'experimental')) {
     return false;
   }
 
@@ -184,10 +228,7 @@ export const isPropertyValueConfiguration = (x: any): x is PropertyValueConfigur
   }
 
   // Optional exclude property
-  if (x.exclude !== undefined && !isStringArray(x.exclude)) {
-    return false;
-  }
-  return true;
+  return x.exclude === undefined || isStringArray(x.exclude);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

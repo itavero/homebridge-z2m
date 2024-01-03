@@ -18,7 +18,11 @@ the Xiaomi XDD13LM
   * Brightness
   * Color Temperature
   * On
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Xiaomi](../index.md#xiaomi)

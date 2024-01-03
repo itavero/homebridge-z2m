@@ -17,10 +17,10 @@ the Gledopto GL-B-002P
 * [Lightbulb](../../light.md)
   * Brightness
   * Color Temperature
-  * Hue
   * On
-  * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Gledopto](../index.md#gledopto)

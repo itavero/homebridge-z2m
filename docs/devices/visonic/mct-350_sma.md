@@ -22,6 +22,10 @@ the Visonic MCT-350 SMA
   * Contact Sensor State
   * Status Low Battery
   * Status Tampered
+* [Temperature Sensor](../../sensors.md)
+  * Current Temperature
+  * Status Low Battery
+  * Status Tampered
 
 
 # Related

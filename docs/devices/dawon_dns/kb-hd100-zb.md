@@ -30,8 +30,9 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "card",
+    "label": "Card",
     "property": "card",
-    "access": 1,
+    "access": 5,
     "value_on": true,
     "value_off": false,
     "description": "Indicates if the card is inserted (= true) or not (= false)"
@@ -39,6 +40,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "binary",
     "name": "battery_low",
+    "label": "Battery low",
     "property": "battery_low",
     "access": 1,
     "value_on": true,
@@ -48,6 +50,7 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

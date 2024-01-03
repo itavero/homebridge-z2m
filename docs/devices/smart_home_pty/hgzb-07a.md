@@ -21,6 +21,8 @@ the Smart Home Pty HGZB-07A
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Smart Home Pty](../index.md#smart_home_pty)

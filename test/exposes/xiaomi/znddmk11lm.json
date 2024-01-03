@@ -1,0 +1,222 @@
+[
+  {
+    "type": "numeric",
+    "name": "power",
+    "label": "Power",
+    "property": "power",
+    "access": 1,
+    "unit": "W",
+    "description": "Instantaneous measured power"
+  },
+  {
+    "type": "numeric",
+    "name": "energy",
+    "label": "Energy",
+    "property": "energy",
+    "access": 1,
+    "unit": "kWh",
+    "description": "Sum of consumed energy"
+  },
+  {
+    "type": "numeric",
+    "name": "voltage",
+    "label": "Voltage",
+    "property": "voltage",
+    "access": 1,
+    "unit": "V",
+    "description": "Measured electrical potential value"
+  },
+  {
+    "type": "numeric",
+    "name": "device_temperature",
+    "label": "Device temperature",
+    "property": "device_temperature",
+    "access": 1,
+    "unit": "°C",
+    "description": "Temperature of the device"
+  },
+  {
+    "type": "binary",
+    "name": "power_outage_memory",
+    "label": "Power outage memory",
+    "property": "power_outage_memory",
+    "access": 7,
+    "value_on": true,
+    "value_off": false,
+    "description": "Enable/disable the power outage memory, this recovers the on/off mode after power failure"
+  },
+  {
+    "type": "light",
+    "features": [
+      {
+        "type": "binary",
+        "name": "state",
+        "label": "State",
+        "property": "state_l1",
+        "access": 7,
+        "value_on": "ON",
+        "value_off": "OFF",
+        "value_toggle": "TOGGLE",
+        "description": "On/off state of this light",
+        "endpoint": "l1"
+      },
+      {
+        "type": "numeric",
+        "name": "brightness",
+        "label": "Brightness",
+        "property": "brightness_l1",
+        "access": 7,
+        "value_min": 0,
+        "value_max": 254,
+        "description": "Brightness of this light",
+        "endpoint": "l1"
+      },
+      {
+        "type": "numeric",
+        "name": "color_temp",
+        "label": "Color temp",
+        "property": "color_temp_l1",
+        "access": 7,
+        "unit": "mired",
+        "value_min": 153,
+        "value_max": 370,
+        "description": "Color temperature of this light",
+        "presets": [
+          {
+            "name": "coolest",
+            "value": 153,
+            "description": "Coolest temperature supported"
+          },
+          {
+            "name": "cool",
+            "value": 250,
+            "description": "Cool temperature (250 mireds / 4000 Kelvin)"
+          },
+          {
+            "name": "neutral",
+            "value": 370,
+            "description": "Neutral temperature (370 mireds / 2700 Kelvin)"
+          },
+          {
+            "name": "warmest",
+            "value": 370,
+            "description": "Warmest temperature supported"
+          }
+        ],
+        "endpoint": "l1"
+      },
+      {
+        "type": "composite",
+        "property": "color_l1",
+        "name": "color_xy",
+        "label": "Color (X/Y)",
+        "features": [
+          {
+            "type": "numeric",
+            "name": "x",
+            "label": "X",
+            "property": "x",
+            "access": 7
+          },
+          {
+            "type": "numeric",
+            "name": "y",
+            "label": "Y",
+            "property": "y",
+            "access": 7
+          }
+        ],
+        "access": 7,
+        "description": "Color of this light in the CIE 1931 color space (x/y)",
+        "endpoint": "l1"
+      }
+    ],
+    "endpoint": "l1"
+  },
+  {
+    "type": "light",
+    "features": [
+      {
+        "type": "binary",
+        "name": "state",
+        "label": "State",
+        "property": "state_l2",
+        "access": 7,
+        "value_on": "ON",
+        "value_off": "OFF",
+        "value_toggle": "TOGGLE",
+        "description": "On/off state of this light",
+        "endpoint": "l2"
+      },
+      {
+        "type": "numeric",
+        "name": "brightness",
+        "label": "Brightness",
+        "property": "brightness_l2",
+        "access": 7,
+        "value_min": 0,
+        "value_max": 254,
+        "description": "Brightness of this light",
+        "endpoint": "l2"
+      },
+      {
+        "type": "numeric",
+        "name": "color_temp",
+        "label": "Color temp",
+        "property": "color_temp_l2",
+        "access": 7,
+        "unit": "mired",
+        "value_min": 153,
+        "value_max": 370,
+        "description": "Color temperature of this light",
+        "presets": [
+          {
+            "name": "coolest",
+            "value": 153,
+            "description": "Coolest temperature supported"
+          },
+          {
+            "name": "cool",
+            "value": 250,
+            "description": "Cool temperature (250 mireds / 4000 Kelvin)"
+          },
+          {
+            "name": "neutral",
+            "value": 370,
+            "description": "Neutral temperature (370 mireds / 2700 Kelvin)"
+          },
+          {
+            "name": "warmest",
+            "value": 370,
+            "description": "Warmest temperature supported"
+          }
+        ],
+        "endpoint": "l2"
+      }
+    ],
+    "endpoint": "l2"
+  },
+  {
+    "type": "enum",
+    "name": "dimmer_mode",
+    "label": "Dimmer mode",
+    "property": "dimmer_mode",
+    "access": 7,
+    "values": [
+      "rgbw",
+      "dual_ct"
+    ],
+    "description": "Switch between rgbw mode or dual color temperature mode"
+  },
+  {
+    "type": "numeric",
+    "name": "linkquality",
+    "label": "Linkquality",
+    "property": "linkquality",
+    "access": 1,
+    "unit": "lqi",
+    "description": "Link quality (signal strength)",
+    "value_min": 0,
+    "value_max": 255
+  }
+]

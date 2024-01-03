@@ -19,6 +19,8 @@ the Leedarson ZBT-CCTLight-Candle0904
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Leedarson](../index.md#leedarson)

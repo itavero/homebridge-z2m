@@ -1,6 +1,5 @@
 import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
 
-
 export interface MqttToHomeKitValueTransformer {
   (value: unknown): CharacteristicValue | undefined;
 }
@@ -13,9 +12,8 @@ abstract class BaseCharacteristicMonitor implements CharacteristicMonitor {
   constructor(
     private readonly key: string,
     protected readonly service: Service,
-    protected readonly characteristic: string | WithUUID<new () => Characteristic>,
-  ) {
-  }
+    protected readonly characteristic: string | WithUUID<new () => Characteristic>
+  ) {}
 
   abstract transformValueFromMqtt(value: unknown): CharacteristicValue | undefined;
 
@@ -35,7 +33,7 @@ abstract class BaseCharacteristicMonitor implements CharacteristicMonitor {
 export class NestedCharacteristicMonitor implements CharacteristicMonitor {
   constructor(
     private readonly key: string,
-    private readonly monitors: CharacteristicMonitor[],
+    private readonly monitors: CharacteristicMonitor[]
   ) {
     if (monitors.length === 0) {
       throw new RangeError(`No monitors passed to NestedCharacteristicMonitor for key ${key}.`);
@@ -45,17 +43,13 @@ export class NestedCharacteristicMonitor implements CharacteristicMonitor {
   callback(state: Record<string, unknown>): void {
     if (this.key in state) {
       const nested_state = state[this.key] as Record<string, unknown>;
-      this.monitors.forEach(m => m.callback(nested_state));
+      this.monitors.forEach((m) => m.callback(nested_state));
     }
   }
 }
 
 export class PassthroughCharacteristicMonitor extends BaseCharacteristicMonitor {
-  constructor(
-    key: string,
-    service: Service,
-    characteristic: string | WithUUID<new () => Characteristic>,
-  ) {
+  constructor(key: string, service: Service, characteristic: string | WithUUID<new () => Characteristic>) {
     super(key, service, characteristic);
   }
 
@@ -69,7 +63,7 @@ export class MappingCharacteristicMonitor extends BaseCharacteristicMonitor {
     key: string,
     service: Service,
     characteristic: string | WithUUID<new () => Characteristic>,
-    private readonly mapping: Map<CharacteristicValue, CharacteristicValue>,
+    private readonly mapping: Map<CharacteristicValue, CharacteristicValue>
   ) {
     super(key, service, characteristic);
     if (mapping.size === 0) {
@@ -93,13 +87,13 @@ export class BinaryConditionCharacteristicMonitor extends BaseCharacteristicMoni
     characteristic: string | WithUUID<new () => Characteristic>,
     private readonly condition: BinaryConditionBasedOnValue,
     private readonly value_true: CharacteristicValue,
-    private readonly value_false: CharacteristicValue,
+    private readonly value_false: CharacteristicValue
   ) {
     super(key, service, characteristic);
   }
 
   transformValueFromMqtt(value: unknown): CharacteristicValue | undefined {
-    return (this.condition(value)) ? this.value_true : this.value_false;
+    return this.condition(value) ? this.value_true : this.value_false;
   }
 }
 
@@ -111,7 +105,7 @@ export class NumericCharacteristicMonitor extends BaseCharacteristicMonitor {
     private readonly input_min: number,
     private readonly input_max: number,
     private readonly output_min?: number | undefined,
-    private readonly output_max?: number | undefined,
+    private readonly output_max?: number | undefined
   ) {
     super(key, service, characteristic);
     if (input_min === input_max) {
@@ -154,6 +148,6 @@ export class NumericCharacteristicMonitor extends BaseCharacteristicMonitor {
     }
     const percentage = (input - this.input_min) / (this.input_max - this.input_min);
 
-    return out_minimum + (percentage * (out_maximum - out_minimum));
+    return out_minimum + percentage * (out_maximum - out_minimum);
   }
 }

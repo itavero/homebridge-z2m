@@ -136,6 +136,31 @@ describe('Plugin configuration', () => {
       expect(isPluginConfiguration(configValid, BasicServiceCreatorManager.getInstance())).toBe(true);
     });
 
+    describe('with valid devices config', () => {
+      it('devices as object', () => {
+        const configDevicesNotAnArray: PlatformConfig = { ...minimalValidConfiguration, devices: { '0x123': 'not an array' } };
+        expect(isPluginConfiguration(configDevicesNotAnArray, BasicServiceCreatorManager.getInstance())).toBe(false);
+      });
+      it('device without ID', () => {
+        const configDevicesNotAnArray: PlatformConfig = { ...minimalValidConfiguration, devices: [{ exclude: false }] };
+        expect(isPluginConfiguration(configDevicesNotAnArray, BasicServiceCreatorManager.getInstance())).toBe(false);
+      });
+      it('device with invalid config', () => {
+        const configDevicesNotAnArray: PlatformConfig = {
+          ...minimalValidConfiguration,
+          devices: [{ id: '0x1234', ignore_availability: 'nope' }],
+        };
+        expect(isPluginConfiguration(configDevicesNotAnArray, BasicServiceCreatorManager.getInstance())).toBe(false);
+      });
+      it('device with valid config', () => {
+        const configDevicesNotAnArray: PlatformConfig = {
+          ...minimalValidConfiguration,
+          devices: [{ id: '0x1234', ignore_availability: true }],
+        };
+        expect(isPluginConfiguration(configDevicesNotAnArray, BasicServiceCreatorManager.getInstance())).toBe(true);
+      });
+    });
+
     it('with experimental as a string array (if present)', () => {
       const configNotAnArray: PlatformConfig = {
         ...minimalValidConfiguration,
@@ -178,29 +203,30 @@ describe('Plugin configuration', () => {
       });
 
       it.each`
-      converter       | type            | expected
-      ${'occupancy'}  | ${'occupancy'}  | ${true}
-      ${'occupancy'}  | ${'motion'}     | ${true}
-      ${'occupancy'}  | ${'contact'}    | ${false}
-      ${'occupancy'}  | ${1}            | ${false}
-      ${'switch'}     | ${'switch'}     | ${true}
-      ${'switch'}     | ${'outlet'}     | ${true}
-      ${'switch'}     | ${'contact'}    | ${false}
-      ${'switch'}     | ${1}            | ${false}
-    `('validates converter config for $converter if type is set to $type correctly (result: $expected)',
+        converter      | type           | expected
+        ${'occupancy'} | ${'occupancy'} | ${true}
+        ${'occupancy'} | ${'motion'}    | ${true}
+        ${'occupancy'} | ${'contact'}   | ${false}
+        ${'occupancy'} | ${1}           | ${false}
+        ${'switch'}    | ${'switch'}    | ${true}
+        ${'switch'}    | ${'outlet'}    | ${true}
+        ${'switch'}    | ${'contact'}   | ${false}
+        ${'switch'}    | ${1}           | ${false}
+      `(
+        'validates converter config for $converter if type is set to $type correctly (result: $expected)',
         ({ converter, type, expected }) => {
           const config: PlatformConfig = {
             ...minimalValidConfiguration,
             defaults: {
-              converters: {
-              },
+              converters: {},
             },
           };
           config.defaults.converters[converter] = {
             type: type,
           };
           expect(isPluginConfiguration(config, BasicServiceCreatorManager.getInstance())).toBe(expected);
-        });
+        }
+      );
     });
   });
 });

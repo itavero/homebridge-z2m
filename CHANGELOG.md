@@ -6,6 +6,58 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Changed
+
+- Drop support for unsupported Node.js version. Now only testing against v18 and v20.
+
+### Fixed
+
+- Compatibility with Zigbee2MQTT v1.35.0 fixed (see fixes in `v1.9.3-rc.0`)
+
+## [1.11.0-beta.2] - 2023-01-16
+
+### Added
+
+- Support for Carbon Dioxide (`co2`) sensors added. (see [#609](https://github.com/itavero/homebridge-z2m/issues/609))
+
+### Changed
+
+- Moved the Availability feature behind an experimental feature flag (`AVAILABILITY`), as it is not working reliably yet. (see [#593](https://github.com/itavero/homebridge-z2m/issues/593])
+- Added additional options for Adaptive Lighting, to have it only update the color temperature when the light is on and to have it send a `transition` when updating the color temperature. These options are **not** yet available via the config user interface. (see [#590](https://github.com/itavero/homebridge-z2m/discussions/590))
+
+## [1.11.0-beta.1] - 2023-01-09
+
+### Changed
+
+- Updated `config.schema.json` to have `exclude` set to `false` if it is unchecked in the Config UI. This should allow users to override a global `exclude: true` setting for specific devices, via the web interface. (see [#610](https://github.com/itavero/homebridge-z2m/issues/610))
+- Debug messages can now be output as `info`, by setting `debug_as_info` to `true` in the plugin configuration. (see docs for more information)
+- Added option `ignore_z2m_online` to device configuration, to not mark devices as offline when Zigbee2MQTT reports itself as offline or when the connection to the MQTT broker is lost.
+
+## [1.11.0-beta.0] - 2022-12-12
+
+### Added
+
+- **Adaptive Lighting**: Added support for Adaptive Lighting. Currently this needs to be enabled *manually* in the plugin configuration, using [converter specific configuration for `light`](https://z2m.dev/light.html#converter-specific-configuration-light). In a future release this might get enabled by default. (see [#30](https://github.com/itavero/homebridge-z2m/issues/30) / [#488](https://github.com/itavero/homebridge-z2m/pull/488))
+
+## [1.10.0] - 2022-12-09
+
+Based on v1.9.2, as v1.9.3 was made later as a hotfix.
+
+### Added
+
+- Properties/exposes information can now be excluded based on the `endpoint`, using the `excluded_endpoints` configuration option. (relates to [#517](https://github.com/itavero/homebridge-z2m/issues/517))
+- Window Covering can now be requested to stop moving (see [#483](https://github.com/itavero/homebridge-z2m/issues/483))
+- Availability information from Zigbee2MQTT, if available, is now used to determine if a device is reachable or not. (see [#36](https://github.com/itavero/homebridge-z2m/issues/36))
+
+### Changed
+
+- Exposes information is now filtered before passing it to the service handlers. This should make the behavior more consistent and reduce complexity of the service handlers for improved maintainability.
+- MQTT messages being published by this plugin are now logged to the `debug` log level by default. This can be changed by setting `log.mqtt_publish` to the desired log level (e.g. `info`) in the plugin configuration. (see [#518](https://github.com/itavero/homebridge-z2m/issues/518))
+
+### Fixed
+
+- When combining exposes information of grouped devices, the `value_min` and `value_max` were not being combined correctly. This has been fixed, so that the resulting range is supported by all devices in the group.
+
 ## [1.9.3] - 2024-01-03
 
 ### Fixed
@@ -36,7 +88,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Added
 
-- Some converters now have some additional configuration options which allows you to select an alternative implementation. (see 
+- Some converters now have some additional configuration options which allows you to select an alternative implementation. (see
  [#458](https://github.com/itavero/homebridge-z2m/pull/458) and related issues)
   - `switch` can be configured as a `switch` (default) or `outlet`
   - `occupancy` can be configured as `occupancy` (default) or `motion`
@@ -220,7 +272,7 @@ For `cover` devices the following changes/fixes are in this release:
 ## [1.1.0-beta.1][] - 2021-01-16
 ### Changed
 - Zigbee2MQTT minimal version check ignores the `-dev` suffix, so that the newer development build is also accepted.
-- Updated Name characteristic of the Accessory Information service with the `friendly_name` received from Zigbee2MQTT. 
+- Updated Name characteristic of the Accessory Information service with the `friendly_name` received from Zigbee2MQTT.
 - Fixed some typo's, both in code and documentation.
 - Changed casing of Zigbee2MQTT in logs and such.
 
@@ -353,9 +405,9 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.3...HEAD
-[1.9.3]: https://github.com/itavero/homebridge-z2m/compare/v1.9.3-rc.0...v1.9.3
-[1.9.3-rc.0]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...v1.9.3-rc.0
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...HEAD
+[1.11.0-beta.2]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.1...v1.11.0-beta.2
+[1.11.0-beta.1]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.0...v1.11.0-beta.1
 [1.9.2]: https://github.com/itavero/homebridge-z2m/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/itavero/homebridge-z2m/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/itavero/homebridge-z2m/compare/v1.8.0...v1.9.0

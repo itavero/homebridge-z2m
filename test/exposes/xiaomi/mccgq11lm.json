@@ -2,16 +2,18 @@
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
-    "description": "Remaining battery in %",
+    "description": "Remaining battery in %, can take up to 24 hours before reported.",
     "value_min": 0,
     "value_max": 100
   },
   {
     "type": "binary",
     "name": "contact",
+    "label": "Contact",
     "property": "contact",
     "access": 1,
     "value_on": false,
@@ -21,6 +23,7 @@
   {
     "type": "numeric",
     "name": "device_temperature",
+    "label": "Device temperature",
     "property": "device_temperature",
     "access": 1,
     "unit": "°C",
@@ -29,6 +32,7 @@
   {
     "type": "numeric",
     "name": "voltage",
+    "label": "Voltage",
     "property": "voltage",
     "access": 1,
     "unit": "mV",
@@ -37,6 +41,7 @@
   {
     "type": "numeric",
     "name": "power_outage_count",
+    "label": "Power outage count",
     "property": "power_outage_count",
     "access": 1,
     "description": "Number of power outages"
@@ -44,6 +49,7 @@
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

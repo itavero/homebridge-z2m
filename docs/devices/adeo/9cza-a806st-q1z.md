@@ -19,6 +19,8 @@ the ADEO 9CZA-A806ST-Q1Z
   * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from ADEO](../index.md#adeo)

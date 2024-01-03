@@ -2,10 +2,11 @@
   {
     "type": "numeric",
     "name": "battery",
+    "label": "Battery",
     "property": "battery",
     "access": 1,
     "unit": "%",
-    "description": "Remaining battery in %",
+    "description": "Remaining battery in %, can take up to 24 hours before reported.",
     "value_min": 0,
     "value_max": 100
   },
@@ -15,6 +16,7 @@
       {
         "type": "enum",
         "name": "state",
+        "label": "State",
         "property": "state",
         "access": 3,
         "values": [
@@ -26,17 +28,20 @@
       {
         "type": "numeric",
         "name": "tilt",
+        "label": "Tilt",
         "property": "tilt",
         "access": 7,
         "value_min": 0,
         "value_max": 100,
-        "description": "Tilt of this cover"
+        "description": "Tilt of this cover",
+        "unit": "%"
       }
     ]
   },
   {
     "type": "numeric",
     "name": "linkquality",
+    "label": "Linkquality",
     "property": "linkquality",
     "access": 1,
     "unit": "lqi",

@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Fixed
+
+- Compatibility with Zigbee2MQTT v1.35.0 fixed (see fixes in `v1.9.3-rc.0`)
+
 ## [1.9.3-rc.0] - 2024-01-02
 
 ### Fixed

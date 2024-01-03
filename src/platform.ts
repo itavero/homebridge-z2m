@@ -10,7 +10,7 @@ import {
   PluginConfiguration,
 } from './configModels';
 
-import * as mqtt from 'mqtt';
+import mqtt from 'mqtt';
 import * as fs from 'fs';
 import {
   DeviceListEntry,

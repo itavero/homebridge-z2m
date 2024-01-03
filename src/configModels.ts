@@ -101,7 +101,7 @@ export interface MqttConfiguration extends Record<string, unknown> {
   client_id?: string;
   reject_unauthorized?: boolean;
   keepalive?: number;
-  version?: number;
+  version?: 3 | 4 | 5;
   disable_qos?: boolean;
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

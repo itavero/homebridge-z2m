@@ -18,6 +18,7 @@ import {
   ExposesEntry,
   exposesGetOverlap,
   GroupListEntry,
+  isDeviceDefinition,
   isDeviceListEntry,
   isDeviceListEntryForGroup,
 } from './z2mModels';
@@ -582,7 +583,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private createOrUpdateAccessory(device: DeviceListEntry) {
-    if (!device.supported || device.definition === undefined || this.isDeviceExcluded(device)) {
+    if (!device.supported || !isDeviceDefinition(device.definition) || this.isDeviceExcluded(device)) {
       return;
     }
     const uuid_input = isDeviceListEntryForGroup(device) ? `group-${device.group_id}` : device.ieee_address;

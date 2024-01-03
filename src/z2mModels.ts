@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export declare type MqttValue = string | boolean | number;
 
+const isNullOrUndefined = (x: unknown): x is null | undefined => x === null || x === undefined;
+
 export interface ExposesEntry {
   type: string;
   name?: string;
@@ -38,7 +40,7 @@ export enum ExposesKnownTypes {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isExposesEntry = (x: any): x is ExposesEntry => {
-  if (x === undefined || x.type === undefined) {
+  if (isNullOrUndefined(x) || isNullOrUndefined(x.type)) {
     return false;
   }
 
@@ -299,7 +301,8 @@ export interface DeviceDefinition {
   exposes: ExposesEntry[];
 }
 
-export const isDeviceDefinition = (x: any): x is DeviceDefinition => x.vendor && x.model && Array.isArray(x.exposes);
+export const isDeviceDefinition = (x: any): x is DeviceDefinition =>
+  !isNullOrUndefined(x) && x.vendor && x.model && Array.isArray(x.exposes);
 
 export interface DeviceListEntry {
   definition?: DeviceDefinition | null;
@@ -314,9 +317,8 @@ export interface DeviceListEntryForGroup extends DeviceListEntry {
   group_id: number;
 }
 
-const isNullOrUndefined = (x: unknown): x is null | undefined => x === null || x === undefined;
-
-export const isDeviceListEntry = (x: any): x is DeviceListEntry => x.ieee_address && x.friendly_name && x.supported;
+export const isDeviceListEntry = (x: any): x is DeviceListEntry =>
+  !isNullOrUndefined(x) && x.ieee_address && x.friendly_name && x.supported;
 export const isDeviceListEntryForGroup = (x: any): x is DeviceListEntryForGroup => {
   return isDeviceListEntry(x) && 'group_id' in x && typeof x['group_id'] === 'number';
 };
@@ -351,11 +353,11 @@ export interface GroupMember {
   endpoint: number;
 }
 
-export const isGroupMember = (x: any): x is GroupMember => x.ieee_address && x.endpoint;
+export const isGroupMember = (x: any): x is GroupMember => !isNullOrUndefined(x) && x.ieee_address && x.endpoint;
 export interface GroupListEntry {
   friendly_name: string;
   id: number;
   members: GroupMember[];
 }
 
-export const isGroupListEntry = (x: any): x is GroupListEntry => x.id && x.friendly_name && x.members;
+export const isGroupListEntry = (x: any): x is GroupListEntry => !isNullOrUndefined(x) && x.id && x.friendly_name && x.members;

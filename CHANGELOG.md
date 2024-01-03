@@ -10,6 +10,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Drop support for unsupported Node.js version. Now only testing against v18 and v20.
 
+### Fixed
+
+- Compatibility with Zigbee2MQTT v1.35.0 fixed (see fixes in `v1.9.3-rc.0`)
+
 ## [1.11.0-beta.2] - 2023-01-16
 
 ### Added
@@ -37,6 +41,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [1.10.0] - 2022-12-09
 
+Based on v1.9.2, as v1.9.3 was made later as a hotfix.
+
 ### Added
 
 - Properties/exposes information can now be excluded based on the `endpoint`, using the `excluded_endpoints` configuration option. (relates to [#517](https://github.com/itavero/homebridge-z2m/issues/517))
@@ -51,6 +57,19 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Fixed
 
 - When combining exposes information of grouped devices, the `value_min` and `value_max` were not being combined correctly. This has been fixed, so that the resulting range is supported by all devices in the group.
+
+## [1.9.3] - 2024-01-03
+
+### Fixed
+
+- Compatibility with Zigbee2MQTT v1.35.0 fixed (see fixes in `v1.9.3-rc.0`)
+
+## [1.9.3-rc.0] - 2024-01-02
+
+### Fixed
+
+- Type checks on Z2M models now explicitly check that the input is not null or undefined, to prevent crashes when we get unexpected data. (see [#794](https://github.com/itavero/homebridge-z2m/issues/794))
+- When creating or updating an accessory, previously it was only checked if the device definition was not undefined. Now we check if it seems to be a valid device definition. (see [#794](https://github.com/itavero/homebridge-z2m/issues/794))
 
 ## [1.9.2] - 2022-10-01
 
@@ -386,11 +405,9 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.2...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...HEAD
 [1.11.0-beta.2]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.1...v1.11.0-beta.2
 [1.11.0-beta.1]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.0...v1.11.0-beta.1
-[1.11.0-beta.0]: https://github.com/itavero/homebridge-z2m/compare/v1.10.0...v1.11.0-beta.0
-[1.10.0]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...v1.10.0
 [1.9.2]: https://github.com/itavero/homebridge-z2m/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/itavero/homebridge-z2m/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/itavero/homebridge-z2m/compare/v1.8.0...v1.9.0

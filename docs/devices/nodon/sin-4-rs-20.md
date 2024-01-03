@@ -15,9 +15,11 @@ The following HomeKit Services and Characteristics are exposed by
 the NodOn SIN-4-RS-20
 
 * [Window Covering](../../cover.md)
+  * Current Horizontal Tilt Angle
   * Current Position
   * Hold Position
   * Position State
+  * Target Horizontal Tilt Angle
   * Target Position
 
 

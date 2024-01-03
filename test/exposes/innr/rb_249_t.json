@@ -3,36 +3,36 @@
     "type": "light",
     "features": [
       {
-        "type": "binary",
         "name": "state",
         "label": "State",
-        "property": "state",
         "access": 7,
+        "type": "binary",
+        "property": "state",
+        "description": "On/off state of this light",
         "value_on": "ON",
         "value_off": "OFF",
-        "value_toggle": "TOGGLE",
-        "description": "On/off state of this light"
+        "value_toggle": "TOGGLE"
       },
       {
-        "type": "numeric",
         "name": "brightness",
         "label": "Brightness",
-        "property": "brightness",
         "access": 7,
-        "value_min": 0,
+        "type": "numeric",
+        "property": "brightness",
+        "description": "Brightness of this light",
         "value_max": 254,
-        "description": "Brightness of this light"
+        "value_min": 0
       },
       {
-        "type": "numeric",
         "name": "color_temp",
         "label": "Color temp",
-        "property": "color_temp",
         "access": 7,
-        "unit": "mired",
-        "value_min": 200,
-        "value_max": 454,
+        "type": "numeric",
+        "property": "color_temp",
         "description": "Color temperature of this light",
+        "unit": "mired",
+        "value_max": 454,
+        "value_min": 200,
         "presets": [
           {
             "name": "coolest",
@@ -62,15 +62,15 @@
         ]
       },
       {
-        "type": "numeric",
         "name": "color_temp_startup",
         "label": "Color temp startup",
-        "property": "color_temp_startup",
         "access": 7,
-        "unit": "mired",
-        "value_min": 200,
-        "value_max": 454,
+        "type": "numeric",
+        "property": "color_temp_startup",
         "description": "Color temperature after cold power on of this light",
+        "unit": "mired",
+        "value_max": 454,
+        "value_min": 200,
         "presets": [
           {
             "name": "coolest",
@@ -107,11 +107,12 @@
     ]
   },
   {
-    "type": "enum",
     "name": "effect",
     "label": "Effect",
-    "property": "effect",
     "access": 2,
+    "type": "enum",
+    "property": "effect",
+    "description": "Triggers an effect on the light (e.g. make light blink for a few seconds)",
     "values": [
       "blink",
       "breathe",
@@ -119,32 +120,31 @@
       "channel_change",
       "finish_effect",
       "stop_effect"
-    ],
-    "description": "Triggers an effect on the light (e.g. make light blink for a few seconds)"
+    ]
   },
   {
-    "type": "enum",
     "name": "power_on_behavior",
     "label": "Power-on behavior",
-    "property": "power_on_behavior",
     "access": 7,
+    "type": "enum",
+    "property": "power_on_behavior",
+    "description": "Controls the behavior when the device is powered on after power loss",
     "values": [
       "off",
       "on",
       "toggle",
       "previous"
-    ],
-    "description": "Controls the behavior when the device is powered on after power loss"
+    ]
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]

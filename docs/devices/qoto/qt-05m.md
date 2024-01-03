@@ -28,91 +28,91 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "numeric",
     "name": "water_flow",
     "label": "Water flow",
-    "property": "water_flow",
     "access": 1,
+    "type": "numeric",
+    "property": "water_flow",
+    "description": "Current water flow in %.",
     "unit": "%",
-    "value_min": 0,
-    "description": "Current water flow in %."
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "last_watering_duration",
     "label": "Last watering duration",
-    "property": "last_watering_duration",
     "access": 1,
+    "type": "numeric",
+    "property": "last_watering_duration",
+    "description": "Last watering duration in seconds.",
     "unit": "sec",
-    "value_min": 0,
-    "description": "Last watering duration in seconds."
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "remaining_watering_time",
     "label": "Remaining watering time",
-    "property": "remaining_watering_time",
     "access": 1,
+    "type": "numeric",
+    "property": "remaining_watering_time",
+    "description": "Remaning watering time (for auto shutdown). Updates every minute, and every 10s in the last minute.",
     "unit": "sec",
-    "value_min": 0,
-    "description": "Remaning watering time (for auto shutdown). Updates every minute, and every 10s in the last minute."
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "valve_state",
     "label": "Valve state",
-    "property": "valve_state",
     "access": 3,
-    "value_min": 0,
-    "value_max": 100,
-    "value_step": 5,
+    "type": "numeric",
+    "property": "valve_state",
+    "description": "Set valve to %.",
     "unit": "%",
-    "description": "Set valve to %."
+    "value_max": 100,
+    "value_min": 0,
+    "value_step": 5
   },
   {
-    "type": "numeric",
     "name": "shutdown_timer",
     "label": "Shutdown timer",
-    "property": "shutdown_timer",
     "access": 3,
-    "value_min": 0,
-    "value_max": 14400,
+    "type": "numeric",
+    "property": "shutdown_timer",
+    "description": "Auto shutdown in seconds.",
     "unit": "sec",
-    "description": "Auto shutdown in seconds."
+    "value_max": 14400,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "valve_state_auto_shutdown",
     "label": "Valve state auto shutdown",
-    "property": "valve_state_auto_shutdown",
     "access": 3,
-    "value_min": 0,
-    "value_max": 100,
-    "value_step": 5,
+    "type": "numeric",
+    "property": "valve_state_auto_shutdown",
+    "description": "Set valve to % with auto shutdown.",
     "unit": "%",
-    "description": "Set valve to % with auto shutdown."
+    "value_max": 100,
+    "value_min": 0,
+    "value_step": 5
   },
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

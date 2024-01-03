@@ -28,60 +28,60 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   },
   {
-    "type": "binary",
     "name": "key_1",
     "label": "Key 1",
-    "property": "key_1",
     "access": 1,
+    "type": "binary",
+    "property": "key_1",
     "value_on": "ON",
     "value_off": "OFF"
   },
   {
-    "type": "binary",
     "name": "key_2",
     "label": "Key 2",
-    "property": "key_2",
     "access": 1,
+    "type": "binary",
+    "property": "key_2",
     "value_on": "ON",
     "value_off": "OFF"
   },
   {
-    "type": "binary",
     "name": "key_3",
     "label": "Key 3",
-    "property": "key_3",
     "access": 1,
+    "type": "binary",
+    "property": "key_3",
     "value_on": "ON",
     "value_off": "OFF"
   },
   {
-    "type": "binary",
     "name": "key_4",
     "label": "Key 4",
-    "property": "key_4",
     "access": 1,
+    "type": "binary",
+    "property": "key_4",
     "value_on": "ON",
     "value_off": "OFF"
   }

@@ -31,63 +31,63 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "switch",
     "features": [
       {
-        "type": "binary",
         "name": "state",
         "label": "State",
-        "property": "learn_ir_code",
         "access": 2,
+        "type": "binary",
+        "property": "learn_ir_code",
+        "description": "Turn on to learn new IR code",
         "value_on": "ON",
-        "value_off": "OFF",
-        "description": "Turn on to learn new IR code"
+        "value_off": "OFF"
       }
     ]
   },
   {
-    "type": "text",
     "name": "learned_ir_code",
     "label": "Learned ir code",
-    "property": "learned_ir_code",
     "access": 1,
+    "type": "text",
+    "property": "learned_ir_code",
     "description": "The IR code learned by device"
   },
   {
-    "type": "text",
     "name": "ir_code_to_send",
     "label": "Ir code to send",
-    "property": "ir_code_to_send",
     "access": 2,
+    "type": "text",
+    "property": "ir_code_to_send",
     "description": "The IR code to send by device"
   },
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "voltage",
     "label": "Voltage",
-    "property": "voltage",
     "access": 1,
-    "unit": "mV",
-    "description": "Voltage of the battery in millivolts"
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Voltage of the battery in millivolts",
+    "unit": "mV"
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

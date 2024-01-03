@@ -1,106 +1,106 @@
 [
   {
-    "type": "binary",
     "name": "battery_low",
     "label": "Battery low",
-    "property": "battery_low",
     "access": 1,
+    "type": "binary",
+    "property": "battery_low",
+    "description": "Indicates if the battery of this device is almost empty",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the battery of this device is almost empty"
+    "value_off": false
   },
   {
+    "label": "Child lock",
     "type": "lock",
     "features": [
       {
-        "type": "binary",
         "name": "state",
         "label": "State",
-        "property": "child_lock",
         "access": 3,
+        "type": "binary",
+        "property": "child_lock",
+        "description": "Enables/disables physical input on the device",
         "value_on": "LOCK",
-        "value_off": "UNLOCK",
-        "description": "Enables/disables physical input on the device"
+        "value_off": "UNLOCK"
       }
-    ],
-    "label": "Child lock"
+    ]
   },
   {
+    "label": "Away mode",
     "type": "switch",
     "features": [
       {
-        "type": "binary",
         "name": "state",
         "label": "State",
-        "property": "away_mode",
         "access": 3,
+        "type": "binary",
+        "property": "away_mode",
+        "description": "Enable/disable away mode",
         "value_on": "ON",
-        "value_off": "OFF",
-        "description": "Enable/disable away mode"
+        "value_off": "OFF"
       }
-    ],
-    "label": "Away mode"
+    ]
   },
   {
     "type": "climate",
     "features": [
       {
-        "type": "numeric",
         "name": "current_heating_setpoint",
         "label": "Current heating setpoint",
-        "property": "current_heating_setpoint",
         "access": 3,
-        "value_min": 5,
-        "value_max": 35,
-        "value_step": 0.5,
+        "type": "numeric",
+        "property": "current_heating_setpoint",
+        "description": "Temperature setpoint",
         "unit": "°C",
-        "description": "Temperature setpoint"
+        "value_max": 35,
+        "value_min": 5,
+        "value_step": 0.5
       },
       {
-        "type": "numeric",
         "name": "local_temperature",
         "label": "Local temperature",
-        "property": "local_temperature",
         "access": 1,
-        "unit": "°C",
-        "description": "Current temperature measured on the device"
+        "type": "numeric",
+        "property": "local_temperature",
+        "description": "Current temperature measured on the device",
+        "unit": "°C"
       },
       {
-        "type": "enum",
         "name": "system_mode",
         "label": "System mode",
-        "property": "system_mode",
         "access": 3,
+        "type": "enum",
+        "property": "system_mode",
+        "description": "Mode of this device",
         "values": [
           "off",
           "heat",
           "auto"
-        ],
-        "description": "Mode of this device"
+        ]
       },
       {
-        "type": "enum",
         "name": "running_state",
         "label": "Running state",
-        "property": "running_state",
         "access": 1,
+        "type": "enum",
+        "property": "running_state",
+        "description": "The current running state",
         "values": [
           "idle",
           "heat"
-        ],
-        "description": "The current running state"
+        ]
       }
     ]
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]

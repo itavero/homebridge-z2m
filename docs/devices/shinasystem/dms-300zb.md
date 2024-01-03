@@ -28,85 +28,85 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "voltage",
     "label": "Voltage",
-    "property": "voltage",
     "access": 1,
-    "unit": "mV",
-    "description": "Voltage of the battery in millivolts"
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Voltage of the battery in millivolts",
+    "unit": "mV"
   },
   {
-    "type": "binary",
     "name": "occupancy_in",
     "label": "Occupancy in",
-    "property": "occupancy_in",
     "access": 1,
+    "type": "binary",
+    "property": "occupancy_in",
+    "description": "Indicates whether \"IN\" Sensor of the device detected occupancy",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether \"IN\" Sensor of the device detected occupancy"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "occupancy_out",
     "label": "Occupancy out",
-    "property": "occupancy_out",
     "access": 1,
+    "type": "binary",
+    "property": "occupancy_out",
+    "description": "Indicates whether \"OUT\" Sensor of the device detected occupancy",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether \"OUT\" Sensor of the device detected occupancy"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "occupancy_or",
     "label": "Occupancy or",
-    "property": "occupancy_or",
     "access": 1,
+    "type": "binary",
+    "property": "occupancy_or",
+    "description": "Indicates whether \"IN or OUT\" Sensor of the device detected occupancy",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether \"IN or OUT\" Sensor of the device detected occupancy"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "occupancy_and",
     "label": "Occupancy and",
-    "property": "occupancy_and",
     "access": 1,
+    "type": "binary",
+    "property": "occupancy_and",
+    "description": "Indicates whether \"IN and OUT\" Sensor of the device detected occupancy",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether \"IN and OUT\" Sensor of the device detected occupancy"
+    "value_off": false
   },
   {
-    "type": "numeric",
     "name": "occupancy_timeout",
     "label": "Occupancy timeout",
-    "property": "occupancy_timeout",
     "access": 7,
+    "type": "numeric",
+    "property": "occupancy_timeout",
     "unit": "s",
-    "value_min": 0,
-    "value_max": 3600
+    "value_max": 3600,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

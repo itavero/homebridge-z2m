@@ -21,6 +21,7 @@ the SONOFF SNZB-04P
 * [Contact Sensor](../../sensors.md)
   * Contact Sensor State
   * Status Low Battery
+  * Status Tampered
 
 
 # Related

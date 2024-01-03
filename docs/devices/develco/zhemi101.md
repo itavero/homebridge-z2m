@@ -28,49 +28,50 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "numeric",
     "name": "power",
     "label": "Power",
-    "property": "power",
     "access": 1,
-    "unit": "W",
-    "description": "Instantaneous measured power"
+    "type": "numeric",
+    "property": "power",
+    "description": "Instantaneous measured power",
+    "unit": "W"
   },
   {
-    "type": "numeric",
     "name": "energy",
     "label": "Energy",
-    "property": "energy",
     "access": 1,
-    "unit": "kWh",
-    "description": "Sum of consumed energy"
+    "type": "numeric",
+    "property": "energy",
+    "description": "Sum of consumed energy",
+    "unit": "kWh"
   },
   {
-    "type": "binary",
     "name": "battery_low",
     "label": "Battery low",
-    "property": "battery_low",
     "access": 1,
+    "type": "binary",
+    "property": "battery_low",
+    "description": "Indicates if the battery of this device is almost empty",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the battery of this device is almost empty"
+    "value_off": false
   },
   {
-    "type": "numeric",
     "name": "pulse_configuration",
     "label": "Pulse configuration",
-    "property": "pulse_configuration",
     "access": 7,
-    "value_min": 0,
+    "type": "numeric",
+    "property": "pulse_configuration",
+    "description": "Pulses per kwh. Default 1000 imp/kWh. Range 0 to 65535",
     "value_max": 65535,
-    "description": "Pulses per kwh. Default 1000 imp/kWh. Range 0 to 65535"
+    "value_min": 0
   },
   {
-    "type": "enum",
     "name": "interface_mode",
     "label": "Interface mode",
-    "property": "interface_mode",
     "access": 7,
+    "type": "enum",
+    "property": "interface_mode",
+    "description": "Operating mode/probe",
     "values": [
       "electricity",
       "gas",
@@ -80,39 +81,38 @@ This is the information provided by Zigbee2MQTT for this device:
       "IEC62056-21",
       "DSMR-2.3",
       "DSMR-4.0"
-    ],
-    "description": "Operating mode/probe"
+    ]
   },
   {
-    "type": "numeric",
     "name": "current_summation",
     "label": "Current summation",
-    "property": "current_summation",
     "access": 2,
+    "type": "numeric",
+    "property": "current_summation",
     "description": "Current summation value sent to the display. e.g. 570 = 0,570 kWh",
-    "value_min": 0,
-    "value_max": 268435455
+    "value_max": 268435455,
+    "value_min": 0
   },
   {
-    "type": "binary",
     "name": "check_meter",
     "label": "Check meter",
-    "property": "check_meter",
     "access": 1,
+    "type": "binary",
+    "property": "check_meter",
+    "description": "Is true if communication problem with meter is experienced",
     "value_on": true,
-    "value_off": false,
-    "description": "Is true if communication problem with meter is experienced"
+    "value_off": false
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

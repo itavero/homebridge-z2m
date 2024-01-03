@@ -20,6 +20,7 @@ the Xiaomi MCCGQ13LM
   * Status Low Battery
 * [Contact Sensor](../../sensors.md)
   * Contact Sensor State
+  * Status Tampered
 
 
 # Related

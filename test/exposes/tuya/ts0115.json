@@ -1,116 +1,116 @@
 [
   {
     "type": "switch",
+    "endpoint": "l1",
     "features": [
       {
-        "type": "binary",
         "name": "state",
         "label": "State",
+        "access": 7,
+        "type": "binary",
+        "endpoint": "l1",
         "property": "state_l1",
-        "access": 7,
+        "description": "On/off state of the switch",
         "value_on": "ON",
         "value_off": "OFF",
-        "description": "On/off state of the switch",
-        "value_toggle": "TOGGLE",
-        "endpoint": "l1"
+        "value_toggle": "TOGGLE"
       }
-    ],
-    "endpoint": "l1"
+    ]
   },
   {
     "type": "switch",
+    "endpoint": "l2",
     "features": [
       {
-        "type": "binary",
         "name": "state",
         "label": "State",
+        "access": 7,
+        "type": "binary",
+        "endpoint": "l2",
         "property": "state_l2",
-        "access": 7,
+        "description": "On/off state of the switch",
         "value_on": "ON",
         "value_off": "OFF",
-        "description": "On/off state of the switch",
-        "value_toggle": "TOGGLE",
-        "endpoint": "l2"
+        "value_toggle": "TOGGLE"
       }
-    ],
-    "endpoint": "l2"
+    ]
   },
   {
     "type": "switch",
+    "endpoint": "l3",
     "features": [
       {
-        "type": "binary",
         "name": "state",
         "label": "State",
+        "access": 7,
+        "type": "binary",
+        "endpoint": "l3",
         "property": "state_l3",
-        "access": 7,
+        "description": "On/off state of the switch",
         "value_on": "ON",
         "value_off": "OFF",
-        "description": "On/off state of the switch",
-        "value_toggle": "TOGGLE",
-        "endpoint": "l3"
+        "value_toggle": "TOGGLE"
       }
-    ],
-    "endpoint": "l3"
+    ]
   },
   {
     "type": "switch",
+    "endpoint": "l4",
     "features": [
       {
-        "type": "binary",
         "name": "state",
         "label": "State",
+        "access": 7,
+        "type": "binary",
+        "endpoint": "l4",
         "property": "state_l4",
-        "access": 7,
+        "description": "On/off state of the switch",
         "value_on": "ON",
         "value_off": "OFF",
-        "description": "On/off state of the switch",
-        "value_toggle": "TOGGLE",
-        "endpoint": "l4"
+        "value_toggle": "TOGGLE"
       }
-    ],
-    "endpoint": "l4"
+    ]
   },
   {
     "type": "switch",
+    "endpoint": "l5",
     "features": [
       {
-        "type": "binary",
         "name": "state",
         "label": "State",
-        "property": "state_l5",
         "access": 7,
+        "type": "binary",
+        "endpoint": "l5",
+        "property": "state_l5",
+        "description": "On/off state of the switch",
         "value_on": "ON",
         "value_off": "OFF",
-        "description": "On/off state of the switch",
-        "value_toggle": "TOGGLE",
-        "endpoint": "l5"
+        "value_toggle": "TOGGLE"
       }
-    ],
-    "endpoint": "l5"
+    ]
   },
   {
-    "type": "enum",
     "name": "power_on_behavior",
     "label": "Power-on behavior",
-    "property": "power_on_behavior",
     "access": 7,
+    "type": "enum",
+    "property": "power_on_behavior",
+    "description": "Controls the behavior when the device is powered on after power loss",
     "values": [
       "off",
       "previous",
       "on"
-    ],
-    "description": "Controls the behavior when the device is powered on after power loss"
+    ]
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]

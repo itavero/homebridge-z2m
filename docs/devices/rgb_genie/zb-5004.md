@@ -28,22 +28,23 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "enum",
     "name": "action",
     "label": "Action",
-    "property": "action",
     "access": 1,
+    "type": "enum",
+    "property": "action",
+    "description": "Triggered action (e.g. a button click)",
     "values": [
       "recall_*",
       "on",
@@ -51,19 +52,18 @@ This is the information provided by Zigbee2MQTT for this device:
       "brightness_stop",
       "brightness_move_up",
       "brightness_move_down"
-    ],
-    "description": "Triggered action (e.g. a button click)"
+    ]
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

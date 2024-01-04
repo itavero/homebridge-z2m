@@ -1,83 +1,98 @@
 [
   {
-    "type": "numeric",
-    "name": "temperature",
-    "label": "Temperature",
-    "property": "temperature",
-    "access": 1,
-    "unit": "°C",
-    "description": "Measured temperature value"
-  },
-  {
-    "type": "numeric",
-    "name": "humidity",
-    "label": "Humidity",
-    "property": "humidity",
-    "access": 1,
-    "unit": "%",
-    "description": "Measured relative humidity"
-  },
-  {
-    "type": "numeric",
-    "name": "voc",
-    "label": "VOC",
-    "property": "voc",
-    "access": 1,
-    "unit": "ppb",
-    "description": "Measured VOC value"
-  },
-  {
-    "type": "numeric",
     "name": "device_temperature",
     "label": "Device temperature",
-    "property": "device_temperature",
     "access": 1,
-    "unit": "°C",
-    "description": "Temperature of the device"
+    "type": "numeric",
+    "property": "device_temperature",
+    "description": "Temperature of the device",
+    "unit": "°C"
   },
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "voltage",
     "label": "Voltage",
-    "property": "voltage",
     "access": 1,
-    "unit": "mV",
-    "description": "Voltage of the battery in millivolts"
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Voltage of the battery in millivolts",
+    "unit": "mV"
   },
   {
+    "name": "air_quality",
+    "label": "Air quality",
+    "access": 5,
     "type": "enum",
+    "property": "air_quality",
+    "description": "Measured air quality",
+    "values": [
+      "excellent",
+      "good",
+      "moderate",
+      "poor",
+      "unhealthy"
+    ]
+  },
+  {
+    "name": "voc",
+    "label": "Voc",
+    "access": 5,
+    "type": "numeric",
+    "property": "voc",
+    "description": "Measured VOC value",
+    "unit": "ppb"
+  },
+  {
+    "name": "temperature",
+    "label": "Temperature",
+    "access": 5,
+    "type": "numeric",
+    "property": "temperature",
+    "description": "Measured temperature value",
+    "unit": "ºC"
+  },
+  {
+    "name": "humidity",
+    "label": "Humidity",
+    "access": 5,
+    "type": "numeric",
+    "property": "humidity",
+    "description": "Measured relative humidity",
+    "unit": "%"
+  },
+  {
     "name": "display_unit",
     "label": "Display unit",
-    "property": "display_unit",
     "access": 7,
+    "type": "enum",
+    "property": "display_unit",
+    "description": "Units to show on the display",
     "values": [
       "mgm3_celsius",
       "ppb_celsius",
       "mgm3_fahrenheit",
       "ppb_fahrenheit"
-    ],
-    "description": "Units to show on the display"
+    ]
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]

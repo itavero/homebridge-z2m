@@ -28,28 +28,30 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "composite",
-    "property": "warning",
     "name": "warning",
     "label": "Warning",
+    "access": 2,
+    "type": "composite",
+    "property": "warning",
     "features": [
       {
-        "type": "enum",
         "name": "mode",
         "label": "Mode",
-        "property": "mode",
         "access": 2,
+        "type": "enum",
+        "property": "mode",
+        "description": "Mode of the warning (sound effect)",
         "values": [
           "stop",
           "burglar",
@@ -58,79 +60,77 @@ This is the information provided by Zigbee2MQTT for this device:
           "police_panic",
           "fire_panic",
           "emergency_panic"
-        ],
-        "description": "Mode of the warning (sound effect)"
+        ]
       },
       {
-        "type": "enum",
         "name": "level",
         "label": "Level",
-        "property": "level",
         "access": 2,
+        "type": "enum",
+        "property": "level",
+        "description": "Sound level",
         "values": [
           "low",
           "medium",
           "high",
           "very_high"
-        ],
-        "description": "Sound level"
+        ]
       },
       {
-        "type": "enum",
         "name": "strobe_level",
         "label": "Strobe level",
-        "property": "strobe_level",
         "access": 2,
+        "type": "enum",
+        "property": "strobe_level",
+        "description": "Intensity of the strobe",
         "values": [
           "low",
           "medium",
           "high",
           "very_high"
-        ],
-        "description": "Intensity of the strobe"
+        ]
       },
       {
-        "type": "binary",
         "name": "strobe",
         "label": "Strobe",
-        "property": "strobe",
         "access": 2,
+        "type": "binary",
+        "property": "strobe",
+        "description": "Turn on/off the strobe (light) during warning",
         "value_on": true,
-        "value_off": false,
-        "description": "Turn on/off the strobe (light) during warning"
+        "value_off": false
       },
       {
-        "type": "numeric",
         "name": "strobe_duty_cycle",
         "label": "Strobe duty cycle",
-        "property": "strobe_duty_cycle",
         "access": 2,
+        "type": "numeric",
+        "property": "strobe_duty_cycle",
+        "description": "Length of the flash cycle",
         "value_max": 10,
-        "value_min": 0,
-        "description": "Length of the flash cycle"
+        "value_min": 0
       },
       {
-        "type": "numeric",
         "name": "duration",
         "label": "Duration",
-        "property": "duration",
         "access": 2,
-        "unit": "s",
-        "description": "Duration in seconds of the alarm"
+        "type": "numeric",
+        "property": "duration",
+        "description": "Duration in seconds of the alarm",
+        "unit": "s"
       }
-    ],
-    "access": 2
+    ]
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

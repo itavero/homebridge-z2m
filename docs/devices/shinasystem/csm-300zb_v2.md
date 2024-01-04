@@ -28,106 +28,107 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "voltage",
     "label": "Voltage",
-    "property": "voltage",
     "access": 1,
-    "unit": "mV",
-    "description": "Voltage of the battery in millivolts"
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Voltage of the battery in millivolts",
+    "unit": "mV"
   },
   {
-    "type": "enum",
     "name": "status",
     "label": "Status",
-    "property": "status",
     "access": 1,
+    "type": "enum",
+    "property": "status",
+    "description": "Currently status",
     "values": [
       "idle",
       "in",
       "out"
-    ],
-    "description": "Currently status"
+    ]
   },
   {
-    "type": "numeric",
     "name": "people",
     "label": "People",
-    "property": "people",
     "access": 7,
-    "value_min": 0,
+    "type": "numeric",
+    "property": "people",
+    "description": "People count",
     "value_max": 100,
-    "description": "People count"
+    "value_min": 0
   },
   {
-    "type": "enum",
     "name": "rf_pairing_on",
     "label": "Rf pairing on",
-    "property": "rf_pairing_on",
     "access": 2,
+    "type": "enum",
+    "property": "rf_pairing_on",
+    "description": "Run RF pairing mode",
     "values": [
       "run"
-    ],
-    "description": "Run RF pairing mode"
+    ]
   },
   {
-    "type": "binary",
     "name": "counting_freeze",
     "label": "Counting freeze",
-    "property": "counting_freeze",
     "access": 2,
+    "type": "binary",
+    "property": "counting_freeze",
+    "description": "Counting Freeze ON/OFF, not reporting people value when is ON",
     "value_on": "ON",
-    "value_off": "OFF",
-    "description": "Counting Freeze ON/OFF, not reporting people value when is ON"
+    "value_off": "OFF"
   },
   {
-    "type": "enum",
     "name": "tof_init",
     "label": "Tof init",
-    "property": "tof_init",
     "access": 2,
+    "type": "enum",
+    "property": "tof_init",
+    "description": "ToF sensor initial",
     "values": [
       "initial"
-    ],
-    "description": "ToF sensor initial"
+    ]
   },
   {
-    "type": "binary",
     "name": "led_state",
     "label": "Led state",
-    "property": "led_state",
     "access": 2,
+    "type": "binary",
+    "property": "led_state",
+    "description": "Indicate LED enable/disable, default : enable",
     "value_on": "enable",
-    "value_off": "disable",
-    "description": "Indicate LED enable/disable, default : enable"
+    "value_off": "disable"
   },
   {
-    "type": "binary",
     "name": "rf_state",
     "label": "Rf state",
-    "property": "rf_state",
     "access": 2,
+    "type": "binary",
+    "property": "rf_state",
+    "description": "RF function enable/disable, default : disable",
     "value_on": "enable",
-    "value_off": "disable",
-    "description": "RF function enable/disable, default : disable"
+    "value_off": "disable"
   },
   {
-    "type": "enum",
     "name": "transaction",
     "label": "Transaction",
-    "property": "transaction",
     "access": 2,
+    "type": "enum",
+    "property": "transaction",
+    "description": "Transaction interval, default : 400ms",
     "values": [
       "0ms",
       "200ms",
@@ -135,39 +136,38 @@ This is the information provided by Zigbee2MQTT for this device:
       "600ms",
       "800ms",
       "1,000ms"
-    ],
-    "description": "Transaction interval, default : 400ms"
+    ]
   },
   {
-    "type": "binary",
     "name": "fast_in",
     "label": "Fast in",
-    "property": "fast_in",
     "access": 2,
+    "type": "binary",
+    "property": "fast_in",
+    "description": "Fast process enable/disable when people 0 to 1. default : enable",
     "value_on": "enable",
-    "value_off": "disable",
-    "description": "Fast process enable/disable when people 0 to 1. default : enable"
+    "value_off": "disable"
   },
   {
-    "type": "binary",
     "name": "fast_out",
     "label": "Fast out",
-    "property": "fast_out",
     "access": 2,
+    "type": "binary",
+    "property": "fast_out",
+    "description": "Fast process enable/disable when people 1 to 0. default : enable",
     "value_on": "enable",
-    "value_off": "disable",
-    "description": "Fast process enable/disable when people 1 to 0. default : enable"
+    "value_off": "disable"
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

@@ -28,35 +28,35 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "binary",
     "name": "card",
     "label": "Card",
-    "property": "card",
     "access": 5,
+    "type": "binary",
+    "property": "card",
+    "description": "Indicates if the card is inserted (= true) or not (= false)",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the card is inserted (= true) or not (= false)"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "battery_low",
     "label": "Battery low",
-    "property": "battery_low",
     "access": 1,
+    "type": "binary",
+    "property": "battery_low",
+    "description": "Indicates if the battery of this device is almost empty",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the battery of this device is almost empty"
+    "value_off": false
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

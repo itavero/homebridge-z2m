@@ -28,46 +28,46 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "numeric",
     "name": "soil_moisture",
     "label": "Soil moisture",
-    "property": "soil_moisture",
     "access": 1,
-    "unit": "%",
-    "description": "Measured soil moisture value"
+    "type": "numeric",
+    "property": "soil_moisture",
+    "description": "Measured soil moisture value",
+    "unit": "%"
   },
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "report_delay",
     "label": "Report delay",
-    "property": "report_delay",
     "access": 3,
-    "unit": "min",
+    "type": "numeric",
+    "property": "report_delay",
     "description": "Adjust Report Delay, by default 60 minutes",
-    "value_min": 1,
-    "value_max": 180
+    "unit": "min",
+    "value_max": 180,
+    "value_min": 1
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

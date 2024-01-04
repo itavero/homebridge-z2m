@@ -28,30 +28,30 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "binary",
     "name": "battery_low",
     "label": "Battery low",
-    "property": "battery_low",
     "access": 1,
-    "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the battery of this device is almost empty"
-  },
-  {
     "type": "binary",
-    "name": "alarm",
-    "label": "Alarm",
-    "property": "alarm",
-    "access": 3,
+    "property": "battery_low",
+    "description": "Indicates if the battery of this device is almost empty",
     "value_on": true,
     "value_off": false
   },
   {
-    "type": "enum",
+    "name": "alarm",
+    "label": "Alarm",
+    "access": 3,
+    "type": "binary",
+    "property": "alarm",
+    "value_on": true,
+    "value_off": false
+  },
+  {
     "name": "melody",
     "label": "Melody",
-    "property": "melody",
     "access": 3,
+    "type": "enum",
+    "property": "melody",
     "values": [
       "1",
       "2",
@@ -74,21 +74,21 @@ This is the information provided by Zigbee2MQTT for this device:
     ]
   },
   {
-    "type": "numeric",
     "name": "duration",
     "label": "Duration",
-    "property": "duration",
     "access": 3,
+    "type": "numeric",
+    "property": "duration",
     "unit": "s",
-    "value_min": 0,
-    "value_max": 1800
+    "value_max": 1800,
+    "value_min": 0
   },
   {
-    "type": "enum",
     "name": "volume",
     "label": "Volume",
-    "property": "volume",
     "access": 3,
+    "type": "enum",
+    "property": "volume",
     "values": [
       "low",
       "medium",
@@ -96,23 +96,23 @@ This is the information provided by Zigbee2MQTT for this device:
     ]
   },
   {
-    "type": "numeric",
     "name": "battpercentage",
     "label": "Battpercentage",
-    "property": "battpercentage",
     "access": 1,
+    "type": "numeric",
+    "property": "battpercentage",
     "unit": "%"
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

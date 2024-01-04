@@ -1,54 +1,54 @@
 [
   {
-    "type": "binary",
     "name": "vibration",
     "label": "Vibration",
-    "property": "vibration",
     "access": 1,
+    "type": "binary",
+    "property": "vibration",
+    "description": "Indicates whether the device detected vibration",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether the device detected vibration"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "battery_low",
     "label": "Battery low",
-    "property": "battery_low",
     "access": 1,
+    "type": "binary",
+    "property": "battery_low",
+    "description": "Indicates if the battery of this device is almost empty",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the battery of this device is almost empty"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "tamper",
     "label": "Tamper",
-    "property": "tamper",
     "access": 1,
+    "type": "binary",
+    "property": "tamper",
+    "description": "Indicates whether the device is tampered",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether the device is tampered"
+    "value_off": false
   },
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]

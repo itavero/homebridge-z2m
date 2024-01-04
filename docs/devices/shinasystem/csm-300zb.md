@@ -28,58 +28,58 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "voltage",
     "label": "Voltage",
-    "property": "voltage",
     "access": 1,
-    "unit": "mV",
-    "description": "Voltage of the battery in millivolts"
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Voltage of the battery in millivolts",
+    "unit": "mV"
   },
   {
-    "type": "enum",
     "name": "status",
     "label": "Status",
-    "property": "status",
     "access": 1,
+    "type": "enum",
+    "property": "status",
+    "description": "Currently status",
     "values": [
       "idle",
       "in",
       "out"
-    ],
-    "description": "Currently status"
+    ]
   },
   {
-    "type": "numeric",
     "name": "people",
     "label": "People",
-    "property": "people",
     "access": 7,
-    "value_min": 0,
+    "type": "numeric",
+    "property": "people",
+    "description": "People count",
     "value_max": 50,
-    "description": "People count"
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

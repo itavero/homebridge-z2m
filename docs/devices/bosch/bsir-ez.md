@@ -28,114 +28,116 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "binary",
     "name": "alarm_state",
     "label": "Alarm state",
-    "property": "alarm_state",
     "access": 7,
+    "type": "binary",
+    "property": "alarm_state",
+    "description": "Alarm turn ON/OFF",
     "value_on": "ON",
-    "value_off": "OFF",
-    "description": "Alarm turn ON/OFF"
+    "value_off": "OFF"
   },
   {
-    "type": "numeric",
     "name": "light_delay",
     "label": "Light delay",
-    "property": "light_delay",
     "access": 7,
-    "value_min": 0,
-    "value_max": 30,
-    "value_step": 1,
+    "type": "numeric",
+    "property": "light_delay",
+    "description": "Flashing light delay",
     "unit": "s",
-    "description": "Flashing light delay"
+    "value_max": 30,
+    "value_min": 0,
+    "value_step": 1
   },
   {
-    "type": "numeric",
     "name": "siren_delay",
     "label": "Siren delay",
-    "property": "siren_delay",
     "access": 7,
-    "value_min": 0,
-    "value_max": 30,
-    "value_step": 1,
+    "type": "numeric",
+    "property": "siren_delay",
+    "description": "Siren alarm delay",
     "unit": "s",
-    "description": "Siren alarm delay"
+    "value_max": 30,
+    "value_min": 0,
+    "value_step": 1
   },
   {
-    "type": "numeric",
     "name": "siren_duration",
     "label": "Siren duration",
-    "property": "siren_duration",
     "access": 7,
-    "value_min": 1,
-    "value_max": 15,
-    "value_step": 1,
+    "type": "numeric",
+    "property": "siren_duration",
+    "description": "Duration of the alarm siren",
     "unit": "m",
-    "description": "Duration of the alarm siren"
+    "value_max": 15,
+    "value_min": 1,
+    "value_step": 1
   },
   {
-    "type": "numeric",
     "name": "light_duration",
     "label": "Light duration",
-    "property": "light_duration",
     "access": 7,
-    "value_min": 1,
-    "value_max": 15,
-    "value_step": 1,
+    "type": "numeric",
+    "property": "light_duration",
+    "description": "Duration of the alarm light",
     "unit": "m",
-    "description": "Duration of the alarm light"
+    "value_max": 15,
+    "value_min": 1,
+    "value_step": 1
   },
   {
-    "type": "enum",
     "name": "siren_volume",
     "label": "Siren volume",
-    "property": "siren_volume",
     "access": 7,
+    "type": "enum",
+    "property": "siren_volume",
+    "description": "Volume of the alarm",
     "values": [
       "low",
       "medium",
       "high"
-    ],
-    "description": "Volume of the alarm"
+    ]
   },
   {
-    "type": "enum",
     "name": "siren_and_light",
     "label": "Siren and light",
-    "property": "siren_and_light",
     "access": 7,
+    "type": "enum",
+    "property": "siren_and_light",
+    "description": "Siren and Light behaviour during alarm ",
     "values": [
       "only_light",
       "only_siren",
       "siren_and_light"
-    ],
-    "description": "Siren and Light behaviour during alarm "
+    ]
   },
   {
-    "type": "enum",
     "name": "power_source",
     "label": "Power source",
-    "property": "power_source",
     "access": 7,
+    "type": "enum",
+    "property": "power_source",
+    "description": "Siren power source",
     "values": [
       "solar_panel",
       "ac_power_supply",
       "dc_power_supply"
-    ],
-    "description": "Siren power source"
+    ]
   },
   {
-    "type": "composite",
-    "property": "warning",
     "name": "warning",
     "label": "Warning",
+    "access": 2,
+    "type": "composite",
+    "property": "warning",
     "features": [
       {
-        "type": "enum",
         "name": "mode",
         "label": "Mode",
-        "property": "mode",
         "access": 2,
+        "type": "enum",
+        "property": "mode",
+        "description": "Mode of the warning (sound effect)",
         "values": [
           "stop",
           "burglar",
@@ -144,82 +146,80 @@ This is the information provided by Zigbee2MQTT for this device:
           "police_panic",
           "fire_panic",
           "emergency_panic"
-        ],
-        "description": "Mode of the warning (sound effect)"
+        ]
       }
-    ],
-    "access": 2
+    ]
   },
   {
-    "type": "binary",
     "name": "test",
     "label": "Test",
-    "property": "test",
     "access": 1,
+    "type": "binary",
+    "property": "test",
+    "description": "Indicates whether the device is being tested",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether the device is being tested"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "tamper",
     "label": "Tamper",
-    "property": "tamper",
     "access": 1,
+    "type": "binary",
+    "property": "tamper",
+    "description": "Indicates whether the device is tampered",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether the device is tampered"
+    "value_off": false
   },
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "voltage",
     "label": "Voltage",
-    "property": "voltage",
     "access": 1,
-    "unit": "mV",
-    "description": "Voltage of the battery in millivolts"
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Voltage of the battery in millivolts",
+    "unit": "mV"
   },
   {
-    "type": "binary",
     "name": "battery_low",
     "label": "Battery low",
-    "property": "battery_low",
     "access": 1,
+    "type": "binary",
+    "property": "battery_low",
+    "description": "Indicates if the battery of this device is almost empty",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the battery of this device is almost empty"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "ac_status",
     "label": "Ac status",
-    "property": "ac_status",
     "access": 1,
+    "type": "binary",
+    "property": "ac_status",
+    "description": "Is the device plugged in",
     "value_on": true,
-    "value_off": false,
-    "description": "Is the device plugged in"
+    "value_off": false
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

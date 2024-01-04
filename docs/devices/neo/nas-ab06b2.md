@@ -28,118 +28,118 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "enum",
     "name": "alarm_state",
     "label": "Alarm state",
-    "property": "alarm_state",
     "access": 1,
+    "type": "enum",
+    "property": "alarm_state",
+    "description": "Alarm status",
     "values": [
       "alarm_sound",
       "alarm_light",
       "alarm_sound_light",
       "normal"
-    ],
-    "description": "Alarm status"
+    ]
   },
   {
-    "type": "binary",
     "name": "alarm_switch",
     "label": "Alarm switch",
-    "property": "alarm_switch",
     "access": 3,
+    "type": "binary",
+    "property": "alarm_switch",
+    "description": "Enable alarm",
     "value_on": "ON",
-    "value_off": "OFF",
-    "description": "Enable alarm"
+    "value_off": "OFF"
   },
   {
-    "type": "binary",
     "name": "tamper_alarm_switch",
     "label": "Tamper alarm switch",
-    "property": "tamper_alarm_switch",
     "access": 3,
+    "type": "binary",
+    "property": "tamper_alarm_switch",
+    "description": "Enable tamper alarm",
     "value_on": "ON",
-    "value_off": "OFF",
-    "description": "Enable tamper alarm"
+    "value_off": "OFF"
   },
   {
-    "type": "binary",
     "name": "tamper_alarm",
     "label": "Tamper alarm",
-    "property": "tamper_alarm",
     "access": 1,
+    "type": "binary",
+    "property": "tamper_alarm",
+    "description": "Indicates whether the device is tampered",
     "value_on": "ON",
-    "value_off": "OFF",
-    "description": "Indicates whether the device is tampered"
+    "value_off": "OFF"
   },
   {
-    "type": "enum",
     "name": "alarm_melody",
     "label": "Alarm melody",
-    "property": "alarm_melody",
     "access": 3,
+    "type": "enum",
+    "property": "alarm_melody",
+    "description": "Alarm sound effect",
     "values": [
       "melody_1",
       "melody_2",
       "melody_3"
-    ],
-    "description": "Alarm sound effect"
+    ]
   },
   {
-    "type": "enum",
     "name": "alarm_mode",
     "label": "Alarm mode",
-    "property": "alarm_mode",
     "access": 3,
+    "type": "enum",
+    "property": "alarm_mode",
+    "description": "Alarm mode",
     "values": [
       "alarm_sound",
       "alarm_light",
       "alarm_sound_light"
-    ],
-    "description": "Alarm mode"
+    ]
   },
   {
-    "type": "numeric",
     "name": "alarm_time",
     "label": "Alarm time",
-    "property": "alarm_time",
     "access": 3,
-    "value_min": 1,
-    "value_max": 60,
-    "value_step": 1,
+    "type": "numeric",
+    "property": "alarm_time",
+    "description": "Alarm duration in minutes",
     "unit": "min",
-    "description": "Alarm duration in minutes"
+    "value_max": 60,
+    "value_min": 1,
+    "value_step": 1
   },
   {
-    "type": "binary",
     "name": "charging",
     "label": "Charging",
-    "property": "charging",
     "access": 1,
+    "type": "binary",
+    "property": "charging",
+    "description": "Charging status",
     "value_on": true,
-    "value_off": false,
-    "description": "Charging status"
+    "value_off": false
   },
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

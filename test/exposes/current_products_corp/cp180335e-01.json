@@ -1,24 +1,24 @@
 [
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
     "type": "cover",
     "features": [
       {
-        "type": "enum",
         "name": "state",
         "label": "State",
-        "property": "state",
         "access": 3,
+        "type": "enum",
+        "property": "state",
         "values": [
           "OPEN",
           "CLOSE",
@@ -26,27 +26,27 @@
         ]
       },
       {
-        "type": "numeric",
         "name": "tilt",
         "label": "Tilt",
-        "property": "tilt",
         "access": 7,
-        "value_min": 0,
-        "value_max": 100,
+        "type": "numeric",
+        "property": "tilt",
         "description": "Tilt of this cover",
-        "unit": "%"
+        "unit": "%",
+        "value_max": 100,
+        "value_min": 0
       }
     ]
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]

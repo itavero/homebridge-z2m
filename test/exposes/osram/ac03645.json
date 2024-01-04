@@ -3,36 +3,36 @@
     "type": "light",
     "features": [
       {
-        "type": "binary",
         "name": "state",
         "label": "State",
-        "property": "state",
         "access": 7,
+        "type": "binary",
+        "property": "state",
+        "description": "On/off state of this light",
         "value_on": "ON",
         "value_off": "OFF",
-        "value_toggle": "TOGGLE",
-        "description": "On/off state of this light"
+        "value_toggle": "TOGGLE"
       },
       {
-        "type": "numeric",
         "name": "brightness",
         "label": "Brightness",
-        "property": "brightness",
         "access": 7,
-        "value_min": 0,
+        "type": "numeric",
+        "property": "brightness",
+        "description": "Brightness of this light",
         "value_max": 254,
-        "description": "Brightness of this light"
+        "value_min": 0
       },
       {
-        "type": "numeric",
         "name": "color_temp",
         "label": "Color temp",
-        "property": "color_temp",
         "access": 7,
-        "unit": "mired",
-        "value_min": 153,
-        "value_max": 526,
+        "type": "numeric",
+        "property": "color_temp",
         "description": "Color temperature of this light",
+        "unit": "mired",
+        "value_max": 526,
+        "value_min": 153,
         "presets": [
           {
             "name": "coolest",
@@ -62,61 +62,62 @@
         ]
       },
       {
-        "type": "composite",
-        "property": "color",
         "name": "color_xy",
         "label": "Color (X/Y)",
-        "features": [
-          {
-            "type": "numeric",
-            "name": "x",
-            "label": "X",
-            "property": "x",
-            "access": 7
-          },
-          {
-            "type": "numeric",
-            "name": "y",
-            "label": "Y",
-            "property": "y",
-            "access": 7
-          }
-        ],
         "access": 7,
-        "description": "Color of this light in the CIE 1931 color space (x/y)"
-      },
-      {
         "type": "composite",
         "property": "color",
-        "name": "color_hs",
-        "label": "Color (HS)",
+        "description": "Color of this light in the CIE 1931 color space (x/y)",
         "features": [
           {
+            "name": "x",
+            "label": "X",
+            "access": 7,
             "type": "numeric",
-            "name": "hue",
-            "label": "Hue",
-            "property": "hue",
-            "access": 7
+            "property": "x"
           },
           {
+            "name": "y",
+            "label": "Y",
+            "access": 7,
             "type": "numeric",
+            "property": "y"
+          }
+        ]
+      },
+      {
+        "name": "color_hs",
+        "label": "Color (HS)",
+        "access": 7,
+        "type": "composite",
+        "property": "color",
+        "description": "Color of this light expressed as hue/saturation",
+        "features": [
+          {
+            "name": "hue",
+            "label": "Hue",
+            "access": 7,
+            "type": "numeric",
+            "property": "hue"
+          },
+          {
             "name": "saturation",
             "label": "Saturation",
-            "property": "saturation",
-            "access": 7
+            "access": 7,
+            "type": "numeric",
+            "property": "saturation"
           }
-        ],
-        "access": 7,
-        "description": "Color of this light expressed as hue/saturation"
+        ]
       }
     ]
   },
   {
-    "type": "enum",
     "name": "effect",
     "label": "Effect",
-    "property": "effect",
     "access": 2,
+    "type": "enum",
+    "property": "effect",
+    "description": "Triggers an effect on the light (e.g. make light blink for a few seconds)",
     "values": [
       "blink",
       "breathe",
@@ -124,18 +125,17 @@
       "channel_change",
       "finish_effect",
       "stop_effect"
-    ],
-    "description": "Triggers an effect on the light (e.g. make light blink for a few seconds)"
+    ]
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]

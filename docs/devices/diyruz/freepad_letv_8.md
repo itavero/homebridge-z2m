@@ -28,249 +28,249 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "enum",
     "name": "action",
     "label": "Action",
-    "property": "action",
     "access": 1,
+    "type": "enum",
+    "property": "action",
+    "description": "Triggered action (e.g. a button click)",
     "values": [
       "*_single",
       "*_double",
       "*_triple",
       "*_quadruple",
       "*_release"
-    ],
-    "description": "Triggered action (e.g. a button click)"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_type",
     "label": "Switch type",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_1",
     "property": "switch_type_button_1",
-    "access": 7,
     "values": [
       "toggle",
       "momentary",
       "multifunction"
-    ],
-    "endpoint": "button_1"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_actions",
     "label": "Switch actions",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_1",
     "property": "switch_actions_button_1",
-    "access": 7,
     "values": [
       "on",
       "off",
       "toggle"
-    ],
-    "endpoint": "button_1"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_type",
     "label": "Switch type",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_2",
     "property": "switch_type_button_2",
-    "access": 7,
     "values": [
       "toggle",
       "momentary",
       "multifunction"
-    ],
-    "endpoint": "button_2"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_actions",
     "label": "Switch actions",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_2",
     "property": "switch_actions_button_2",
-    "access": 7,
     "values": [
       "on",
       "off",
       "toggle"
-    ],
-    "endpoint": "button_2"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_type",
     "label": "Switch type",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_3",
     "property": "switch_type_button_3",
-    "access": 7,
     "values": [
       "toggle",
       "momentary",
       "multifunction"
-    ],
-    "endpoint": "button_3"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_actions",
     "label": "Switch actions",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_3",
     "property": "switch_actions_button_3",
-    "access": 7,
     "values": [
       "on",
       "off",
       "toggle"
-    ],
-    "endpoint": "button_3"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_type",
     "label": "Switch type",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_4",
     "property": "switch_type_button_4",
-    "access": 7,
     "values": [
       "toggle",
       "momentary",
       "multifunction"
-    ],
-    "endpoint": "button_4"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_actions",
     "label": "Switch actions",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_4",
     "property": "switch_actions_button_4",
-    "access": 7,
     "values": [
       "on",
       "off",
       "toggle"
-    ],
-    "endpoint": "button_4"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_type",
     "label": "Switch type",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_5",
     "property": "switch_type_button_5",
-    "access": 7,
     "values": [
       "toggle",
       "momentary",
       "multifunction"
-    ],
-    "endpoint": "button_5"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_actions",
     "label": "Switch actions",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_5",
     "property": "switch_actions_button_5",
-    "access": 7,
     "values": [
       "on",
       "off",
       "toggle"
-    ],
-    "endpoint": "button_5"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_type",
     "label": "Switch type",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_6",
     "property": "switch_type_button_6",
-    "access": 7,
     "values": [
       "toggle",
       "momentary",
       "multifunction"
-    ],
-    "endpoint": "button_6"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_actions",
     "label": "Switch actions",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_6",
     "property": "switch_actions_button_6",
-    "access": 7,
     "values": [
       "on",
       "off",
       "toggle"
-    ],
-    "endpoint": "button_6"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_type",
     "label": "Switch type",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "button_7",
     "property": "switch_type_button_7",
-    "access": 7,
     "values": [
       "toggle",
       "momentary",
       "multifunction"
-    ],
-    "endpoint": "button_7"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_actions",
     "label": "Switch actions",
-    "property": "switch_actions_button_7",
     "access": 7,
+    "type": "enum",
+    "endpoint": "button_7",
+    "property": "switch_actions_button_7",
     "values": [
       "on",
       "off",
       "toggle"
-    ],
-    "endpoint": "button_7"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_type",
     "label": "Switch type",
-    "property": "switch_type_button_8",
     "access": 7,
+    "type": "enum",
+    "endpoint": "button_8",
+    "property": "switch_type_button_8",
     "values": [
       "toggle",
       "momentary",
       "multifunction"
-    ],
-    "endpoint": "button_8"
+    ]
   },
   {
-    "type": "enum",
     "name": "switch_actions",
     "label": "Switch actions",
-    "property": "switch_actions_button_8",
     "access": 7,
+    "type": "enum",
+    "endpoint": "button_8",
+    "property": "switch_actions_button_8",
     "values": [
       "on",
       "off",
       "toggle"
-    ],
-    "endpoint": "button_8"
+    ]
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

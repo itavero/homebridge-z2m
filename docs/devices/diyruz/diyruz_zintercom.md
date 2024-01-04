@@ -28,120 +28,120 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "enum",
     "name": "state",
     "label": "State",
-    "property": "state",
     "access": 1,
+    "type": "enum",
+    "property": "state",
+    "description": "Current state",
     "values": [
       "idle",
       "ring",
       "talk",
       "open",
       "drop"
-    ],
-    "description": "Current state"
+    ]
   },
   {
-    "type": "enum",
     "name": "mode",
     "label": "Mode",
-    "property": "mode",
     "access": 7,
+    "type": "enum",
+    "property": "mode",
+    "description": "Select open mode",
     "values": [
       "never",
       "once",
       "always",
       "drop"
-    ],
-    "description": "Select open mode"
+    ]
   },
   {
-    "type": "binary",
     "name": "sound",
     "label": "Sound",
-    "property": "sound",
     "access": 7,
+    "type": "binary",
+    "property": "sound",
+    "description": "Enable or disable sound",
     "value_on": "ON",
-    "value_off": "OFF",
-    "description": "Enable or disable sound"
+    "value_off": "OFF"
   },
   {
-    "type": "numeric",
     "name": "time_ring",
     "label": "Time ring",
-    "property": "time_ring",
     "access": 7,
-    "unit": "sec",
+    "type": "numeric",
+    "property": "time_ring",
     "description": "Time to ring before answer",
-    "value_min": 0,
-    "value_max": 600
+    "unit": "sec",
+    "value_max": 600,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "time_talk",
     "label": "Time talk",
-    "property": "time_talk",
     "access": 7,
-    "unit": "sec",
+    "type": "numeric",
+    "property": "time_talk",
     "description": "Time to hold before open",
-    "value_min": 0,
-    "value_max": 600
+    "unit": "sec",
+    "value_max": 600,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "time_open",
     "label": "Time open",
-    "property": "time_open",
     "access": 7,
-    "unit": "sec",
+    "type": "numeric",
+    "property": "time_open",
     "description": "Time to open before end",
-    "value_min": 0,
-    "value_max": 600
+    "unit": "sec",
+    "value_max": 600,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "time_bell",
     "label": "Time bell",
-    "property": "time_bell",
     "access": 7,
-    "unit": "sec",
+    "type": "numeric",
+    "property": "time_bell",
     "description": "Time after last bell to finish ring",
-    "value_min": 0,
-    "value_max": 600
+    "unit": "sec",
+    "value_max": 600,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "time_report",
     "label": "Time report",
-    "property": "time_report",
     "access": 7,
-    "unit": "min",
+    "type": "numeric",
+    "property": "time_report",
     "description": "Reporting interval",
-    "value_min": 0,
-    "value_max": 1440
+    "unit": "min",
+    "value_max": 1440,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

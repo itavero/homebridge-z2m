@@ -1,53 +1,53 @@
 [
   {
-    "type": "binary",
     "name": "gas",
     "label": "Gas",
-    "property": "gas",
     "access": 1,
+    "type": "binary",
+    "property": "gas",
+    "description": "Indicates whether the device detected gas",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether the device detected gas"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "carbon_monoxide",
     "label": "Carbon monoxide",
-    "property": "carbon_monoxide",
     "access": 1,
+    "type": "binary",
+    "property": "carbon_monoxide",
+    "description": "Indicates if CO (carbon monoxide) is detected",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates if CO (carbon monoxide) is detected"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "tamper",
     "label": "Tamper",
-    "property": "tamper",
     "access": 1,
+    "type": "binary",
+    "property": "tamper",
+    "description": "Indicates whether the device is tampered",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether the device is tampered"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "battery_low",
     "label": "Battery low",
-    "property": "battery_low",
     "access": 1,
+    "type": "binary",
+    "property": "battery_low",
+    "description": "Indicates if the battery of this device is almost empty",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the battery of this device is almost empty"
+    "value_off": false
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]

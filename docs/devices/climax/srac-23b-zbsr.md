@@ -28,37 +28,39 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "binary",
     "name": "battery_low",
     "label": "Battery low",
-    "property": "battery_low",
     "access": 1,
+    "type": "binary",
+    "property": "battery_low",
+    "description": "Indicates if the battery of this device is almost empty",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the battery of this device is almost empty"
+    "value_off": false
   },
   {
-    "type": "binary",
     "name": "tamper",
     "label": "Tamper",
-    "property": "tamper",
     "access": 1,
+    "type": "binary",
+    "property": "tamper",
+    "description": "Indicates whether the device is tampered",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates whether the device is tampered"
+    "value_off": false
   },
   {
-    "type": "composite",
-    "property": "warning",
     "name": "warning",
     "label": "Warning",
+    "access": 2,
+    "type": "composite",
+    "property": "warning",
     "features": [
       {
-        "type": "enum",
         "name": "mode",
         "label": "Mode",
-        "property": "mode",
         "access": 2,
+        "type": "enum",
+        "property": "mode",
+        "description": "Mode of the warning (sound effect)",
         "values": [
           "stop",
           "burglar",
@@ -67,145 +69,143 @@ This is the information provided by Zigbee2MQTT for this device:
           "police_panic",
           "fire_panic",
           "emergency_panic"
-        ],
-        "description": "Mode of the warning (sound effect)"
+        ]
       },
       {
-        "type": "enum",
         "name": "level",
         "label": "Level",
-        "property": "level",
         "access": 2,
+        "type": "enum",
+        "property": "level",
+        "description": "Sound level",
         "values": [
           "low",
           "medium",
           "high",
           "very_high"
-        ],
-        "description": "Sound level"
+        ]
       },
       {
-        "type": "enum",
         "name": "strobe_level",
         "label": "Strobe level",
-        "property": "strobe_level",
         "access": 2,
+        "type": "enum",
+        "property": "strobe_level",
+        "description": "Intensity of the strobe",
         "values": [
           "low",
           "medium",
           "high",
           "very_high"
-        ],
-        "description": "Intensity of the strobe"
+        ]
       },
       {
-        "type": "binary",
         "name": "strobe",
         "label": "Strobe",
-        "property": "strobe",
         "access": 2,
+        "type": "binary",
+        "property": "strobe",
+        "description": "Turn on/off the strobe (light) during warning",
         "value_on": true,
-        "value_off": false,
-        "description": "Turn on/off the strobe (light) during warning"
+        "value_off": false
       },
       {
-        "type": "numeric",
         "name": "strobe_duty_cycle",
         "label": "Strobe duty cycle",
-        "property": "strobe_duty_cycle",
         "access": 2,
+        "type": "numeric",
+        "property": "strobe_duty_cycle",
+        "description": "Length of the flash cycle",
         "value_max": 10,
-        "value_min": 0,
-        "description": "Length of the flash cycle"
+        "value_min": 0
       },
       {
-        "type": "numeric",
         "name": "duration",
         "label": "Duration",
-        "property": "duration",
         "access": 2,
-        "unit": "s",
-        "description": "Duration in seconds of the alarm"
+        "type": "numeric",
+        "property": "duration",
+        "description": "Duration in seconds of the alarm",
+        "unit": "s"
       }
-    ],
-    "access": 2
+    ]
   },
   {
-    "type": "composite",
-    "property": "squawk",
     "name": "squawk",
     "label": "Squawk",
+    "access": 2,
+    "type": "composite",
+    "property": "squawk",
     "features": [
       {
-        "type": "enum",
         "name": "state",
         "label": "State",
-        "property": "state",
         "access": 2,
+        "type": "enum",
+        "property": "state",
+        "description": "Set Squawk state",
         "values": [
           "system_is_armed",
           "system_is_disarmed"
-        ],
-        "description": "Set Squawk state"
+        ]
       },
       {
-        "type": "enum",
         "name": "level",
         "label": "Level",
-        "property": "level",
         "access": 2,
+        "type": "enum",
+        "property": "level",
+        "description": "Sound level",
         "values": [
           "low",
           "medium",
           "high",
           "very_high"
-        ],
-        "description": "Sound level"
+        ]
       },
       {
-        "type": "binary",
         "name": "strobe",
         "label": "Strobe",
-        "property": "strobe",
         "access": 2,
+        "type": "binary",
+        "property": "strobe",
+        "description": "Turn on/off the strobe (light) for Squawk",
         "value_on": true,
-        "value_off": false,
-        "description": "Turn on/off the strobe (light) for Squawk"
+        "value_off": false
       }
-    ],
-    "access": 2
+    ]
   },
   {
-    "type": "numeric",
     "name": "max_duration",
     "label": "Max duration",
-    "property": "max_duration",
     "access": 7,
+    "type": "numeric",
+    "property": "max_duration",
+    "description": "Duration of Siren",
     "unit": "s",
-    "value_min": 0,
     "value_max": 600,
-    "description": "Duration of Siren"
+    "value_min": 0
   },
   {
-    "type": "binary",
     "name": "alarm",
     "label": "Alarm",
-    "property": "alarm",
     "access": 2,
+    "type": "binary",
+    "property": "alarm",
+    "description": "Manual start of siren",
     "value_on": "START",
-    "value_off": "OFF",
-    "description": "Manual start of siren"
+    "value_off": "OFF"
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

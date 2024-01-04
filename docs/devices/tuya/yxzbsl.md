@@ -28,49 +28,50 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "binary",
     "name": "alarm",
     "label": "Alarm",
-    "property": "alarm",
     "access": 3,
+    "type": "binary",
+    "property": "alarm",
+    "description": "Turn the light of the alarm ON/OFF",
     "value_on": "ON",
-    "value_off": "OFF",
-    "description": "Turn the light of the alarm ON/OFF"
+    "value_off": "OFF"
   },
   {
-    "type": "enum",
     "name": "type",
     "label": "Type",
-    "property": "type",
     "access": 3,
+    "type": "enum",
+    "property": "type",
+    "description": "Alarm type",
     "values": [
       "sound",
       "light",
       "sound+light",
       "normal"
-    ],
-    "description": "Alarm type"
+    ]
   },
   {
-    "type": "enum",
     "name": "volume",
     "label": "Volume",
-    "property": "volume",
     "access": 3,
+    "type": "enum",
+    "property": "volume",
+    "description": "Volume of the alarm",
     "values": [
       "mute",
       "low",
       "middle",
       "high"
-    ],
-    "description": "Volume of the alarm"
+    ]
   },
   {
-    "type": "enum",
     "name": "ringtone",
     "label": "Ringtone",
-    "property": "ringtone",
     "access": 3,
+    "type": "enum",
+    "property": "ringtone",
+    "description": "Ringtone of the alarm",
     "values": [
       "melody1",
       "melody2",
@@ -85,67 +86,66 @@ This is the information provided by Zigbee2MQTT for this device:
       "temperature",
       "entered",
       "left"
-    ],
-    "description": "Ringtone of the alarm"
+    ]
   },
   {
-    "type": "enum",
     "name": "power_type",
     "label": "Power type",
-    "property": "power_type",
     "access": 1,
+    "type": "enum",
+    "property": "power_type",
+    "description": "Power type",
     "values": [
       "battery",
       "cable"
-    ],
-    "description": "Power type"
+    ]
   },
   {
-    "type": "numeric",
     "name": "duration",
     "label": "Duration",
-    "property": "duration",
     "access": 3,
-    "value_min": 1,
-    "value_max": 60,
-    "value_step": 1,
+    "type": "numeric",
+    "property": "duration",
+    "description": "Duration of the alarm",
     "unit": "min",
-    "description": "Duration of the alarm"
+    "value_max": 60,
+    "value_min": 1,
+    "value_step": 1
   },
   {
-    "type": "enum",
     "name": "battery_level",
     "label": "Battery level",
-    "property": "battery_level",
     "access": 1,
+    "type": "enum",
+    "property": "battery_level",
+    "description": "Battery level state",
     "values": [
       "low",
       "middle",
       "high"
-    ],
-    "description": "Battery level state"
+    ]
   },
   {
-    "type": "numeric",
     "name": "battery",
     "label": "Battery",
-    "property": "battery",
     "access": 1,
-    "unit": "%",
+    "type": "numeric",
+    "property": "battery",
     "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "value_min": 0,
-    "value_max": 100
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]
 ```

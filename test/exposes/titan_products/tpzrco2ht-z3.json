@@ -1,59 +1,59 @@
 [
   {
-    "type": "numeric",
     "name": "voltage",
     "label": "Voltage",
-    "property": "voltage",
     "access": 1,
-    "unit": "mV",
-    "description": "Voltage of the battery in millivolts"
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Voltage of the battery in millivolts",
+    "unit": "mV"
   },
   {
-    "type": "binary",
     "name": "battery_low",
     "label": "Battery low",
-    "property": "battery_low",
     "access": 1,
+    "type": "binary",
+    "property": "battery_low",
+    "description": "Indicates if the battery of this device is almost empty",
     "value_on": true,
-    "value_off": false,
-    "description": "Indicates if the battery of this device is almost empty"
+    "value_off": false
   },
   {
-    "type": "numeric",
     "name": "humidity",
     "label": "Humidity",
-    "property": "humidity",
     "access": 1,
-    "unit": "%",
-    "description": "Measured relative humidity"
+    "type": "numeric",
+    "property": "humidity",
+    "description": "Measured relative humidity",
+    "unit": "%"
   },
   {
-    "type": "numeric",
     "name": "temperature",
     "label": "Temperature",
-    "property": "temperature",
     "access": 1,
-    "unit": "°C",
-    "description": "Measured temperature value"
+    "type": "numeric",
+    "property": "temperature",
+    "description": "Measured temperature value",
+    "unit": "°C"
   },
   {
-    "type": "numeric",
     "name": "co2",
     "label": "CO2",
-    "property": "co2",
     "access": 1,
-    "unit": "ppm",
-    "description": "The measured CO2 (carbon dioxide) value"
+    "type": "numeric",
+    "property": "co2",
+    "description": "The measured CO2 (carbon dioxide) value",
+    "unit": "ppm"
   },
   {
-    "type": "numeric",
     "name": "linkquality",
     "label": "Linkquality",
-    "property": "linkquality",
     "access": 1,
-    "unit": "lqi",
+    "type": "numeric",
+    "property": "linkquality",
     "description": "Link quality (signal strength)",
-    "value_min": 0,
-    "value_max": 255
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
   }
 ]

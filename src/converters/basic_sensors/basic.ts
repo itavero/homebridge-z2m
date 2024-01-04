@@ -5,13 +5,9 @@ import { Characteristic, CharacteristicValue, Service } from 'homebridge';
 import { getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
 
-export interface ServiceConstructor {
-  (serviceName: string, subType: string | undefined): Service;
-}
+export type ServiceConstructor = (serviceName: string, subType: string | undefined) => Service;
 
-export interface IdentifierGenerator {
-  (endpoint: string | undefined, accessory: BasicAccessory): string;
-}
+export type IdentifierGenerator = (endpoint: string | undefined, accessory: BasicAccessory) => string;
 
 export abstract class BasicSensorHandler implements ServiceHandler {
   protected monitors: CharacteristicMonitor[] = [];

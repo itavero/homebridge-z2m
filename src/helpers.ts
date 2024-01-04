@@ -66,7 +66,16 @@ export function getAllEndpoints(entries: ExposesEntry[], parentEndpoint?: string
     }
   });
   const result = Array.from(endpoints);
-  result.sort();
+  // Sort so that `undefined` is always the first and the rest is sorted alphabetically.
+  result.sort((a, b) => {
+    if (a === undefined) {
+      return -1;
+    }
+    if (b === undefined) {
+      return 1;
+    }
+    return a.localeCompare(b);
+  });
   return result;
 }
 

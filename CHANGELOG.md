@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.11.0-beta.3] - 2024-01-04
+
 ### Changed
 
 - Drop support for unsupported Node.js version. Now only testing against v18 and v20 (current LTS releases).
@@ -406,7 +408,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.9.2...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.3...HEAD
+[1.11.0-beta.3]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.2...v1.11.0-beta.3
 [1.11.0-beta.2]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.1...v1.11.0-beta.2
 [1.11.0-beta.1]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.0...v1.11.0-beta.1
 [1.9.2]: https://github.com/itavero/homebridge-z2m/compare/v1.9.1...v1.9.2

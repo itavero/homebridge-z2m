@@ -35,7 +35,7 @@ describe('Air Quality Sensor', () => {
 
         newHarness.checkCreationExpectations();
         newHarness.checkHasMainCharacteristics();
-        newHarness.checkExpectedGetableKeys([]);
+        newHarness.checkExpectedGetableKeys(['voc']);
         harness = newHarness;
       }
       harness?.clearMocks();

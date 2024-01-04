@@ -284,10 +284,10 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     if (pattern.length >= 2) {
       // Need at least 2 characters for the wildcard to work
       if (pattern.startsWith('*')) {
-        return value.endsWith(pattern.substr(1));
+        return value.endsWith(pattern.substring(1));
       }
       if (pattern.endsWith('*')) {
-        return value.startsWith(pattern.substr(0, pattern.length - 1));
+        return value.startsWith(pattern.slice(0, -1));
       }
     }
     return value === pattern;

@@ -25,9 +25,7 @@ import { DeviceTemperatureSensorHandler } from './basic_sensors/device_temperatu
 import { CarbonDioxideSensorHandler } from './basic_sensors/carbon_dioxide';
 import { BasicLogger } from '../logger';
 
-interface ExposeToHandlerFunction {
-  (expose: ExposesEntryWithProperty): ServiceHandler;
-}
+type ExposeToHandlerFunction = (expose: ExposesEntryWithProperty) => ServiceHandler;
 
 interface BasicSensorConstructor {
   new (expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory);

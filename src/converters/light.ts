@@ -189,8 +189,7 @@ class LightHandler implements ServiceHandler {
       keys.push(this.colorTempExpose.property);
     }
     if (
-      this.colorExpose !== undefined &&
-      this.colorExpose.property !== undefined &&
+      this.colorExpose?.property !== undefined &&
       ((this.colorComponentAExpose !== undefined && exposesCanBeGet(this.colorComponentAExpose)) ||
         (this.colorComponentBExpose !== undefined && exposesCanBeGet(this.colorComponentBExpose)))
     ) {
@@ -214,12 +213,7 @@ class LightHandler implements ServiceHandler {
           delete state[this.colorTempExpose.property];
         }
 
-        if (
-          this.colorExpose !== undefined &&
-          this.colorExpose.property !== undefined &&
-          this.colorExpose.property in state &&
-          colorModeIsTemperature
-        ) {
+        if (this.colorExpose?.property !== undefined && this.colorExpose.property in state && colorModeIsTemperature) {
           // Color mode is Color Temperature. Remove HS/XY color information.
           delete state[this.colorExpose.property];
         }
@@ -259,7 +253,7 @@ class LightHandler implements ServiceHandler {
       ) as ExposesEntryWithFeatures | undefined;
     }
 
-    if (this.colorExpose !== undefined && this.colorExpose.property !== undefined) {
+    if (this.colorExpose?.property !== undefined) {
       // Note: Components of color_xy and color_hs do not specify a range in zigbee-herdsman-converters
       const components = this.colorExpose.features
         .filter((e) => exposesHasProperty(e) && e.type === ExposesKnownTypes.NUMERIC)
@@ -399,7 +393,7 @@ class LightHandler implements ServiceHandler {
         data[this.brightnessExpose.property] = this.brightnessExpose.value_max;
       } else {
         data[this.brightnessExpose.property] = Math.round(
-          this.brightnessExpose.value_min + ((value as number) / 100) * (this.brightnessExpose.value_max - this.brightnessExpose.value_min)
+          this.brightnessExpose.value_min + (value / 100) * (this.brightnessExpose.value_max - this.brightnessExpose.value_min)
         );
       }
       this.accessory.queueDataForSetAction(data);

@@ -1,8 +1,6 @@
 import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
 
-export interface MqttToHomeKitValueTransformer {
-  (value: unknown): CharacteristicValue | undefined;
-}
+export type MqttToHomeKitValueTransformer = (value: unknown) => CharacteristicValue | undefined;
 
 export interface CharacteristicMonitor {
   callback(state: Record<string, unknown>): void;
@@ -49,10 +47,6 @@ export class NestedCharacteristicMonitor implements CharacteristicMonitor {
 }
 
 export class PassthroughCharacteristicMonitor extends BaseCharacteristicMonitor {
-  constructor(key: string, service: Service, characteristic: string | WithUUID<new () => Characteristic>) {
-    super(key, service, characteristic);
-  }
-
   transformValueFromMqtt(value: unknown): CharacteristicValue | undefined {
     return value as CharacteristicValue;
   }
@@ -76,9 +70,7 @@ export class MappingCharacteristicMonitor extends BaseCharacteristicMonitor {
   }
 }
 
-export interface BinaryConditionBasedOnValue {
-  (value: unknown): boolean;
-}
+export type BinaryConditionBasedOnValue = (value: unknown) => boolean;
 
 export class BinaryConditionCharacteristicMonitor extends BaseCharacteristicMonitor {
   constructor(

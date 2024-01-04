@@ -25,7 +25,7 @@ export class SwitchActionMapping {
     this._id = value;
   }
 
-  public merge(other: SwitchActionMapping): SwitchActionMapping {
+  public merge(other: SwitchActionMapping): this {
     if (this.subType !== other.subType) {
       throw new Error(
         'Can NOT merge SwitchActionMapping instances with different identifiers and/or extensions. ' +
@@ -118,7 +118,7 @@ export class SwitchActionHelper {
 
   private static readonly separators: string[] = ['_', '-'];
 
-  private static readonly regex_number = new RegExp('(\\d{1,3})');
+  private static readonly regex_number = /(\d{1,3})/;
 
   private readonly regex_id_start: RegExp;
   private readonly regex_id_end: RegExp;
@@ -150,7 +150,7 @@ export class SwitchActionHelper {
   }
 
   private firstNumberInString(input: string): number | undefined {
-    const numbers = input.match(SwitchActionHelper.regex_number)?.map((x: string) => parseInt(x));
+    const numbers = SwitchActionHelper.regex_number.exec(input)?.map((x: string) => parseInt(x));
     if (numbers !== undefined && numbers.length > 0 && !isNaN(numbers[0])) {
       return numbers[0];
     }
@@ -223,11 +223,11 @@ export class SwitchActionHelper {
     }
 
     // Determine action for value
-    const startMatch = input.match(this.regex_id_start);
+    const startMatch = this.regex_id_start.exec(input);
     if (startMatch && startMatch.length >= 2 && this.matchActionValues(mapping, input, startMatch[1])) {
       return mapping;
     }
-    const endMatch = input.match(this.regex_id_end);
+    const endMatch = this.regex_id_end.exec(input);
     if (endMatch && endMatch.length >= 2 && this.matchActionValues(mapping, input, endMatch[1])) {
       return mapping;
     }
@@ -356,10 +356,8 @@ export class SwitchActionHelper {
       if (firstNumberInX > firstNumberInY) {
         return Y_GOES_FIRST;
       }
-    } else {
-      if (firstNumberInY !== undefined) {
-        return Y_GOES_FIRST;
-      }
+    } else if (firstNumberInY !== undefined) {
+      return Y_GOES_FIRST;
     }
 
     return 0;

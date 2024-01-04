@@ -113,9 +113,7 @@ export function exposesIsPublished(entry: ExposesEntry): boolean {
   return entry.access !== undefined && (entry.access & ExposesAccessLevel.PUBLISHED) !== 0;
 }
 
-export interface ExposesPredicate {
-  (expose: ExposesEntry): boolean;
-}
+export type ExposesPredicate = (expose: ExposesEntry) => boolean;
 
 export function exposesHasAllRequiredFeatures(entry: ExposesEntryWithFeatures, features: ExposesPredicate[]): boolean {
   for (const f of features) {

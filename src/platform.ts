@@ -308,9 +308,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       if (updateDevices || updateGroups) {
         this.removeStaleDevices();
       }
-    } catch (Error) {
+    } catch (err) {
       this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
-      this.log.error(errorToString(Error));
+      this.log.error(errorToString(err));
     }
   }
 
@@ -412,7 +412,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       if ('state' in state) {
         isAvailable = state.state === 'online';
       }
-    } catch (error) {
+    } catch (err) {
       // Ignore error as the string payload version is handled above
     }
     const deviceTopic = topic.slice(0, -1 * Zigbee2mqttPlatform.TOPIC_SUFFIX_AVAILABILITY.length);
@@ -421,9 +421,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       try {
         accessory.updateAvailability(isAvailable);
         this.log.debug(`Handled device availability update for ${deviceTopic}: ${statePayload}`);
-      } catch (Error) {
+      } catch (err) {
         this.log.error(`Failed to process availability update with payload: ${statePayload}`);
-        this.log.error(errorToString(Error));
+        this.log.error(errorToString(err));
       }
     } else {
       this.log.debug(`Unhandled message on topic: ${topic}`);
@@ -442,9 +442,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         const state = JSON.parse(statePayload);
         accessory.updateStates(state);
         this.log.debug(`Handled device update for ${topic}: ${statePayload}`);
-      } catch (Error) {
+      } catch (err) {
         this.log.error(`Failed to process status update with payload: ${statePayload}`);
-        this.log.error(errorToString(Error));
+        this.log.error(errorToString(err));
       }
     } else {
       this.log.debug(`Unhandled message on topic: ${topic}`);
@@ -559,9 +559,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       process.nextTick(() => {
         try {
           this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-        } catch (error) {
+        } catch (err) {
           this.log.error('Failed to delete accessory.');
-          this.log.error(errorToString(error));
+          this.log.error(errorToString(err));
         }
       });
       return;

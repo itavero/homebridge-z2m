@@ -20,7 +20,9 @@ these devices
 * [Lightbulb](../../light.md)
   * Brightness
   * Color Temperature
+  * Hue
   * On
+  * Saturation
 
 ## Other features
 * [Adaptive Lighting](../../light.md)

@@ -25,11 +25,11 @@ span.vendor {
 </style>
 
 # Device support
-This page lists the devices currently supported by Zigbee2MQTT v1.35.0 (which depends on zigbee-herdsman-converters v18.3.0).
+This page lists the devices currently supported by Zigbee2MQTT v1.35.1 (which depends on zigbee-herdsman-converters v18.9.0).
 Using an automated script, we have checked which HomeKit Services (and Characteristics) would be created for each of these devices.
 That way you have some kind of idea of what kind of devices are supported.
 
-Currently there are **3257 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
+Currently there are **3268 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
 Unfortunately there are still 112 devices that are not (yet) supported by this plugin, but are supported by Zigbee2MQTT (and expose more than just a _link quality_).
 
 ## A
@@ -69,6 +69,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 <span class="vendor">[Benexmart](index.md#benexmart)</span>
 <span class="vendor">[Beok](index.md#beok)</span>
 <span class="vendor">[Binthen](index.md#binthen)</span>
+<span class="vendor">[BITUO TECHNIK](index.md#bituo_technik)</span>
 <span class="vendor">[Blaupunkt](index.md#blaupunkt)</span>
 <span class="vendor">[BlitzWolf](index.md#blitzwolf)</span>
 <span class="vendor">[Bosch](index.md#bosch)</span>
@@ -282,6 +283,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 <span class="vendor">[LifeControl](index.md#lifecontrol)</span>
 <span class="vendor">[Lifud](index.md#lifud)</span>
 <span class="vendor">[LightSolutions](index.md#lightsolutions)</span>
+<span class="vendor">[Lilistore](index.md#lilistore)</span>
 <span class="vendor">[Linkind](index.md#linkind)</span>
 <span class="vendor">[Linkoze](index.md#linkoze)</span>
 <span class="vendor">[Linptech](index.md#linptech)</span>
@@ -868,6 +870,13 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | [CV01A](tuya/ts0601_cover_1.md) | Binthen Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
 
 
+# BITUO TECHNIK {#bituo_technik}
+
+| Model | Description |
+| ----- | ----------- |
+| [SPM01-D2TZ-U01](bituo_technik/spm01-d2tz-u01.md) | BITUO TECHNIK Smart energy sensor |
+
+
 # Blaupunkt {#blaupunkt}
 
 | Model | Description |
@@ -897,6 +906,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | ----- | ----------- |
 | [8750001213](bosch/8750001213.md) | Bosch Twinguard |
 | [BHI-US](bosch/bhi-us.md) | Bosch Universal Switch II |
+| [BMCT-RZ](bosch/bmct-rz.md) | Bosch Relay, potential free |
 | [BMCT-SLZ](bosch/bmct-slz.md) | Bosch Light/shutter control unit II |
 | [BSD-2](bosch/bsd-2.md) | Bosch Smoke alarm detector |
 | [BSEN-C2](bosch/bsen-c2.md) | Bosch Door/window contact II |
@@ -3027,6 +3037,13 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | [42-032](lightsolutions/42-032.md) | LightSolutions LED driver CCT 12V - 30W - CCT |
 
 
+# Lilistore {#lilistore}
+
+| Model | Description |
+| ----- | ----------- |
+| [TS0601_lilistore](tuya/ts0601_cover_8.md) | Lilistore Cover motor (white-label of TuYa TS0601_cover_8) |
+
+
 # Linkind {#linkind}
 
 | Model | Description |
@@ -3172,7 +3189,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | ----- | ----------- |
 | [TY-12-100-400-W1Z](tuya/ts0601_light.md) | Ltech 12W 100-400mA Zigbee CC Dimmable LED driver (white-label of TuYa TS0601_light) |
 | [TY-75-24-G2Z2](tuya/ts0601_light.md) | Ltech 150W 24V Zigbee CV tunable white LED driver (white-label of TuYa TS0601_light) |
-| [TY-75-24-G2Z2_CCT](skydance/wz5_dim_1.md) | Ltech 150W 24V Zigbee CV tunable white LED driver (white-label of Skydance WZ5_dim_1) |
+| [TY-75-24-G2Z2_CCT](skydance/wz5_cct.md) | Ltech 150W 24V Zigbee CV tunable white LED driver (white-label of Skydance WZ5_cct) |
 
 
 # Lubeez {#lubeez}
@@ -3508,6 +3525,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | [4512749-N](namron/4512749-n.md) | Namron Thermostat outlet socket |
 | [4512750](namron/4512750.md) | Namron Zigbee dimmer 2.0 |
 | [4512751](namron/4512750.md) | Namron Zigbee dimmer 2.0 (white-label of Namron 4512750) |
+| [4512752/4512753](namron/4512752_4512753.md) | Namron Touch thermostat 16A 2.0 |
 | [4512760](namron/4512760.md) | Namron Zigbee dimmer 400W |
 | [4512761](namron/4512761.md) | Namron Zigbee relais 16A |
 | [4512762](namron/4512762.md) | Namron Zigbee Door Sensor |
@@ -4187,6 +4205,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | [8719514339125](philips/8719514339125.md) | Philips Hue white ambiance Buckram triple spotlight with Bluetooth |
 | [8719514339163](philips/8719514339163.md) | Philips Hue white ambiance Buckram quadruple spotlight with Bluetooth |
 | [8719514342361](philips/8719514342361.md) | Philips Hue smart plug - AU |
+| [8719514343320](philips/8719514343320.md) | Philips Hue white A67 bulb E26 with Bluetooth (1600 Lumen) |
 | [8719514344723](philips/8719514344723.md) | Philips Akari downlight |
 | [8719514382350](philips/8719514382350.md) | Philips Akari downlight |
 | [8719514392830](philips/8719514392830.md) | Philips Hue White Ambiance E27 filament screw globe |
@@ -4926,6 +4945,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | [VA4220ZB](sinope/va4220zb.md) | Sinopé Sedna smart water valve |
 | [WL4200](sinope/wl4200.md) | Sinopé Zigbee smart water leak detector |
 | [WL4200S](sinope/wl4200s.md) | Sinopé Zigbee smart water leak detector with external sensor |
+| [WL4210](sinope/wl4210.md) | Sinopé Zigbee smart water leak detector with external sensor |
 
 
 # Siterwell {#siterwell}
@@ -5337,6 +5357,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | [3RSS007Z](third_reality/3rss007z.md) | Third Reality Smart light switch |
 | [3RSS008Z](third_reality/3rss008z.md) | Third Reality RealitySwitch Plus |
 | [3RSS009Z](third_reality/3rss009z.md) | Third Reality Smart switch Gen3 |
+| [3RTHS0224BZ](third_reality/3rths0224bz.md) | Third Reality Temperature and humidity sensor v2 |
 | [3RTHS24BZ](third_reality/3rths24bz.md) | Third Reality Temperature and humidity sensor |
 | [3RVS01031Z](third_reality/3rvs01031z.md) | Third Reality Zigbee vibration sensor |
 | [3RWS18BZ](third_reality/3rws18bz.md) | Third Reality Water sensor |
@@ -5596,6 +5617,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | [TS0601_cover_5](tuya/ts0601_cover_5.md) | TuYa Curtain/blind switch |
 | [TS0601_cover_6](tuya/ts0601_cover_6.md) | TuYa Cover motor |
 | [TS0601_cover_7](tuya/ts0601_cover_7.md) | TuYa Cover motor |
+| [TS0601_cover_8](tuya/ts0601_cover_8.md) | TuYa Cover motor |
 | [TS0601_cover_with_1_switch](tuya/ts0601_cover_with_1_switch.md) | TuYa Curtain/blind switch with 1 Gang switch |
 | [TS0601_cover_with_2_switch](tuya/ts0601_cover_with_2_switch.md) | TuYa Curtain/blind switch with 2 Gang switch |
 | [TS0601_dimmer](tuya/ts0601_dimmer.md) | TuYa Zigbee smart dimmer |
@@ -5816,6 +5838,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
+| [7377019](viessmann/7377019.md) | Viessmann ViCare CO2, temperature and humidity sensor |
 | [ZK03839](viessmann/zk03839.md) | Viessmann ViCare climate sensor |
 | [ZK03840](viessmann/zk03840.md) | Viessmann ViCare radiator thermostat valve |
 
@@ -5951,6 +5974,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | [R7048](woox/r7048.md) | Woox Smart humidity & temperature sensor |
 | [R7049](woox/r7049.md) | Woox Smart smoke alarm |
 | [R7051](woox/r7051.md) | Woox Smart siren |
+| [R7052](tuya/ts0215a_sos.md) | Woox Smart SOS button (white-label of TuYa TS0215A_sos) |
 | [R7054](tuya/ts0215a_remote.md) | Woox Security remote control (white-label of TuYa TS0215A_remote) |
 | [R7060](woox/r7060.md) | Woox Smart garden irrigation control |
 | [R9077](woox/r9077.md) | Woox RGB+CCT LED |
@@ -6248,6 +6272,7 @@ Unfortunately there are still 112 devices that are not (yet) supported by this p
 | [ZM-RM02](zemismart/zm-rm02.md) | Zemismart Smart 6 key scene switch |
 | [ZM16EL-03/33](tuya/ts0601_cover_3.md) | Zemismart Cover motor (white-label of TuYa TS0601_cover_3) |
 | [ZM25EL](tuya/ts0601_cover_3.md) | Zemismart Cover motor (white-label of TuYa TS0601_cover_3) |
+| [ZM25R1](zemismart/zm25r1.md) | Zemismart Tubular motor |
 | [ZM25RX-08/30](zemismart/zm25rx-08_30.md) | Zemismart Tubular motor |
 | [ZM25TQ](zemismart/zm25tq.md) | Zemismart Tubular motor |
 | [ZM79E-DT](tuya/ts0601_cover_1.md) | Zemismart Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |

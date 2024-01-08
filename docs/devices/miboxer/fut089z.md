@@ -18,48 +18,10 @@ the MiBoxer FUT089Z
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 
-
-
-## Exposes
-
-This is the information provided by Zigbee2MQTT for this device:
-
-```json
-[
-  {
-    "name": "battery",
-    "label": "Battery",
-    "access": 1,
-    "type": "numeric",
-    "property": "battery",
-    "description": "Remaining battery in %, can take up to 24 hours before reported.",
-    "unit": "%",
-    "value_max": 100,
-    "value_min": 0
-  },
-  {
-    "name": "voltage",
-    "label": "Voltage",
-    "access": 1,
-    "type": "numeric",
-    "property": "voltage",
-    "description": "Voltage of the battery in millivolts",
-    "unit": "mV"
-  },
-  {
-    "name": "linkquality",
-    "label": "Linkquality",
-    "access": 1,
-    "type": "numeric",
-    "property": "linkquality",
-    "description": "Link quality (signal strength)",
-    "unit": "lqi",
-    "value_max": 255,
-    "value_min": 0
-  }
-]
-```
 
 # Related
 * [Other devices from MiBoxer](../index.md#miboxer)

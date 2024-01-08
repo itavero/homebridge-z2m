@@ -59,7 +59,7 @@
     "type": "numeric",
     "property": "temperature",
     "description": "Measured temperature value",
-    "unit": "ºC"
+    "unit": "°C"
   },
   {
     "name": "humidity",

@@ -66,7 +66,7 @@
     "type": "enum",
     "endpoint": "l1",
     "property": "power_on_behavior_l1",
-    "description": "Controls the behavior when the device is powered on after power loss",
+    "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
     "values": [
       "off",
       "previous",
@@ -80,7 +80,7 @@
     "type": "enum",
     "endpoint": "l2",
     "property": "power_on_behavior_l2",
-    "description": "Controls the behavior when the device is powered on after power loss",
+    "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
     "values": [
       "off",
       "previous",

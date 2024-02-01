@@ -81,7 +81,7 @@
   "devDependencies": {
     "@release-it/keep-a-changelog": "^5.0.0",
     "@types/color-convert": "^2.0.0",
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.2.5",
     "@types/semver": "^7.3.4",
     "@typescript-eslint/eslint-plugin": "^6.17.0",

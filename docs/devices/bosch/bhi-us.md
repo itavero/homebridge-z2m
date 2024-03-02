@@ -34,6 +34,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "binary",
     "property": "battery_low",
     "description": "Indicates if the battery of this device is almost empty",
+    "category": "diagnostic",
     "value_on": true,
     "value_off": false
   },
@@ -44,6 +45,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "voltage",
     "description": "Voltage of the battery in millivolts",
+    "category": "diagnostic",
     "unit": "mV"
   },
   {
@@ -52,7 +54,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 7,
     "type": "text",
     "property": "config_led_top_left_press",
-    "description": "Specifies LED color (rgb) and pattern on short press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff1493000104010001"
+    "description": "Specifies LED color (rgb) and pattern on short press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff1493000104010001",
+    "category": "config"
   },
   {
     "name": "config_led_top_right_press",
@@ -60,7 +63,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 7,
     "type": "text",
     "property": "config_led_top_right_press",
-    "description": "Specifies LED color (rgb) and pattern on short press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff1493000104010001"
+    "description": "Specifies LED color (rgb) and pattern on short press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff1493000104010001",
+    "category": "config"
   },
   {
     "name": "config_led_bottom_left_press",
@@ -68,7 +72,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 7,
     "type": "text",
     "property": "config_led_bottom_left_press",
-    "description": "Specifies LED color (rgb) and pattern on short press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff1493000104010001"
+    "description": "Specifies LED color (rgb) and pattern on short press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff1493000104010001",
+    "category": "config"
   },
   {
     "name": "config_led_bottom_right_press",
@@ -76,7 +81,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 7,
     "type": "text",
     "property": "config_led_bottom_right_press",
-    "description": "Specifies LED color (rgb) and pattern on short press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff1493000104010001"
+    "description": "Specifies LED color (rgb) and pattern on short press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff1493000104010001",
+    "category": "config"
   },
   {
     "name": "config_led_top_left_longpress",
@@ -84,7 +90,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 7,
     "type": "text",
     "property": "config_led_top_left_longpress",
-    "description": "Specifies LED color (rgb) and pattern on long press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff4200000502050001"
+    "description": "Specifies LED color (rgb) and pattern on long press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff4200000502050001",
+    "category": "config"
   },
   {
     "name": "config_led_top_right_longpress",
@@ -92,7 +99,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 7,
     "type": "text",
     "property": "config_led_top_right_longpress",
-    "description": "Specifies LED color (rgb) and pattern on long press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff4200000502050001"
+    "description": "Specifies LED color (rgb) and pattern on long press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff4200000502050001",
+    "category": "config"
   },
   {
     "name": "config_led_bottom_left_longpress",
@@ -100,7 +108,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 7,
     "type": "text",
     "property": "config_led_bottom_left_longpress",
-    "description": "Specifies LED color (rgb) and pattern on long press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff4200000502050001"
+    "description": "Specifies LED color (rgb) and pattern on long press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff4200000502050001",
+    "category": "config"
   },
   {
     "name": "config_led_bottom_right_longpress",
@@ -108,7 +117,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 7,
     "type": "text",
     "property": "config_led_bottom_right_longpress",
-    "description": "Specifies LED color (rgb) and pattern on long press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff4200000502050001"
+    "description": "Specifies LED color (rgb) and pattern on long press as hex string.\n0-2: RGB value (e.g. ffffff = white)\n3: Light position (01=top, 02=bottom, 00=full)\n4-7: Durations for sequence fade-in -> on -> fade-out -> off (e.g. 01020102)\n8: Number of Repetitions (01=1 to ff=255)\nExample: ff4200000502050001",
+    "category": "config"
   },
   {
     "name": "linkquality",
@@ -117,6 +127,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "linkquality",
     "description": "Link quality (signal strength)",
+    "category": "diagnostic",
     "unit": "lqi",
     "value_max": 255,
     "value_min": 0

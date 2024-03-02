@@ -6,6 +6,7 @@
     "type": "numeric",
     "property": "voltage",
     "description": "Voltage of the battery in millivolts",
+    "category": "diagnostic",
     "unit": "mV"
   },
   {
@@ -15,6 +16,7 @@
     "type": "binary",
     "property": "battery_low",
     "description": "Indicates if the battery of this device is almost empty",
+    "category": "diagnostic",
     "value_on": true,
     "value_off": false
   },
@@ -52,6 +54,7 @@
     "type": "numeric",
     "property": "linkquality",
     "description": "Link quality (signal strength)",
+    "category": "diagnostic",
     "unit": "lqi",
     "value_max": 255,
     "value_min": 0

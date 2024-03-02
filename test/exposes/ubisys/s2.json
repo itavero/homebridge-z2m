@@ -67,6 +67,7 @@
     "endpoint": "l1",
     "property": "power_on_behavior_l1",
     "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
+    "category": "config",
     "values": [
       "off",
       "previous",
@@ -81,6 +82,7 @@
     "endpoint": "l2",
     "property": "power_on_behavior_l2",
     "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
+    "category": "config",
     "values": [
       "off",
       "previous",
@@ -94,6 +96,7 @@
     "type": "numeric",
     "property": "power",
     "description": "Instantaneous measured power",
+    "category": "diagnostic",
     "unit": "W"
   },
   {
@@ -112,6 +115,7 @@
     "type": "numeric",
     "property": "linkquality",
     "description": "Link quality (signal strength)",
+    "category": "diagnostic",
     "unit": "lqi",
     "value_max": 255,
     "value_min": 0

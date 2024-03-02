@@ -17,7 +17,9 @@ the Acuity Brands Lighting (ABL) RB56SC
 * [Lightbulb](../../light.md)
   * Brightness
   * Color Temperature
+  * Hue
   * On
+  * Saturation
 
 ## Other features
 * [Adaptive Lighting](../../light.md)

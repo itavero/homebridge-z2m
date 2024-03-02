@@ -33,7 +33,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 1,
     "type": "numeric",
     "property": "battery",
-    "description": "Remaining battery in %, can take up to 24 hours before reported.",
+    "description": "Remaining battery in %, can take up to 24 hours before reported",
+    "category": "diagnostic",
     "unit": "%",
     "value_max": 100,
     "value_min": 0
@@ -45,6 +46,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "power",
     "description": "Instantaneous measured power",
+    "category": "diagnostic",
     "unit": "W"
   },
   {
@@ -63,6 +65,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "linkquality",
     "description": "Link quality (signal strength)",
+    "category": "diagnostic",
     "unit": "lqi",
     "value_max": 255,
     "value_min": 0

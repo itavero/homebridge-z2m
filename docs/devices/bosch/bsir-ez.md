@@ -176,7 +176,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 1,
     "type": "numeric",
     "property": "battery",
-    "description": "Remaining battery in %, can take up to 24 hours before reported.",
+    "description": "Remaining battery in %, can take up to 24 hours before reported",
+    "category": "diagnostic",
     "unit": "%",
     "value_max": 100,
     "value_min": 0
@@ -188,6 +189,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "voltage",
     "description": "Voltage of the battery in millivolts",
+    "category": "diagnostic",
     "unit": "mV"
   },
   {
@@ -197,6 +199,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "binary",
     "property": "battery_low",
     "description": "Indicates if the battery of this device is almost empty",
+    "category": "diagnostic",
     "value_on": true,
     "value_off": false
   },
@@ -217,6 +220,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "linkquality",
     "description": "Link quality (signal strength)",
+    "category": "diagnostic",
     "unit": "lqi",
     "value_max": 255,
     "value_min": 0

@@ -193,7 +193,7 @@ class CoverHandler implements ServiceHandler {
 
       // As long as the update timer is running, we are expecting updates.
       if (this.updateTimer !== undefined && this.updateTimer.isActive) {
-        if (latestPosition === this.positionCurrent) {
+        if (latestPosition === this.positionCurrent && !doIgnoreIfEqual) {
           // Stop requesting frequent updates if no change is detected.
           this.updateTimer.stop();
         } else {

@@ -178,8 +178,8 @@ class CoverHandler implements ServiceHandler {
 
       // Ignore "first" update?
       const doIgnoreIfEqual = this.ignoreNextUpdateIfEqualToTarget;
-      this.ignoreNextUpdateIfEqualToTarget = false;
       if (latestPosition === this.lastPositionSet && doIgnoreIfEqual) {
+        this.ignoreNextUpdateIfEqualToTarget = false;
         this.accessory.log.debug(`${this.accessory.displayName}: cover: ignore position update (equal to last target)`);
         return;
       }

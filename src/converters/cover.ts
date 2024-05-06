@@ -42,6 +42,10 @@ export class CoverCreator implements ServiceCreator {
 
 class CoverHandler implements ServiceHandler {
   private static readonly STATE_HOLD_POSITION = 'STOP';
+  private static readonly MOTOR_STATE_DEFAULT = 'none';
+  private static readonly MOTOR_STATE_OPENING = 'opening';
+  private static readonly MOTOR_STATE_CLOSING = 'closing';
+  private static readonly MOTOR_STATE_STOPPED = 'stopped';
   private readonly positionExpose: ExposesEntryWithNumericRangeProperty;
   private readonly tiltExpose: ExposesEntryWithNumericRangeProperty | undefined;
   private readonly stateExpose: ExposesEntryWithEnumProperty | undefined;
@@ -58,6 +62,10 @@ class CoverHandler implements ServiceHandler {
   private ignoreNextUpdateIfEqualToTarget: boolean;
   private lastPositionSet = -1;
   private positionCurrent = -1;
+  private motorState: string;
+  private motorStatePrevious: string;
+  private hasMotorState: boolean;
+  private setTargetPositionHandled: boolean;
 
   public readonly mainCharacteristics: Characteristic[] = [];
 
@@ -156,6 +164,10 @@ class CoverHandler implements ServiceHandler {
     }
     this.waitingForUpdate = false;
     this.ignoreNextUpdateIfEqualToTarget = false;
+    this.hasMotorState = false;
+    this.setTargetPositionHandled = false;
+    this.motorState = CoverHandler.MOTOR_STATE_DEFAULT;
+    this.motorStatePrevious = CoverHandler.MOTOR_STATE_DEFAULT;
   }
 
   identifier: string;
@@ -173,13 +185,35 @@ class CoverHandler implements ServiceHandler {
   updateState(state: Record<string, unknown>): void {
     this.monitors.forEach((m) => m.callback(state));
 
+    if ('motor_state' in state) {
+      const latestMotorState = state['motor_state'] as string;
+      switch (latestMotorState) {
+        case 'opening':
+          this.motorState = CoverHandler.MOTOR_STATE_OPENING;
+          break;
+        case 'closing':
+          this.motorState = CoverHandler.MOTOR_STATE_CLOSING;
+          break;
+        case 'stopped':
+        case 'pause':
+        default:
+          this.motorState = CoverHandler.MOTOR_STATE_STOPPED;
+          break;
+      }
+      this.hasMotorState = true;
+      if (this.updateTimer !== undefined) {
+        this.accessory.log.debug(`${this.accessory.displayName}: cover: motor_state detected, stopping updateTimer`);
+        this.updateTimer.stop();
+      }
+    }
+
     if (this.positionExpose.property in state) {
       const latestPosition = state[this.positionExpose.property] as number;
 
       // Ignore "first" update?
       const doIgnoreIfEqual = this.ignoreNextUpdateIfEqualToTarget;
+      this.ignoreNextUpdateIfEqualToTarget = false;
       if (latestPosition === this.lastPositionSet && doIgnoreIfEqual) {
-        this.ignoreNextUpdateIfEqualToTarget = false;
         this.accessory.log.debug(`${this.accessory.displayName}: cover: ignore position update (equal to last target)`);
         return;
       }
@@ -192,8 +226,8 @@ class CoverHandler implements ServiceHandler {
       let didStop = true;
 
       // As long as the update timer is running, we are expecting updates.
-      if (this.updateTimer !== undefined && this.updateTimer.isActive) {
-        if (latestPosition === this.positionCurrent && !doIgnoreIfEqual) {
+      if (this.updateTimer !== undefined && this.updateTimer.isActive && !this.hasMotorState) {
+        if (latestPosition === this.positionCurrent) {
           // Stop requesting frequent updates if no change is detected.
           this.updateTimer.stop();
         } else {
@@ -210,7 +244,7 @@ class CoverHandler implements ServiceHandler {
   }
 
   private startOrRestartUpdateTimer(): void {
-    if (this.updateTimer === undefined) {
+    if (this.updateTimer === undefined || this.hasMotorState) {
       return;
     }
 
@@ -252,14 +286,39 @@ class CoverHandler implements ServiceHandler {
       this.current_max
     );
 
-    this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
-
-    if (isStopped) {
-      // Update target position and position state
-      // This should improve the UX in the Home.app
-      this.accessory.log.debug(`${this.accessory.displayName}: cover: assume movement stopped`);
+    if (this.motorState === CoverHandler.MOTOR_STATE_CLOSING && this.motorStatePrevious !== CoverHandler.MOTOR_STATE_CLOSING) {
+      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.DECREASING);
+      this.accessory.log.debug(`${this.accessory.displayName}: cover: closing via motor_state`);
+      if (!this.setTargetPositionHandled) {
+        this.service.updateCharacteristic(hap.Characteristic.TargetPosition, 0);
+      }
+      this.motorStatePrevious = CoverHandler.MOTOR_STATE_CLOSING;
+      this.setTargetPositionHandled = false;
+    } else if (this.motorState === CoverHandler.MOTOR_STATE_OPENING && this.motorStatePrevious !== CoverHandler.MOTOR_STATE_OPENING) {
+      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.INCREASING);
+      this.accessory.log.debug(`${this.accessory.displayName}: cover: opening via motor_state`);
+      if (!this.setTargetPositionHandled) {
+        this.service.updateCharacteristic(hap.Characteristic.TargetPosition, 100);
+      }
+      this.motorStatePrevious = CoverHandler.MOTOR_STATE_OPENING;
+      this.setTargetPositionHandled = false;
+    } else if (this.motorState === CoverHandler.MOTOR_STATE_STOPPED && this.motorStatePrevious !== CoverHandler.MOTOR_STATE_STOPPED) {
       this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
+      this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
       this.service.updateCharacteristic(hap.Characteristic.TargetPosition, characteristicValue);
+      this.accessory.log.debug(`${this.accessory.displayName}: cover: stopped via motor_state`);
+      this.motorStatePrevious = CoverHandler.MOTOR_STATE_STOPPED;
+      this.setTargetPositionHandled = false;
+    } else if (this.motorState === CoverHandler.MOTOR_STATE_DEFAULT && !this.hasMotorState) {
+      this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
+
+      if (isStopped) {
+        // Update target position and position state
+        // This should improve the UX in the Home.app
+        this.accessory.log.debug(`${this.accessory.displayName}: cover: assume movement stopped`);
+        this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
+        this.service.updateCharacteristic(hap.Characteristic.TargetPosition, characteristicValue);
+      }
     }
   }
 
@@ -276,15 +335,19 @@ class CoverHandler implements ServiceHandler {
     data[this.positionExpose.property] = target;
     this.accessory.queueDataForSetAction(data);
 
-    // Assume position state based on new target
-    if (target > this.positionCurrent) {
-      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.INCREASING);
-    } else if (target < this.positionCurrent) {
-      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.DECREASING);
+    if (!this.hasMotorState) {
+      // Assume position state based on new target
+      if (target > this.positionCurrent) {
+        this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.INCREASING);
+      } else if (target < this.positionCurrent) {
+        this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.DECREASING);
+      } else {
+        this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
+      }
     } else {
-      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
+      this.service.updateCharacteristic(hap.Characteristic.TargetPosition, target);
+      this.setTargetPositionHandled = true;
     }
-
     // Store last sent position for future reference
     this.lastPositionSet = target;
 

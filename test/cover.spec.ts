@@ -413,4 +413,107 @@ describe('Cover', () => {
       harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'state', true, { state: 'STOP' });
     });
   });
+
+  describe('Bosch Light/shutter control unit II', () => {
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('bosch/bmct-slz.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Check service creation
+        const windowCovering = newHarness
+          .getOrAddHandler(hap.Service.WindowCovering)
+          .addExpectedCharacteristic('position', hap.Characteristic.CurrentPosition, false)
+          .addExpectedCharacteristic('target_position', hap.Characteristic.TargetPosition, true)
+          .addExpectedCharacteristic('position_state', hap.Characteristic.PositionState, false)
+          .addExpectedCharacteristic('state', hap.Characteristic.HoldPosition, true);
+        newHarness.prepareCreationMocks();
+
+        const positionCharacteristicMock = windowCovering.getCharacteristicMock('position');
+        if (positionCharacteristicMock !== undefined) {
+          positionCharacteristicMock.props.minValue = 0;
+          positionCharacteristicMock.props.maxValue = 100;
+        }
+
+        const targetPositionCharacteristicMock = windowCovering.getCharacteristicMock('target_position');
+        if (targetPositionCharacteristicMock !== undefined) {
+          targetPositionCharacteristicMock.props.minValue = 0;
+          targetPositionCharacteristicMock.props.maxValue = 100;
+        }
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
+        newHarness.checkExpectedGetableKeys(['position']);
+        harness = newHarness;
+      }
+      harness?.clearMocks();
+    });
+
+    afterEach(() => {
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
+    });
+
+    test('Status update is handled: Position changes', () => {
+      expect(harness).toBeDefined();
+
+      // First update (previous state is unknown, so)
+      harness.checkUpdateState(
+        '{"position":100, "motor_state":"stopped"}',
+        hap.Service.WindowCovering,
+        new Map([
+          [hap.Characteristic.CurrentPosition, 100],
+          [hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED],
+          [hap.Characteristic.TargetPosition, 100],
+        ])
+      );
+      harness.clearMocks();
+    });
+
+    test('HomeKit: Hold position', () => {
+      expect(harness).toBeDefined();
+
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'state', true, { state: 'STOP' });
+    });
+
+    test('HomeKit: Change target position', () => {
+      expect(harness).toBeDefined();
+
+      // Ignore known stopped position
+      harness.checkUpdateStateIsIgnored('{"position":100, "motor_state":"stopped"}');
+      harness.clearMocks();
+
+      // Check changing the position to a lower value
+      harness.checkHomeKitUpdate(hap.Service.WindowCovering, 'target_position', 51, { position: 51 });
+      harness.getOrAddHandler(hap.Service.WindowCovering).checkCharacteristicUpdates(new Map([[hap.Characteristic.TargetPosition, 51]]));
+      harness.clearMocks();
+
+      harness.checkUpdateState(
+        '{"position":41, "motor_state":"closing"}',
+        hap.Service.WindowCovering,
+        new Map([[hap.Characteristic.PositionState, hap.Characteristic.PositionState.DECREASING]])
+      );
+      harness.clearMocks();
+
+      harness.checkUpdateState(
+        '{"position":51, "motor_state":"stopped"}',
+        hap.Service.WindowCovering,
+        new Map([
+          [hap.Characteristic.CurrentPosition, 51],
+          [hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED],
+          [hap.Characteristic.TargetPosition, 51],
+        ])
+      );
+      harness.clearMocks();
+    });
+  });
 });

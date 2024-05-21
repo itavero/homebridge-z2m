@@ -97,7 +97,8 @@ export class NumericCharacteristicMonitor extends BaseCharacteristicMonitor {
     private readonly input_min: number,
     private readonly input_max: number,
     private readonly output_min?: number | undefined,
-    private readonly output_max?: number | undefined
+    private readonly output_max?: number | undefined,
+    roundValue: boolean = false,
   ) {
     super(key, service, characteristic);
     if (input_min === input_max) {
@@ -141,12 +142,7 @@ export class NumericCharacteristicMonitor extends BaseCharacteristicMonitor {
     const percentage = (input - this.input_min) / (this.input_max - this.input_min);
 
     const result = out_minimum + percentage * (out_maximum - out_minimum);
-    if (
-      result < 1 &&
-      result > 0 &&
-      actualCharacteristic !== undefined &&
-      actualCharacteristic.UUID === '00000008-0000-1000-8000-0026BB765291'
-    ) {
+    if (this.roundValue && result > 0 && result < 1) {
       return 1;
     }
     return result;

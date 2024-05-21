@@ -583,7 +583,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private createOrUpdateAccessory(device: DeviceListEntry) {
-    if (!device.supported || !isDeviceDefinition(device.definition) || this.isDeviceExcluded(device)) {
+    if (!isDeviceDefinition(device.definition) || this.isDeviceExcluded(device)) {
       return;
     }
     const uuid_input = isDeviceListEntryForGroup(device) ? `group-${device.group_id}` : device.ieee_address;

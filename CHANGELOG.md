@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Changed
+
+- Process devices not yet supported by Zigbee2MQTT if they provide exposes information. This should allow automatically detected features to already be exposed.
+
 ### Fixed
 
 - Non-zero brightness levels below 1% are now rounded up to 1%. (see [#673](https://github.com/itavero/homebridge-z2m/issues/673))

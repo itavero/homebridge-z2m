@@ -347,6 +347,8 @@ class LightHandler implements ServiceHandler {
           hap.Characteristic.Brightness,
           this.brightnessExpose.value_min,
           this.brightnessExpose.value_max,
+          null,
+          null,
           true
         )
       );

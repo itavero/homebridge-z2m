@@ -197,7 +197,6 @@ describe('Light', () => {
       if (brightnessCharacteristicMock !== undefined) {
         brightnessCharacteristicMock.props.minValue = 0;
         brightnessCharacteristicMock.props.maxValue = 100;
-        brightnessCharacteristicMock.UUID = '00000008-0000-1000-8000-0026BB765291';
       }
     });
 

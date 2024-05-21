@@ -16,12 +16,6 @@ the Bosch BTH-RM230Z
 
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
-* [Thermostat](../../climate.md)
-  * Current Heating Cooling State
-  * Current Temperature
-  * Target Heating Cooling State
-  * Target Temperature
-  * Temperature Display Units
 
 
 # Related

@@ -36,12 +36,62 @@
     ]
   },
   {
+    "name": "power_on_behavior",
+    "label": "Power-on behavior",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "l1",
+    "property": "power_on_behavior_l1",
+    "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
+    "category": "config",
+    "values": [
+      "off",
+      "previous",
+      "on"
+    ]
+  },
+  {
+    "name": "power_on_behavior",
+    "label": "Power-on behavior",
+    "access": 7,
+    "type": "enum",
+    "endpoint": "l2",
+    "property": "power_on_behavior_l2",
+    "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
+    "category": "config",
+    "values": [
+      "off",
+      "previous",
+      "on"
+    ]
+  },
+  {
+    "name": "power",
+    "label": "Power",
+    "access": 5,
+    "type": "numeric",
+    "property": "power",
+    "description": "Instantaneous measured power",
+    "category": "diagnostic",
+    "unit": "W"
+  },
+  {
+    "name": "energy",
+    "label": "Energy",
+    "access": 5,
+    "type": "numeric",
+    "property": "energy",
+    "description": "Sum of consumed energy",
+    "unit": "kWh"
+  },
+  {
     "name": "action",
     "label": "Action",
     "access": 1,
     "type": "enum",
     "property": "action",
     "description": "Triggered action (e.g. a button click)",
+    "category": "diagnostic",
     "values": [
       "toggle_s1",
       "toggle_s2",
@@ -60,58 +110,13 @@
     ]
   },
   {
-    "name": "power_on_behavior",
-    "label": "Power-on behavior",
-    "access": 7,
-    "type": "enum",
-    "endpoint": "l1",
-    "property": "power_on_behavior_l1",
-    "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
-    "values": [
-      "off",
-      "previous",
-      "on"
-    ]
-  },
-  {
-    "name": "power_on_behavior",
-    "label": "Power-on behavior",
-    "access": 7,
-    "type": "enum",
-    "endpoint": "l2",
-    "property": "power_on_behavior_l2",
-    "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
-    "values": [
-      "off",
-      "previous",
-      "on"
-    ]
-  },
-  {
-    "name": "power",
-    "label": "Power",
-    "access": 5,
-    "type": "numeric",
-    "property": "power",
-    "description": "Instantaneous measured power",
-    "unit": "W"
-  },
-  {
-    "name": "energy",
-    "label": "Energy",
-    "access": 5,
-    "type": "numeric",
-    "property": "energy",
-    "description": "Sum of consumed energy",
-    "unit": "kWh"
-  },
-  {
     "name": "linkquality",
     "label": "Linkquality",
     "access": 1,
     "type": "numeric",
     "property": "linkquality",
     "description": "Link quality (signal strength)",
+    "category": "diagnostic",
     "unit": "lqi",
     "value_max": 255,
     "value_min": 0

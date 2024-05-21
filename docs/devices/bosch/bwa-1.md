@@ -20,6 +20,7 @@ the Bosch BWA-1
   * Status Low Battery
 * [Leak Sensor](../../sensors.md)
   * Leak Detected
+  * Status Low Battery
   * Status Tampered
 
 

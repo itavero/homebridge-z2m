@@ -17,9 +17,7 @@ the YSRSAI YSR-MINI-01_wwcw
 * [Lightbulb](../../light.md)
   * Brightness
   * Color Temperature
-  * Hue
   * On
-  * Saturation
 
 ## Other features
 * [Adaptive Lighting](../../light.md)

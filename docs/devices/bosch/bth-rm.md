@@ -21,12 +21,6 @@ the Bosch BTH-RM
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
   * Status Low Battery
-* [Thermostat](../../climate.md)
-  * Current Heating Cooling State
-  * Current Temperature
-  * Target Heating Cooling State
-  * Target Temperature
-  * Temperature Display Units
 
 
 # Related

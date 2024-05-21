@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Fixed
+
+- Overlooked an `supported` check in the previous version. This is now also removed, so devices not officially supported by Zigbee2MQTT can now be used.
+
 ## [1.11.0-beta.4] - 2024-05-21
 
 ### Changed

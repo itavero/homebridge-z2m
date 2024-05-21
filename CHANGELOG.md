@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.11.0-beta.4] - 2024-05-21
+
 ### Changed
 
 - Process devices not yet supported by Zigbee2MQTT if they provide exposes information. This should allow automatically detected features to already be exposed.
@@ -416,7 +418,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.3...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.4...HEAD
+[1.11.0-beta.4]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.3...v1.11.0-beta.4
 [1.11.0-beta.3]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.2...v1.11.0-beta.3
 [1.11.0-beta.2]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.1...v1.11.0-beta.2
 [1.11.0-beta.1]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.0...v1.11.0-beta.1

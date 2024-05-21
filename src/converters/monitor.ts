@@ -140,6 +140,15 @@ export class NumericCharacteristicMonitor extends BaseCharacteristicMonitor {
     }
     const percentage = (input - this.input_min) / (this.input_max - this.input_min);
 
-    return out_minimum + percentage * (out_maximum - out_minimum);
+    const result = out_minimum + percentage * (out_maximum - out_minimum);
+    if (
+      result < 1 &&
+      result > 0 &&
+      actualCharacteristic !== undefined &&
+      actualCharacteristic.UUID === '00000008-0000-1000-8000-0026BB765291'
+    ) {
+      return 1;
+    }
+    return result;
   }
 }

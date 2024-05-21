@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Fixed
+
+- Non-zero brightness levels below 1% are now rounded up to 1%. (see [#673](https://github.com/itavero/homebridge-z2m/issues/673))
+
 ## [1.11.0-beta.3] - 2024-01-04
 
 ### Changed

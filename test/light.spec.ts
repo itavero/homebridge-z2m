@@ -197,6 +197,7 @@ describe('Light', () => {
       if (brightnessCharacteristicMock !== undefined) {
         brightnessCharacteristicMock.props.minValue = 0;
         brightnessCharacteristicMock.props.maxValue = 100;
+        brightnessCharacteristicMock.UUID = '00000008-0000-1000-8000-0026BB765291';
       }
     });
 
@@ -225,6 +226,18 @@ describe('Light', () => {
         expect(harness).toBeDefined();
         harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
         harness.checkSingleUpdateState('{"brightness":0}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 0);
+      });
+
+      test('Brightness 1% (1/254 from Zigbee)', () => {
+        expect(harness).toBeDefined();
+        harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+        harness.checkSingleUpdateState('{"brightness":1}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 1);
+      });
+
+      test('Brightness 1% (2/254 from Zigbee)', () => {
+        expect(harness).toBeDefined();
+        harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+        harness.checkSingleUpdateState('{"brightness":2}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 1);
       });
 
       test('Brightness 50%', () => {

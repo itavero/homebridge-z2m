@@ -87,7 +87,7 @@ jobs:
             -Dsonar.pullrequest.base=${{ steps.pr.outputs.base_ref }}
 
       - name: Publish Code Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           override_pr: ${{ steps.pr.outputs.number }}
           override_commit: ${{ steps.pr.outputs.head_sha }}

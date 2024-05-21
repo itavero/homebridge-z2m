@@ -85,3 +85,4 @@ jobs:
           files: ./coverage/clover.xml
           flags: tests
           fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -316,7 +316,7 @@ export interface DeviceListEntryForGroup extends DeviceListEntry {
 }
 
 export const isDeviceListEntry = (x: any): x is DeviceListEntry =>
-  !isNullOrUndefined(x) && x.ieee_address && x.friendly_name && x.supported;
+  !isNullOrUndefined(x) && x.ieee_address && x.friendly_name && typeof x.supported === 'boolean';
 export const isDeviceListEntryForGroup = (x: any): x is DeviceListEntryForGroup => {
   return isDeviceListEntry(x) && 'group_id' in x && typeof x['group_id'] === 'number';
 };

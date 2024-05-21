@@ -34,6 +34,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "power",
     "description": "Instantaneous measured power",
+    "category": "diagnostic",
     "unit": "W"
   },
   {
@@ -52,6 +53,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "binary",
     "property": "battery_low",
     "description": "Indicates if the battery of this device is almost empty",
+    "category": "diagnostic",
     "value_on": true,
     "value_off": false
   },
@@ -110,6 +112,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "linkquality",
     "description": "Link quality (signal strength)",
+    "category": "diagnostic",
     "unit": "lqi",
     "value_max": 255,
     "value_min": 0

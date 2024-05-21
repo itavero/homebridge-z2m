@@ -25,7 +25,7 @@ describe('Action', () => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
         // Load exposes from JSON
-        deviceExposes = loadExposesFromFile('xiaomi/wxkg07lm.json');
+        deviceExposes = loadExposesFromFile('aqara/wxkg07lm.json');
         expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
@@ -255,7 +255,7 @@ describe('Action', () => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
         // Load exposes from JSON
-        deviceExposes = loadExposesFromFile('xiaomi/wxcjkg13lm.json');
+        deviceExposes = loadExposesFromFile('aqara/wxcjkg13lm.json');
         expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 

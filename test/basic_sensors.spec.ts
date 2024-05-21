@@ -22,7 +22,7 @@ describe('Basic Sensors', () => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
         // Load exposes from JSON
-        deviceExposes = loadExposesFromFile('xiaomi/wsdcgq12lm.json');
+        deviceExposes = loadExposesFromFile('aqara/wsdcgq12lm.json');
         expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
@@ -186,7 +186,7 @@ describe('Basic Sensors', () => {
         // Only test service creation for first test case and reuse harness afterwards
         if (deviceExposes.length === 0 && harness === undefined) {
           // Load exposes from JSON
-          deviceExposes = loadExposesFromFile('xiaomi/rtcgq11lm.json');
+          deviceExposes = loadExposesFromFile('aqara/rtcgq11lm.json');
           expect(deviceExposes.length).toBeGreaterThan(0);
           const newHarness = new ServiceHandlersTestHarness();
 
@@ -251,7 +251,7 @@ describe('Basic Sensors', () => {
         // Only test service creation for first test case and reuse harness afterwards
         if (deviceExposes.length === 0 && harness === undefined) {
           // Load exposes from JSON
-          deviceExposes = loadExposesFromFile('xiaomi/rtcgq11lm.json');
+          deviceExposes = loadExposesFromFile('aqara/rtcgq11lm.json');
           expect(deviceExposes.length).toBeGreaterThan(0);
           const newHarness = new ServiceHandlersTestHarness();
 
@@ -301,7 +301,7 @@ describe('Basic Sensors', () => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
         // Load exposes from JSON
-        deviceExposes = loadExposesFromFile('xiaomi/mccgq11lm.json');
+        deviceExposes = loadExposesFromFile('aqara/mccgq11lm.json');
         expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 
@@ -352,7 +352,7 @@ describe('Basic Sensors', () => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
         // Load exposes from JSON
-        deviceExposes = loadExposesFromFile('xiaomi/sjcgq11lm.json');
+        deviceExposes = loadExposesFromFile('aqara/sjcgq11lm.json');
         expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 

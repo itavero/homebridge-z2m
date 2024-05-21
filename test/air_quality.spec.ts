@@ -20,7 +20,7 @@ describe('Air Quality Sensor', () => {
       // Only test service creation for first test case and reuse harness afterwards
       if (deviceExposes.length === 0 && harness === undefined) {
         // Load exposes from JSON
-        deviceExposes = loadExposesFromFile('xiaomi/vockqjk11lm.json');
+        deviceExposes = loadExposesFromFile('aqara/vockqjk11lm.json');
         expect(deviceExposes.length).toBeGreaterThan(0);
         const newHarness = new ServiceHandlersTestHarness();
 

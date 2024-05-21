@@ -16,6 +16,7 @@
     "type": "binary",
     "property": "battery_low",
     "description": "Indicates if the battery of this device is almost empty",
+    "category": "diagnostic",
     "value_on": true,
     "value_off": false
   },
@@ -35,7 +36,8 @@
     "access": 1,
     "type": "numeric",
     "property": "battery",
-    "description": "Remaining battery in %, can take up to 24 hours before reported.",
+    "description": "Remaining battery in %, can take up to 24 hours before reported",
+    "category": "diagnostic",
     "unit": "%",
     "value_max": 100,
     "value_min": 0
@@ -76,6 +78,7 @@
     "type": "numeric",
     "property": "voltage",
     "description": "Voltage of the battery in millivolts",
+    "category": "diagnostic",
     "unit": "mV"
   },
   {
@@ -95,6 +98,7 @@
     "type": "numeric",
     "property": "device_temperature",
     "description": "Temperature of the device",
+    "category": "diagnostic",
     "unit": "°C"
   },
   {
@@ -103,7 +107,8 @@
     "access": 1,
     "type": "numeric",
     "property": "power_outage_count",
-    "description": "Number of power outages"
+    "description": "Number of power outages",
+    "category": "diagnostic"
   },
   {
     "name": "linkquality",
@@ -112,6 +117,7 @@
     "type": "numeric",
     "property": "linkquality",
     "description": "Link quality (signal strength)",
+    "category": "diagnostic",
     "unit": "lqi",
     "value_max": 255,
     "value_min": 0

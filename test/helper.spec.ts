@@ -5,7 +5,7 @@ import { loadExposesFromFile } from './testHelpers';
 
 describe('Helper functions', () => {
   test('Add missing endpoints to ExposesEntry', () => {
-    const exposes = loadExposesFromFile('xiaomi/znddmk11lm.json');
+    const exposes = loadExposesFromFile('aqara/znddmk11lm.json');
     const sanitized = sanitizeAndFilterExposesEntries(exposes);
 
     // Should not be identical, as explicit endpoint information is added.

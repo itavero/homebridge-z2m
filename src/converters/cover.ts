@@ -19,7 +19,19 @@ import { ExtendedTimer } from '../timer';
 import { CharacteristicMonitor, NumericCharacteristicMonitor } from './monitor';
 
 export class CoverCreator implements ServiceCreator {
+  private sxposesMotorState: boolean = false;
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
+    exposes
+      .filter(
+        (e) =>
+          e.type === ExposesKnownTypes.ENUM &&
+          e.name === 'motor_state' &&
+          exposesHasEnumProperty(e) &&
+          e.values.includes(CoverHandler.MOTOR_STATE_OPENING) &&
+          e.values.includes(CoverHandler.MOTOR_STATE_CLOSING) &&
+          e.values.includes(CoverHandler.MOTOR_STATE_STOPPED)
+      )
+      .map(() => (this.sxposesMotorState = true));
     exposes
       .filter(
         (e) =>
@@ -27,12 +39,12 @@ export class CoverCreator implements ServiceCreator {
           exposesHasFeatures(e) &&
           !accessory.isServiceHandlerIdKnown(CoverHandler.generateIdentifier(e.endpoint))
       )
-      .forEach((e) => this.createService(e as ExposesEntryWithFeatures, accessory));
+      .forEach((e) => this.createService(e as ExposesEntryWithFeatures, accessory, this.sxposesMotorState));
   }
 
-  private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
+  private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory, modern: boolean): void {
     try {
-      const handler = new CoverHandler(expose, accessory);
+      const handler = new CoverHandler(expose, accessory, modern);
       accessory.registerServiceHandler(handler);
     } catch (error) {
       accessory.log.warn(`Failed to setup cover for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}": ${error}`);
@@ -42,10 +54,9 @@ export class CoverCreator implements ServiceCreator {
 
 class CoverHandler implements ServiceHandler {
   private static readonly STATE_HOLD_POSITION = 'STOP';
-  private static readonly MOTOR_STATE_DEFAULT = 'none';
-  private static readonly MOTOR_STATE_OPENING = 'opening';
-  private static readonly MOTOR_STATE_CLOSING = 'closing';
-  private static readonly MOTOR_STATE_STOPPED = 'stopped';
+  public static readonly MOTOR_STATE_OPENING = 'opening';
+  public static readonly MOTOR_STATE_CLOSING = 'closing';
+  public static readonly MOTOR_STATE_STOPPED = 'stopped';
   private readonly positionExpose: ExposesEntryWithNumericRangeProperty;
   private readonly tiltExpose: ExposesEntryWithNumericRangeProperty | undefined;
   private readonly stateExpose: ExposesEntryWithEnumProperty | undefined;
@@ -64,14 +75,14 @@ class CoverHandler implements ServiceHandler {
   private positionCurrent = -1;
   private motorState: string;
   private motorStatePrevious: string;
-  private hasMotorState: boolean;
   private setTargetPositionHandled: boolean;
 
   public readonly mainCharacteristics: Characteristic[] = [];
 
   constructor(
     expose: ExposesEntryWithFeatures,
-    private readonly accessory: BasicAccessory
+    private readonly accessory: BasicAccessory,
+    private readonly modern: boolean
   ) {
     const endpoint = expose.endpoint;
     this.identifier = CoverHandler.generateIdentifier(endpoint);
@@ -159,15 +170,14 @@ class CoverHandler implements ServiceHandler {
       getOrAddCharacteristic(this.service, hap.Characteristic.HoldPosition).on('set', this.handleSetHoldPosition.bind(this));
     }
 
-    if (exposesCanBeGet(this.positionExpose)) {
+    if (exposesCanBeGet(this.positionExpose) && !modern) {
       this.updateTimer = new ExtendedTimer(this.requestPositionUpdate.bind(this), 4000);
     }
     this.waitingForUpdate = false;
     this.ignoreNextUpdateIfEqualToTarget = false;
-    this.hasMotorState = false;
     this.setTargetPositionHandled = false;
-    this.motorState = CoverHandler.MOTOR_STATE_DEFAULT;
-    this.motorStatePrevious = CoverHandler.MOTOR_STATE_DEFAULT;
+    this.motorState = 'none';
+    this.motorStatePrevious = 'none';
   }
 
   identifier: string;
@@ -200,11 +210,6 @@ class CoverHandler implements ServiceHandler {
           this.motorState = CoverHandler.MOTOR_STATE_STOPPED;
           break;
       }
-      this.hasMotorState = true;
-      if (this.updateTimer !== undefined) {
-        this.accessory.log.debug(`${this.accessory.displayName}: cover: motor_state detected, stopping updateTimer`);
-        this.updateTimer.stop();
-      }
     }
 
     if (this.positionExpose.property in state) {
@@ -226,7 +231,7 @@ class CoverHandler implements ServiceHandler {
       let didStop = true;
 
       // As long as the update timer is running, we are expecting updates.
-      if (this.updateTimer !== undefined && this.updateTimer.isActive && !this.hasMotorState) {
+      if (this.updateTimer !== undefined && this.updateTimer.isActive && !this.modern) {
         if (latestPosition === this.positionCurrent) {
           // Stop requesting frequent updates if no change is detected.
           this.updateTimer.stop();
@@ -244,7 +249,7 @@ class CoverHandler implements ServiceHandler {
   }
 
   private startOrRestartUpdateTimer(): void {
-    if (this.updateTimer === undefined || this.hasMotorState) {
+    if (this.updateTimer === undefined) {
       return;
     }
 
@@ -309,7 +314,7 @@ class CoverHandler implements ServiceHandler {
       this.accessory.log.debug(`${this.accessory.displayName}: cover: stopped via motor_state`);
       this.motorStatePrevious = CoverHandler.MOTOR_STATE_STOPPED;
       this.setTargetPositionHandled = false;
-    } else if (this.motorState === CoverHandler.MOTOR_STATE_DEFAULT && !this.hasMotorState) {
+    } else if (!this.modern) {
       this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
 
       if (isStopped) {
@@ -335,7 +340,7 @@ class CoverHandler implements ServiceHandler {
     data[this.positionExpose.property] = target;
     this.accessory.queueDataForSetAction(data);
 
-    if (!this.hasMotorState) {
+    if (!this.modern) {
       // Assume position state based on new target
       if (target > this.positionCurrent) {
         this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.INCREASING);

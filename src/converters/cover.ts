@@ -19,19 +19,7 @@ import { ExtendedTimer } from '../timer';
 import { CharacteristicMonitor, NumericCharacteristicMonitor } from './monitor';
 
 export class CoverCreator implements ServiceCreator {
-  private sxposesMotorState: boolean = false;
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
-    exposes
-      .filter(
-        (e) =>
-          e.type === ExposesKnownTypes.ENUM &&
-          e.name === 'motor_state' &&
-          exposesHasEnumProperty(e) &&
-          e.values.includes(CoverHandler.MOTOR_STATE_OPENING) &&
-          e.values.includes(CoverHandler.MOTOR_STATE_CLOSING) &&
-          e.values.includes(CoverHandler.MOTOR_STATE_STOPPED)
-      )
-      .map(() => (this.sxposesMotorState = true));
     exposes
       .filter(
         (e) =>
@@ -39,7 +27,23 @@ export class CoverCreator implements ServiceCreator {
           exposesHasFeatures(e) &&
           !accessory.isServiceHandlerIdKnown(CoverHandler.generateIdentifier(e.endpoint))
       )
-      .forEach((e) => this.createService(e as ExposesEntryWithFeatures, accessory, this.sxposesMotorState));
+      .forEach((e) => {
+        let exposesMotorState: boolean = false;
+        const motorStateExpose = exposes.find(
+          (m) =>
+            CoverHandler.generateIdentifier(m.endpoint) === CoverHandler.generateIdentifier(e.endpoint) &&
+            m.type === ExposesKnownTypes.ENUM &&
+            m.name === 'motor_state' &&
+            exposesHasEnumProperty(m) &&
+            m.values.includes(CoverHandler.MOTOR_STATE_OPENING) &&
+            m.values.includes(CoverHandler.MOTOR_STATE_CLOSING) &&
+            m.values.includes(CoverHandler.MOTOR_STATE_STOPPED)
+        ) as ExposesEntry[] | undefined;
+        if (motorStateExpose !== undefined) {
+          exposesMotorState = true;
+        }
+        this.createService(e as ExposesEntryWithFeatures, accessory, exposesMotorState);
+      });
   }
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory, modern: boolean): void {

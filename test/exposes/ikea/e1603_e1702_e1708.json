@@ -22,11 +22,24 @@
     "type": "enum",
     "property": "power_on_behavior",
     "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
+    "category": "config",
     "values": [
       "off",
       "on",
       "toggle",
       "previous"
+    ]
+  },
+  {
+    "name": "identify",
+    "label": "Identify",
+    "access": 2,
+    "type": "enum",
+    "property": "identify",
+    "description": "Initiate device identification",
+    "category": "config",
+    "values": [
+      "identify"
     ]
   },
   {
@@ -36,6 +49,7 @@
     "type": "numeric",
     "property": "linkquality",
     "description": "Link quality (signal strength)",
+    "category": "diagnostic",
     "unit": "lqi",
     "value_max": 255,
     "value_min": 0

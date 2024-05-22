@@ -227,6 +227,18 @@ describe('Light', () => {
         harness.checkSingleUpdateState('{"brightness":0}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 0);
       });
 
+      test('Brightness 1% (1/254 from Zigbee)', () => {
+        expect(harness).toBeDefined();
+        harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+        harness.checkSingleUpdateState('{"brightness":1}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 1);
+      });
+
+      test('Brightness 1% (2/254 from Zigbee)', () => {
+        expect(harness).toBeDefined();
+        harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');
+        harness.checkSingleUpdateState('{"brightness":2}', hap.Service.Lightbulb, hap.Characteristic.Brightness, 1);
+      });
+
       test('Brightness 50%', () => {
         expect(harness).toBeDefined();
         harness.getOrAddHandler(hap.Service.Lightbulb).prepareGetCharacteristicMock('brightness');

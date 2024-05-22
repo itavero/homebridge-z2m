@@ -79,10 +79,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Code Coverage (on push)
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         if: github.event_name == 'push' && matrix.node-version == env.node-version-analysis
         with:
           files: ./coverage/clover.xml
           flags: tests
-          name: codecov-umbrella
           fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -78,7 +78,7 @@ export class LightCreator implements ServiceCreator {
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
     const converterConfig = accessory.getConverterConfiguration(LightCreator.CONFIG_TAG);
-    let adaptiveLightingConfig: AdaptiveLightingConfig = LightCreator.DEFAULT_CONFIG;
+    let adaptiveLightingConfig: AdaptiveLightingConfig = { ...LightCreator.DEFAULT_CONFIG };
     if (isLightConfig(converterConfig)) {
       if (isAdaptiveLightingConfig(converterConfig.adaptive_lighting)) {
         adaptiveLightingConfig = converterConfig.adaptive_lighting;

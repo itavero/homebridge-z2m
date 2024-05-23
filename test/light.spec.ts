@@ -165,6 +165,8 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+        newHarness.addConverterConfiguration('light', { adaptive_lighting: { enabled: false } });
+        newHarness.numberOfExpectedControllers = 0;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
@@ -490,6 +492,8 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+        newHarness.addConverterConfiguration('light', { adaptive_lighting: false });
+        newHarness.numberOfExpectedControllers = 0;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
@@ -674,6 +678,7 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+        newHarness.numberOfExpectedControllers = 1;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
@@ -801,6 +806,7 @@ describe('Light', () => {
       harness.checkSetDataQueued({ color: { hue: 300, saturation: 100 } });
     });
   });
+
   describe('Namron Zigbee Dimmer (Adaptive Lighting ignored)', () => {
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
@@ -859,7 +865,7 @@ describe('Light', () => {
     });
   });
 
-  describe('Innr RB-249-T (Adaptive Lighting turned on)', () => {
+  describe('Innr RB-249-T', () => {
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -873,7 +879,6 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
-        newHarness.addConverterConfiguration('light', { adaptive_lighting: true });
         newHarness.numberOfExpectedControllers = 1;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)

@@ -30,6 +30,7 @@ import { convertHueSatToXy, convertMiredColorTemperatureToHueSat, convertXyToHue
 import { EXP_COLOR_MODE } from '../experimental';
 
 interface AdaptiveLightingConfig {
+  enabled?: boolean;
   only_when_on?: boolean;
   transition?: number;
 }
@@ -40,6 +41,8 @@ interface LightConfig {
 
 const isAdaptiveLightingConfig = (x: unknown): x is AdaptiveLightingConfig =>
   x !== undefined &&
+  typeof x !== 'boolean' &&
+  (typeof (x as AdaptiveLightingConfig).enabled === 'boolean' || (x as AdaptiveLightingConfig).enabled === undefined) &&
   (typeof (x as AdaptiveLightingConfig).only_when_on === 'boolean' || (x as AdaptiveLightingConfig).only_when_on === undefined) &&
   (typeof (x as AdaptiveLightingConfig).transition === 'number' || (x as AdaptiveLightingConfig).transition === undefined);
 
@@ -51,7 +54,8 @@ const isLightConfig = (x: unknown): x is LightConfig =>
 
 export class LightCreator implements ServiceCreator {
   public static readonly CONFIG_TAG = 'light';
-  private static readonly DEFAULT_CONFIG_WHEN_ON = {
+  private static readonly DEFAULT_CONFIG = {
+    enabled: true,
     only_when_on: true,
     transition: undefined,
   };
@@ -74,12 +78,15 @@ export class LightCreator implements ServiceCreator {
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
     const converterConfig = accessory.getConverterConfiguration(LightCreator.CONFIG_TAG);
-    let adaptiveLightingConfig: AdaptiveLightingConfig | undefined = undefined;
+    let adaptiveLightingConfig: AdaptiveLightingConfig = LightCreator.DEFAULT_CONFIG;
     if (isLightConfig(converterConfig)) {
       if (isAdaptiveLightingConfig(converterConfig.adaptive_lighting)) {
         adaptiveLightingConfig = converterConfig.adaptive_lighting;
-      } else if (converterConfig.adaptive_lighting === true) {
-        adaptiveLightingConfig = LightCreator.DEFAULT_CONFIG_WHEN_ON;
+        if (adaptiveLightingConfig.enabled === undefined) {
+          adaptiveLightingConfig.enabled = true;
+        }
+      } else if (converterConfig.adaptive_lighting === false) {
+        adaptiveLightingConfig.enabled = false;
       }
     }
 
@@ -132,13 +139,13 @@ class LightHandler implements ServiceHandler {
   private received_saturation = false;
 
   private get adaptiveLightingEnabled(): boolean {
-    return this.adaptiveLightingConfig !== undefined;
+    return this.adaptiveLightingConfig.enabled === true;
   }
 
   constructor(
     expose: ExposesEntryWithFeatures,
     private readonly accessory: BasicAccessory,
-    private readonly adaptiveLightingConfig?: AdaptiveLightingConfig
+    private readonly adaptiveLightingConfig: AdaptiveLightingConfig
   ) {
     const endpoint = expose.endpoint;
     this.identifier = LightHandler.generateIdentifier(endpoint);
@@ -376,8 +383,14 @@ class LightHandler implements ServiceHandler {
 
   private handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    data[this.stateExpose.property] = (value as boolean) ? this.stateExpose.value_on : this.stateExpose.value_off;
+    const is_on = value as boolean;
+    data[this.stateExpose.property] = is_on ? this.stateExpose.value_on : this.stateExpose.value_off;
     this.accessory.queueDataForSetAction(data);
+
+    // If turned on, reset the last adaptive lighting temperature.
+    if (is_on) {
+      this.resetAdaptiveLightingTemperature();
+    }
     callback(null);
   }
 
@@ -400,6 +413,8 @@ class LightHandler implements ServiceHandler {
         );
       }
       this.accessory.queueDataForSetAction(data);
+      // If brightness is set, reset the last adaptive lighting temperature.
+      this.resetAdaptiveLightingTemperature();
       callback(null);
     } else {
       callback(new Error('brightness not supported'));
@@ -526,7 +541,7 @@ class LightHandler implements ServiceHandler {
     // Adaptive Lighting active?
     if (this.colorTempExpose !== undefined && this.adaptiveLighting !== undefined && this.adaptiveLighting.isAdaptiveLightingActive()) {
       const lightIsOn = this.service.getCharacteristic(hap.Characteristic.On).value as boolean;
-      if (this.adaptiveLightingConfig?.only_when_on && lightIsOn === false) {
+      if (this.adaptiveLightingConfig.only_when_on && lightIsOn === false) {
         this.accessory.log.debug(`adaptive_lighting: ${this.accessory.displayName}: skipped, light is off`);
         return false;
       }
@@ -542,7 +557,7 @@ class LightHandler implements ServiceHandler {
           return false;
         }
 
-        if (lightIsOn && this.adaptiveLightingConfig?.transition !== undefined && this.adaptiveLightingConfig.transition > 0) {
+        if (lightIsOn && this.adaptiveLightingConfig.transition !== undefined && this.adaptiveLightingConfig.transition > 0) {
           this.accessory.queueDataForSetAction({ transition: this.adaptiveLightingConfig.transition });
         }
 
@@ -554,14 +569,6 @@ class LightHandler implements ServiceHandler {
     }
 
     return true;
-  }
-
-  private updateHueAndSaturationBasedOnColorTemperature(value: number): void {
-    if (this.colorHueCharacteristic !== undefined && this.colorSaturationCharacteristic !== undefined) {
-      const color = hap.ColorUtils.colorTemperatureToHueAndSaturation(value, true);
-      this.colorHueCharacteristic.updateValue(color.hue);
-      this.colorSaturationCharacteristic.updateValue(color.saturation);
-    }
   }
 }
 

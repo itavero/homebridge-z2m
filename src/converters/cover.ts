@@ -28,27 +28,23 @@ export class CoverCreator implements ServiceCreator {
           !accessory.isServiceHandlerIdKnown(CoverHandler.generateIdentifier(e.endpoint))
       )
       .forEach((e) => {
-        let exposesMotorState: boolean = false;
         const motorStateExpose = exposes.find(
           (m) =>
-            CoverHandler.generateIdentifier(m.endpoint) === CoverHandler.generateIdentifier(e.endpoint) &&
-            m.type === ExposesKnownTypes.ENUM &&
+            m.endpoint === e.endpoint &&
             m.name === 'motor_state' &&
             exposesHasEnumProperty(m) &&
+            exposesIsPublished(m) &&
             m.values.includes(CoverHandler.MOTOR_STATE_OPENING) &&
             m.values.includes(CoverHandler.MOTOR_STATE_CLOSING) &&
             m.values.includes(CoverHandler.MOTOR_STATE_STOPPED)
-        ) as ExposesEntry[] | undefined;
-        if (motorStateExpose !== undefined) {
-          exposesMotorState = true;
-        }
-        this.createService(e as ExposesEntryWithFeatures, accessory, exposesMotorState);
+        );
+        this.createService(e as ExposesEntryWithFeatures, accessory, motorStateExpose as ExposesEntryWithEnumProperty);
       });
   }
 
-  private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory, modern: boolean): void {
+  private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory, motorStateExpose: ExposesEntryWithEnumProperty): void {
     try {
-      const handler = new CoverHandler(expose, accessory, modern);
+      const handler = new CoverHandler(expose, accessory, motorStateExpose);
       accessory.registerServiceHandler(handler);
     } catch (error) {
       accessory.log.warn(`Failed to setup cover for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}": ${error}`);
@@ -77,8 +73,8 @@ class CoverHandler implements ServiceHandler {
   private ignoreNextUpdateIfEqualToTarget: boolean;
   private lastPositionSet = -1;
   private positionCurrent = -1;
-  private motorState: string;
-  private motorStatePrevious: string;
+  private motorState: string | undefined;
+  private motorStatePrevious: string | undefined;
   private setTargetPositionHandled: boolean;
 
   public readonly mainCharacteristics: Characteristic[] = [];
@@ -86,7 +82,7 @@ class CoverHandler implements ServiceHandler {
   constructor(
     expose: ExposesEntryWithFeatures,
     private readonly accessory: BasicAccessory,
-    private readonly modern: boolean
+    private readonly motorStateExpose: ExposesEntryWithEnumProperty | undefined
   ) {
     const endpoint = expose.endpoint;
     this.identifier = CoverHandler.generateIdentifier(endpoint);
@@ -174,14 +170,14 @@ class CoverHandler implements ServiceHandler {
       getOrAddCharacteristic(this.service, hap.Characteristic.HoldPosition).on('set', this.handleSetHoldPosition.bind(this));
     }
 
-    if (exposesCanBeGet(this.positionExpose) && !modern) {
+    if (exposesCanBeGet(this.positionExpose) && this.motorStateExpose === undefined) {
       this.updateTimer = new ExtendedTimer(this.requestPositionUpdate.bind(this), 4000);
     }
     this.waitingForUpdate = false;
     this.ignoreNextUpdateIfEqualToTarget = false;
     this.setTargetPositionHandled = false;
-    this.motorState = 'none';
-    this.motorStatePrevious = 'none';
+    this.motorState = undefined;
+    this.motorStatePrevious = undefined;
   }
 
   identifier: string;
@@ -193,23 +189,22 @@ class CoverHandler implements ServiceHandler {
     if (this.tiltExpose !== undefined && exposesCanBeGet(this.tiltExpose)) {
       keys.push(this.tiltExpose.property);
     }
+    if (this.motorStateExpose !== undefined && exposesCanBeGet(this.motorStateExpose)) {
+      keys.push(this.motorStateExpose.property);
+    }
     return keys;
   }
 
   updateState(state: Record<string, unknown>): void {
     this.monitors.forEach((m) => m.callback(state));
 
-    if ('motor_state' in state) {
-      const latestMotorState = state['motor_state'] as string;
+    if (this.motorStateExpose !== undefined && this.motorStateExpose.property in state) {
+      const latestMotorState = state[this.motorStateExpose.property] as string;
       switch (latestMotorState) {
-        case 'opening':
-          this.motorState = CoverHandler.MOTOR_STATE_OPENING;
+        case CoverHandler.MOTOR_STATE_OPENING:
+        case CoverHandler.MOTOR_STATE_CLOSING:
+          this.motorState = latestMotorState;
           break;
-        case 'closing':
-          this.motorState = CoverHandler.MOTOR_STATE_CLOSING;
-          break;
-        case 'stopped':
-        case 'pause':
         default:
           this.motorState = CoverHandler.MOTOR_STATE_STOPPED;
           break;
@@ -235,7 +230,7 @@ class CoverHandler implements ServiceHandler {
       let didStop = true;
 
       // As long as the update timer is running, we are expecting updates.
-      if (this.updateTimer !== undefined && this.updateTimer.isActive && !this.modern) {
+      if (this.updateTimer !== undefined && this.updateTimer.isActive) {
         if (latestPosition === this.positionCurrent) {
           // Stop requesting frequent updates if no change is detected.
           this.updateTimer.stop();
@@ -318,7 +313,7 @@ class CoverHandler implements ServiceHandler {
       this.accessory.log.debug(`${this.accessory.displayName}: cover: stopped via motor_state`);
       this.motorStatePrevious = CoverHandler.MOTOR_STATE_STOPPED;
       this.setTargetPositionHandled = false;
-    } else if (!this.modern) {
+    } else if (this.motorStateExpose === undefined) {
       this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
 
       if (isStopped) {
@@ -344,7 +339,7 @@ class CoverHandler implements ServiceHandler {
     data[this.positionExpose.property] = target;
     this.accessory.queueDataForSetAction(data);
 
-    if (!this.modern) {
+    if (this.motorStateExpose === undefined) {
       // Assume position state based on new target
       if (target > this.positionCurrent) {
         this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.INCREASING);

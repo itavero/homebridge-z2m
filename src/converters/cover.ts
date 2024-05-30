@@ -298,37 +298,35 @@ class CoverHandler implements ServiceHandler {
         this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
         this.service.updateCharacteristic(hap.Characteristic.TargetPosition, characteristicValue);
       }
-    } else {
-      if (this.motorState !== this.motorStatePrevious) {
-        let newPositionState: number;
-        let newTargetPosition: number;
-        switch (this.motorState) {
-          case CoverHandler.MOTOR_STATE_CLOSING:
-            newPositionState = hap.Characteristic.PositionState.DECREASING;
-            newTargetPosition = 0;
-            this.accessory.log.debug(`${this.accessory.displayName}: cover: closing via motor_state`);
-            break;
-          case CoverHandler.MOTOR_STATE_OPENING:
-            newPositionState = hap.Characteristic.PositionState.INCREASING;
-            newTargetPosition = 100;
-            this.accessory.log.debug(`${this.accessory.displayName}: cover: opening via motor_state`);
-            break;
-          default:
-            newPositionState = hap.Characteristic.PositionState.STOPPED;
-            newTargetPosition = characteristicValue;
-            this.accessory.log.debug(`${this.accessory.displayName}: cover: stopped via motor_state`);
-            break;
-        }
-        this.service.updateCharacteristic(hap.Characteristic.PositionState, newPositionState);
-        if (newPositionState === hap.Characteristic.PositionState.STOPPED) {
-          this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
-        }
-        if (newPositionState === hap.Characteristic.PositionState.STOPPED || !this.setTargetPositionHandled) {
-          this.service.updateCharacteristic(hap.Characteristic.TargetPosition, newTargetPosition);
-        }
-        this.motorStatePrevious = this.motorState;
-        this.setTargetPositionHandled = false;
+    } else if (this.motorState !== this.motorStatePrevious) {
+      let newPositionState: number;
+      let newTargetPosition: number;
+      switch (this.motorState) {
+        case CoverHandler.MOTOR_STATE_CLOSING:
+          newPositionState = hap.Characteristic.PositionState.DECREASING;
+          newTargetPosition = 0;
+          this.accessory.log.debug(`${this.accessory.displayName}: cover: closing via motor_state`);
+          break;
+        case CoverHandler.MOTOR_STATE_OPENING:
+          newPositionState = hap.Characteristic.PositionState.INCREASING;
+          newTargetPosition = 100;
+          this.accessory.log.debug(`${this.accessory.displayName}: cover: opening via motor_state`);
+          break;
+        default:
+          newPositionState = hap.Characteristic.PositionState.STOPPED;
+          newTargetPosition = characteristicValue;
+          this.accessory.log.debug(`${this.accessory.displayName}: cover: stopped via motor_state`);
+          break;
       }
+      this.service.updateCharacteristic(hap.Characteristic.PositionState, newPositionState);
+      if (newPositionState === hap.Characteristic.PositionState.STOPPED) {
+        this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
+      }
+      if (newPositionState === hap.Characteristic.PositionState.STOPPED || !this.setTargetPositionHandled) {
+        this.service.updateCharacteristic(hap.Characteristic.TargetPosition, newTargetPosition);
+      }
+      this.motorStatePrevious = this.motorState;
+      this.setTargetPositionHandled = false;
     }
   }
 

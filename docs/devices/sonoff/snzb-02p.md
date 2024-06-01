@@ -20,10 +20,8 @@ the SONOFF SNZB-02P
   * Status Low Battery
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
-  * Status Low Battery
 * [Temperature Sensor](../../sensors.md)
   * Current Temperature
-  * Status Low Battery
 
 
 # Related

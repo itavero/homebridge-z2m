@@ -20,7 +20,6 @@ the Bosch BSD-2
   * Status Low Battery
 * [Smoke Sensor](../../sensors.md)
   * Smoke Detected
-  * Status Low Battery
 
 
 # Related

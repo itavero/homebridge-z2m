@@ -70,27 +70,27 @@ This is the information provided by Zigbee2MQTT for this device:
     "value_step": 5
   },
   {
-    "name": "shutdown_timer",
-    "label": "Shutdown timer",
-    "access": 3,
-    "type": "numeric",
-    "property": "shutdown_timer",
-    "description": "Auto shutdown in seconds.",
-    "unit": "sec",
-    "value_max": 14400,
-    "value_min": 0
-  },
-  {
     "name": "valve_state_auto_shutdown",
     "label": "Valve state auto shutdown",
     "access": 3,
     "type": "numeric",
     "property": "valve_state_auto_shutdown",
-    "description": "Set valve to % with auto shutdown.",
+    "description": "Set valve to % with auto shutdown. Must be set before setting the shutdown timer.",
     "unit": "%",
     "value_max": 100,
     "value_min": 0,
     "value_step": 5
+  },
+  {
+    "name": "shutdown_timer",
+    "label": "Shutdown timer",
+    "access": 3,
+    "type": "numeric",
+    "property": "shutdown_timer",
+    "description": "Auto shutdown in seconds. Must be set after setting valve state auto shutdown.",
+    "unit": "sec",
+    "value_max": 14400,
+    "value_min": 0
   },
   {
     "name": "battery",

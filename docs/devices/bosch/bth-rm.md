@@ -20,7 +20,6 @@ the Bosch BTH-RM
   * Status Low Battery
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
-  * Status Low Battery
 
 
 # Related

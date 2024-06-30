@@ -6,6 +6,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.11.0-beta.6] - 2024-06-30
+
 ### Changed
 
 - Window Covering now uses `motor_state` (if provided) to improve the user experience in the Home.app (see [#852](https://github.com/itavero/homebridge-z2m/issues/852) / [#854](https://github.com/itavero/homebridge-z2m/issues/854))
@@ -428,7 +430,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Improve state determination for WindowCovering.
 
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.5...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.6...HEAD
+[1.11.0-beta.6]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.5...v1.11.0-beta.6
 [1.11.0-beta.5]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.4...v1.11.0-beta.5
 [1.11.0-beta.4]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.3...v1.11.0-beta.4
 [1.11.0-beta.3]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.2...v1.11.0-beta.3

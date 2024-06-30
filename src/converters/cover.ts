@@ -42,7 +42,11 @@ export class CoverCreator implements ServiceCreator {
       });
   }
 
-  private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory, motorStateExpose: ExposesEntryWithEnumProperty): void {
+  private createService(
+    expose: ExposesEntryWithFeatures,
+    accessory: BasicAccessory,
+    motorStateExpose: ExposesEntryWithEnumProperty | undefined
+  ): void {
     try {
       const handler = new CoverHandler(expose, accessory, motorStateExpose);
       accessory.registerServiceHandler(handler);

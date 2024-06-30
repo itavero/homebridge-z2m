@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Changed
+
+- Window Covering now uses `motor_state` (if provided) to improve the user experience in the Home.app (see [#852](https://github.com/itavero/homebridge-z2m/issues/852) / [#854](https://github.com/itavero/homebridge-z2m/issues/854))
+
 ## [1.11.0-beta.5] - 2024-05-21
 
 ### Fixed

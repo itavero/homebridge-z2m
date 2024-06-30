@@ -27,12 +27,28 @@ export class CoverCreator implements ServiceCreator {
           exposesHasFeatures(e) &&
           !accessory.isServiceHandlerIdKnown(CoverHandler.generateIdentifier(e.endpoint))
       )
-      .forEach((e) => this.createService(e as ExposesEntryWithFeatures, accessory));
+      .forEach((e) => {
+        const motorStateExpose = exposes.find(
+          (m) =>
+            m.endpoint === e.endpoint &&
+            m.name === 'motor_state' &&
+            exposesHasEnumProperty(m) &&
+            exposesIsPublished(m) &&
+            m.values.includes(CoverHandler.MOTOR_STATE_OPENING) &&
+            m.values.includes(CoverHandler.MOTOR_STATE_CLOSING) &&
+            m.values.includes(CoverHandler.MOTOR_STATE_STOPPED)
+        );
+        this.createService(e as ExposesEntryWithFeatures, accessory, motorStateExpose as ExposesEntryWithEnumProperty);
+      });
   }
 
-  private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
+  private createService(
+    expose: ExposesEntryWithFeatures,
+    accessory: BasicAccessory,
+    motorStateExpose: ExposesEntryWithEnumProperty | undefined
+  ): void {
     try {
-      const handler = new CoverHandler(expose, accessory);
+      const handler = new CoverHandler(expose, accessory, motorStateExpose);
       accessory.registerServiceHandler(handler);
     } catch (error) {
       accessory.log.warn(`Failed to setup cover for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}": ${error}`);
@@ -42,6 +58,9 @@ export class CoverCreator implements ServiceCreator {
 
 class CoverHandler implements ServiceHandler {
   private static readonly STATE_HOLD_POSITION = 'STOP';
+  public static readonly MOTOR_STATE_OPENING = 'opening';
+  public static readonly MOTOR_STATE_CLOSING = 'closing';
+  public static readonly MOTOR_STATE_STOPPED = 'stopped';
   private readonly positionExpose: ExposesEntryWithNumericRangeProperty;
   private readonly tiltExpose: ExposesEntryWithNumericRangeProperty | undefined;
   private readonly stateExpose: ExposesEntryWithEnumProperty | undefined;
@@ -58,12 +77,16 @@ class CoverHandler implements ServiceHandler {
   private ignoreNextUpdateIfEqualToTarget: boolean;
   private lastPositionSet = -1;
   private positionCurrent = -1;
+  private motorState: string | undefined;
+  private motorStatePrevious: string | undefined;
+  private setTargetPositionHandled: boolean;
 
   public readonly mainCharacteristics: Characteristic[] = [];
 
   constructor(
     expose: ExposesEntryWithFeatures,
-    private readonly accessory: BasicAccessory
+    private readonly accessory: BasicAccessory,
+    private readonly motorStateExpose: ExposesEntryWithEnumProperty | undefined
   ) {
     const endpoint = expose.endpoint;
     this.identifier = CoverHandler.generateIdentifier(endpoint);
@@ -151,11 +174,14 @@ class CoverHandler implements ServiceHandler {
       getOrAddCharacteristic(this.service, hap.Characteristic.HoldPosition).on('set', this.handleSetHoldPosition.bind(this));
     }
 
-    if (exposesCanBeGet(this.positionExpose)) {
+    if (exposesCanBeGet(this.positionExpose) && this.motorStateExpose === undefined) {
       this.updateTimer = new ExtendedTimer(this.requestPositionUpdate.bind(this), 4000);
     }
     this.waitingForUpdate = false;
     this.ignoreNextUpdateIfEqualToTarget = false;
+    this.setTargetPositionHandled = false;
+    this.motorState = undefined;
+    this.motorStatePrevious = undefined;
   }
 
   identifier: string;
@@ -167,11 +193,27 @@ class CoverHandler implements ServiceHandler {
     if (this.tiltExpose !== undefined && exposesCanBeGet(this.tiltExpose)) {
       keys.push(this.tiltExpose.property);
     }
+    if (this.motorStateExpose !== undefined && exposesCanBeGet(this.motorStateExpose)) {
+      keys.push(this.motorStateExpose.property);
+    }
     return keys;
   }
 
   updateState(state: Record<string, unknown>): void {
     this.monitors.forEach((m) => m.callback(state));
+
+    if (this.motorStateExpose !== undefined && this.motorStateExpose.property in state) {
+      const latestMotorState = state[this.motorStateExpose.property] as string;
+      switch (latestMotorState) {
+        case CoverHandler.MOTOR_STATE_OPENING:
+        case CoverHandler.MOTOR_STATE_CLOSING:
+          this.motorState = latestMotorState;
+          break;
+        default:
+          this.motorState = CoverHandler.MOTOR_STATE_STOPPED;
+          break;
+      }
+    }
 
     if (this.positionExpose.property in state) {
       const latestPosition = state[this.positionExpose.property] as number;
@@ -251,15 +293,44 @@ class CoverHandler implements ServiceHandler {
       this.current_min,
       this.current_max
     );
-
-    this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
-
-    if (isStopped) {
-      // Update target position and position state
-      // This should improve the UX in the Home.app
-      this.accessory.log.debug(`${this.accessory.displayName}: cover: assume movement stopped`);
-      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
-      this.service.updateCharacteristic(hap.Characteristic.TargetPosition, characteristicValue);
+    if (this.motorStateExpose === undefined) {
+      this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
+      if (isStopped) {
+        // Update target position and position state
+        // This should improve the UX in the Home.app
+        this.accessory.log.debug(`${this.accessory.displayName}: cover: assume movement stopped`);
+        this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
+        this.service.updateCharacteristic(hap.Characteristic.TargetPosition, characteristicValue);
+      }
+    } else if (this.motorState !== this.motorStatePrevious) {
+      let newPositionState: number;
+      let newTargetPosition: number;
+      switch (this.motorState) {
+        case CoverHandler.MOTOR_STATE_CLOSING:
+          newPositionState = hap.Characteristic.PositionState.DECREASING;
+          newTargetPosition = 0;
+          this.accessory.log.debug(`${this.accessory.displayName}: cover: closing via motor_state`);
+          break;
+        case CoverHandler.MOTOR_STATE_OPENING:
+          newPositionState = hap.Characteristic.PositionState.INCREASING;
+          newTargetPosition = 100;
+          this.accessory.log.debug(`${this.accessory.displayName}: cover: opening via motor_state`);
+          break;
+        default:
+          newPositionState = hap.Characteristic.PositionState.STOPPED;
+          newTargetPosition = characteristicValue;
+          this.accessory.log.debug(`${this.accessory.displayName}: cover: stopped via motor_state`);
+          break;
+      }
+      this.service.updateCharacteristic(hap.Characteristic.PositionState, newPositionState);
+      if (newPositionState === hap.Characteristic.PositionState.STOPPED) {
+        this.service.updateCharacteristic(hap.Characteristic.CurrentPosition, characteristicValue);
+      }
+      if (newPositionState === hap.Characteristic.PositionState.STOPPED || !this.setTargetPositionHandled) {
+        this.service.updateCharacteristic(hap.Characteristic.TargetPosition, newTargetPosition);
+      }
+      this.motorStatePrevious = this.motorState;
+      this.setTargetPositionHandled = false;
     }
   }
 
@@ -276,15 +347,19 @@ class CoverHandler implements ServiceHandler {
     data[this.positionExpose.property] = target;
     this.accessory.queueDataForSetAction(data);
 
-    // Assume position state based on new target
-    if (target > this.positionCurrent) {
-      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.INCREASING);
-    } else if (target < this.positionCurrent) {
-      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.DECREASING);
+    if (this.motorStateExpose === undefined) {
+      // Assume position state based on new target
+      if (target > this.positionCurrent) {
+        this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.INCREASING);
+      } else if (target < this.positionCurrent) {
+        this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.DECREASING);
+      } else {
+        this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
+      }
     } else {
-      this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
+      this.service.updateCharacteristic(hap.Characteristic.TargetPosition, target);
+      this.setTargetPositionHandled = true;
     }
-
     // Store last sent position for future reference
     this.lastPositionSet = target;
 

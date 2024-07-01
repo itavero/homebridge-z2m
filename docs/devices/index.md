@@ -25,12 +25,12 @@ span.vendor {
 </style>
 
 # Device support
-This page lists the devices currently supported by Zigbee2MQTT v1.38.0 (which depends on zigbee-herdsman-converters v19.47.1).
+This page lists the devices currently supported by Zigbee2MQTT v1.39.0 (which depends on zigbee-herdsman-converters v19.62.0).
 Using an automated script, we have checked which HomeKit Services (and Characteristics) would be created for each of these devices.
 That way you have some kind of idea of what kind of devices are supported.
 
-Currently there are **3464 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
-Unfortunately there are still 133 devices that are not (yet) supported by this plugin, but are supported by Zigbee2MQTT (and expose more than just a _link quality_).
+Currently there are **3525 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
+Unfortunately there are still 137 devices that are not (yet) supported by this plugin, but are supported by Zigbee2MQTT (and expose more than just a _link quality_).
 
 ## A
 <div style="clear:both" />
@@ -42,6 +42,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 <span class="vendor">[AduroSmart](index.md#adurosmart)</span>
 <span class="vendor">[AEOTEC](index.md#aeotec)</span>
 <span class="vendor">[Airam](index.md#airam)</span>
+<span class="vendor">[Airzone](index.md#airzone)</span>
 <span class="vendor">[Ajax Online](index.md#ajax_online)</span>
 <span class="vendor">[Akuvox](index.md#akuvox)</span>
 <span class="vendor">[Alab](index.md#alab)</span>
@@ -149,6 +150,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 <span class="vendor">[EGLO](index.md#eglo)</span>
 <span class="vendor">[Ekaza](index.md#ekaza)</span>
 <span class="vendor">[ELECTSMART](index.md#electsmart)</span>
+<span class="vendor">[Elivco](index.md#elivco)</span>
 <span class="vendor">[ELKO](index.md#elko)</span>
 <span class="vendor">[Elko](index.md#elko)</span>
 <span class="vendor">[Enbrighten](index.md#enbrighten)</span>
@@ -403,6 +405,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 ## Q
 <div style="clear:both" />
+<span class="vendor">[QA](index.md#qa)</span>
 <span class="vendor">[Qingping](index.md#qingping)</span>
 <span class="vendor">[Qmotion](index.md#qmotion)</span>
 <span class="vendor">[QOTO](index.md#qoto)</span>
@@ -488,7 +491,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 <span class="vendor">[TP-Link](index.md#tp-link)</span>
 <span class="vendor">[Trio2sys](index.md#trio2sys)</span>
 <span class="vendor">[Trust](index.md#trust)</span>
-<span class="vendor">[TuYa](index.md#tuya)</span>
+<span class="vendor">[Tuya](index.md#tuya)</span>
 <span class="vendor">[TUYATEC](index.md#tuyatec)</span>
 <div style="clear:both" />
 
@@ -568,7 +571,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [AM25](tuya/ts0601_cover_1.md) | A-OK Tubular motor (white-label of TuYa TS0601_cover_1) |
+| [AM25](tuya/ts0601_cover_1.md) | A-OK Tubular motor (white-label of Tuya TS0601_cover_1) |
 
 
 # Acova {#acova}
@@ -592,8 +595,8 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [LKWSZ211](tuya/lkwsz211.md) | Adaprox Remote wireless switch (2-key) (white-label of TuYa LKWSZ211) |
-| [TS0001_fingerbot_1](tuya/ts0001_fingerbot.md) | Adaprox Zigbee fingerbot plus (white-label of TuYa TS0001_fingerbot) |
+| [LKWSZ211](tuya/lkwsz211.md) | Adaprox Remote wireless switch (2-key) (white-label of Tuya LKWSZ211) |
+| [TS0001_fingerbot_1](tuya/ts0001_fingerbot.md) | Adaprox Zigbee fingerbot plus (white-label of Tuya TS0001_fingerbot) |
 
 
 # ADEO {#adeo}
@@ -679,6 +682,13 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [CTR.UBX](airam/ctr_ubx.md) | Airam CTR.U remote BX |
 
 
+# Airzone {#airzone}
+
+| Model | Description |
+| ----- | ----------- |
+| [AZAI6ZBEMHI](airzone/azai6zbemhi.md) | Airzone Gateway for two-way control and integration of AirCon Units.AZAI6ZBEMHI for Mitsubishi Heavy |
+
+
 # Ajax Online {#ajax_online}
 
 | Model | Description |
@@ -718,12 +728,12 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [141L100RC](aldi/141l100rc.md) | Aldi MEGOS switch and dimming light remote control |
-| [C422AC11D41H140.0W](tuya/ts0505b_1.md) | Aldi MEGOS LED panel RGB+CCT 40W 3600lm 62 x 62 cm (white-label of TuYa TS0505B_1) |
-| [C422AC14D41H140.0W](tuya/ts0505b_1.md) | Aldi MEGOS LED panel RGB+CCT 40W 3600lm 30 x 120 cm (white-label of TuYa TS0505B_1) |
-| [F122SB62H22A4.5W](tuya/ts0502b.md) | Aldi LIGHTWAY smart home LED-lamp - filament (white-label of TuYa TS0502B) |
-| [L122AA63H11A6.5W](tuya/ts0505b_1.md) | Aldi LIGHTWAY smart home LED-lamp - candle (white-label of TuYa TS0505B_1) |
-| [L122CB63H11A9.0W](tuya/ts0505b_1.md) | Aldi LIGHTWAY smart home LED-lamp - bulb (white-label of TuYa TS0505B_1) |
-| [L122FF63H11A5.0W](tuya/ts0505b_1.md) | Aldi LIGHTWAY smart home LED-lamp - spot (white-label of TuYa TS0505B_1) |
+| [C422AC11D41H140.0W](tuya/ts0505b_1.md) | Aldi MEGOS LED panel RGB+CCT 40W 3600lm 62 x 62 cm (white-label of Tuya TS0505B_1) |
+| [C422AC14D41H140.0W](tuya/ts0505b_1.md) | Aldi MEGOS LED panel RGB+CCT 40W 3600lm 30 x 120 cm (white-label of Tuya TS0505B_1) |
+| [F122SB62H22A4.5W](tuya/ts0502b.md) | Aldi LIGHTWAY smart home LED-lamp - filament (white-label of Tuya TS0502B) |
+| [L122AA63H11A6.5W](tuya/ts0505b_1.md) | Aldi LIGHTWAY smart home LED-lamp - candle (white-label of Tuya TS0505B_1) |
+| [L122CB63H11A9.0W](tuya/ts0505b_1.md) | Aldi LIGHTWAY smart home LED-lamp - bulb (white-label of Tuya TS0505B_1) |
+| [L122FF63H11A5.0W](tuya/ts0505b_1.md) | Aldi LIGHTWAY smart home LED-lamp - spot (white-label of Tuya TS0505B_1) |
 
 
 # Alecto {#alecto}
@@ -738,7 +748,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [AM/R-Sm](tuya/ts0601_cover_1.md) | Alutech Tubular motor (white-label of TuYa TS0601_cover_1) |
+| [AM/R-Sm](tuya/ts0601_cover_1.md) | Alutech Tubular motor (white-label of Tuya TS0601_cover_1) |
 
 
 # Anchor {#anchor}
@@ -893,6 +903,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [ZNCZ12LM](aqara/zncz12lm.md) | Aqara Smart plug US |
 | [ZNCZ15LM](aqara/zncz15lm.md) | Aqara Smart plug T1, CN |
 | [ZNDDMK11LM](aqara/znddmk11lm.md) | Aqara Smart lightstrip driver |
+| [ZNDDQDQ11LM](aqara/znddqdq11lm.md) | Aqara T1 light strip controller |
 | [ZNDDQDQ12LM](aqara/znddqdq12lm.md) | Aqara T1 light strip controller |
 | [ZNGZDJ11LM](aqara/zngzdj11lm.md) | Aqara Roller shade controller |
 | [ZNGZDJ16LM](aqara/zngzdj16lm.md) | Aqara Roller shade controller T1C |
@@ -938,13 +949,13 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [1005005194831629](tuya/ts0601_contact_temperature_humidity_sensor.md) | Aubess Contact, temperature and humidity sensor (white-label of TuYa TS0601_contact_temperature_humidity_sensor) |
-| [40ZH-O](tuya/zm-35h-q.md) | Aubess Motion sensor (white-label of TuYa ZM-35H-Q) |
-| [IH-K665](tuya/ts0207_water_leak_detector.md) | Aubess Water leak sensor (white-label of TuYa TS0207_water_leak_detector) |
-| [TMZ02](tuya/whd02.md) | Aubess Wall switch module (white-label of TuYa WHD02) |
-| [TMZ02L-16A-B](tuya/ts0011_switch_module.md) | Aubess 1 gang switch module - (without neutral) (white-label of TuYa TS0011_switch_module) |
-| [TS011F_plug_1](tuya/ts011f_plug_1.md) | Aubess Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
-| [WHD02](tuya/ts000f_power.md) | Aubess Switch with power monitoring (white-label of TuYa TS000F_power) |
+| [1005005194831629](tuya/ts0601_contact_temperature_humidity_sensor.md) | Aubess Contact, temperature and humidity sensor (white-label of Tuya TS0601_contact_temperature_humidity_sensor) |
+| [40ZH-O](tuya/zm-35h-q.md) | Aubess Motion sensor (white-label of Tuya ZM-35H-Q) |
+| [IH-K665](tuya/ts0207_water_leak_detector.md) | Aubess Water leak sensor (white-label of Tuya TS0207_water_leak_detector) |
+| [TMZ02](tuya/whd02.md) | Aubess Wall switch module (white-label of Tuya WHD02) |
+| [TMZ02L-16A-B](tuya/ts0011_switch_module.md) | Aubess 1 gang switch module - (without neutral) (white-label of Tuya TS0011_switch_module) |
+| [TS011F_plug_1](tuya/ts011f_plug_1.md) | Aubess Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
+| [WHD02](tuya/ts000f_power.md) | Aubess Switch with power monitoring (white-label of Tuya TS000F_power) |
 | [ZXZIR-02](aubess/zxzir-02.md) | Aubess Universal smart IR remote control |
 
 
@@ -960,6 +971,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [AU-A1GUZBRGBW](aurora_lighting/au-a1guzbrgbw.md) | Aurora Lighting AOne 5.6w smart RGBW tuneable GU10 lamp |
 | [AU-A1VG125Z5E/19](aurora_lighting/au-a1vg125z5e_19.md) | Aurora Lighting AOne 4W smart dimmable G125 lamp 1900K |
 | [AU-A1VGSZ5E/19](aurora_lighting/au-a1vgsz5e_19.md) | Aurora Lighting AOne 4W smart dimmable Vintage GLS lamp 1900K |
+| [AU-A1ZB110](aurora_lighting/au-a1zb110.md) | Aurora Lighting AOne 1-10V in-line dimmer |
 | [AU-A1ZB2WDM](aurora_lighting/au-a1zb2wdm.md) | Aurora Lighting AOne 250W smart rotary dimmer module |
 | [AU-A1ZBDSS](aurora_lighting/au-a1zbdss.md) | Aurora Lighting Double smart socket UK |
 | [AU-A1ZBDWS](aurora_lighting/au-a1zbdws.md) | Aurora Lighting Magnetic door & window contact sensor |
@@ -984,7 +996,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [TS0004_1](tuya/ts0004.md) | Avatto Smart light switch - 4 gang with neutral wire (white-label of TuYa TS0004) |
+| [TS0004_1](tuya/ts0004.md) | Avatto Smart light switch - 4 gang with neutral wire (white-label of Tuya TS0004) |
 | [ZDMS16-1](avatto/zdms16-1.md) | Avatto Zigbee 1 channel Dimmer |
 | [ZDMS16-2](avatto/zdms16-2.md) | Avatto Zigbee 2 channels Dimmer |
 
@@ -993,24 +1005,24 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [1gang N-ZLWSM01](tuya/ts0011_switch_module.md) | AVATTO 1 gang switch module - (without neutral) (white-label of TuYa TS0011_switch_module) |
-| [2gang N-ZLWSM01](tuya/ts0012_switch_module.md) | AVATTO 2 gang switch module - (without neutral) (white-label of TuYa TS0012_switch_module) |
-| [3gang N-ZLWSM01](tuya/ts0013_switch_module.md) | AVATTO 3 gang switch module - (without neutral) (white-label of TuYa TS0013_switch_module) |
-| [LZWSM16-2](tuya/ts0012_switch_module.md) | AVATTO 2 gang switch module - (without neutral) (white-label of TuYa TS0012_switch_module) |
-| [LZWSM16-3](tuya/ts0013_switch_module.md) | AVATTO 3 gang switch module - (without neutral) (white-label of TuYa TS0013_switch_module) |
-| [ME167](tuya/ts0601_thermostat_3.md) | AVATTO Thermostatic radiator valve (white-label of TuYa TS0601_thermostat_3) |
-| [ME168](tuya/ts0601_thermostat_3.md) | AVATTO Thermostatic radiator valve (white-label of TuYa TS0601_thermostat_3) |
-| [MIUCOT10Z](tuya/ts011f_plug_3.md) | AVATTO Smart plug (with power monitoring by polling) (white-label of TuYa TS011F_plug_3) |
-| [TRV06](tuya/tv02-zigbee.md) | AVATTO Thermostat radiator valve (white-label of TuYa TV02-Zigbee) |
-| [TS0006_1](tuya/ts0006.md) | AVATTO 4 gang switch module with neutral wire and socket (white-label of TuYa TS0006) |
-| [ZGB-WS-EU](tuya/ts0601_switch_4_gang_1.md) | AVATTO 4 gang switch (white-label of TuYa TS0601_switch_4_gang_1) |
-| [ZGB-WS-EU](tuya/ts0601_switch.md) | AVATTO 1, 2, 3 or 4 gang switch (white-label of TuYa TS0601_switch) |
-| [ZTS02](tuya/ts0002.md) | AVATTO 2 gang switch (white-label of TuYa TS0002) |
-| [ZWSM16-1-Zigbee](tuya/ts0001_switch_module.md) | AVATTO 1 gang switch module (white-label of TuYa TS0001_switch_module) |
-| [ZWSM16-2-Zigbee](tuya/ts0002_switch_module_2.md) | AVATTO 2 gang switch module (white-label of TuYa TS0002_switch_module_2) |
-| [ZWSM16-3-Zigbee](tuya/ts0003_switch_module_2.md) | AVATTO 3 gang switch module (white-label of TuYa TS0003_switch_module_2) |
-| [ZWSM16-4-Zigbee](tuya/ts0004_switch_module_2.md) | AVATTO 4 gang switch module (white-label of TuYa TS0004_switch_module_2) |
-| [ZWT-100-16A](tuya/x5h-gb-b.md) | AVATTO Wall-mount thermostat (white-label of TuYa X5H-GB-B) |
+| [1gang N-ZLWSM01](tuya/ts0011_switch_module.md) | AVATTO 1 gang switch module - (without neutral) (white-label of Tuya TS0011_switch_module) |
+| [2gang N-ZLWSM01](tuya/ts0012_switch_module.md) | AVATTO 2 gang switch module - (without neutral) (white-label of Tuya TS0012_switch_module) |
+| [3gang N-ZLWSM01](tuya/ts0013_switch_module.md) | AVATTO 3 gang switch module - (without neutral) (white-label of Tuya TS0013_switch_module) |
+| [LZWSM16-2](tuya/ts0012_switch_module.md) | AVATTO 2 gang switch module - (without neutral) (white-label of Tuya TS0012_switch_module) |
+| [LZWSM16-3](tuya/ts0013_switch_module.md) | AVATTO 3 gang switch module - (without neutral) (white-label of Tuya TS0013_switch_module) |
+| [ME167](tuya/ts0601_thermostat_3.md) | AVATTO Thermostatic radiator valve (white-label of Tuya TS0601_thermostat_3) |
+| [ME168](tuya/ts0601_thermostat_3.md) | AVATTO Thermostatic radiator valve (white-label of Tuya TS0601_thermostat_3) |
+| [MIUCOT10Z](tuya/ts011f_plug_3.md) | AVATTO Smart plug (with power monitoring by polling) (white-label of Tuya TS011F_plug_3) |
+| [TRV06](tuya/tv02-zigbee.md) | AVATTO Thermostat radiator valve (white-label of Tuya TV02-Zigbee) |
+| [TS0006_1](tuya/ts0006.md) | AVATTO 4 gang switch module with neutral wire and socket (white-label of Tuya TS0006) |
+| [ZGB-WS-EU](tuya/ts0601_switch_4_gang_1.md) | AVATTO 4 gang switch (white-label of Tuya TS0601_switch_4_gang_1) |
+| [ZGB-WS-EU](tuya/ts0601_switch.md) | AVATTO 1, 2, 3 or 4 gang switch (white-label of Tuya TS0601_switch) |
+| [ZTS02](tuya/ts0002.md) | AVATTO 2 gang switch (white-label of Tuya TS0002) |
+| [ZWSM16-1-Zigbee](tuya/ts0001_switch_module.md) | AVATTO 1 gang switch module (white-label of Tuya TS0001_switch_module) |
+| [ZWSM16-2-Zigbee](tuya/ts0002_switch_module_2.md) | AVATTO 2 gang switch module (white-label of Tuya TS0002_switch_module_2) |
+| [ZWSM16-3-Zigbee](tuya/ts0003_switch_module_2.md) | AVATTO 3 gang switch module (white-label of Tuya TS0003_switch_module_2) |
+| [ZWSM16-4-Zigbee](tuya/ts0004_switch_module_2.md) | AVATTO 4 gang switch module (white-label of Tuya TS0004_switch_module_2) |
+| [ZWT-100-16A](tuya/x5h-gb-b.md) | AVATTO Wall-mount thermostat (white-label of Tuya X5H-GB-B) |
 
 
 # AwoX {#awox}
@@ -1036,7 +1048,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [BDS03G1](tuya/ts0001.md) | Bandi 1 gang switch (white-label of TuYa TS0001) |
+| [BDS03G1](tuya/ts0001.md) | Bandi 1 gang switch (white-label of Tuya TS0001) |
 
 
 # Bankamp {#bankamp}
@@ -1065,22 +1077,22 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [ZM-sui1](tuya/ts0041.md) | Benexmart Wireless switch with 1 button (white-label of TuYa TS0041) |
+| [ZM-sui1](tuya/ts0041.md) | Benexmart Wireless switch with 1 button (white-label of Tuya TS0041) |
 
 
 # Beok {#beok}
 
 | Model | Description |
 | ----- | ----------- |
-| [TGR85-ZB](tuya/x5h-gb-b.md) | Beok Wall-mount thermostat (white-label of TuYa X5H-GB-B) |
+| [TGR85-ZB](tuya/x5h-gb-b.md) | Beok Wall-mount thermostat (white-label of Tuya X5H-GB-B) |
 
 
 # Binthen {#binthen}
 
 | Model | Description |
 | ----- | ----------- |
-| [BCM100D](tuya/ts0601_cover_1.md) | Binthen Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
-| [CV01A](tuya/ts0601_cover_1.md) | Binthen Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
+| [BCM100D](tuya/ts0601_cover_1.md) | Binthen Curtain motor/roller blind motor/window pusher/tubular motor (white-label of Tuya TS0601_cover_1) |
+| [CV01A](tuya/ts0601_cover_1.md) | Binthen Curtain motor/roller blind motor/window pusher/tubular motor (white-label of Tuya TS0601_cover_1) |
 
 
 # BITUO TECHNIK {#bituo_technik}
@@ -1103,13 +1115,13 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [BW-IS2](tuya/sntz007.md) | BlitzWolf Rechargeable Zigbee contact sensor (white-label of TuYa SNTZ007) |
+| [BW-IS2](tuya/sntz007.md) | BlitzWolf Rechargeable Zigbee contact sensor (white-label of Tuya SNTZ007) |
 | [BW-IS3](blitzwolf/bw-is3.md) | BlitzWolf Rechargeable Zigbee PIR motion sensor |
-| [BW-IS4](tuya/ts0201.md) | BlitzWolf Temperature & humidity sensor with display (white-label of TuYa TS0201) |
-| [BW-SHP13](tuya/ts011f_plug_1.md) | BlitzWolf Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
-| [BW-SHP13](tuya/ts0121_plug.md) | BlitzWolf 10A UK or 16A EU smart plug (white-label of TuYa TS0121_plug) |
-| [BW-SHP15](tuya/ts011f_plug_3.md) | BlitzWolf Smart plug (with power monitoring by polling) (white-label of TuYa TS011F_plug_3) |
-| [BW-SHP15](tuya/ts011f_plug_1.md) | BlitzWolf Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
+| [BW-IS4](tuya/ts0201.md) | BlitzWolf Temperature & humidity sensor with display (white-label of Tuya TS0201) |
+| [BW-SHP13](tuya/ts011f_plug_1.md) | BlitzWolf Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
+| [BW-SHP13](tuya/ts0121_plug.md) | BlitzWolf 10A UK or 16A EU smart plug (white-label of Tuya TS0121_plug) |
+| [BW-SHP15](tuya/ts011f_plug_3.md) | BlitzWolf Smart plug (with power monitoring by polling) (white-label of Tuya TS011F_plug_3) |
+| [BW-SHP15](tuya/ts011f_plug_1.md) | BlitzWolf Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
 | [BW-SS7_1gang](blitzwolf/bw-ss7_1gang.md) | BlitzWolf Zigbee 3.0 smart light switch module 1 gang |
 | [BW-SS7_2gang](blitzwolf/bw-ss7_2gang.md) | BlitzWolf Zigbee 3.0 smart light switch module 2 gang |
 
@@ -1165,15 +1177,15 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [BSEED_TS0601_cover](bseed/bseed_ts0601_cover.md) | BSEED Zigbee curtain switch |
-| [TS0003](tuya/ts0003.md) | BSEED Zigbee switch (white-label of TuYa TS0003) |
-| [Zigbee Socket](tuya/ts011f_wall_outlet.md) | BSEED In-wall outlet (white-label of TuYa TS011F_wall_outlet) |
+| [TS0003](tuya/ts0003.md) | BSEED Zigbee switch (white-label of Tuya TS0003) |
+| [Zigbee Socket](tuya/ts011f_wall_outlet.md) | BSEED In-wall outlet (white-label of Tuya TS011F_wall_outlet) |
 
 
 # BTF-Lighting {#btf-lighting}
 
 | Model | Description |
 | ----- | ----------- |
-| [C03Z](tuya/ts0503b.md) | BTF-Lighting Zigbee RGB light (white-label of TuYa TS0503B) |
+| [C03Z](tuya/ts0503b.md) | BTF-Lighting Zigbee RGB light (white-label of Tuya TS0503B) |
 
 
 # BTicino {#bticino}
@@ -1280,8 +1292,8 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | ----- | ----------- |
 | [SA100](cleverio/sa100.md) | Cleverio Smart siren |
 | [SB100](cleverio/sb100.md) | Cleverio Wireless switch with 1 button |
-| [SS100](tuya/ts0203.md) | Cleverio Door sensor (white-label of TuYa TS0203) |
-| [SS200](tuya/sm0202.md) | Cleverio Motion sensor (white-label of TuYa SM0202) |
+| [SS100](tuya/ts0203.md) | Cleverio Door sensor (white-label of Tuya TS0203) |
+| [SS200](tuya/sm0202.md) | Cleverio Motion sensor (white-label of Tuya SM0202) |
 | [SS300](cleverio/ss300.md) | Cleverio Temperature/humdity sensor |
 
 
@@ -1289,9 +1301,9 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [CMA30035](tuya/ts011f_wall_outlet.md) | ClickSmart+ 1 gang socket outlet (white-label of TuYa TS011F_wall_outlet) |
-| [CMA30036](tuya/ts011f_2_gang_wall.md) | ClickSmart+ 2 gang socket outlet (white-label of TuYa TS011F_2_gang_wall) |
-| [CSPGM2075PW](tuya/ts0042.md) | ClickSmart+ Wireless switch with 2 buttons (white-label of TuYa TS0042) |
+| [CMA30035](tuya/ts011f_wall_outlet.md) | ClickSmart+ 1 gang socket outlet (white-label of Tuya TS011F_wall_outlet) |
+| [CMA30036](tuya/ts011f_2_gang_wall.md) | ClickSmart+ 2 gang socket outlet (white-label of Tuya TS011F_2_gang_wall) |
+| [CSPGM2075PW](tuya/ts0042.md) | ClickSmart+ Wireless switch with 2 buttons (white-label of Tuya TS0042) |
 
 
 # Climax {#climax}
@@ -1322,7 +1334,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [CR-MNZ1](tuya/ts0001_power.md) | Colorock 1 gang switch 30A with power monitoring (white-label of TuYa TS0001_power) |
+| [CR-MNZ1](tuya/ts0001_power.md) | Colorock 1 gang switch 30A with power monitoring (white-label of Tuya TS0001_power) |
 
 
 # Commercial Electric {#commercial_electric}
@@ -1343,26 +1355,26 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [4500990](tuya/ts0121_plug.md) | Connecte 10A UK or 16A EU smart plug (white-label of TuYa TS0121_plug) |
-| [4500991](tuya/ts0121_plug.md) | Connecte 10A UK or 16A EU smart plug (white-label of TuYa TS0121_plug) |
-| [4500992](tuya/ts0121_plug.md) | Connecte 10A UK or 16A EU smart plug (white-label of TuYa TS0121_plug) |
-| [4500993](tuya/ts0121_plug.md) | Connecte 10A UK or 16A EU smart plug (white-label of TuYa TS0121_plug) |
+| [4500990](tuya/ts0121_plug.md) | Connecte 10A UK or 16A EU smart plug (white-label of Tuya TS0121_plug) |
+| [4500991](tuya/ts0121_plug.md) | Connecte 10A UK or 16A EU smart plug (white-label of Tuya TS0121_plug) |
+| [4500992](tuya/ts0121_plug.md) | Connecte 10A UK or 16A EU smart plug (white-label of Tuya TS0121_plug) |
+| [4500993](tuya/ts0121_plug.md) | Connecte 10A UK or 16A EU smart plug (white-label of Tuya TS0121_plug) |
 
 
 # Coswall {#coswall}
 
 | Model | Description |
 | ----- | ----------- |
-| [CS-AJ-DE2U-ZG-11](tuya/ts011f_plug_1.md) | Coswall Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
+| [CS-AJ-DE2U-ZG-11](tuya/ts011f_plug_1.md) | Coswall Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
 
 
 # CR Smart Home {#cr_smart_home}
 
 | Model | Description |
 | ----- | ----------- |
-| [TS0001](tuya/ts0001.md) | CR Smart Home Valve control (white-label of TuYa TS0001) |
-| [TS0203](tuya/ts0203.md) | CR Smart Home Door sensor (white-label of TuYa TS0203) |
-| [TS0207](tuya/ts0207_water_leak_detector.md) | CR Smart Home Water leak detector (white-label of TuYa TS0207_water_leak_detector) |
+| [TS0001](tuya/ts0001.md) | CR Smart Home Valve control (white-label of Tuya TS0001) |
+| [TS0203](tuya/ts0203.md) | CR Smart Home Door sensor (white-label of Tuya TS0203) |
+| [TS0207](tuya/ts0207_water_leak_detector.md) | CR Smart Home Water leak detector (white-label of Tuya TS0207_water_leak_detector) |
 
 
 # CREE {#cree}
@@ -1376,12 +1388,14 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
+| [4503145](ctm_lyng/4503145.md) | CTM Lyng NorLum Dim OP, 2-250W rotary dimmer |
 | [AX_Valve_Controller](ctm_lyng/ax_valve_controller.md) | CTM Lyng AX Valve Controller, water shutoff valve controller |
 | [AX_Water_Sensor](ctm_lyng/ax_water_sensor.md) | CTM Lyng AX Water Sensor, water leakage detector |
 | [CTM_DimmerPille](ctm_lyng/mtouch_dim.md) | CTM Lyng CTM Lyng DimmerPille (white-label of CTM Lyng mTouch_Dim) |
 | [CTM_MBD_Dim](ctm_lyng/ctm_mbd_dim.md) | CTM Lyng MBD Dim, motion detector with dimmer |
 | [MBD-S](ctm_lyng/mbd-s.md) | CTM Lyng MBD-S, motion detector with 16A relay |
 | [mKomfy_Sensor](ctm_lyng/mkomfy_sensor.md) | CTM Lyng mKomfy, stove guard |
+| [mKomfy_Tak](ctm_lyng/mkomfy_tak.md) | CTM Lyng Temperature sensor |
 | [mStikk_Outlet](ctm_lyng/mstikk_outlet.md) | CTM Lyng mStikk OP, wall socket |
 | [mSwitch_Mic](ctm_lyng/mswitch_mic.md) | CTM Lyng Mikrofon, alarm detection microphone |
 | [mTouch_Air_Sensor](ctm_lyng/mtouch_air_sensor.md) | CTM Lyng Air Sensor, temperature & humidity sensor |
@@ -1455,7 +1469,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [SK-Z802C-US](tuya/ts130f.md) | Danor Smart curtain/shutter switch (white-label of TuYa TS130F) |
+| [SK-Z802C-US](tuya/ts130f.md) | Danor Smart curtain/shutter switch (white-label of Tuya TS130F) |
 
 
 # databyte.ch {#databyte_ch}
@@ -1528,6 +1542,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [MOSZB-141](develco/moszb-141.md) | Develco Motion sensor |
 | [SBTZB-110](develco/sbtzb-110.md) | Develco Smart button |
 | [SIRZB-110](develco/sirzb-110.md) | Develco Customizable siren |
+| [SIRZB-111](develco/sirzb-110.md) | Develco Customizable siren (white-label of Develco SIRZB-110) |
 | [SMRZB-143](develco/smrzb-143.md) | Develco Smart cable |
 | [SMRZB-332](develco/smrzb-332.md) | Develco Smart relay DIN |
 | [SMSZB-120](develco/smszb-120.md) | Develco Smoke detector with siren |
@@ -1572,7 +1587,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [YG400A](tuya/ts0205.md) | Dongguan Daying Electornics Technology Smoke sensor (white-label of TuYa TS0205) |
+| [YG400A](tuya/ts0205.md) | Dongguan Daying Electornics Technology Smoke sensor (white-label of Tuya TS0205) |
 
 
 # Dresden Elektronik {#dresden_elektronik}
@@ -1589,26 +1604,26 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [DY-RQ500A](tuya/ts0601_gas_sensor_2.md) | DYGSM Gas sensor (white-label of TuYa TS0601_gas_sensor_2) |
-| [DY-RQ500A](tuya/ts0601_gas_sensor_2.md) | DYGSM Gas sensor (white-label of TuYa TS0601_gas_sensor_2) |
+| [DY-RQ500A](tuya/ts0601_gas_sensor_2.md) | DYGSM Gas sensor (white-label of Tuya TS0601_gas_sensor_2) |
+| [DY-RQ500A](tuya/ts0601_gas_sensor_2.md) | DYGSM Gas sensor (white-label of Tuya TS0601_gas_sensor_2) |
 
 
 # Earda {#earda}
 
 | Model | Description |
 | ----- | ----------- |
-| [EDM-1ZAA-EU](tuya/ts0601_dimmer_1.md) | Earda 1 gang smart dimmer (white-label of TuYa TS0601_dimmer_1) |
-| [EDM-1ZAB-EU](tuya/ts0601_dimmer_1.md) | Earda 1 gang smart dimmer (white-label of TuYa TS0601_dimmer_1) |
-| [EDM-1ZBA-EU](tuya/ts0601_dimmer_1.md) | Earda 1 gang smart dimmer (white-label of TuYa TS0601_dimmer_1) |
-| [ESW-2ZAA-EU](tuya/ts0012.md) | Earda Smart light switch - 2 gang (white-label of TuYa TS0012) |
+| [EDM-1ZAA-EU](tuya/ts0601_dimmer_1_gang_1.md) | Earda 1 gang smart dimmer (white-label of Tuya TS0601_dimmer_1_gang_1) |
+| [EDM-1ZAB-EU](tuya/ts0601_dimmer_1_gang_1.md) | Earda 1 gang smart dimmer (white-label of Tuya TS0601_dimmer_1_gang_1) |
+| [EDM-1ZBA-EU](tuya/ts0601_dimmer_1_gang_1.md) | Earda 1 gang smart dimmer (white-label of Tuya TS0601_dimmer_1_gang_1) |
+| [ESW-2ZAA-EU](tuya/ts0012.md) | Earda Smart light switch - 2 gang (white-label of Tuya TS0012) |
 
 
 # EARU {#earu}
 
 | Model | Description |
 | ----- | ----------- |
-| [EAKCB-T-M-Z](tuya/ts011f_with_threshold.md) | EARU Smart circuit breaker (white-label of TuYa TS011F_with_threshold) |
-| [EAYCB-Z-2P](tuya/ts011f_with_threshold.md) | EARU Smart circuit breaker with Leakage Protection (white-label of TuYa TS011F_with_threshold) |
+| [EAKCB-T-M-Z](tuya/ts011f_with_threshold.md) | EARU Smart circuit breaker (white-label of Tuya TS011F_with_threshold) |
+| [EAYCB-Z-2P](tuya/ts011f_with_threshold.md) | EARU Smart circuit breaker with Leakage Protection (white-label of Tuya TS011F_with_threshold) |
 
 
 # EasyAccess {#easyaccess}
@@ -1763,7 +1778,14 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [EST-120Z](tuya/ts0601_floor_thermostat.md) | ELECTSMART Zigbee thermostat for electric floors (white-label of TuYa TS0601_floor_thermostat) |
+| [EST-120Z](tuya/ts0601_floor_thermostat.md) | ELECTSMART Zigbee thermostat for electric floors (white-label of Tuya TS0601_floor_thermostat) |
+
+
+# Elivco {#elivco}
+
+| Model | Description |
+| ----- | ----------- |
+| [LSPA9](tuya/ts011f_plug_1.md) | Elivco Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
 
 
 # ELKO {#elko}
@@ -1897,7 +1919,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [Heat M30](tuya/ts0601_thermostat.md) | Evolveo Radiator valve with thermostat (white-label of TuYa TS0601_thermostat) |
+| [Heat M30](tuya/ts0601_thermostat.md) | Evolveo Radiator valve with thermostat (white-label of Tuya TS0601_thermostat) |
 
 
 # Evvr {#evvr}
@@ -1947,7 +1969,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [FE-GU10-5W](tuya/ts0505b_1.md) | Feconn Zigbee GU10 5W smart bulb (white-label of TuYa TS0505B_1) |
+| [FE-GU10-5W](tuya/ts0505b_1.md) | Feconn Zigbee GU10 5W smart bulb (white-label of Tuya TS0505B_1) |
 
 
 # Feibit {#feibit}
@@ -2058,7 +2080,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [Garza-Standard-A60](tuya/ts0505b_1.md) | Garza Smart Standard A60 bulb (white-label of TuYa TS0505B_1) |
+| [Garza-Standard-A60](tuya/ts0505b_1.md) | Garza Smart Standard A60 bulb (white-label of Tuya TS0505B_1) |
 
 
 # GE {#ge}
@@ -2185,6 +2207,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [GL-FL-006P](gledopto/gl-fl-006p.md) | Gledopto Zigbee 60W Floodlight RGB+CCT (pro) |
 | [GL-FL-006TZ](gledopto/gl-fl-006tz.md) | Gledopto Zigbee 60W Floodlight RGB+CCT |
 | [GL-FL-006TZS](gledopto/gl-fl-006tzs.md) | Gledopto Zigbee 60W Floodlight RGB+CCT (plus) |
+| [GL-FL-007P](gledopto/gl-fl-007p.md) | Gledopto Zigbee 100W Floodlight RGB+CCT (pro) |
 | [GL-G-001P](gledopto/gl-g-001p.md) | Gledopto Zigbee 12W Garden Lamp RGB+CCT (pro) |
 | [GL-G-001Z](gledopto/gl-g-001z.md) | Gledopto Zigbee 12W Garden Lamp RGB+CCT |
 | [GL-G-001ZS](gledopto/gl-g-001zs.md) | Gledopto Zigbee 12W Garden Lamp RGB+CCT (plus) |
@@ -2270,7 +2293,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [ESW-OZAA-EU](tuya/ts0044.md) | Haozee Wireless switch with 4 buttons (white-label of TuYa TS0044) |
+| [ESW-OZAA-EU](tuya/ts0044.md) | Haozee Wireless switch with 4 buttons (white-label of Tuya TS0044) |
 
 
 # Heatit {#heatit}
@@ -2376,14 +2399,14 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [DDS238-2](tuya/ts0601_din_1.md) | Hiking Single phase DIN-rail energy meter with switch function (white-label of TuYa TS0601_din_1) |
+| [DDS238-2](tuya/ts0601_din_1.md) | Hiking Single phase DIN-rail energy meter with switch function (white-label of Tuya TS0601_din_1) |
 
 
 # Hiladuo {#hiladuo}
 
 | Model | Description |
 | ----- | ----------- |
-| [B09M3R35GC](tuya/ts0601_cover_3.md) | Hiladuo Motorized roller shade (white-label of TuYa TS0601_cover_3) |
+| [B09M3R35GC](tuya/ts0601_cover_3.md) | Hiladuo Motorized roller shade (white-label of Tuya TS0601_cover_3) |
 
 
 # Hilux {#hilux}
@@ -2430,20 +2453,20 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [ZJSBL7-100Z](tuya/ts0601_rcbo.md) | HOCH DIN mount RCBO with smart energy metering (white-label of TuYa TS0601_rcbo) |
+| [ZJSBL7-100Z](tuya/ts0601_rcbo.md) | HOCH DIN mount RCBO with smart energy metering (white-label of Tuya TS0601_rcbo) |
 
 
 # Homeetec {#homeetec}
 
 | Model | Description |
 | ----- | ----------- |
-| [37022173](tuya/ts0601_cover_with_2_switch.md) | Homeetec Curtain/blind switch with 2 Gang switch (white-label of TuYa TS0601_cover_with_2_switch) |
-| [37022463](tuya/ts0002_switch_2_gang.md) | Homeetec 2 Gang switch with backlight (white-label of TuYa TS0002_switch_2_gang) |
-| [37022474](tuya/ts0003_switch_3_gang.md) | Homeetec 3 Gang switch with backlight (white-label of TuYa TS0003_switch_3_gang) |
-| [37022483](tuya/ts0601_cover_5.md) | Homeetec Curtain/blind switch (white-label of TuYa TS0601_cover_5) |
-| [37022493](tuya/ts0601_cover_with_1_switch.md) | Homeetec Curtain/blind switch with 1 Gang switch (white-label of TuYa TS0601_cover_with_1_switch) |
-| [37022714](tuya/ts0601_switch_4_gang_2.md) | Homeetec 4 Gang switch with backlight (white-label of TuYa TS0601_switch_4_gang_2) |
-| [Homeetec_37022454](tuya/ts0001_switch_1_gang.md) | Homeetec 1 Gang switch with backlight (white-label of TuYa TS0001_switch_1_gang) |
+| [37022173](tuya/ts0601_cover_with_2_switch.md) | Homeetec Curtain/blind switch with 2 Gang switch (white-label of Tuya TS0601_cover_with_2_switch) |
+| [37022463](tuya/ts0002_switch_2_gang.md) | Homeetec 2 Gang switch with backlight (white-label of Tuya TS0002_switch_2_gang) |
+| [37022474](tuya/ts0003_switch_3_gang.md) | Homeetec 3 Gang switch with backlight (white-label of Tuya TS0003_switch_3_gang) |
+| [37022483](tuya/ts0601_cover_5.md) | Homeetec Curtain/blind switch (white-label of Tuya TS0601_cover_5) |
+| [37022493](tuya/ts0601_cover_with_1_switch.md) | Homeetec Curtain/blind switch with 1 Gang switch (white-label of Tuya TS0601_cover_with_1_switch) |
+| [37022714](tuya/ts0601_switch_4_gang_2.md) | Homeetec 4 Gang switch with backlight (white-label of Tuya TS0601_switch_4_gang_2) |
+| [Homeetec_37022454](tuya/ts0001_switch_1_gang.md) | Homeetec 1 Gang switch with backlight (white-label of Tuya TS0001_switch_1_gang) |
 
 
 # Hommyn {#hommyn}
@@ -2488,7 +2511,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [CMD900LE](tuya/ts0601_cover_1.md) | HUARUI Lithium battery intelligent curtain opening and closing motor (white-label of TuYa TS0601_cover_1) |
+| [CMD900LE](tuya/ts0601_cover_1.md) | HUARUI Lithium battery intelligent curtain opening and closing motor (white-label of Tuya TS0601_cover_1) |
 
 
 # HZC {#hzc}
@@ -2535,7 +2558,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [GTZ06](tuya/ts0601_thermostat_1.md) | id3 Thermostatic radiator valve (white-label of TuYa TS0601_thermostat_1) |
+| [GTZ06](tuya/ts0601_thermostat_1.md) | id3 Thermostatic radiator valve (white-label of Tuya TS0601_thermostat_1) |
 
 
 # Idinio {#idinio}
@@ -2549,7 +2572,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [_TZE204_ztqnh5cg](tuya/zy-m100-s_2.md) | iHenso Human presence sensor (white-label of TuYa ZY-M100-S_2) |
+| [_TZE204_ztqnh5cg](tuya/zy-m100-s_2.md) | iHenso Human presence sensor (white-label of Tuya ZY-M100-S_2) |
 
 
 # iHORN {#ihorn}
@@ -2648,9 +2671,9 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [LED2103G5](ikea/led2103g5.md) | IKEA TRADFRI bulb E26/E27, warm white, globe, 806 lumen |
 | [LED2104R3](ikea/led2104r3.md) | IKEA TRADFRI bulb GU10, warm white, 345/380 lm |
 | [LED2107C4](ikea/led2107c4.md) | IKEA TRADFRI bulb E14, white spectrum, candle, opal, 470 lm |
-| [LED2109G6](ikea/led2109g6.md) | IKEA TRADFRI bulb E27, color/white spectrum, globe, opal, 806 lm |
+| [LED2109G6](ikea/led2109g6.md) | IKEA TRADFRI bulb E26/E27, color/white spectrum, globe, opal, 806 lm |
 | [LED2111G6](ikea/led2111g6.md) | IKEA TRADFRI bulb E14, color/white spectrum, globe, opal, 806 lm |
-| [LED2201G8](ikea/led2201g8.md) | IKEA TRADFRI bulb E26/27, white spectrum, globe, opal, 1055 lm |
+| [LED2201G8](ikea/led2201g8.md) | IKEA TRADFRI bulb E26/27, white spectrum, globe, opal, 1055/1100 lm |
 | [T1820](ikea/t1820.md) | IKEA LEPTITER recessed spot light, white spectrum |
 | [T1828](ikea/t1828.md) | IKEA GUNNARP light panel, round |
 | [T1829](ikea/t1829.md) | IKEA GUNNARP light panel, 40x40 cm |
@@ -2737,8 +2760,8 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [07502L](immax/07502l.md) | Immax 4 in 1 multi sensor |
 | [07505L](immax/07505l.md) | Immax Neo smart keypad |
 | [07703L](immax/07703l.md) | Immax Radiator valve |
-| [07732B](tuya/ts0601_thermostat.md) | Immax Radiator valve with thermostat (white-label of TuYa TS0601_thermostat) |
-| [07732L](tuya/ts0601_thermostat.md) | Immax Radiator valve with thermostat (white-label of TuYa TS0601_thermostat) |
+| [07732B](tuya/ts0601_thermostat.md) | Immax Radiator valve with thermostat (white-label of Tuya TS0601_thermostat) |
+| [07732L](tuya/ts0601_thermostat.md) | Immax Radiator valve with thermostat (white-label of Tuya TS0601_thermostat) |
 | [07743L](immax/07743l.md) | Immax Neo Smart LED E27 11W RGB + CCT, color, dimmable, Zigbee 3.0 |
 | [07752L](immax/07752l.md) | Immax NEO smart internal double socket |
 | [07767L](immax/07767l.md) | Immax NEO Smart outdoor button |
@@ -3015,16 +3038,16 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [FMD2C018](tuya/ts0601_dimmer_4.md) | KnockautX 2 gang smart dimmer module (white-label of TuYa TS0601_dimmer_4) |
+| [FMD2C018](tuya/ts0601_dimmer_4.md) | KnockautX 2 gang smart dimmer module (white-label of Tuya TS0601_dimmer_4) |
 | [FMS2C017](moes/ms-104bz.md) | KnockautX 2 gang switch (white-label of Moes MS-104BZ) |
-| [SMOAL024](tuya/ts0601_smoke_3.md) | KnockautX Photoelectric smoke detector (white-label of TuYa TS0601_smoke_3) |
+| [SMOAL024](tuya/ts0601_smoke_3.md) | KnockautX Photoelectric smoke detector (white-label of Tuya TS0601_smoke_3) |
 
 
 # KOJIMA {#kojima}
 
 | Model | Description |
 | ----- | ----------- |
-| [KOJIMA-THS-ZG-LCD](tuya/zg-227zl.md) | KOJIMA Temperature and humidity sensor (white-label of TuYa ZG-227ZL) |
+| [KOJIMA-THS-ZG-LCD](tuya/zg-227zl.md) | KOJIMA Temperature and humidity sensor (white-label of Tuya ZG-227ZL) |
 
 
 # Konke {#konke}
@@ -3059,7 +3082,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [ZB1248-10A](tuya/ts011f_1.md) | KTNNKG Relay switch (white-label of TuYa TS011F_1) |
+| [ZB1248-10A](tuya/ts011f_1.md) | KTNNKG Relay switch (white-label of Tuya TS011F_1) |
 
 
 # KURVIA {#kurvia}
@@ -3093,10 +3116,10 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [PS080](tuya/ts0101.md) | Larkkey Zigbee Socket (white-label of TuYa TS0101) |
-| [PS580](tuya/ts0108.md) | Larkkey Socket with 2 USB (white-label of TuYa TS0108) |
-| [ZSTY-SM-1DMZG-EU](tuya/ts0601_dimmer_1.md) | Larkkey 1 gang smart dimmer (white-label of TuYa TS0601_dimmer_1) |
-| [ZSTY-SM-1SRZG-EU](tuya/ts0601_cover_1.md) | Larkkey Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
+| [PS080](tuya/ts0101.md) | Larkkey Zigbee Socket (white-label of Tuya TS0101) |
+| [PS580](tuya/ts0108.md) | Larkkey Socket with 2 USB (white-label of Tuya TS0108) |
+| [ZSTY-SM-1DMZG-EU](tuya/ts0601_dimmer_1_gang_1.md) | Larkkey 1 gang smart dimmer (white-label of Tuya TS0601_dimmer_1_gang_1) |
+| [ZSTY-SM-1SRZG-EU](tuya/ts0601_cover_1.md) | Larkkey Curtain motor/roller blind motor/window pusher/tubular motor (white-label of Tuya TS0601_cover_1) |
 
 
 # LDS {#lds}
@@ -3211,7 +3234,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [WP33-EU](tuya/e220-kr4n0z0-ha.md) | LEELKI Multiprise with 4 AC outlets and 2 USB super charging ports (16A) (white-label of TuYa E220-KR4N0Z0-HA) |
+| [WP33-EU](tuya/e220-kr4n0z0-ha.md) | LEELKI Multiprise with 4 AC outlets and 2 USB super charging ports (16A) (white-label of Tuya E220-KR4N0Z0-HA) |
 
 
 # Legrand {#legrand}
@@ -3257,7 +3280,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [JZ-ZB-001](lellki/jz-zb-001.md) | LELLKI Smart plug (without power monitoring) |
 | [JZ-ZB-002](lellki/jz-zb-002.md) | LELLKI 2 gang touch switch |
 | [JZ-ZB-003](lellki/jz-zb-003.md) | LELLKI 3 gang switch |
-| [TS011F_plug](tuya/ts011f_plug_1.md) | LELLKI Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
+| [TS011F_plug](tuya/ts011f_plug_1.md) | LELLKI Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
 | [WK34-EU](lellki/wk34-eu.md) | LELLKI Power socket EU (with power monitoring) |
 | [WP30-EU](lellki/wp30-eu.md) | LELLKI Power cord 4 sockets EU (with power monitoring) |
 | [WP33-EU/WP34-EU](lellki/wp33-eu_wp34-eu.md) | LELLKI Multiprise with 4 AC outlets and 2 USB super charging ports (16A) |
@@ -3268,8 +3291,8 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [T2-Z67/T2-W67](tuya/ts0601_fan_switch.md) | Lerlink Fan switch (white-label of TuYa TS0601_fan_switch) |
-| [X706U](tuya/ts0601_dimmer_1.md) | Lerlink 1 gang smart dimmer (white-label of TuYa TS0601_dimmer_1) |
+| [T2-Z67/T2-W67](tuya/ts0601_fan_switch.md) | Lerlink Fan switch (white-label of Tuya TS0601_fan_switch) |
+| [X706U](tuya/ts0601_dimmer_1_gang_1.md) | Lerlink 1 gang smart dimmer (white-label of Tuya TS0601_dimmer_1_gang_1) |
 
 
 # Letsleds {#letsleds}
@@ -3312,55 +3335,55 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [14147206L](tuya/ts0502a.md) | Lidl Livarno Lux ceiling light (white-label of TuYa TS0502A) |
-| [14148906L](tuya/ts0505a.md) | Lidl Livarno Lux mood light RGB+CCT (white-label of TuYa TS0505A) |
-| [14149505L/14149506L_1](tuya/ts0505a.md) | Lidl Livarno Lux light bar RGB+CCT (black/white) (white-label of TuYa TS0505A) |
-| [14149505L/14149506L_2](tuya/ts0505b_2.md) | Lidl Livarno Lux light bar RGB+CCT (black/white) (white-label of TuYa TS0505B_2) |
-| [14153706L](tuya/ts0505b_1.md) | Lidl Livarno smart LED ceiling light (white-label of TuYa TS0505B_1) |
+| [14147206L](tuya/ts0502a.md) | Lidl Livarno Lux ceiling light (white-label of Tuya TS0502A) |
+| [14148906L](tuya/ts0505a.md) | Lidl Livarno Lux mood light RGB+CCT (white-label of Tuya TS0505A) |
+| [14149505L/14149506L_1](tuya/ts0505a.md) | Lidl Livarno Lux light bar RGB+CCT (black/white) (white-label of Tuya TS0505A) |
+| [14149505L/14149506L_2](tuya/ts0505b_2.md) | Lidl Livarno Lux light bar RGB+CCT (black/white) (white-label of Tuya TS0505B_2) |
+| [14153706L](tuya/ts0505b_1.md) | Lidl Livarno smart LED ceiling light (white-label of Tuya TS0505B_1) |
 | [14153806L](lidl/14153806l.md) | Lidl Livarno smart LED ceiling light |
-| [14153905L](tuya/ts0502a.md) | Lidl Livarno Home LED floor lamp (white-label of TuYa TS0502A) |
-| [14156408L](tuya/ts0502b.md) | Lidl Livarno Lux smart LED ceiling light (white-label of TuYa TS0502B) |
-| [14156506L](tuya/ts0505b_1.md) | Lidl Livarno Lux smart LED mood light (white-label of TuYa TS0505B_1) |
-| [14158704L](tuya/ts0505b_1.md) | Lidl Livarno Home LED floor lamp, RGBW (white-label of TuYa TS0505B_1) |
-| [14158804L](tuya/ts0505b_1.md) | Lidl Livarno Home LED desk lamp RGBW (white-label of TuYa TS0505B_1) |
+| [14153905L](tuya/ts0502a.md) | Lidl Livarno Home LED floor lamp (white-label of Tuya TS0502A) |
+| [14156408L](tuya/ts0502b.md) | Lidl Livarno Lux smart LED ceiling light (white-label of Tuya TS0502B) |
+| [14156506L](tuya/ts0505b_1.md) | Lidl Livarno Lux smart LED mood light (white-label of Tuya TS0505B_1) |
+| [14158704L](tuya/ts0505b_1.md) | Lidl Livarno Home LED floor lamp, RGBW (white-label of Tuya TS0505B_1) |
+| [14158804L](tuya/ts0505b_1.md) | Lidl Livarno Home LED desk lamp RGBW (white-label of Tuya TS0505B_1) |
 | [368308_2010](lidl/368308_2010.md) | Lidl Silvercrest radiator valve with thermostat |
-| [399629_2110](tuya/ts0505b_1.md) | Lidl Livarno Lux Ceiling Panel RGB+CCT (white-label of TuYa TS0505B_1) |
+| [399629_2110](tuya/ts0505b_1.md) | Lidl Livarno Lux Ceiling Panel RGB+CCT (white-label of Tuya TS0505B_1) |
 | [FB20-002](lidl/fb20-002.md) | Lidl Livarno Lux switch and dimming light remote control |
 | [FB21-001](lidl/fb21-001.md) | Lidl Livarno Lux switch and dimming light remote control |
-| [HG06104A](tuya/ts0505a.md) | Lidl Livarno Lux smart LED light strip 2.5m (white-label of TuYa TS0505A) |
-| [HG06106A](tuya/ts0505a.md) | Lidl Livarno Lux GU10 spot RGB (white-label of TuYa TS0505A) |
-| [HG06106B](tuya/ts0505a.md) | Lidl Livarno Lux E14 candle RGB (white-label of TuYa TS0505A) |
-| [HG06106C](tuya/ts0505a.md) | Lidl Livarno Lux E27 bulb RGB (white-label of TuYa TS0505A) |
+| [HG06104A](tuya/ts0505a.md) | Lidl Livarno Lux smart LED light strip 2.5m (white-label of Tuya TS0505A) |
+| [HG06106A](tuya/ts0505a.md) | Lidl Livarno Lux GU10 spot RGB (white-label of Tuya TS0505A) |
+| [HG06106B](tuya/ts0505a.md) | Lidl Livarno Lux E14 candle RGB (white-label of Tuya TS0505A) |
+| [HG06106C](tuya/ts0505a.md) | Lidl Livarno Lux E27 bulb RGB (white-label of Tuya TS0505A) |
 | [HG06335/HG07310](lidl/hg06335_hg07310.md) | Lidl Silvercrest smart motion sensor |
 | [HG06336](lidl/hg06336.md) | Lidl Silvercrest smart window and door sensor |
 | [HG06337](lidl/hg06337.md) | Lidl Silvercrest smart plug (EU, CH, FR, BS, DK) |
 | [HG06338](lidl/hg06338.md) | Lidl Silvercrest 3 gang switch, with 4 USB (EU, FR, CZ, BS) |
-| [HG06462A](tuya/ts0501a.md) | Lidl Livarno Lux E27 A60 filament bulb (white-label of TuYa TS0501A) |
-| [HG06463A](tuya/ts0501a.md) | Lidl Livarno Lux E27 ST64 filament bulb (white-label of TuYa TS0501A) |
-| [HG06463B](tuya/ts0501a.md) | Lidl Livarno Lux E27 G95 filament bulb (white-label of TuYa TS0501A) |
+| [HG06462A](tuya/ts0501a.md) | Lidl Livarno Lux E27 A60 filament bulb (white-label of Tuya TS0501A) |
+| [HG06463A](tuya/ts0501a.md) | Lidl Livarno Lux E27 ST64 filament bulb (white-label of Tuya TS0501A) |
+| [HG06463B](tuya/ts0501a.md) | Lidl Livarno Lux E27 G95 filament bulb (white-label of Tuya TS0501A) |
 | [HG06467](lidl/hg06467.md) | Lidl Melinera smart LED string lights |
-| [HG06492A/HG08130A](tuya/ts0502a.md) | Lidl Livarno Lux GU10 spot CCT (white-label of TuYa TS0502A) |
-| [HG06492B](tuya/ts0502a.md) | Lidl Livarno Lux E14 candle CCT (white-label of TuYa TS0502A) |
-| [HG06492C/HG08130C/HG09154C](tuya/ts0502a.md) | Lidl Livarno Lux E27 bulb CCT (white-label of TuYa TS0502A) |
+| [HG06492A/HG08130A](tuya/ts0502a.md) | Lidl Livarno Lux GU10 spot CCT (white-label of Tuya TS0502A) |
+| [HG06492B](tuya/ts0502a.md) | Lidl Livarno Lux E14 candle CCT (white-label of Tuya TS0502A) |
+| [HG06492C/HG08130C/HG09154C](tuya/ts0502a.md) | Lidl Livarno Lux E27 bulb CCT (white-label of Tuya TS0502A) |
 | [HG06619](lidl/hg06619.md) | Lidl Silvercrest outdoor plug |
 | [HG06620](lidl/hg06620.md) | Lidl Silvercrest garden spike with 2 sockets |
 | [HG06668](lidl/hg06668.md) | Lidl Silvercrest smart wireless door bell button |
-| [HG07834A/HG09155A](tuya/ts0505b_1.md) | Lidl Livarno Lux GU10 spot RGB (white-label of TuYa TS0505B_1) |
-| [HG07834B](tuya/ts0505b_1.md) | Lidl Livarno Lux E14 candle RGB (white-label of TuYa TS0505B_1) |
-| [HG07834C](tuya/ts0505b_1.md) | Lidl Livarno Lux E27 bulb RGB (white-label of TuYa TS0505B_1) |
-| [HG08007](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor LED band (white-label of TuYa TS0505B_1) |
-| [HG08008](tuya/ts0505b_1.md) | Lidl Livarno Home LED ceiling light (white-label of TuYa TS0505B_1) |
-| [HG08008](tuya/ts0505b_1.md) | Lidl Livarno Home LED ceiling light (white-label of TuYa TS0505B_1) |
-| [HG08010](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor spotlight (white-label of TuYa TS0505B_1) |
-| [HG08010](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor spotlight (white-label of TuYa TS0505B_1) |
-| [HG08131C](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor E27 bulb in set with flare (white-label of TuYa TS0505B_1) |
+| [HG07834A/HG09155A](tuya/ts0505b_1.md) | Lidl Livarno Lux GU10 spot RGB (white-label of Tuya TS0505B_1) |
+| [HG07834B](tuya/ts0505b_1.md) | Lidl Livarno Lux E14 candle RGB (white-label of Tuya TS0505B_1) |
+| [HG07834C](tuya/ts0505b_1.md) | Lidl Livarno Lux E27 bulb RGB (white-label of Tuya TS0505B_1) |
+| [HG08007](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor LED band (white-label of Tuya TS0505B_1) |
+| [HG08008](tuya/ts0505b_1.md) | Lidl Livarno Home LED ceiling light (white-label of Tuya TS0505B_1) |
+| [HG08008](tuya/ts0505b_1.md) | Lidl Livarno Home LED ceiling light (white-label of Tuya TS0505B_1) |
+| [HG08010](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor spotlight (white-label of Tuya TS0505B_1) |
+| [HG08010](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor spotlight (white-label of Tuya TS0505B_1) |
+| [HG08131C](tuya/ts0505b_1.md) | Lidl Livarno Home outdoor E27 bulb in set with flare (white-label of Tuya TS0505B_1) |
 | [HG08164](lidl/hg08164.md) | Lidl Silvercrest smart button |
-| [HG08383A](tuya/ts0505b_1.md) | Lidl Livarno outdoor LED light chain (white-label of TuYa TS0505B_1) |
-| [HG08383B](tuya/ts0505b_1.md) | Lidl Livarno outdoor LED light chain (white-label of TuYa TS0505B_1) |
+| [HG08383A](tuya/ts0505b_1.md) | Lidl Livarno outdoor LED light chain (white-label of Tuya TS0505B_1) |
+| [HG08383B](tuya/ts0505b_1.md) | Lidl Livarno outdoor LED light chain (white-label of Tuya TS0505B_1) |
 | [HG08633](lidl/hg08633.md) | Lidl Livarno gardenspot RGB |
 | [HG08673](lidl/hg08673.md) | Lidl Silvercrest smart plug with power monitoring (EU, FR) |
 | [HG08673-BS](lidl/hg08673.md) | Lidl Silvercrest smart plug with power monitoring (BS) (white-label of Lidl HG08673) |
-| [HG09648](tuya/ts030f.md) | Lidl Livarno roller blinds (white-label of TuYa TS030F) |
+| [HG09648](tuya/ts030f.md) | Lidl Livarno roller blinds (white-label of Tuya TS030F) |
 | [PSBZS A1](lidl/psbzs_a1.md) | Lidl Parkside smart watering timer |
 
 
@@ -3380,8 +3403,8 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [LF-AAZ012-0400-42](tuya/ts0601_light.md) | Lifud Zigbee dimmable LED driver 4-40W 220-240Vac (white-label of TuYa TS0601_light) |
-| [LF-GAZ150A6250-24](tuya/ts0601_light.md) | Lifud Lifud Zigbee LED Driver CCT 150W 24V (white-label of TuYa TS0601_light) |
+| [LF-AAZ012-0400-42](tuya/ts0601_light.md) | Lifud Zigbee dimmable LED driver 4-40W 220-240Vac (white-label of Tuya TS0601_light) |
+| [LF-GAZ150A6250-24](tuya/ts0601_light.md) | Lifud Lifud Zigbee LED Driver CCT 150W 24V (white-label of Tuya TS0601_light) |
 
 
 # Light Solutions {#light_solutions}
@@ -3404,7 +3427,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [TS0601_lilistore](tuya/ts0601_cover_8.md) | Lilistore Cover motor (white-label of TuYa TS0601_cover_8) |
+| [TS0601_lilistore](tuya/ts0601_cover_8.md) | Lilistore Cover motor (white-label of Tuya TS0601_cover_8) |
 
 
 # Linkind {#linkind}
@@ -3433,9 +3456,9 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [LKDSZ001](tuya/ts0203_1.md) | Linkoze Door sensor with scene switch (white-label of TuYa TS0203_1) |
-| [LKMSZ001](tuya/ts0202_2.md) | Linkoze Motion sensor with scene switch (white-label of TuYa TS0202_2) |
-| [LKWSZ211](tuya/lkwsz211.md) | Linkoze Wireless switch (2-key) (white-label of TuYa LKWSZ211) |
+| [LKDSZ001](tuya/ts0203_1.md) | Linkoze Door sensor with scene switch (white-label of Tuya TS0203_1) |
+| [LKMSZ001](tuya/ts0202_2.md) | Linkoze Motion sensor with scene switch (white-label of Tuya TS0202_2) |
+| [LKWSZ211](tuya/lkwsz211.md) | Linkoze Wireless switch (2-key) (white-label of Tuya LKWSZ211) |
 
 
 # Linptech {#linptech}
@@ -3465,6 +3488,8 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [TI0001-cover](livolo/ti0001-cover.md) | Livolo Zigbee roller blind motor |
 | [TI0001-curtain-switch](livolo/ti0001-curtain-switch.md) | Livolo Zigbee curtain switch (can only read status, control does not work yet) |
 | [TI0001-dimmer](livolo/ti0001-dimmer.md) | Livolo Zigbee dimmer |
+| [TI0001-hygrometer](livolo/ti0001-hygrometer.md) | Livolo Zigbee Digital Humidity and Temperature Sensor |
+| [TI0001-illuminance](livolo/ti0001-illuminance.md) | Livolo Zigbee digital illuminance and sound sensor |
 | [TI0001-pir](livolo/ti0001-pir.md) | Livolo Zigbee motion Sensor |
 | [TI0001-socket](livolo/ti0001-socket.md) | Livolo Zigbee socket |
 | [TI0001-switch](livolo/ti0001-switch.md) | Livolo Zigbee switch 1 gang |
@@ -3475,8 +3500,8 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [Fan+Light-01](tuya/ts0601_fan_5_levels_and_light_switch.md) | Liwokit Fan with 5 levels & light switch (white-label of TuYa TS0601_fan_5_levels_and_light_switch) |
-| [Fan+Light-01](tuya/ts0601_fan_and_light_switch.md) | Liwokit Fan & light switch (white-label of TuYa TS0601_fan_and_light_switch) |
+| [Fan+Light-01](tuya/ts0601_fan_5_levels_and_light_switch.md) | Liwokit Fan with 5 levels & light switch (white-label of Tuya TS0601_fan_5_levels_and_light_switch) |
+| [Fan+Light-01](tuya/ts0601_fan_and_light_switch.md) | Liwokit Fan & light switch (white-label of Tuya TS0601_fan_and_light_switch) |
 
 
 # LiXee {#lixee}
@@ -3501,28 +3526,28 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | ----- | ----------- |
 | [11830304](lonsonho/11830304.md) | Lonsonho Curtain switch |
 | [4000116784070](lonsonho/4000116784070.md) | Lonsonho Smart plug EU |
-| [EDM-1ZBB-EU](tuya/ts0601_dimmer_1.md) | Lonsonho Smart Dimmer Switch (white-label of TuYa TS0601_dimmer_1) |
+| [EDM-1ZBB-EU](tuya/ts0601_dimmer_1_gang_1.md) | Lonsonho Smart Dimmer Switch (white-label of Tuya TS0601_dimmer_1_gang_1) |
 | [QS-Zigbee-C01](lonsonho/qs-zigbee-c01.md) | Lonsonho Curtain/blind motor controller |
 | [QS-Zigbee-C03](lonsonho/qs-zigbee-c03.md) | Lonsonho Curtain/blind motor controller |
 | [QS-Zigbee-D02-TRIAC-2C-L](lonsonho/qs-zigbee-d02-triac-2c-l.md) | Lonsonho 2 gang smart dimmer switch module without neutral |
 | [QS-Zigbee-D02-TRIAC-2C-LN](lonsonho/qs-zigbee-d02-triac-2c-ln.md) | Lonsonho 2 gang smart dimmer switch module with neutral |
 | [QS-Zigbee-D02-TRIAC-L](lonsonho/qs-zigbee-d02-triac-l.md) | Lonsonho 1 gang smart dimmer switch module without neutral |
-| [QS-Zigbee-D02-TRIAC-L_1](tuya/ts110e_1gang_2.md) | Lonsonho 1 channel dimmer (white-label of TuYa TS110E_1gang_2) |
+| [QS-Zigbee-D02-TRIAC-L_1](tuya/ts110e_1gang_2.md) | Lonsonho 1 channel dimmer (white-label of Tuya TS110E_1gang_2) |
 | [QS-Zigbee-D02-TRIAC-LN](lonsonho/qs-zigbee-d02-triac-ln.md) | Lonsonho 1 gang smart dimmer switch module with neutral |
-| [QS-Zigbee-D02-TRIAC-LN_1](tuya/ts110e_1gang_2.md) | Lonsonho 1 channel dimmer (white-label of TuYa TS110E_1gang_2) |
+| [QS-Zigbee-D02-TRIAC-LN_1](tuya/ts110e_1gang_2.md) | Lonsonho 1 channel dimmer (white-label of Tuya TS110E_1gang_2) |
 | [QS-Zigbee-S04-2C-LN](lonsonho/qs-zigbee-s04-2c-ln.md) | Lonsonho 2 gang switch module with neutral wire |
-| [QS-Zigbee-S05-L](tuya/ts0011.md) | Lonsonho 1 gang smart switch module without neutral wire (white-label of TuYa TS0011) |
+| [QS-Zigbee-S05-L](tuya/ts0011.md) | Lonsonho 1 gang smart switch module without neutral wire (white-label of Tuya TS0011) |
 | [QS-Zigbee-S05-LN](lonsonho/qs-zigbee-s05-ln.md) | Lonsonho 1 gang switch module with neutral wire |
-| [TS0041](tuya/ts0041.md) | Lonsonho Wireless switch with 1 button (white-label of TuYa TS0041) |
-| [TS0042](tuya/ts0042.md) | Lonsonho Wireless switch with 2 buttons (white-label of TuYa TS0042) |
-| [TS0043](tuya/ts0043.md) | Lonsonho Wireless switch with 3 buttons (white-label of TuYa TS0043) |
-| [TS0044](tuya/ts0044.md) | Lonsonho Wireless switch with 4 buttons (white-label of TuYa TS0044) |
+| [TS0041](tuya/ts0041.md) | Lonsonho Wireless switch with 1 button (white-label of Tuya TS0041) |
+| [TS0042](tuya/ts0042.md) | Lonsonho Wireless switch with 2 buttons (white-label of Tuya TS0042) |
+| [TS0043](tuya/ts0043.md) | Lonsonho Wireless switch with 3 buttons (white-label of Tuya TS0043) |
+| [TS0044](tuya/ts0044.md) | Lonsonho Wireless switch with 4 buttons (white-label of Tuya TS0044) |
 | [TS130F_dual](lonsonho/ts130f_dual.md) | Lonsonho Dual curtain/blind module |
 | [VM-Zigbee-S02-0-10V](lonsonho/vm-zigbee-s02-0-10v.md) | Lonsonho 2 channel Zigbee 0-10V dimmer module |
-| [X701](tuya/ts0001.md) | Lonsonho 1 gang switch (white-label of TuYa TS0001) |
-| [X702](tuya/ts0002.md) | Lonsonho 2 gang switch (white-label of TuYa TS0002) |
-| [X702A](tuya/ts0002_switch_module_3.md) | Lonsonho 2 gang switch with backlight (white-label of TuYa TS0002_switch_module_3) |
-| [X703A](tuya/ts0003_switch_3_gang_with_backlight.md) | Lonsonho 3 Gang switch with backlight (white-label of TuYa TS0003_switch_3_gang_with_backlight) |
+| [X701](tuya/ts0001.md) | Lonsonho 1 gang switch (white-label of Tuya TS0001) |
+| [X702](tuya/ts0002.md) | Lonsonho 2 gang switch (white-label of Tuya TS0002) |
+| [X702A](tuya/ts0002_switch_module_3.md) | Lonsonho 2 gang switch with backlight (white-label of Tuya TS0002_switch_module_3) |
+| [X703A](tuya/ts0003_switch_3_gang_with_backlight.md) | Lonsonho 3 Gang switch with backlight (white-label of Tuya TS0003_switch_3_gang_with_backlight) |
 | [X711A](lonsonho/x711a.md) | Lonsonho 1 gang switch |
 | [X712A](lonsonho/x712a.md) | Lonsonho 2 gang switch |
 | [X713A](lonsonho/x713a.md) | Lonsonho 3 gang switch |
@@ -3533,13 +3558,13 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [GDC311ZBQ1](tuya/gdc311zbq1.md) | LoraTap LoraTap garage door opener with wireless sensor (white-label of TuYa GDC311ZBQ1) |
-| [RR400ZB](tuya/ts011f_socket_module.md) | LoraTap Socket module (white-label of TuYa TS011F_socket_module) |
-| [SC400](tuya/ts130f.md) | LoraTap Curtain/blind switch (white-label of TuYa TS130F) |
-| [SP400ZB](tuya/ts011f_socket_module.md) | LoraTap Socket module (white-label of TuYa TS011F_socket_module) |
-| [SS600ZB](tuya/ts0043.md) | LoraTap Wireless switch with 3 buttons (white-label of TuYa TS0043) |
-| [SS6400ZB](tuya/ts0044.md) | LoraTap Wireless switch with 4 buttons (white-label of TuYa TS0044) |
-| [SS9600ZB](tuya/ts0046.md) | LoraTap Wireless switch with 6 buttons (white-label of TuYa TS0046) |
+| [GDC311ZBQ1](tuya/gdc311zbq1.md) | LoraTap LoraTap garage door opener with wireless sensor (white-label of Tuya GDC311ZBQ1) |
+| [RR400ZB](tuya/ts011f_socket_module.md) | LoraTap Socket module (white-label of Tuya TS011F_socket_module) |
+| [SC400](tuya/ts130f.md) | LoraTap Curtain/blind switch (white-label of Tuya TS130F) |
+| [SP400ZB](tuya/ts011f_socket_module.md) | LoraTap Socket module (white-label of Tuya TS011F_socket_module) |
+| [SS600ZB](tuya/ts0043.md) | LoraTap Wireless switch with 3 buttons (white-label of Tuya TS0043) |
+| [SS6400ZB](tuya/ts0044.md) | LoraTap Wireless switch with 4 buttons (white-label of Tuya TS0044) |
+| [SS9600ZB](tuya/ts0046.md) | LoraTap Wireless switch with 6 buttons (white-label of Tuya TS0046) |
 
 
 # LS Deutschland GmbH {#ls_deutschland_gmbh}
@@ -3553,8 +3578,9 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [TY-12-100-400-W1Z](tuya/ts0601_light.md) | Ltech 12W 100-400mA Zigbee CC Dimmable LED driver (white-label of TuYa TS0601_light) |
-| [TY-75-24-G2Z2](tuya/ts0601_light.md) | Ltech 150W 24V Zigbee CV tunable white LED driver (white-label of TuYa TS0601_light) |
+| [SE-20-250-1000-W2Z2](skydance/wz5_cct.md) | Ltech LED (CCT mode) (white-label of Skydance WZ5_cct) |
+| [TY-12-100-400-W1Z](tuya/ts0601_light.md) | Ltech 12W 100-400mA Zigbee CC Dimmable LED driver (white-label of Tuya TS0601_light) |
+| [TY-75-24-G2Z2](tuya/ts0601_light.md) | Ltech 150W 24V Zigbee CV tunable white LED driver (white-label of Tuya TS0601_light) |
 | [TY-75-24-G2Z2_CCT](skydance/wz5_cct.md) | Ltech 150W 24V Zigbee CV tunable white LED driver (white-label of Skydance WZ5_cct) |
 
 
@@ -3569,8 +3595,8 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [ZX-5232](tuya/ts0203.md) | Luminea Smart door and window sensor (white-label of TuYa TS0203) |
-| [ZX-5311](tuya/ts0202.md) | Luminea Motion sensor (white-label of TuYa TS0202) |
+| [ZX-5232](tuya/ts0203.md) | Luminea Smart door and window sensor (white-label of Tuya TS0203) |
+| [ZX-5311](tuya/ts0202.md) | Luminea Motion sensor (white-label of Tuya TS0202) |
 
 
 # Lupus {#lupus}
@@ -3626,14 +3652,14 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [MG-AUZG01](makegood/mg-auzg01.md) | MakeGood Double Zigbee power point |
-| [MG-ZG04W/B/G](tuya/ts0014.md) | MakeGood Smart light switch - 4 gang without neutral wire (white-label of TuYa TS0014) |
+| [MG-ZG04W/B/G](tuya/ts0014.md) | MakeGood Smart light switch - 4 gang without neutral wire (white-label of Tuya TS0014) |
 
 
 # Marmitek {#marmitek}
 
 | Model | Description |
 | ----- | ----------- |
-| [SM0202_1](tuya/sm0202.md) | Marmitek Motion sensor (white-label of TuYa SM0202) |
+| [SM0202_1](tuya/sm0202.md) | Marmitek Motion sensor (white-label of Tuya SM0202) |
 
 
 # Matcall {#matcall}
@@ -3648,11 +3674,11 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [ATMS1602Z](tuya/ts011f_din_smart_relay.md) | MatSee Plus Din smart relay (with power monitoring) (white-label of TuYa TS011F_din_smart_relay) |
-| [DAC2161C](tuya/ts0601_din_2.md) | MatSee Plus Smart Zigbee energy meter 80A din rail (white-label of TuYa TS0601_din_2) |
-| [PC321-Z-TY](tuya/ts0601_3_phase_clamp_meter.md) | MatSee Plus 3-phase clamp power meter (white-label of TuYa TS0601_3_phase_clamp_meter) |
-| [PJ-ZGD01](tuya/pj-zgd01.md) | MatSee Plus Garage door opener (white-label of TuYa PJ-ZGD01) |
-| [PJ-ZSW01](tuya/ts011f_plug_1.md) | MatSee Plus Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
+| [ATMS1602Z](tuya/ts011f_din_smart_relay.md) | MatSee Plus Din smart relay (with power monitoring) (white-label of Tuya TS011F_din_smart_relay) |
+| [DAC2161C](tuya/ts0601_din_2.md) | MatSee Plus Smart Zigbee energy meter 80A din rail (white-label of Tuya TS0601_din_2) |
+| [PC321-Z-TY](tuya/ts0601_3_phase_clamp_meter.md) | MatSee Plus 3-phase clamp power meter (white-label of Tuya TS0601_3_phase_clamp_meter) |
+| [PJ-ZGD01](tuya/pj-zgd01.md) | MatSee Plus Garage door opener (white-label of Tuya PJ-ZGD01) |
+| [PJ-ZSW01](tuya/ts011f_plug_1.md) | MatSee Plus Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
 
 
 # Meazon {#meazon}
@@ -3667,63 +3693,64 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [SW02](tuya/ts0207_water_leak_detector.md) | Meian Water leak sensor (white-label of TuYa TS0207_water_leak_detector) |
+| [SW02](tuya/ts0207_water_leak_detector.md) | Meian Water leak sensor (white-label of Tuya TS0207_water_leak_detector) |
 
 
 # Mercator Ikuü {#mercator_ikuu}
 
 | Model | Description |
 | ----- | ----------- |
-| [S9E27LED9W-RGB-Z](tuya/ts0505b_1.md) | Mercator Ikuü Zigbee RGB+CCT light (white-label of TuYa TS0505B_1) |
-| [SISW01](tuya/ts0101.md) | Mercator Ikuü Inline Switch (white-label of TuYa TS0101) |
+| [S9E27LED9W-RGB-Z](tuya/ts0505b_1.md) | Mercator Ikuü Zigbee RGB+CCT light (white-label of Tuya TS0505B_1) |
+| [SISW01](tuya/ts0101.md) | Mercator Ikuü Inline Switch (white-label of Tuya TS0101) |
 | [SMA02P](mercator_ikuu/sma02p.md) | Mercator Ikuü Motion detector |
-| [SMA02P](tuya/ts0202.md) | Mercator Ikuü Motion sensor (white-label of TuYa TS0202) |
+| [SMA02P](tuya/ts0202.md) | Mercator Ikuü Motion sensor (white-label of Tuya TS0202) |
 | [SMA03P](mercator_ikuu/sma03p.md) | Mercator Ikuü Environmental sensor |
 | [SMA04P](mercator_ikuu/sma04p.md) | Mercator Ikuü Contact sensor |
 | [SMCL01-ZB](mercator_ikuu/smcl01-zb.md) | Mercator Ikuü Ikon ceiling light |
-| [SMD4106W-RGB-ZB](tuya/ts0505b_1.md) | Mercator Ikuü Zigbee RGB+CCT light (white-label of TuYa TS0505B_1) |
+| [SMD4106W-RGB-ZB](tuya/ts0505b_1.md) | Mercator Ikuü Zigbee RGB+CCT light (white-label of Tuya TS0505B_1) |
 | [SMD4109W-RGB-ZB](mercator_ikuu/smd4109w-rgb-zb.md) | Mercator Ikuü 92mm Walter downlight RGB + CCT |
-| [SMD9300](tuya/ts0502b.md) | Mercator Ikuü Donovan Panel Light (white-label of TuYa TS0502B) |
-| [SMFL20W-ZB](tuya/ts0501b.md) | Mercator Ikuü Ridley Floodlight (white-label of TuYa TS0501B) |
-| [SMI7040](tuya/ts0502b.md) | Mercator Ikuü Ford Batten Light (white-label of TuYa TS0502B) |
-| [SPBS01G](tuya/ts0101.md) | Mercator Ikuü Zigbee Socket (white-label of TuYa TS0101) |
+| [SMD9300](tuya/ts0502b.md) | Mercator Ikuü Donovan Panel Light (white-label of Tuya TS0502B) |
+| [SMFL20W-ZB](tuya/ts0501b.md) | Mercator Ikuü Ridley Floodlight (white-label of Tuya TS0501B) |
+| [SMI7040](tuya/ts0502b.md) | Mercator Ikuü Ford Batten Light (white-label of Tuya TS0502B) |
+| [SPBS01G](tuya/ts0101.md) | Mercator Ikuü Zigbee Socket (white-label of Tuya TS0101) |
 | [SPP02G](mercator_ikuu/spp02g.md) | Mercator Ikuü Double power point |
 | [SPP02GIP](mercator_ikuu/spp02gip.md) | Mercator Ikuü Double power point IP54 |
 | [SPP04G](mercator_ikuu/spp04g.md) | Mercator Ikuü Quad power point |
 | [SPPUSB02](mercator_ikuu/sppusb02.md) | Mercator Ikuü Double power point with USB |
-| [SSW01](tuya/ts0011.md) | Mercator Ikuü Smart light switch - 1 gang (white-label of TuYa TS0011) |
-| [SSW02](tuya/ts0002.md) | Mercator Ikuü 2 gang switch (white-label of TuYa TS0002) |
+| [SSW01](tuya/ts0011.md) | Mercator Ikuü Smart light switch - 1 gang (white-label of Tuya TS0011) |
+| [SSW02](tuya/ts0002.md) | Mercator Ikuü 2 gang switch (white-label of Tuya TS0002) |
 | [SSW03G](mercator_ikuu/ssw03g.md) | Mercator Ikuü Triple switch |
-| [SSW04](tuya/ts0014.md) | Mercator Ikuü Smart light switch - 4 gang without neutral wire (white-label of TuYa TS0014) |
-| [SSW06G](tuya/ts0601_switch_6_gang.md) | Mercator Ikuü 6 Gang switch (white-label of TuYa TS0601_switch_6_gang) |
-| [SSWD01](tuya/ts0601_dimmer_1.md) | Mercator Ikuü 1 gang smart dimmer (white-label of TuYa TS0601_dimmer_1) |
+| [SSW04](tuya/ts0014.md) | Mercator Ikuü Smart light switch - 4 gang without neutral wire (white-label of Tuya TS0014) |
+| [SSW06G](tuya/ts0601_switch_6_gang.md) | Mercator Ikuü 6 Gang switch (white-label of Tuya TS0601_switch_6_gang) |
+| [SSWD01](tuya/ts0601_dimmer_1_gang_1.md) | Mercator Ikuü 1 gang smart dimmer (white-label of Tuya TS0601_dimmer_1_gang_1) |
 | [SSWF01G](mercator_ikuu/sswf01g.md) | Mercator Ikuü AC fan controller |
-| [SSWM-DIMZ](tuya/ts0601_dimmer_1.md) | Mercator Ikuü Switch Mechanism (white-label of TuYa TS0601_dimmer_1) |
-| [SSWRM-ZB](tuya/ts0601_dimmer_1.md) | Mercator Ikuü Rotary dimmer mechanism (white-label of TuYa TS0601_dimmer_1) |
+| [SSWM-DIMZ](tuya/ts0601_dimmer_1_gang_1.md) | Mercator Ikuü Switch Mechanism (white-label of Tuya TS0601_dimmer_1_gang_1) |
+| [SSWRM-ZB](tuya/ts0601_dimmer_1_gang_1.md) | Mercator Ikuü Rotary dimmer mechanism (white-label of Tuya TS0601_dimmer_1_gang_1) |
 
 
 # MHCOZY {#mhcozy}
 
 | Model | Description |
 | ----- | ----------- |
-| [TYWB 4ch-RF](tuya/ts0004.md) | MHCOZY 4 channel relay (white-label of TuYa TS0004) |
+| [TYWB 4ch-RF](tuya/ts0004.md) | MHCOZY 4 channel relay (white-label of Tuya TS0004) |
 
 
 # MiBoxer {#miboxer}
 
 | Model | Description |
 | ----- | ----------- |
-| [FUT035Z+](tuya/ts0502b.md) | MiBoxer Dual white LED controller (white-label of TuYa TS0502B) |
-| [FUT036Z](tuya/ts0501b.md) | MiBoxer Single color LED controller (white-label of TuYa TS0501B) |
-| [FUT037Z](tuya/ts0503b.md) | MiBoxer RGB led controller (white-label of TuYa TS0503B) |
-| [FUT037Z+](tuya/ts0505b_1.md) | MiBoxer RGB led controller (white-label of TuYa TS0505B_1) |
+| [E2-ZR](tuya/ts0505b_1.md) | MiBoxer 2 in 1 led controller (white-label of Tuya TS0505B_1) |
+| [FUT035Z+](tuya/ts0502b.md) | MiBoxer Dual white LED controller (white-label of Tuya TS0502B) |
+| [FUT036Z](tuya/ts0501b.md) | MiBoxer Single color LED controller (white-label of Tuya TS0501B) |
+| [FUT037Z](tuya/ts0503b.md) | MiBoxer RGB led controller (white-label of Tuya TS0503B) |
+| [FUT037Z+](tuya/ts0505b_1.md) | MiBoxer RGB led controller (white-label of Tuya TS0505B_1) |
 | [FUT038Z](miboxer/fut038z.md) | MiBoxer RGBW LED controller |
-| [FUT039Z](tuya/ts0505b_1.md) | MiBoxer RGB+CCT LED controller (white-label of TuYa TS0505B_1) |
-| [FUT066Z](tuya/ts0505b_1.md) | MiBoxer RGB+CCT LED Downlight (white-label of TuYa TS0505B_1) |
+| [FUT039Z](tuya/ts0505b_1.md) | MiBoxer RGB+CCT LED controller (white-label of Tuya TS0505B_1) |
+| [FUT066Z](tuya/ts0505b_1.md) | MiBoxer RGB+CCT LED Downlight (white-label of Tuya TS0505B_1) |
 | [FUT089Z](miboxer/fut089z.md) | MiBoxer RGB+CCT Remote |
-| [FUT106ZR](tuya/ts0505b_1.md) | MiBoxer GU10 bulb (white-label of TuYa TS0505B_1) |
-| [FUTC11ZR](tuya/ts0505b_1.md) | MiBoxer Outdoor light (white-label of TuYa TS0505B_1) |
-| [PIR1-ZB](tuya/ts0202.md) | MiBoxer PIR sensor (white-label of TuYa TS0202) |
+| [FUT106ZR](tuya/ts0505b_1.md) | MiBoxer GU10 bulb (white-label of Tuya TS0505B_1) |
+| [FUTC11ZR](tuya/ts0505b_1.md) | MiBoxer Outdoor light (white-label of Tuya TS0505B_1) |
+| [PIR1-ZB](tuya/ts0202.md) | MiBoxer PIR sensor (white-label of Tuya TS0202) |
 
 
 # Micro Matic Norge AS {#micro_matic_norge_as}
@@ -3737,15 +3764,15 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [M11Z](tuya/ts011f_switch_5_gang.md) | Milfra 2 gang 2 usb 1 wall ac outlet (white-label of TuYa TS011F_switch_5_gang) |
+| [M11Z](tuya/ts011f_switch_5_gang.md) | Milfra 2 gang 2 usb 1 wall ac outlet (white-label of Tuya TS011F_switch_5_gang) |
 
 
 # MODEMIX {#modemix}
 
 | Model | Description |
 | ----- | ----------- |
-| [MOD037](tuya/ts011f_plug_1.md) | MODEMIX Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
-| [MOD048](tuya/ts011f_plug_1.md) | MODEMIX Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
+| [MOD037](tuya/ts011f_plug_1.md) | MODEMIX Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
+| [MOD048](tuya/ts011f_plug_1.md) | MODEMIX Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
 
 
 # Modular {#modular}
@@ -3759,59 +3786,59 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [AM43-0.45/40-ES-EB](tuya/ts0601_cover_4.md) | Moes Roller blind/shades drive motor (white-label of TuYa TS0601_cover_4) |
+| [AM43-0.45/40-ES-EB](tuya/ts0601_cover_4.md) | Moes Roller blind/shades drive motor (white-label of Tuya TS0601_cover_4) |
 | [BHT-002-GCLZB](moes/bht-002-gclzb.md) | Moes Moes BHT series Thermostat |
 | [BHT-002/BHT-006](moes/bht-002-gclzb.md) | Moes Smart heating thermostat (white-label of Moes BHT-002-GCLZB) |
 | [BRT-100-TRV](moes/brt-100-trv.md) | Moes Thermostatic radiator valve |
-| [EDM-1ZBB-EU](tuya/ts0601_dimmer_1.md) | Moes 1 gang smart dimmer (white-label of TuYa TS0601_dimmer_1) |
+| [EDM-1ZBB-EU](tuya/ts0601_dimmer_1_gang_1.md) | Moes 1 gang smart dimmer (white-label of Tuya TS0601_dimmer_1_gang_1) |
 | [ERS-10TZBVB-AA](moes/ers-10tzbvb-aa.md) | Moes Smart button |
-| [HY368](tuya/ts0601_thermostat.md) | Moes Radiator valve with thermostat (white-label of TuYa TS0601_thermostat) |
-| [HY369RT](tuya/ts0601_thermostat.md) | Moes Radiator valve with thermostat (white-label of TuYa TS0601_thermostat) |
-| [MOES_plug](tuya/ts011f_plug_1.md) | Moes Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
+| [HY368](tuya/ts0601_thermostat.md) | Moes Radiator valve with thermostat (white-label of Tuya TS0601_thermostat) |
+| [HY369RT](tuya/ts0601_thermostat.md) | Moes Radiator valve with thermostat (white-label of Tuya TS0601_thermostat) |
+| [MOES_plug](tuya/ts011f_plug_1.md) | Moes Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
 | [MS-104BZ](moes/ms-104bz.md) | Moes Smart light switch module (2 gang) |
 | [MS-104Z](moes/ms-104z.md) | Moes Smart light switch module (1 gang) |
-| [MS-105-M](tuya/ts0601_dimmer_5.md) | Moes 1 gang smart dimmer module (white-label of TuYa TS0601_dimmer_5) |
-| [MS-105B](tuya/ts0601_dimmer_2.md) | Moes 2 gang smart dimmer (white-label of TuYa TS0601_dimmer_2) |
-| [MS-105B-M](tuya/ts0601_dimmer_4.md) | Moes 2 gang smart dimmer module (white-label of TuYa TS0601_dimmer_4) |
-| [MS-105Z](tuya/ts0601_dimmer_1.md) | Moes Smart Dimmer module (white-label of TuYa TS0601_dimmer_1) |
-| [MS-108ZR](moes/ms-108zr.md) | Moes Zigbee + RF curtain switch module |
+| [MS-105-M](tuya/ts0601_dimmer_5.md) | Moes 1 gang smart dimmer module (white-label of Tuya TS0601_dimmer_5) |
+| [MS-105B](tuya/ts0601_dimmer_2.md) | Moes 2 gang smart dimmer (white-label of Tuya TS0601_dimmer_2) |
+| [MS-105B-M](tuya/ts0601_dimmer_4.md) | Moes 2 gang smart dimmer module (white-label of Tuya TS0601_dimmer_4) |
+| [MS-105Z](tuya/ts0601_dimmer_1_gang_1.md) | Moes Smart Dimmer module (white-label of Tuya TS0601_dimmer_1_gang_1) |
+| [MS-108ZR](tuya/ts130f.md) | Moes Zigbee + RF curtain switch module (white-label of Tuya TS130F) |
 | [SR-ZS](moes/sr-zs.md) | Moes Smart switch (light + sence) |
-| [TV01-ZB](tuya/tv02-zigbee.md) | Moes Thermostat radiator valve (white-label of TuYa TV02-Zigbee) |
-| [TV01-ZB](tuya/tv02-zigbee.md) | Moes Thermostat radiator valve (white-label of TuYa TV02-Zigbee) |
+| [TV01-ZB](tuya/tv02-zigbee.md) | Moes Thermostat radiator valve (white-label of Tuya TV02-Zigbee) |
+| [TV01-ZB](tuya/tv02-zigbee.md) | Moes Thermostat radiator valve (white-label of Tuya TV02-Zigbee) |
 | [UFO-R11](moes/ufo-r11.md) | Moes Universal smart IR remote control |
-| [WS-EUB1-ZG](tuya/ts0601_switch_4_gang_1.md) | Moes 4 gang switch (white-label of TuYa TS0601_switch_4_gang_1) |
-| [WS-EUB1-ZG](tuya/ts0601_switch.md) | Moes 1, 2, 3 or 4 gang switch (white-label of TuYa TS0601_switch) |
-| [WS-SY-EURD](tuya/ts0601_dimmer_knob.md) | Moes Zigbee smart knob dimmer (white-label of TuYa TS0601_dimmer_knob) |
-| [WS-SY-EURD-WH-MS](tuya/ts0601_dimmer_knob.md) | Moes Zigbee smart knob dimmer (white-label of TuYa TS0601_dimmer_knob) |
-| [ZB-LZD10-RCW](tuya/ts0505b_1.md) | Moes 10W RGB+CCT Smart Downlight (white-label of TuYa TS0505B_1) |
-| [ZB-TD5-RCW-GU10](tuya/ts0505b_1.md) | Moes RGB+CCT 4.7W GU10 LED bulb (white-label of TuYa TS0505B_1) |
-| [ZB-TDA9-RCW-E27-MS](tuya/ts0505b_1.md) | Moes RGB+CCT 9W E27 LED bulb (white-label of TuYa TS0505B_1) |
+| [WS-EUB1-ZG](tuya/ts0601_switch_4_gang_1.md) | Moes 4 gang switch (white-label of Tuya TS0601_switch_4_gang_1) |
+| [WS-EUB1-ZG](tuya/ts0601_switch.md) | Moes 1, 2, 3 or 4 gang switch (white-label of Tuya TS0601_switch) |
+| [WS-SY-EURD](tuya/ts0601_dimmer_knob.md) | Moes Zigbee smart knob dimmer (white-label of Tuya TS0601_dimmer_knob) |
+| [WS-SY-EURD-WH-MS](tuya/ts0601_dimmer_knob.md) | Moes Zigbee smart knob dimmer (white-label of Tuya TS0601_dimmer_knob) |
+| [ZB-LZD10-RCW](tuya/ts0505b_1.md) | Moes 10W RGB+CCT Smart Downlight (white-label of Tuya TS0505B_1) |
+| [ZB-TD5-RCW-GU10](tuya/ts0505b_1.md) | Moes RGB+CCT 4.7W GU10 LED bulb (white-label of Tuya TS0505B_1) |
+| [ZB-TDA9-RCW-E27-MS](tuya/ts0505b_1.md) | Moes RGB+CCT 9W E27 LED bulb (white-label of Tuya TS0505B_1) |
 | [ZC-HM](moes/zc-hm.md) | Moes Carbon monoxide alarm |
 | [ZK-CH-2U](nue_3a/hgzb-01.md) | Moes Plug with 2 USB ports (white-label of Nue / 3A HGZB-01) |
-| [ZK-EU](tuya/ts011f_plug_1.md) | Moes Smart wallsocket (with power monitoring) (white-label of TuYa TS011F_plug_1) |
+| [ZK-EU](tuya/ts011f_plug_1.md) | Moes Smart wallsocket (with power monitoring) (white-label of Tuya TS011F_plug_1) |
 | [ZK-EU-2U](moes/zk-eu-2u.md) | Moes Zigbee 3.0 dual USB wireless socket plug |
-| [ZLD-RCW_1](tuya/ts0505b_1.md) | Moes RGB+CCT Zigbee LED controller (white-label of TuYa TS0505B_1) |
-| [ZM-104-M](tuya/ts0001_switch_module.md) | Moes 1 gang switch module (white-label of TuYa TS0001_switch_module) |
-| [ZM-104B-M](tuya/ts0002_switch_module.md) | Moes 2 gang switch module (white-label of TuYa TS0002_switch_module) |
+| [ZLD-RCW_1](tuya/ts0505b_1.md) | Moes RGB+CCT Zigbee LED controller (white-label of Tuya TS0505B_1) |
+| [ZM-104-M](tuya/ts0001_switch_module.md) | Moes 1 gang switch module (white-label of Tuya TS0001_switch_module) |
+| [ZM-104B-M](tuya/ts0002_switch_module.md) | Moes 2 gang switch module (white-label of Tuya TS0002_switch_module) |
 | [ZP-LZ-FR2U](moes/zp-lz-fr2u.md) | Moes Zigbee 3.0 dual USB wireless socket plug |
 | [ZS-EUB_1gang](moes/zs-eub_1gang.md) | Moes Wall light switch (1 gang) |
-| [ZS-EUB_2gang](tuya/ts0012.md) | Moes Smart light switch - 2 gang (white-label of TuYa TS0012) |
-| [ZS-EUD_1gang](tuya/ts0601_dimmer_1.md) | Moes 1 gang smart dimmer (white-label of TuYa TS0601_dimmer_1) |
-| [ZS-EUD_2gang](tuya/ts0601_dimmer_2.md) | Moes 2 gang smart dimmer (white-label of TuYa TS0601_dimmer_2) |
-| [ZS-EUD_3gang](tuya/ts0601_dimmer_3.md) | Moes 3 gang smart dimmer (white-label of TuYa TS0601_dimmer_3) |
+| [ZS-EUB_2gang](tuya/ts0012.md) | Moes Smart light switch - 2 gang (white-label of Tuya TS0012) |
+| [ZS-EUD_1gang](tuya/ts0601_dimmer_1_gang_1.md) | Moes 1 gang smart dimmer (white-label of Tuya TS0601_dimmer_1_gang_1) |
+| [ZS-EUD_2gang](tuya/ts0601_dimmer_2.md) | Moes 2 gang smart dimmer (white-label of Tuya TS0601_dimmer_2) |
+| [ZS-EUD_3gang](tuya/ts0601_dimmer_3.md) | Moes 3 gang smart dimmer (white-label of Tuya TS0601_dimmer_3) |
 | [ZS-SR-EUC](moes/zs-sr-euc.md) | Moes Star ring - smart curtain switch |
-| [ZS-SR-EUD-1](tuya/ts0601_dimmer_1.md) | Moes Star ring smart dimmer switch 1 gang (white-label of TuYa TS0601_dimmer_1) |
-| [ZS-SR-EUD-2](tuya/ts0601_dimmer_2.md) | Moes Star ring smart dimmer switch 2 gangs (white-label of TuYa TS0601_dimmer_2) |
-| [ZS-SR-EUD-3](tuya/ts0601_dimmer_3.md) | Moes Star ring smart dimmer switch 3 gangs (white-label of TuYa TS0601_dimmer_3) |
-| [ZS-US2-BK-MS](tuya/ts0012.md) | Moes Smart light switch - 2 gang (white-label of TuYa TS0012) |
-| [ZS-USD](tuya/ts0601_dimmer_1.md) | Moes 1 gang smart dimmer (white-label of TuYa TS0601_dimmer_1) |
+| [ZS-SR-EUD-1](tuya/ts0601_dimmer_1_gang_1.md) | Moes Star ring smart dimmer switch 1 gang (white-label of Tuya TS0601_dimmer_1_gang_1) |
+| [ZS-SR-EUD-2](tuya/ts0601_dimmer_2.md) | Moes Star ring smart dimmer switch 2 gangs (white-label of Tuya TS0601_dimmer_2) |
+| [ZS-SR-EUD-3](tuya/ts0601_dimmer_3.md) | Moes Star ring smart dimmer switch 3 gangs (white-label of Tuya TS0601_dimmer_3) |
+| [ZS-US2-BK-MS](tuya/ts0012.md) | Moes Smart light switch - 2 gang (white-label of Tuya TS0012) |
+| [ZS-USD](tuya/ts0601_dimmer_1_gang_1.md) | Moes 1 gang smart dimmer (white-label of Tuya TS0601_dimmer_1_gang_1) |
 | [ZSS-HM-SSD01](moes/zss-hm-ssd01.md) | Moes Smoke sensor |
-| [ZSS-JM-GWM-C-MS](tuya/ts0203.md) | Moes Smart door and window sensor (white-label of TuYa TS0203) |
-| [ZSS-X-GWM-C](tuya/ts0203.md) | Moes Door/window magnetic sensor (white-label of TuYa TS0203) |
+| [ZSS-JM-GWM-C-MS](tuya/ts0203.md) | Moes Smart door and window sensor (white-label of Tuya TS0203) |
+| [ZSS-X-GWM-C](tuya/ts0203.md) | Moes Door/window magnetic sensor (white-label of Tuya TS0203) |
 | [ZSS-ZK-THL](moes/zss-zk-thl.md) | Moes Smart temperature and humidity meter with display |
-| [ZT-SR-EU4](tuya/ts0044.md) | Moes Star Ring 4 Gang Scene Switch (white-label of TuYa TS0044) |
-| [ZT-SY-EU-G-4S-WH-MS](tuya/ts0044.md) | Moes Wireless switch with 4 buttons (white-label of TuYa TS0044) |
-| [ZTRV-ZX-TV01-MS](tuya/tv02-zigbee.md) | Moes Thermostat radiator valve (white-label of TuYa TV02-Zigbee) |
+| [ZT-SR-EU4](tuya/ts0044.md) | Moes Star Ring 4 Gang Scene Switch (white-label of Tuya TS0044) |
+| [ZT-SY-EU-G-4S-WH-MS](tuya/ts0044.md) | Moes Wireless switch with 4 buttons (white-label of Tuya TS0044) |
+| [ZTRV-ZX-TV01-MS](tuya/tv02-zigbee.md) | Moes Thermostat radiator valve (white-label of Tuya TV02-Zigbee) |
 | [ZTS-EU_1gang](moes/zts-eu_1gang.md) | Moes Wall touch light switch (1 gang) |
 | [ZTS-EU_2gang](moes/zts-eu_2gang.md) | Moes Wall touch light switch (2 gang) |
 | [ZTS-EU_3gang](moes/zts-eu_3gang.md) | Moes Wall touch light switch (3 gang) |
@@ -3855,14 +3882,16 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [ZJSB9-80Z](tuya/ts011f_1.md) | Mumubiz Switch (white-label of TuYa TS011F_1) |
+| [TYZGTH1CH-D1RF](mumubiz/tyzgth1ch-d1rf.md) | Mumubiz Smart switch with temperature/humidity sensor |
+| [TYZGTH4CH-D1RF](mumubiz/tyzgth4ch-d1rf.md) | Mumubiz 4 channel changeover contact with temperature and humidity sensing |
+| [ZJSB9-80Z](tuya/ts011f_1.md) | Mumubiz Switch (white-label of Tuya TS011F_1) |
 
 
 # Mycket {#mycket}
 
 | Model | Description |
 | ----- | ----------- |
-| [MS-SP-LE27WRGB](tuya/ts0505a.md) | Mycket E27 RGBW bulb (white-label of TuYa TS0505A) |
+| [MS-SP-LE27WRGB](tuya/ts0505a.md) | Mycket E27 RGBW bulb (white-label of Tuya TS0505A) |
 
 
 # Namron {#namron}
@@ -3894,6 +3923,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [4512719](namron/4512719.md) | Namron Zigbee 2 channel switch K4 (white) |
 | [4512721](namron/4512721.md) | Namron Zigbee 4 channel switch K8 (black) |
 | [4512726](namron/4512726.md) | Namron Zigbee 4 in 1 dimmer |
+| [4512727](enocean/ptm_215z.md) | Namron  ZigBee FOH Green Bryter K4 (white-label of EnOcean PTM 215Z) |
 | [4512728](namron/4512728.md) | Namron Zigbee 1 channel switch K2 (Black) |
 | [4512729](namron/4512729.md) | Namron Zigbee 2 channel switch K4 (black) |
 | [4512733](namron/4512733.md) | Namron ZigBee dimmer 2-pol 400W |
@@ -3934,9 +3964,10 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [ZBHTR10WT](siterwell/gs361a-h04.md) | Nedis Thermostatic Radiator Valve Controller (white-label of Siterwell GS361A-H04) |
-| [ZBLC1E14](tuya/ts0505b_1.md) | Nedis Zigbee RGB+CCT light (white-label of TuYa TS0505B_1) |
-| [ZBRC10WT](tuya/ts0215a_remote.md) | Nedis Security remote control (white-label of TuYa TS0215A_remote) |
-| [ZBSM10WT](tuya/rh3040.md) | Nedis PIR sensor (white-label of TuYa RH3040) |
+| [ZBLC1E14](tuya/ts0505b_1.md) | Nedis Zigbee RGB+CCT light (white-label of Tuya TS0505B_1) |
+| [ZBRC10WT](tuya/ts0215a_remote.md) | Nedis Security remote control (white-label of Tuya TS0215A_remote) |
+| [ZBSM10WT](tuya/rh3040.md) | Nedis PIR sensor (white-label of Tuya RH3040) |
+| [ZBSM10WT](tuya/ts0202.md) | Nedis Motion sensor (white-label of Tuya TS0202) |
 
 
 # Neo {#neo}
@@ -3948,10 +3979,11 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [NAS-AB06B2](neo/nas-ab06b2.md) | Neo Outdoor solar alarm |
 | [NAS-PD07](neo/nas-pd07.md) | Neo Motion, temperature & humidity sensor |
 | [NAS-PS09B2](neo/nas-ps09b2.md) | Neo Human presence sensor |
-| [NAS-WR01B](tuya/ts011f_plug_3.md) | Neo Smart plug (with power monitoring by polling) (white-label of TuYa TS011F_plug_3) |
-| [NAS-WR01B](tuya/ts011f_plug_1.md) | Neo Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
-| [NAS-WS02B0](tuya/ts0601_water_sensor.md) | Neo Water leak sensor (white-label of TuYa TS0601_water_sensor) |
-| [PLUG-001SPB2](tuya/ts011f_plug_3.md) | Neo Smart plug (with power monitoring by polling) (white-label of TuYa TS011F_plug_3) |
+| [NAS-WR01B](tuya/ts011f_plug_3.md) | Neo Smart plug (with power monitoring by polling) (white-label of Tuya TS011F_plug_3) |
+| [NAS-WR01B](tuya/ts011f_plug_1.md) | Neo Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
+| [NAS-WS02B0](tuya/ts0601_water_sensor.md) | Neo Water leak sensor (white-label of Tuya TS0601_water_sensor) |
+| [NAS-WV03B](neo/nas-wv03b.md) | Neo Smart sprinkler timer |
+| [PLUG-001SPB2](tuya/ts011f_plug_3.md) | Neo Smart plug (with power monitoring by polling) (white-label of Tuya TS011F_plug_3) |
 
 
 # NET2GRID {#net2grid}
@@ -3980,10 +4012,10 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [ORBIS Motion Sensor](tuya/ts0202.md) | Niceboy Motion sensor (white-label of TuYa TS0202) |
-| [ORBIS Vibration Sensor](tuya/ts0210.md) | Niceboy Vibration sensor (white-label of TuYa TS0210) |
-| [ORBIS Water Sensor](tuya/ts0207_water_leak_detector.md) | Niceboy Water leak sensor (white-label of TuYa TS0207_water_leak_detector) |
-| [ORBIS Windows & Door Sensor](tuya/ts0203.md) | Niceboy Door sensor (white-label of TuYa TS0203) |
+| [ORBIS Motion Sensor](tuya/ts0202.md) | Niceboy Motion sensor (white-label of Tuya TS0202) |
+| [ORBIS Vibration Sensor](tuya/ts0210.md) | Niceboy Vibration sensor (white-label of Tuya TS0210) |
+| [ORBIS Water Sensor](tuya/ts0207_water_leak_detector.md) | Niceboy Water leak sensor (white-label of Tuya TS0207_water_leak_detector) |
+| [ORBIS Windows & Door Sensor](tuya/ts0203.md) | Niceboy Door sensor (white-label of Tuya TS0203) |
 
 
 # Niko {#niko}
@@ -4050,27 +4082,31 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [MKS-CM-W5](tuya/ts0601_switch_4_gang_1.md) | Norklmes 4 gang switch (white-label of TuYa TS0601_switch_4_gang_1) |
-| [MKS-CM-W5](tuya/ts0601_switch.md) | Norklmes 1, 2, 3 or 4 gang switch (white-label of TuYa TS0601_switch) |
+| [MKS-CM-W5](tuya/ts0601_switch_4_gang_1.md) | Norklmes 4 gang switch (white-label of Tuya TS0601_switch_4_gang_1) |
+| [MKS-CM-W5](tuya/ts0601_switch.md) | Norklmes 1, 2, 3 or 4 gang switch (white-label of Tuya TS0601_switch) |
 
 
 # Nous {#nous}
 
 | Model | Description |
 | ----- | ----------- |
-| [A1Z](tuya/ts011f_plug_1.md) | Nous Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
-| [A1Z](tuya/ts011f_plug_1.md) | Nous Smart plug (with power monitoring) (white-label of TuYa TS011F_plug_1) |
-| [A4Z](tuya/ts011f_4.md) | Nous 2 gang outdoor plug (white-label of TuYa TS011F_4) |
-| [B2Z](tuya/ts0001_power.md) | Nous 1 gang switch with power monitoring (white-label of TuYa TS0001_power) |
-| [B3Z](tuya/ts0002_power.md) | Nous 2 gang switch module with power monitoring (white-label of TuYa TS0002_power) |
-| [E2](tuya/ts0202.md) | Nous Motion sensor (white-label of TuYa TS0202) |
-| [E4](tuya/ts0207_water_leak_detector.md) | Nous Water Leakage Sensor) (white-label of TuYa TS0207_water_leak_detector) |
+| [A1Z](tuya/ts011f_plug_1.md) | Nous Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
+| [A1Z](tuya/ts011f_plug_1.md) | Nous Smart plug (with power monitoring) (white-label of Tuya TS011F_plug_1) |
+| [A4Z](tuya/ts011f_4.md) | Nous 2 gang outdoor plug (white-label of Tuya TS011F_4) |
+| [B2Z](tuya/ts0001_power.md) | Nous 1 gang switch with power monitoring (white-label of Tuya TS0001_power) |
+| [B3Z](tuya/ts0002_power.md) | Nous 2 gang switch module with power monitoring (white-label of Tuya TS0002_power) |
+| [B4Z](tuya/ts130f.md) | Nous Curtain switch (white-label of Tuya TS130F) |
+| [E2](tuya/ts0202.md) | Nous Motion sensor (white-label of Tuya TS0202) |
+| [E3](tuya/ts0203.md) | Nous Door sensor (white-label of Tuya TS0203) |
+| [E4](tuya/ts0207_water_leak_detector.md) | Nous Water Leakage Sensor) (white-label of Tuya TS0207_water_leak_detector) |
 | [E5](nous/e5.md) | Nous Temperature & humidity |
 | [E6](nous/e6.md) | Nous Temperature & humidity LCD sensor |
-| [L12Z](tuya/ts130f.md) | Nous Smart ZigBee Curtain Module L12Z (white-label of TuYa TS130F) |
-| [L13Z](tuya/ts0002_switch_module.md) | Nous 2 gang switch (white-label of TuYa TS0002_switch_module) |
-| [L6Z](tuya/ts0001_power.md) | Nous Switch with power monitoring (white-label of TuYa TS0001_power) |
-| [P3Z](tuya/ts0505b_1.md) | Nous Smart light bulb (white-label of TuYa TS0505B_1) |
+| [L12Z](tuya/ts130f.md) | Nous Smart ZigBee Curtain Module L12Z (white-label of Tuya TS130F) |
+| [L13Z](tuya/ts0002_switch_module.md) | Nous 2 gang switch (white-label of Tuya TS0002_switch_module) |
+| [L6Z](tuya/ts0001_power.md) | Nous Switch with power monitoring (white-label of Tuya TS0001_power) |
+| [LZ3](tuya/zn231392.md) | Nous Smart water/gas valve (white-label of Tuya ZN231392) |
+| [LZ4](tuya/ts0041.md) | Nous Wireless switch button (white-label of Tuya TS0041) |
+| [P3Z](tuya/ts0505b_1.md) | Nous Smart light bulb (white-label of Tuya TS0505B_1) |
 | [SZ-T04](nous/sz-t04.md) | Nous Temperature and humidity sensor with clock |
 
 
@@ -4078,13 +4114,14 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [WS-US-ZB](tuya/ts0601_switch_3_gang.md) | NOVADIGITAL Interruptor touch Zigbee 3 Teclas (white-label of TuYa TS0601_switch_3_gang) |
+| [WS-US-ZB](tuya/ts0601_switch_3_gang.md) | NOVADIGITAL Interruptor touch Zigbee 3 Teclas (white-label of Tuya TS0601_switch_3_gang) |
 
 
 # Novato {#novato}
 
 | Model | Description |
 | ----- | ----------- |
+| [WPK](tuya/ts0601_cover_1.md) | Novato Smart curtain track (white-label of Tuya TS0601_cover_1) |
 | [ZPV-01](novato/zpv-01.md) | Novato Battery powered smart valve |
 
 
@@ -4121,6 +4158,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [HGZB-44](nue_3a/hgzb-44.md) | Nue / 3A Smart light switch - 4 gang v2.0 |
 | [HGZB-4S](nue_3a/hgzb-4s.md) | Nue / 3A Smart light switch - 4 gang v2.0 |
 | [HGZB-DLC4-N12B](nue_3a/hgzb-dlc4-n12b.md) | Nue / 3A RGB LED downlight |
+| [LXN56-TS27LX1.2](nue_3a/lxn56-ts27lx1_2.md) | Nue / 3A Smart double GPO |
 | [LXN59-2S7LX1.0](nue_3a/lxn59-2s7lx1_0.md) | Nue / 3A Smart light relay - 2 gang |
 | [LXZB-02A](nue_3a/lxzb-02a.md) | Nue / 3A Smart light controller |
 | [MG-AUWS01](nue_3a/mg-auws01.md) | Nue / 3A Smart Double GPO |
@@ -4277,6 +4315,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [PIR313-P](owon/pir313-p.md) | OWON Motion sensor |
 | [PIR323-PTH](owon/pir323-pth.md) | OWON Multi-sensor |
 | [SLC603](owon/slc603.md) | OWON Zigbee remote dimmer |
+| [SPM915](owon/spm915.md) | OWON Sleeping pad monitor |
 | [THS317](owon/ths317.md) | OWON Temperature and humidity sensor |
 | [THS317-ET](owon/ths317-et.md) | OWON Temperature sensor |
 | [THS317-ET-EY](owon/ths317-et-ey.md) | OWON Temperature sensor with probe |
@@ -4289,18 +4328,18 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [PC321-Z-TY](tuya/ts0601_3_phase_clamp_meter.md) | Owon 3-phase clamp power meter (white-label of TuYa TS0601_3_phase_clamp_meter) |
+| [PC321-Z-TY](tuya/ts0601_3_phase_clamp_meter.md) | Owon 3-phase clamp power meter (white-label of Tuya TS0601_3_phase_clamp_meter) |
 
 
 # OXT {#oxt}
 
 | Model | Description |
 | ----- | ----------- |
-| [SWTZ21](tuya/ts0001_switch_module.md) | OXT 1 gang switch module (white-label of TuYa TS0001_switch_module) |
-| [SWTZ22](tuya/ts0002_switch_module.md) | OXT 2 gang switch module (white-label of TuYa TS0002_switch_module) |
-| [SWTZ23](tuya/ts0003_switch_module_1.md) | OXT 3 gang switch module (white-label of TuYa TS0003_switch_module_1) |
-| [SWTZ25](tuya/ts1101_dimmer_module_2ch.md) | OXT Zigbee dimmer module 2 channel (white-label of TuYa TS1101_dimmer_module_2ch) |
-| [SWTZ27](tuya/ts0004_switch_module.md) | OXT 4 gang switch module (white-label of TuYa TS0004_switch_module) |
+| [SWTZ21](tuya/ts0001_switch_module.md) | OXT 1 gang switch module (white-label of Tuya TS0001_switch_module) |
+| [SWTZ22](tuya/ts0002_switch_module.md) | OXT 2 gang switch module (white-label of Tuya TS0002_switch_module) |
+| [SWTZ23](tuya/ts0003_switch_module_1.md) | OXT 3 gang switch module (white-label of Tuya TS0003_switch_module_1) |
+| [SWTZ25](tuya/ts1101_dimmer_module_2ch.md) | OXT Zigbee dimmer module 2 channel (white-label of Tuya TS1101_dimmer_module_2ch) |
+| [SWTZ27](tuya/ts0004_switch_module.md) | OXT 4 gang switch module (white-label of Tuya TS0004_switch_module) |
 
 
 # Oz Smart Things {#oz_smart_things}
@@ -4309,7 +4348,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | ----- | ----------- |
 | [DL41-03-10-R-ZB](oz_smart_things/dl41-03-10-r-zb.md) | Oz Smart Things Oz Smart RGBW Zigbee downlight 10w |
 | [WSP403](owon/wsp403.md) | Oz Smart Things Smart plug (white-label of OWON WSP403) |
-| [ZM85EL-1Z](tuya/ts0601_cover_1.md) | Oz Smart Things Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
+| [ZM85EL-1Z](tuya/ts0601_cover_1.md) | Oz Smart Things Curtain motor/roller blind motor/window pusher/tubular motor (white-label of Tuya TS0601_cover_1) |
 
 
 # Paul Neuhaus {#paul_neuhaus}
@@ -4367,7 +4406,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [RR620ZB](tuya/ts0002_switch_module.md) | pcblab.io 2 gang Zigbee switch module (white-label of TuYa TS0002_switch_module) |
+| [RR620ZB](tuya/ts0002_switch_module.md) | pcblab.io 2 gang Zigbee switch module (white-label of Tuya TS0002_switch_module) |
 
 
 # PEQ {#peq}
@@ -4615,6 +4654,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [8719514301542](philips/8719514301542.md) | Philips Hue Filament Globe XL Ambiance E27 |
 | [8719514302235](philips/8719514302235.md) | Philips Hue White Filament Bulb E14 |
 | [8719514328242](philips/8719514328242.md) | Philips Hue white ambiance E27 800lm with Bluetooth |
+| [8719514329843](philips/8719514329843.md) | Philips Hue A60 - E27 smart bulb - 800 lumen |
 | [8719514338142](philips/8719514338142.md) | Philips Hue White ambiance Runner double spotlight |
 | [8719514338487](philips/8719514338487.md) | Philips Hue white ambiance Pillar spotlight with Bluetooth (white) + dimmer switch |
 | [8719514338524](philips/8719514338524.md) | Philips Hue white ambiance Pillar spotlight with Bluetooth (black) |
@@ -4868,6 +4908,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [929003596101](philips/929003596101.md) | Philips Hue Filament Edison bulb ST64 550lm E26 |
 | [929003597601](philips/929003597601.md) | Philips Hue white ambiance Aurelle square panel light |
 | [929003597701](philips/929003597701.md) | Philips Hue white ambiance Aurelle square panel light 120x30 |
+| [929003597901](philips/929003597901.md) | Philips Hue white ambiance Aurelle round panel light |
 | [929003598001](philips/929003598001.md) | Philips Hue White & Color Ambiance Surimu square panel 30x30 |
 | [929003598101](philips/929003598101.md) | Philips Hue White & Color Ambiance Surimu round panel |
 | [929003621101](philips/929003621101.md) | Philips Hue White & Color ambience Centris ceiling light (4 spots) |
@@ -4940,8 +4981,34 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [T441](tuya/ts0001_switch_module_1.md) | PSMART 1 gang switch module (white-label of TuYa TS0001_switch_module_1) |
-| [T442](tuya/ts0002_switch_module_1.md) | PSMART 2 gang switch module (white-label of TuYa TS0002_switch_module_1) |
+| [T441](tuya/ts0001_switch_module_1.md) | PSMART 1 gang switch module (white-label of Tuya TS0001_switch_module_1) |
+| [T442](tuya/ts0002_switch_module_1.md) | PSMART 2 gang switch module (white-label of Tuya TS0002_switch_module_1) |
+
+
+# QA {#qa}
+
+| Model | Description |
+| ----- | ----------- |
+| [QACZ1](tuya/ts130f.md) | QA Curtain switch (white-label of Tuya TS130F) |
+| [QADZ1](qa/qadz1.md) | QA Dimmer 1 channel |
+| [QADZ2](qa/qadz2.md) | QA Dimmer 2 channel |
+| [QADZC5](tuya/ts0505b_3.md) | QA 5 in 1 LED controller (white-label of Tuya TS0505B_3) |
+| [QAIRZPRO](tuya/zs06.md) | QA Infrared hub pro (white-label of Tuya ZS06) |
+| [QARZ1DC](qa/qarz1dc.md) | QA 1 channel switch |
+| [QARZ2LR](qa/qarz2lr.md) | QA 2 channel long range switch |
+| [QARZ3LR](qa/qarz3lr.md) | QA 3 channel long range switch |
+| [QARZ4LR](qa/qarz4lr.md) | QA 4 channel long range switch |
+| [QARZDC1LR](qa/qarzdc1lr.md) | QA 1 channel long range switch |
+| [QASD1](tuya/ts0203.md) | QA Door sensor (white-label of Tuya TS0203) |
+| [QASZ24R](tuya/mtg075-zb-rl.md) | QA mmWave 24 Ghz sensor with relay (white-label of Tuya MTG075-ZB-RL) |
+| [QAT42Z1](qa/qat42z1.md) | QA 1 channel scene switch |
+| [QAT42Z1H](qa/qat42z1h.md) | QA 1 channel wall switch |
+| [QAT42Z2](qa/qat42z2.md) | QA 2 channel scene switch |
+| [QAT42Z2H](qa/qat42z2h.md) | QA 2 channel wall switch |
+| [QAT42Z3](qa/qat42z3.md) | QA 3 channel scene switch |
+| [QAT42Z3H](qa/qat42z3h.md) | QA 3 channel wall switch |
+| [QAT44Z4H](qa/qat44z4h.md) | QA 4 channel wall switch |
+| [QAT44Z6H](qa/qat44z6h.md) | QA 6 channel wall switch |
 
 
 # Qingping {#qingping}
@@ -4978,7 +5045,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [AT8510-TY](tuya/ts0601_cover_1.md) | Quoya Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
+| [AT8510-TY](tuya/ts0601_cover_1.md) | Quoya Curtain motor/roller blind motor/window pusher/tubular motor (white-label of Tuya TS0601_cover_1) |
 
 
 # Rademacher {#rademacher}
@@ -5053,9 +5120,9 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [37022463](tuya/ts0002_switch_2_gang.md) | RoomsAI 2 Gang switch with backlight (white-label of TuYa TS0002_switch_2_gang) |
-| [37022474](tuya/ts0003_switch_3_gang.md) | RoomsAI 3 Gang switch with backlight (white-label of TuYa TS0003_switch_3_gang) |
-| [RoomsAI_37022454](tuya/ts0001_switch_1_gang.md) | RoomsAI 1 Gang switch with backlight (white-label of TuYa TS0001_switch_1_gang) |
+| [37022463](tuya/ts0002_switch_2_gang.md) | RoomsAI 2 Gang switch with backlight (white-label of Tuya TS0002_switch_2_gang) |
+| [37022474](tuya/ts0003_switch_3_gang.md) | RoomsAI 3 Gang switch with backlight (white-label of Tuya TS0003_switch_3_gang) |
+| [RoomsAI_37022454](tuya/ts0001_switch_1_gang.md) | RoomsAI 1 Gang switch with backlight (white-label of Tuya TS0001_switch_1_gang) |
 
 
 # RTX {#rtx}
@@ -5063,7 +5130,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [ZB-RT1](saswell/sea801-zigbee_sea802-zigbee.md) | RTX Thermostatic radiator valve (white-label of Saswell SEA801-Zigbee/SEA802-Zigbee) |
-| [ZCR1-40EM](tuya/ts0601_din_1.md) | RTX Zigbee DIN energy meter (white-label of TuYa TS0601_din_1) |
+| [ZCR1-40EM](tuya/ts0601_din_1.md) | RTX Zigbee DIN energy meter (white-label of Tuya TS0601_din_1) |
 | [ZMS4](rtx/zms4.md) | RTX Zigbee PIR sensor |
 | [ZVG1](rtx/zvg1.md) | RTX Zigbee smart water valve |
 
@@ -5072,14 +5139,14 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [RY-WS02Z](tuya/ts011f_2_gang_wall.md) | Rylike 2 gang socket outlet AU (white-label of TuYa TS011F_2_gang_wall) |
+| [RY-WS02Z](tuya/ts011f_2_gang_wall.md) | Rylike 2 gang socket outlet AU (white-label of Tuya TS011F_2_gang_wall) |
 
 
 # S366 {#s366}
 
 | Model | Description |
 | ----- | ----------- |
-| [Cloud Even](tuya/ts0601_thermostat_2.md) | S366 Thermostat radiator valve (white-label of TuYa TS0601_thermostat_2) |
+| [Cloud Even](tuya/ts0601_thermostat_2.md) | S366 Thermostat radiator valve (white-label of Tuya TS0601_thermostat_2) |
 
 
 # Salus Controls {#salus_controls}
@@ -5100,7 +5167,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [SM301Z](tuya/rh3040.md) | Samotech PIR sensor (white-label of TuYa RH3040) |
+| [SM301Z](tuya/rh3040.md) | Samotech PIR sensor (white-label of Tuya RH3040) |
 | [SM308](samotech/sm308.md) | Samotech Zigbee AC in wall switch |
 | [SM308-2CH](samotech/sm308-2ch.md) | Samotech Zigbee 2 channel in wall switch |
 | [SM308-S](samotech/sm308-s.md) | Samotech Zigbee in wall smart switch |
@@ -5181,7 +5248,10 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [E8332DST350ZB](schneider_electric/e8332dst350zb.md) | Schneider Electric Wiser AvatarOn 2G dimmer switch |
 | [E8332SCN300ZB](schneider_electric/e8332scn300zb.md) | Schneider Electric Wiser AvatarOn 2G curtain switch |
 | [E8332SRY800ZB](schneider_electric/e8332sry800zb.md) | Schneider Electric Wiser AvatarOn 2G onoff switch |
+| [E8332SRY800ZB_NEW](schneider_electric/e8332sry800zb_new.md) | Schneider Electric Wiser AvatarOn 2G onoff switch |
 | [E8333SRY800ZB](schneider_electric/e8333sry800zb.md) | Schneider Electric Wiser AvatarOn 3G onoff switch |
+| [E8333SRY800ZB_NEW](schneider_electric/e8333sry800zb_new.md) | Schneider Electric Wiser AvatarOn 3G onoff switch |
+| [E8334RWMZB](schneider_electric/e8334rwmzb.md) | Schneider Electric Wiser AvatarOn 4K Freelocate |
 | [EER40030](schneider_electric/eer40030.md) | Schneider Electric Zigbee smart plug with power meter |
 | [EER42000](schneider_electric/eer42000.md) | Schneider Electric Zigbee load actuator with power meter |
 | [EER50000](schneider_electric/eer50000.md) | Schneider Electric Wiser H-Relay (HACT) |
@@ -5302,14 +5372,14 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [SMKG-1KNL-US/TZB-W](tuya/ts0601_switch_1_gang.md) | Shawader 1 gang switch (white-label of TuYa TS0601_switch_1_gang) |
+| [SMKG-1KNL-US/TZB-W](tuya/ts0601_switch_1_gang.md) | Shawader 1 gang switch (white-label of Tuya TS0601_switch_1_gang) |
 
 
 # Shenzhen Golden Security Technology {#shenzhen_golden_security_technology}
 
 | Model | Description |
 | ----- | ----------- |
-| [GM46](tuya/ts0601_cover_1.md) | Shenzhen Golden Security Technology Curtain motor (white-label of TuYa TS0601_cover_1) |
+| [GM46](tuya/ts0601_cover_1.md) | Shenzhen Golden Security Technology Curtain motor (white-label of Tuya TS0601_cover_1) |
 
 
 # Shenzhen Homa {#shenzhen_homa}
@@ -5368,7 +5438,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [378RT](tuya/ts0601_thermostat.md) | SHOJZJ Radiator valve with thermostat (white-label of TuYa TS0601_thermostat) |
+| [378RT](tuya/ts0601_thermostat.md) | SHOJZJ Radiator valve with thermostat (white-label of Tuya TS0601_thermostat) |
 
 
 # Siglis {#siglis}
@@ -5390,7 +5460,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [TVR01](tuya/ts0601_thermostat.md) | Silvercrest Radiator valve with thermostat (white-label of TuYa TS0601_thermostat) |
+| [TVR01](tuya/ts0601_thermostat.md) | Silvercrest Radiator valve with thermostat (white-label of Tuya TS0601_thermostat) |
 
 
 # Sinopé {#sinope}
@@ -5434,7 +5504,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | ----- | ----------- |
 | [WZ5_cct](skydance/wz5_cct.md) | Skydance Zigbee & RF 5 in 1 LED controller (CCT mode) |
 | [WZ5_dim_1](skydance/wz5_dim_1.md) | Skydance Zigbee & RF 5 in 1 LED controller (DIM mode) |
-| [WZ5_dim_2](tuya/ts0505b_3.md) | Skydance Zigbee & RF 5 in 1 LED controller (DIM mode) (white-label of TuYa TS0505B_3) |
+| [WZ5_dim_2](tuya/ts0505b_3.md) | Skydance Zigbee & RF 5 in 1 LED controller (DIM mode) (white-label of Tuya TS0505B_3) |
 | [WZ5_rgb](skydance/wz5_rgb.md) | Skydance Zigbee & RF 5 in 1 LED controller (RGB mode) |
 | [WZ5_rgbcct](skydance/wz5_rgbcct.md) | Skydance Zigbee & RF 5 in 1 LED controller (RGB+CCT mode) |
 | [WZ5_rgbw](skydance/wz5_rgbw.md) | Skydance Zigbee & RF 5 in 1 LED controller (RGBW mode) |
@@ -5488,9 +5558,9 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [S9TSZGB](tuya/ts0043.md) | Smart9 Wireless switch with 3 buttons (white-label of TuYa TS0043) |
-| [S9TSZGB](tuya/ts0042.md) | Smart9 Wireless switch with 2 buttons (white-label of TuYa TS0042) |
-| [S9TSZGB](tuya/ts0041.md) | Smart9 Wireless switch with 1 button (white-label of TuYa TS0041) |
+| [S9TSZGB](tuya/ts0043.md) | Smart9 Wireless switch with 3 buttons (white-label of Tuya TS0043) |
+| [S9TSZGB](tuya/ts0042.md) | Smart9 Wireless switch with 2 buttons (white-label of Tuya TS0042) |
+| [S9TSZGB](tuya/ts0041.md) | Smart9 Wireless switch with 1 button (white-label of Tuya TS0041) |
 | [S9ZGBRC01](smart9/s9zgbrc01.md) | Smart9 Smart remote controller |
 
 
@@ -5555,7 +5625,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [TMZ02L-16A-W](tuya/ts0011_switch_module.md) | SMATRUL 1 gang switch module - (without neutral) (white-label of TuYa TS0011_switch_module) |
+| [TMZ02L-16A-W](tuya/ts0011_switch_module.md) | SMATRUL 1 gang switch module - (without neutral) (white-label of Tuya TS0011_switch_module) |
 
 
 # SOHAN Electric {#sohan_electric}
@@ -5585,12 +5655,12 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [SM-1CTW-EU](somgoms/sm-1ctw-eu.md) | Somgoms Curtain switch |
-| [ZSQB-SMB-ZB](tuya/ts0601_switch_4_gang_1.md) | Somgoms 4 gang switch (white-label of TuYa TS0601_switch_4_gang_1) |
-| [ZSQB-SMB-ZB](tuya/ts0601_switch.md) | Somgoms 1, 2, 3 or 4 gang switch (white-label of TuYa TS0601_switch) |
+| [ZSQB-SMB-ZB](tuya/ts0601_switch_4_gang_1.md) | Somgoms 4 gang switch (white-label of Tuya TS0601_switch_4_gang_1) |
+| [ZSQB-SMB-ZB](tuya/ts0601_switch.md) | Somgoms 1, 2, 3 or 4 gang switch (white-label of Tuya TS0601_switch) |
 | [ZSTY-SM-11ZG-US-W](somgoms/zsty-sm-11zg-us-w.md) | Somgoms 1 gang switch |
 | [ZSTY-SM-1CTZG-US-W](somgoms/zsty-sm-1ctzg-us-w.md) | Somgoms Curtain switch |
 | [ZSTY-SM-1DMZG-US-W](somgoms/zsty-sm-1dmzg-us-w.md) | Somgoms Dimmer switch |
-| [ZSTY-SM-1DMZG-US-W_1](tuya/ts0601_cover_1.md) | Somgoms Curtain switch (white-label of TuYa TS0601_cover_1) |
+| [ZSTY-SM-1DMZG-US-W_1](tuya/ts0601_cover_1.md) | Somgoms Curtain switch (white-label of Tuya TS0601_cover_1) |
 
 
 # SONOFF {#sonoff}
@@ -5613,6 +5683,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [SNZB-03P](sonoff/snzb-03p.md) | SONOFF Zigbee PIR sensor |
 | [SNZB-04](sonoff/snzb-04.md) | SONOFF Contact sensor |
 | [SNZB-04P](sonoff/snzb-04p.md) | SONOFF Contact sensor |
+| [SNZB-05P](sonoff/snzb-05p.md) | SONOFF Zigbee water sensor |
 | [SNZB-06P](sonoff/snzb-06p.md) | SONOFF Zigbee occupancy sensor |
 | [SWV](sonoff/swv.md) | SONOFF Zigbee smart water valve |
 | [TRVZB](sonoff/trvzb.md) | SONOFF Zigbee thermostatic radiator valve |
@@ -5779,7 +5850,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [SWP86-01OG](tuya/ts011f_wall_outlet.md) | Teekar In-wall outlet (white-label of TuYa TS011F_wall_outlet) |
+| [SWP86-01OG](tuya/ts011f_wall_outlet.md) | Teekar In-wall outlet (white-label of Tuya TS011F_wall_outlet) |
 
 
 # TERNCY {#terncy}
@@ -5799,12 +5870,12 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [TS0202](tuya/ts0202.md) | Tesla Smart Motion sensor (white-label of TuYa TS0202) |
-| [TSL-SEN-DOOR](tuya/ts0203.md) | Tesla Smart Door sensor (white-label of TuYa TS0203) |
-| [TSL-SEN-GAS](tuya/ts0204.md) | Tesla Smart Gas sensor (white-label of TuYa TS0204) |
-| [TSL-SEN-SMOKE](tuya/ts0205.md) | Tesla Smart Smoke sensor (white-label of TuYa TS0205) |
+| [TS0202](tuya/ts0202.md) | Tesla Smart Motion sensor (white-label of Tuya TS0202) |
+| [TSL-SEN-DOOR](tuya/ts0203.md) | Tesla Smart Door sensor (white-label of Tuya TS0203) |
+| [TSL-SEN-GAS](tuya/ts0204.md) | Tesla Smart Gas sensor (white-label of Tuya TS0204) |
+| [TSL-SEN-SMOKE](tuya/ts0205.md) | Tesla Smart Smoke sensor (white-label of Tuya TS0205) |
 | [TSL-TRV-GS361A](siterwell/gs361a-h04.md) | Tesla Smart Thermostatic Radiator Valve Controller (white-label of Siterwell GS361A-H04) |
-| [TSL-TRV-TV01ZG](tuya/tv02-zigbee.md) | Tesla Smart Thermostat radiator valve (white-label of TuYa TV02-Zigbee) |
+| [TSL-TRV-TV01ZG](tuya/tv02-zigbee.md) | Tesla Smart Thermostat radiator valve (white-label of Tuya TV02-Zigbee) |
 
 
 # The Light Group {#the_light_group}
@@ -5862,8 +5933,9 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [TO-Q-SY1-JZT](tuya/ts011f_din_smart_relay_polling.md) | Tongou Din smart relay (with power monitoring via polling) (white-label of TuYa TS011F_din_smart_relay_polling) |
-| [TO-Q-SY2-163JZT](tuya/ts011f_with_threshold.md) | Tongou Smart circuit breaker (white-label of TuYa TS011F_with_threshold) |
+| [TO-Q-SY1-JZT](tuya/ts011f_din_smart_relay_polling.md) | Tongou Din smart relay (with power monitoring via polling) (white-label of Tuya TS011F_din_smart_relay_polling) |
+| [TO-Q-SY2-163JZT](tuya/ts011f_with_threshold.md) | Tongou Smart circuit breaker (white-label of Tuya TS011F_with_threshold) |
+| [TOWSMR1](tuya/ea4161c-bi.md) | Tongou Single-phase multifunction energy meter (DIN Module) (white-label of Tuya EA4161C-BI) |
 
 
 # TP-Link {#tp-link}
@@ -5896,354 +5968,364 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [ZYCT-202](trust/zyct-202.md) | Trust Remote control |
 
 
-# TuYa {#tuya}
+# Tuya {#tuya}
 
 | Model | Description |
 | ----- | ----------- |
-| [19DZT](tuya/ts0203.md) | TuYa Door sensor (white-label of TuYa TS0203) |
-| [809WZT](tuya/ts0202.md) | TuYa Motion sensor (white-label of TuYa TS0202) |
-| [899WZ](tuya/ts0207_water_leak_detector.md) | TuYa Water leak detector with 80DB Alarm (white-label of TuYa TS0207_water_leak_detector) |
-| [A5C-21F7-01](tuya/ts0505b_1.md) | TuYa Zigbee RGB+CCT light (white-label of TuYa TS0505B_1) |
-| [ATMS1601Z](tuya/atms1601z.md) | TuYa Din smart relay (without power monitoring) |
-| [BAB-1413_Pro](tuya/bab-1413_pro.md) | TuYa Thermostat radiator valve |
-| [BAC-002-ALZB](tuya/bac-003.md) | TuYa FCU thermostat temperature controller (white-label of TuYa BAC-003) |
-| [BAC-003](tuya/bac-003.md) | TuYa FCU thermostat temperature controller |
-| [BAC-003](tuya/bac-003.md) | TuYa FCU thermostat temperature controller (white-label of TuYa BAC-003) |
-| [BLE-YL01](tuya/ble-yl01.md) | TuYa Smart WiFi Zigbee chlorine meter |
-| [BSD29_1](tuya/ts011f_plug_3.md) | TuYa Smart plug (with power monitoring by polling) (white-label of TuYa TS011F_plug_3) |
-| [BT400B](tuya/ts0215a_sos.md) | TuYa Zigbee Panic Button (white-label of TuYa TS0215A_sos) |
-| [CK-BL702-AL-01](tuya/ck-bl702-al-01.md) | TuYa Zigbee LED bulb |
-| [CTL-R1-TY-Zigbee](tuya/ctl-r1-ty-zigbee.md) | TuYa 24G radar human presence motion sensor. |
-| [D3-DPWK-TY](tuya/d3-dpwk-ty.md) | TuYa HVAC controller |
-| [DCR-RQJ](tuya/dcr-rqj.md) | TuYa Carbon monoxide sensor gas leak detector |
-| [DS-111](tuya/ts0004.md) | TuYa Smart light switch - 4 gang with neutral wire (white-label of TuYa TS0004) |
-| [DS04](tuya/ts0203.md) | TuYa Door sensor (white-label of TuYa TS0203) |
-| [DT82LEMA-1.2N](tuya/ts0601_cover_1.md) | TuYa Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
-| [E220-KR4N0Z0-HA](tuya/e220-kr4n0z0-ha.md) | TuYa Multiprise with 4 AC outlets and 2 USB super charging ports (16A) |
-| [EA4161C-BI](tuya/ea4161c-bi.md) | TuYa Single-phase multifunction energy meter (DIN Module) |
-| [ERS-10TZBVK-AA](tuya/ers-10tzbvk-aa.md) | TuYa Smart knob |
-| [GDC311ZBQ1](tuya/gdc311zbq1.md) | TuYa LoraTap garage door opener with wireless sensor |
-| [gq8b1uv](tuya/gq8b1uv.md) | TuYa Zigbee smart dimmer |
-| [GTZ02](siterwell/gs361a-h04.md) | TuYa Głowica termostatyczna (white-label of Siterwell GS361A-H04) |
-| [HG08007](tuya/ts0505b_1.md) | TuYa Livarno Home outdoor LED band (white-label of TuYa TS0505B_1) |
-| [HW500A](tuya/ts0202.md) | TuYa Motion sensor (white-label of TuYa TS0202) |
-| [HY08WE](tuya/hy08we.md) | TuYa Wall-mount thermostat |
-| [iH-F001](tuya/ts0203.md) | TuYa Door sensor (white-label of TuYa TS0203) |
-| [iH-F8260](moes/ufo-r11.md) | TuYa Universal smart IR remote control (white-label of Moes UFO-R11) |
-| [IH-K009](tuya/ih-k009.md) | TuYa Temperature & humidity sensor |
-| [IH-K663](tuya/ih-k663.md) | TuYa Smart button |
-| [IH012-RT01](tuya/ih012-rt01.md) | TuYa Motion sensor |
-| [IH012-RT02](tuya/ih012-rt02.md) | TuYa Motion sensor |
-| [iHSW02](tuya/whd02.md) | TuYa Wall switch module (white-label of TuYa WHD02) |
-| [JM-TRH-ZGB-V1](tuya/jm-trh-zgb-v1.md) | TuYa Temperature & humidity sensor with clock |
-| [KCTW1Z](tuya/kctw1z.md) | TuYa Temperature & humidity sensor with LCD |
-| [L1(ZW)](tuya/ts0501b_dimmer.md) | TuYa Light dimmer 0-10V (white-label of TuYa TS0501B_dimmer) |
-| [LCZ030](tuya/lcz030.md) | TuYa Temperature & humidity & illuminance sensor with display |
-| [LKWSZ211](tuya/lkwsz211.md) | TuYa Scene remote with 2 keys |
-| [LY-108](tuya/ts0601_cover_6.md) | TuYa Cover (white-label of TuYa TS0601_cover_6) |
-| [M10Z](tuya/ts0003_switch_3_gang_with_backlight.md) | TuYa 2 gang switch with 20A power socket (white-label of TuYa TS0003_switch_3_gang_with_backlight) |
-| [M515EGZT](tuya/ts0601_cover_1.md) | TuYa Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
-| [M9-zigbee-SL](tuya/m9-zigbee-sl.md) | TuYa Smart Switch (4 gang + 4 scene) with neutral wire and motion sensing |
-| [MC500A](tuya/ts0203.md) | TuYa Door sensor (white-label of TuYa TS0203) |
-| [MG-ZG01W](tuya/mg-zg01w.md) | TuYa 1 gang switch |
-| [MG-ZG02W](tuya/mg-zg02w.md) | TuYa 2 gang switch |
-| [MG-ZG03W](tuya/mg-zg03w.md) | TuYa 3 gang switch |
-| [MINI-ZSB](tuya/ts0041.md) | TuYa Smart button (white-label of TuYa TS0041) |
-| [MIR-HE200-TY](tuya/mir-he200-ty.md) | TuYa Human presence sensor with fall function |
-| [MTG035-ZB-RL](tuya/mtg075-zb-rl.md) | TuYa Human presence sensor with relay (white-label of TuYa MTG075-ZB-RL) |
-| [MTG075-ZB-RL](tuya/mtg075-zb-rl.md) | TuYa 2.4G/5.8G human presence sensor with relay |
-| [MTG275-ZB-RL](tuya/mtg075-zb-rl.md) | TuYa 2.4G/5.8G MmWave radar human presence motion sensor (white-label of TuYa MTG075-ZB-RL) |
-| [PA-44Z](tuya/pa-44z.md) | TuYa Photoelectric smoke detector |
-| [PC311-Z-TY](tuya/pc311-z-ty.md) | TuYa Bidirectional energy meter with 80A current clamp |
-| [PJ-1203A](tuya/pj-1203a.md) | TuYa Bidirectional energy meter with 80A current clamp |
-| [PJ-MGW1203](tuya/pj-mgw1203.md) | TuYa Clamp meter |
-| [PJ-ZGD01](tuya/pj-zgd01.md) | TuYa Garage door opener |
-| [QS-zigbee-S08-16A-RF](tuya/whd02.md) | TuYa Wall switch module (white-label of TuYa WHD02) |
-| [QS-Zigbee-SEC01-U](tuya/qs-zigbee-sec01-u.md) | TuYa Zigbee 3.0 smart light switch module 1 gang |
-| [QS-Zigbee-SEC02-U](tuya/qs-zigbee-sec02-u.md) | TuYa Zigbee 3.0 smart light switch module 2 gang |
-| [QT-07S](tuya/ts0222_temperature_humidity.md) | TuYa Soil sensor (white-label of TuYa TS0222_temperature_humidity) |
-| [RC-MCB](tuya/ts0601_din_1.md) | TuYa Zigbee DIN energy meter (white-label of TuYa TS0601_din_1) |
-| [RH3040](tuya/rh3040.md) | TuYa PIR sensor |
-| [RSH-HS06](tuya/rsh-hs06.md) | TuYa Temperature and humidity sensor |
-| [RSH-HS06_1](tuya/ih-k009.md) | TuYa Temperature & humidity sensor (white-label of TuYa IH-K009) |
-| [rtsc11r](tuya/rtsc11r.md) | TuYa 5.8G human presence sensor with relay |
-| [S-LUX-ZB](tuya/s-lux-zb.md) | TuYa Light sensor |
-| [SA12IZL](tuya/sa12izl.md) | TuYa Smart smoke alarm |
-| [SDM01](tuya/sdm01.md) | TuYa Smart energy monitor for 3P+N system |
-| [SH-SC07](tuya/ts0041.md) | TuYa Button scene switch (white-label of TuYa TS0041) |
-| [SM-AW713Z](tuya/ts0111_valve.md) | TuYa Smart water/gas valve (white-label of TuYa TS0111_valve) |
-| [SM0001](tuya/sm0001.md) | TuYa Switch |
-| [SM0201](tuya/sm0201.md) | TuYa Temperature & humidity sensor with LED screen |
-| [SM0202](tuya/sm0202.md) | TuYa Motion sensor |
-| [SNTZ007](tuya/sntz007.md) | TuYa Rechargeable Zigbee contact sensor |
-| [SNTZ009](tuya/sntz009.md) | TuYa Water leak sensor |
-| [SPM01](tuya/spm01.md) | TuYa Smart energy monitor for 1P+N system |
-| [SPM01V2](tuya/spm01v2.md) | TuYa Smart energy monitor for 1P+N system |
-| [SPM02](tuya/spm02.md) | TuYa Smart energy monitor for 3P+N system |
-| [SPM02V2](tuya/spm02v2.md) | TuYa Smart energy monitor for 3P+N system |
-| [SS9600ZB](tuya/ss9600zb.md) | TuYa 6 gang remote |
-| [SWS6TZ-WHITE](tuya/sws6tz-white.md) | TuYa 6 gang wall switch |
-| [SZR07U](tuya/szr07u.md) | TuYa 24GHz millimeter wave radar |
-| [SZT06 V2.0](tuya/szt06_v2_0.md) | TuYa Smart mini temperature and humidity sensor |
-| [SZTH02](tuya/ts0601_temperature_humidity_sensor_2.md) | TuYa Temperature and humidity sensor (white-label of TuYa TS0601_temperature_humidity_sensor_2) |
-| [TH01Z](nous/sz-t04.md) | TuYa Temperature and humidity sensor with clock (white-label of Nous SZ-T04) |
-| [TH02Z](tuya/wsd500a.md) | TuYa Temperature and humidity sensor (white-label of TuYa WSD500A) |
-| [TM-YKQ004](tuya/ts0044.md) | TuYa Zigbee 4 button remote - 12 scene (white-label of TuYa TS0044) |
-| [TM001-ZA/TM081](tuya/tm001-za_tm081.md) | TuYa Door and window sensor |
-| [TRV601](tuya/trv601.md) | TuYa Thermostatic radiator valve. |
-| [TRV602](tuya/trv602.md) | TuYa Thermostatic radiator valve. |
-| [TS0001](tuya/ts0001.md) | TuYa 1 gang switch |
-| [TS0001_fingerbot](tuya/ts0001_fingerbot.md) | TuYa Zigbee fingerbot plus |
-| [TS0001_power](tuya/ts0001_power.md) | TuYa Switch with power monitoring |
-| [TS0001_switch_1_gang](tuya/ts0001_switch_1_gang.md) | TuYa 1-Gang switch with backlight |
-| [TS0001_switch_module](tuya/ts0001_switch_module.md) | TuYa 1 gang switch module |
-| [TS0001_switch_module_1](tuya/ts0001_switch_module_1.md) | TuYa 1 gang switch module |
-| [TS0002](tuya/ts0002.md) | TuYa 2 gang switch |
-| [TS0002_power](tuya/ts0002_power.md) | TuYa 2 gang switch with power monitoring |
-| [TS0002_switch_2_gang](tuya/ts0002_switch_2_gang.md) | TuYa 2-Gang switch with backlight |
-| [TS0002_switch_module](tuya/ts0002_switch_module.md) | TuYa 2 gang switch module |
-| [TS0002_switch_module_1](tuya/ts0002_switch_module_1.md) | TuYa 1 gang switch module |
-| [TS0002_switch_module_2](tuya/ts0002_switch_module_2.md) | TuYa 2 gang switch module |
-| [TS0002_switch_module_3](tuya/ts0002_switch_module_3.md) | TuYa 2 gang switch with backlight |
-| [TS0002_switch_module_4](tuya/ts0002_switch_module_4.md) | TuYa 2 gang switch with backlight |
-| [TS0003](tuya/ts0003.md) | TuYa 3 gang switch |
-| [TS0003_1](tuya/ts0003.md) | TuYa 3 gang switch (white-label of TuYa TS0003) |
-| [TS0003_switch_3_gang](tuya/ts0003_switch_3_gang.md) | TuYa 3-Gang switch with backlight |
-| [TS0003_switch_3_gang_with_backlight](tuya/ts0003_switch_3_gang_with_backlight.md) | TuYa 3-Gang switch with backlight |
-| [TS0003_switch_module_1](tuya/ts0003_switch_module_1.md) | TuYa 3 gang switch module |
-| [TS0003_switch_module_2](tuya/ts0003_switch_module_2.md) | TuYa 3 gang switch module |
-| [TS0004](tuya/ts0004.md) | TuYa Smart light switch - 4 gang with neutral wire |
-| [TS0004_switch_module](tuya/ts0004_switch_module.md) | TuYa 4 gang switch module |
-| [TS0004_switch_module_2](tuya/ts0004_switch_module_2.md) | TuYa 4 gang switch module |
-| [TS0006](tuya/ts0006.md) | TuYa 6 gang switch module with neutral wire |
-| [TS000F_power](tuya/ts000f_power.md) | TuYa Switch with power monitoring |
-| [TS0011](tuya/ts0011.md) | TuYa Smart light switch - 1 gang |
-| [TS0011_switch_module](tuya/ts0011_switch_module.md) | TuYa 1 gang switch module - (without neutral) |
-| [TS0012](tuya/ts0012.md) | TuYa Smart light switch - 2 gang |
-| [TS0012_switch_module](tuya/ts0012_switch_module.md) | TuYa 2 gang switch module - (without neutral) |
-| [TS0013](tuya/ts0013.md) | TuYa Smart light switch - 3 gang without neutral wire |
-| [TS0013_switch_module](tuya/ts0013_switch_module.md) | TuYa 3 gang switch module - (without neutral) |
-| [TS0014](tuya/ts0014.md) | TuYa Smart light switch - 4 gang without neutral wire |
-| [TS0026](tuya/ts0026.md) | TuYa 6 button scene wall switch |
-| [TS0041](tuya/ts0041.md) | TuYa Wireless switch with 1 button |
-| [TS0042](tuya/ts0042.md) | TuYa Wireless switch with 2 buttons |
-| [TS0043](tuya/ts0043.md) | TuYa Wireless switch with 3 buttons |
-| [TS0044](tuya/ts0044.md) | TuYa Wireless switch with 4 buttons |
-| [TS0044_1](tuya/ts0044.md) | TuYa Zigbee 4 button remote - 12 scene (white-label of TuYa TS0044) |
-| [TS0046](tuya/ts0046.md) | TuYa Wireless switch with 6 buttons |
-| [TS0049](tuya/ts0049.md) | TuYa Water valve |
-| [TS004F](tuya/ts004f.md) | TuYa Wireless switch with 4 buttons |
-| [TS004F_6_button](tuya/ts004f_6_button.md) | TuYa Wireless switch with 6 buttons |
-| [TS0052](tuya/ts0052.md) | TuYa Zigbee dimmer module 1 channel |
-| [TS0052_2](tuya/ts0052_2.md) | TuYa Zigbee dimmer module 2 channel |
-| [TS0101](tuya/ts0101.md) | TuYa Zigbee Socket |
-| [TS0108](tuya/ts0108.md) | TuYa Socket with 2 USB |
-| [TS0111](tuya/ts0111.md) | TuYa Socket |
-| [TS0111_valve](tuya/ts0111_valve.md) | TuYa Smart water/gas valve |
-| [TS0115](tuya/ts0115.md) | TuYa Multiprise with 4 AC outlets and 2 USB super charging ports (10A or 16A) |
-| [TS011F_1](tuya/ts011f_1.md) | TuYa Switch |
-| [TS011F_2_gang_2_usb_wall](tuya/ts011f_2_gang_2_usb_wall.md) | TuYa 2 gang 2 usb wall outlet |
-| [TS011F_2_gang_wall](tuya/ts011f_2_gang_wall.md) | TuYa 2 gang wall outlet |
-| [TS011F_3_gang](tuya/ts011f_3_gang.md) | TuYa 3 gang wall ac outlet |
-| [TS011F_4](tuya/ts011f_4.md) | TuYa 2 gang plug |
-| [TS011F_5](tuya/ts011f_5.md) | TuYa 5 gang switch |
-| [TS011F_din_smart_relay](tuya/ts011f_din_smart_relay.md) | TuYa Din smart relay (with power monitoring) |
-| [TS011F_din_smart_relay_polling](tuya/ts011f_din_smart_relay_polling.md) | TuYa Din smart relay (with power monitoring via polling) |
-| [TS011F_plug_1](tuya/ts011f_plug_1.md) | TuYa Smart plug (with power monitoring) |
-| [TS011F_plug_2](tuya/ts011f_plug_2.md) | TuYa Smart plug (without power monitoring) |
-| [TS011F_plug_3](tuya/ts011f_plug_3.md) | TuYa Smart plug (with power monitoring by polling) |
-| [TS011F_socket_module](tuya/ts011f_socket_module.md) | TuYa Socket module |
-| [TS011F_switch_5_gang](tuya/ts011f_switch_5_gang.md) | TuYa 2 gang 2 usb 1 wall ac outlet |
-| [TS011F_wall_outlet](tuya/ts011f_wall_outlet.md) | TuYa In-wall outlet |
-| [TS011F_with_threshold](tuya/ts011f_with_threshold.md) | TuYa Din rail switch with power monitoring and threshold settings |
-| [TS0121_plug](tuya/ts0121_plug.md) | TuYa 10A UK or 16A EU smart plug |
-| [TS0201](tuya/ts0201.md) | TuYa Temperature & humidity sensor with display |
-| [TS0201_1](tuya/ts0201.md) | TuYa Zigbee 3.0 temperature humidity sensor with display (white-label of TuYa TS0201) |
-| [TS0201-z](tuya/ts0201-z.md) | TuYa Temperature & Humidity Sensor (pvxx/ZigbeeTLc) |
-| [TS0202](tuya/ts0202.md) | TuYa Motion sensor |
-| [TS0202_1](tuya/ts0202_1.md) | TuYa Motion sensor |
-| [TS0202_2](tuya/ts0202_2.md) | TuYa Motion sensor with scene switch |
-| [TS0202_3](tuya/ts0202_3.md) | TuYa Motion detector with illuminance |
-| [TS0203](tuya/ts0203.md) | TuYa Door sensor |
-| [TS0203_1](tuya/ts0203_1.md) | TuYa Door sensor with scene switch |
-| [TS0204](tuya/ts0204.md) | TuYa Gas sensor |
-| [TS0205](tuya/ts0205.md) | TuYa Smoke sensor |
-| [TS0205_smoke_2](tuya/ts0205.md) | TuYa Smoke sensor (white-label of TuYa TS0205) |
-| [TS0207_water_leak_detector](tuya/ts0207_water_leak_detector.md) | TuYa Water leak detector |
-| [TS0207_water_leak_detector_1](tuya/ts0207_water_leak_detector.md) | TuYa Zigbee water flood sensor + 1m probe cable (white-label of TuYa TS0207_water_leak_detector) |
-| [TS0207_water_leak_detector_3](tuya/ts0207_water_leak_detector.md) | TuYa Zigbee water leak sensor (white-label of TuYa TS0207_water_leak_detector) |
-| [TS0210](tuya/ts0210.md) | TuYa Vibration sensor |
-| [TS0215A_remote](tuya/ts0215a_remote.md) | TuYa Security remote control |
-| [TS0215A_sos](tuya/ts0215a_sos.md) | TuYa SOS button |
-| [TS0216](tuya/ts0216.md) | TuYa Sound and flash siren |
-| [TS0218](tuya/ts0218.md) | TuYa Button |
-| [TS0222](tuya/ts0222.md) | TuYa Light intensity sensor |
-| [TS0222_temperature_humidity](tuya/ts0222_temperature_humidity.md) | TuYa Temperature & humidity sensor |
-| [TS0224](tuya/ts0224.md) | TuYa Smart light & sound siren |
-| [TS030F](tuya/ts030f.md) | TuYa Smart blind controller |
-| [TS0501A](tuya/ts0501a.md) | TuYa Zigbee light |
-| [TS0501B](tuya/ts0501b.md) | TuYa Zigbee light |
-| [TS0501B_dimmer](tuya/ts0501b_dimmer.md) | TuYa Zigbee dimmer |
-| [TS0502A](tuya/ts0502a.md) | TuYa Light controller |
-| [TS0502B](tuya/ts0502b.md) | TuYa Light controller |
-| [TS0503A](tuya/ts0503a.md) | TuYa Led strip controller |
-| [TS0503B](tuya/ts0503b.md) | TuYa Zigbee RGB light |
-| [TS0504A](tuya/ts0504a.md) | TuYa RGBW LED controller |
-| [TS0504B](tuya/ts0504b.md) | TuYa Zigbee RGBW light |
-| [TS0505A](tuya/ts0505a.md) | TuYa RGB+CCT light controller |
-| [TS0505A_led](tuya/ts0505a_led.md) | TuYa RGB+CCT LED |
-| [TS0505B_1](tuya/ts0505b_1.md) | TuYa Zigbee RGB+CCT light |
-| [TS0505B_1_1](tuya/ts0505b_1.md) | TuYa Zigbee 3.0 18W led light bulb E27 RGBCW (white-label of TuYa TS0505B_1) |
-| [TS0505B_2](tuya/ts0505b_2.md) | TuYa Zigbee RGB+CCT light |
-| [TS0505B_2_1](tuya/ts0505b_2.md) | TuYa Zigbee 3.0 18W led light bulb E27 RGBCW (white-label of TuYa TS0505B_2) |
-| [TS0505B_2_2](tuya/ts0505b_2.md) | TuYa Zigbee GU10/E14 5W smart bulb (white-label of TuYa TS0505B_2) |
-| [TS0505B_3](tuya/ts0505b_3.md) | TuYa Zigbee RGB+CCT light |
-| [TS0601_3_phase_clamp_meter](tuya/ts0601_3_phase_clamp_meter.md) | TuYa 3-phase clamp power meter |
-| [TS0601_3_phase_clamp_meter_relay](tuya/ts0601_3_phase_clamp_meter_relay.md) | TuYa 3-phase clamp power meter with relay |
-| [TS0601_air_quality_sensor](tuya/ts0601_air_quality_sensor.md) | TuYa Air quality sensor |
-| [TS0601_bidirectional_energy meter](tuya/ts0601_bidirectional_energy_meter.md) | TuYa Bidirectional energy meter with 150A Current Clamp |
-| [TS0601_co2_sensor](tuya/ts0601_co2_sensor.md) | TuYa NDIR co2 sensor |
-| [TS0601_contact_temperature_humidity_sensor](tuya/ts0601_contact_temperature_humidity_sensor.md) | TuYa Contact, temperature and humidity sensor |
-| [TS0601_cover_1](tuya/ts0601_cover_1.md) | TuYa Curtain motor/roller blind motor/window pusher/tubular motor |
-| [TS0601_cover_2](tuya/ts0601_cover_2.md) | TuYa Curtain motor fixed speed |
-| [TS0601_cover_3](tuya/ts0601_cover_3.md) | TuYa Cover motor |
-| [TS0601_cover_4](tuya/ts0601_cover_4.md) | TuYa Cover |
-| [TS0601_cover_5](tuya/ts0601_cover_5.md) | TuYa Curtain/blind switch |
-| [TS0601_cover_6](tuya/ts0601_cover_6.md) | TuYa Cover motor |
-| [TS0601_cover_7](tuya/ts0601_cover_7.md) | TuYa Cover motor |
-| [TS0601_cover_8](tuya/ts0601_cover_8.md) | TuYa Cover motor |
-| [TS0601_cover_9](tuya/ts0601_cover_9.md) | TuYa Cover motor |
-| [TS0601_cover_with_1_switch](tuya/ts0601_cover_with_1_switch.md) | TuYa Curtain/blind switch with 1 Gang switch |
-| [TS0601_cover_with_2_switch](tuya/ts0601_cover_with_2_switch.md) | TuYa Curtain/blind switch with 2 Gang switch |
-| [TS0601_dimmer_1](tuya/ts0601_dimmer_1.md) | TuYa 1 gang smart dimmer |
-| [TS0601_dimmer_2](tuya/ts0601_dimmer_2.md) | TuYa 2 gang smart dimmer |
-| [TS0601_dimmer_3](tuya/ts0601_dimmer_3.md) | TuYa 3 gang smart dimmer |
-| [TS0601_dimmer_4](tuya/ts0601_dimmer_4.md) | TuYa 2 gang smart dimmer module |
-| [TS0601_dimmer_5](tuya/ts0601_dimmer_5.md) | TuYa 1 gang smart dimmer module |
-| [TS0601_dimmer_knob](tuya/ts0601_dimmer_knob.md) | TuYa Zigbee smart knob dimmer |
-| [TS0601_din](tuya/ts0601_din.md) | TuYa Zigbee smart energy meter DDS238-2 Zigbee |
-| [TS0601_din_1](tuya/ts0601_din_1.md) | TuYa Zigbee DIN energy meter |
-| [TS0601_din_2](tuya/ts0601_din_2.md) | TuYa Zigbee DIN energy meter |
-| [TS0601_din_3](tuya/ts0601_din_3.md) | TuYa Zigbee DIN energy meter |
-| [TS0601_fan_5_levels_and_light_switch](tuya/ts0601_fan_5_levels_and_light_switch.md) | TuYa Fan with 5 levels & light switch |
-| [TS0601_fan_and_light_switch](tuya/ts0601_fan_and_light_switch.md) | TuYa Fan & light switch |
-| [TS0601_fan_switch](tuya/ts0601_fan_switch.md) | TuYa Fan switch |
-| [TS0601_floor_thermostat](tuya/ts0601_floor_thermostat.md) | TuYa Zigbee thermostat for electric floors |
-| [TS0601_gas_sensor_1](tuya/ts0601_gas_sensor_1.md) | TuYa Gas sensor |
-| [TS0601_gas_sensor_2](tuya/ts0601_gas_sensor_2.md) | TuYa Gas sensor |
-| [TS0601_gas_sensor_3](tuya/ts0601_gas_sensor_3.md) | TuYa Gas sensor |
-| [TS0601_gas_sensor_4](tuya/ts0601_gas_sensor_4.md) | TuYa Gas sensor |
-| [TS0601_human_presence_sensor](tuya/ts0601_human_presence_sensor.md) | TuYa Human presence sensor Zigbee |
-| [TS0601_illuminance_temperature_humidity_sensor_1](tuya/ts0601_illuminance_temperature_humidity_sensor_1.md) | TuYa Illuminance, temperature & humidity sensor |
-| [TS0601_illuminance_temperature_humidity_sensor_2](tuya/ts0601_illuminance_temperature_humidity_sensor_2.md) | TuYa Illuminance sensor |
-| [TS0601_light](tuya/ts0601_light.md) | TuYa Light |
-| [TS0601_motion_sensor](tuya/ts0601_motion_sensor.md) | TuYa Human presence sensor AIR |
-| [TS0601_pir](tuya/ts0601_pir.md) | TuYa Haozee PIR sensor |
-| [TS0601_rcbo](tuya/ts0601_rcbo.md) | TuYa DIN mount RCBO with smart energy metering |
-| [TS0601_smart_air_house_keeper](tuya/ts0601_smart_air_house_keeper.md) | TuYa Smart air house keeper |
-| [TS0601_smart_CO_air_box](tuya/ts0601_smart_co_air_box.md) | TuYa Smart air box (carbon monoxide) |
-| [TS0601_smart_human_presence_sensor_1](tuya/ts0601_smart_human_presence_sensor_1.md) | TuYa Smart Human presence sensor |
-| [TS0601_smoke_1](tuya/ts0601_smoke_1.md) | TuYa Smoke sensor |
-| [TS0601_smoke_3](tuya/ts0601_smoke_3.md) | TuYa Photoelectric smoke detector |
-| [TS0601_smoke_4](tuya/ts0601_smoke_4.md) | TuYa Smoke sensor |
-| [TS0601_smoke_5](tuya/ts0601_smoke_5.md) | TuYa Smoke sensor |
-| [TS0601_smoke_6](tuya/ts0601_smoke_6.md) | TuYa Smoke sensor |
-| [TS0601_soil](tuya/ts0601_soil.md) | TuYa Soil sensor |
-| [TS0601_switch](tuya/ts0601_switch.md) | TuYa 1, 2, 3 or 4 gang switch |
-| [TS0601_switch_1_gang](tuya/ts0601_switch_1_gang.md) | TuYa 1 gang switch |
-| [TS0601_switch_10](tuya/ts0601_switch_10.md) | TuYa 10 gang switch |
-| [TS0601_switch_12](tuya/ts0601_switch_12.md) | TuYa ZXYH 12 gang switch |
-| [TS0601_switch_2_gang](tuya/ts0601_switch_2_gang.md) | TuYa 2 gang switch |
-| [TS0601_switch_3_gang](tuya/ts0601_switch_3_gang.md) | TuYa 3 gang switch |
-| [TS0601_switch_4_gang_1](tuya/ts0601_switch_4_gang_1.md) | TuYa 4 gang switch |
-| [TS0601_switch_4_gang_2](tuya/ts0601_switch_4_gang_2.md) | TuYa 4 gang switch with backlight |
-| [TS0601_switch_5_gang](tuya/ts0601_switch_5_gang.md) | TuYa 5 gang switch |
-| [TS0601_switch_6_gang](tuya/ts0601_switch_6_gang.md) | TuYa 6 gang switch |
-| [TS0601_switch_8](tuya/ts0601_switch_8.md) | TuYa ZYXH 8 gang switch |
-| [TS0601_switch_8_2](tuya/ts0601_switch_8_2.md) | TuYa 8 gang switch |
-| [TS0601_temperature_humidity_sensor_1](tuya/ts0601_temperature_humidity_sensor_1.md) | TuYa Temperature & humidity sensor |
-| [TS0601_temperature_humidity_sensor_2](tuya/ts0601_temperature_humidity_sensor_2.md) | TuYa Temperature and humidity sensor |
-| [TS0601_temperature_humidity_sensor_3](tuya/ts0601_temperature_humidity_sensor_3.md) | TuYa Temperature & humidity sensor |
-| [TS0601_thermostat](tuya/ts0601_thermostat.md) | TuYa Radiator valve with thermostat |
-| [TS0601_thermostat_1](tuya/ts0601_thermostat_1.md) | TuYa Thermostatic radiator valve |
-| [TS0601_thermostat_2](tuya/ts0601_thermostat_2.md) | TuYa Thermostat radiator valve |
-| [TS0601_thermostat_3](tuya/ts0601_thermostat_3.md) | TuYa Thermostatic radiator valve |
-| [TS0601_thermostat_4](tuya/ts0601_thermostat_4.md) | TuYa Thermostatic radiator valve |
-| [TS0601_vibration_sensor](tuya/ts0601_vibration_sensor.md) | TuYa Smart vibration sensor |
-| [TS0601_water_sensor](tuya/ts0601_water_sensor.md) | TuYa Water leak sensor |
-| [TS0603](tuya/ts0603.md) | TuYa Garage door opener |
-| [TS0726](tuya/ts0726.md) | TuYa 4 gang switch with neutral wire |
-| [TS1101_dimmer_module_1ch](tuya/ts1101_dimmer_module_1ch.md) | TuYa Zigbee dimmer module 1 channel |
-| [TS1101_dimmer_module_2ch](tuya/ts1101_dimmer_module_2ch.md) | TuYa Zigbee dimmer module 2 channel |
-| [TS110E_1gang_1](tuya/ts110e_1gang_1.md) | TuYa 1 channel dimmer |
-| [TS110E_1gang_2](tuya/ts110e_1gang_2.md) | TuYa 1 channel dimmer |
-| [TS110E_2gang_1](tuya/ts110e_2gang_1.md) | TuYa 2 channel dimmer |
-| [TS110E_2gang_2](tuya/ts110e_2gang_2.md) | TuYa 2 channel dimmer |
-| [TS130F](tuya/ts130f.md) | TuYa Curtain/blind switch |
-| [TT001ZAV20](tuya/tt001zav20.md) | TuYa Temperature & humidity sensor |
-| [TV02-Zigbee](tuya/tv02-zigbee.md) | TuYa Thermostat radiator valve |
-| [TY-ZPR06](tuya/ts0202.md) | TuYa Motion sensor (white-label of TuYa TS0202) |
-| [TYBAC-006](tuya/tybac-006.md) | TuYa Wall-mount thermostat for 2-pipe fan-coil unit |
-| [TYZS1L](tuya/tyzs1l.md) | TuYa Led strip controller HSB |
-| [U86KCJ-ZP](tuya/u86kcj-zp.md) | TuYa Smart 6 key scene wall switch |
-| [U86KWF-ZPSJ](tuya/u86kwf-zpsj.md) | TuYa Environment controller |
-| [WHD02](tuya/whd02.md) | TuYa Wall switch module |
-| [WLS-100z](tuya/wls-100z.md) | TuYa Water leak sensor |
-| [WSD500A](tuya/wsd500a.md) | TuYa Temperature & humidity sensor |
-| [WZ5_rgb_1](tuya/wz5_rgb_1.md) | TuYa Zigbee & RF 5 in 1 LED controller (RGB mode) |
-| [X5H-GB-B](tuya/x5h-gb-b.md) | TuYa Wall-mount thermostat |
-| [XFY-CGQ-ZIGB](tuya/xfy-cgq-zigb.md) | TuYa Illuminance sensor |
-| [XSH01B](tuya/ts0002_power.md) | TuYa 2 gang switch module with power monitoring (white-label of TuYa TS0002_power) |
-| [YSR-MINI-Z](tuya/ysr-mini-z.md) | TuYa 2 in 1 dimming remote control and scene control |
-| [YXZBRB58](tuya/yxzbrb58.md) | TuYa Smart human presence sensor |
-| [YXZBSL](tuya/yxzbsl.md) | TuYa Smart siren |
-| [ZB-Sm](tuya/zb-sm.md) | TuYa Tubular motor |
-| [ZD08](tuya/ts0203.md) | TuYa Door sensor (white-label of TuYa TS0203) |
-| [ZD82TN](tuya/ts0601_cover_1.md) | TuYa Curtain motor (white-label of TuYa TS0601_cover_1) |
-| [ZG-102Z](tuya/zg-102z.md) | TuYa Door sensor |
-| [ZG-102ZL](tuya/zg-102zl.md) | TuYa Luminance door sensor |
-| [ZG-2002-RF](tuya/ts0002.md) | TuYa Three mode Zigbee Switch (white-label of TuYa TS0002) |
-| [ZG-204ZL](tuya/zg-204zl.md) | TuYa Luminance motion sensor |
-| [ZG-204ZM](tuya/zg-204zm.md) | TuYa PIR 24Ghz human presence sensor |
-| [ZG-205Z/A](tuya/zg-205z_a.md) | TuYa 5.8Ghz/24Ghz Human presence sensor |
-| [ZG-205ZL](tuya/zg-205zl.md) | TuYa 24Ghz/5.8GHz human presence sensor |
-| [ZG-225Z](tuya/zg-225z.md) | TuYa Gas sensor |
-| [ZG-227Z](tuya/zg-227zl.md) | TuYa Temperature and humidity sensor (white-label of TuYa ZG-227ZL) |
-| [ZG-227ZL](tuya/zg-227zl.md) | TuYa Temperature & humidity LCD sensor |
-| [ZM-35H-Q](tuya/zm-35h-q.md) | TuYa Motion sensor |
-| [ZMS-102](tuya/ih012-rt01.md) | TuYa Motion sensor (white-label of TuYa IH012-RT01) |
-| [ZMS01](tuya/ts0202.md) | TuYa Motion sensor (white-label of TuYa TS0202) |
-| [ZN231392](tuya/zn231392.md) | TuYa Smart water/gas valve |
-| [ZP01](tuya/ts0202.md) | TuYa Motion sensor (white-label of TuYa TS0202) |
-| [ZS-TYG3-SM-21Z](tuya/zs-tyg3-sm-21z.md) | TuYa 2 gang smart switch with backlight and neutral wire |
-| [ZS-TYG3-SM-31Z](tuya/zs-tyg3-sm-31z.md) | TuYa 3 gang smart switch with backlight and neutral wire |
-| [ZS-TYG3-SM-41Z](tuya/zs-tyg3-sm-41z.md) | TuYa 4 gang smart switch with backlight and neutral wire |
-| [ZS-TYG3-SM-61Z](tuya/zs-tyg3-sm-61z.md) | TuYa Smart switch (4 gang + 2 scene) with backlight and neutral wire |
-| [ZS06](tuya/zs06.md) | TuYa Universal smart IR remote control |
-| [ZSS-QY-SSD-A-EN](tuya/zss-qy-ssd-a-en.md) | TuYa Smart smoke alarm |
-| [ZTH01](tuya/ts0601_temperature_humidity_sensor_2.md) | TuYa Temperature and humidity sensor (white-label of TuYa TS0601_temperature_humidity_sensor_2) |
-| [ZTH01/ZTH02](tuya/ts0201.md) | TuYa Temperature and humidity sensor (white-label of TuYa TS0201) |
-| [ZTH02](tuya/ts0601_temperature_humidity_sensor_2.md) | TuYa Temperature and humidity sensor (white-label of TuYa TS0601_temperature_humidity_sensor_2) |
-| [ZTH05](tuya/ts0601_temperature_humidity_sensor_2.md) | TuYa Temperature and humidity sensor (white-label of TuYa TS0601_temperature_humidity_sensor_2) |
-| [ZTH05Z](tuya/zth05z.md) | TuYa Temperature and humidity sensor |
-| [ZTH08-E](tuya/ts0601_temperature_humidity_sensor_2.md) | TuYa Temperature and humidity sensor (white-label of TuYa TS0601_temperature_humidity_sensor_2) |
-| [ZWT07](tuya/zwt07.md) | TuYa Wall-mount thermostat |
-| [ZWT198/ZWT100-BH](tuya/zwt198_zwt100-bh.md) | TuYa Avatto wall thermostat |
-| [ZY-M100-24G](tuya/zy-m100-24g.md) | TuYa 24G MmWave radar human presence motion sensor |
-| [ZY-M100-L](tuya/ts0601_smart_human_presence_sensor_1.md) | TuYa Ceiling human breathe sensor (white-label of TuYa TS0601_smart_human_presence_sensor_1) |
-| [ZY-M100-S_1](tuya/zy-m100-s_1.md) | TuYa Mini human breathe sensor |
-| [ZY-M100-S_2](tuya/zy-m100-s_2.md) | TuYa Mini human breathe sensor |
-| [ZYXH](tuya/zyxh.md) | TuYa 24 gang switch |
+| [19DZT](tuya/ts0203.md) | Tuya Door sensor (white-label of Tuya TS0203) |
+| [809WZT](tuya/ts0202.md) | Tuya Motion sensor (white-label of Tuya TS0202) |
+| [899WZ](tuya/ts0207_water_leak_detector.md) | Tuya Water leak detector with 80DB Alarm (white-label of Tuya TS0207_water_leak_detector) |
+| [A5C-21F7-01](tuya/ts0505b_1.md) | Tuya Zigbee RGB+CCT light (white-label of Tuya TS0505B_1) |
+| [ATMS1601Z](tuya/atms1601z.md) | Tuya Din smart relay (without power monitoring) |
+| [BAB-1413_Pro](tuya/bab-1413_pro.md) | Tuya Thermostat radiator valve |
+| [BAC-002-ALZB](tuya/bac-003.md) | Tuya FCU thermostat temperature controller (white-label of Tuya BAC-003) |
+| [BAC-003](tuya/bac-003.md) | Tuya FCU thermostat temperature controller |
+| [BAC-003](tuya/bac-003.md) | Tuya FCU thermostat temperature controller (white-label of Tuya BAC-003) |
+| [BLE-YL01](tuya/ble-yl01.md) | Tuya Smart WiFi Zigbee chlorine meter |
+| [BLE-YL01](tuya/ble-yl01.md) | Tuya Smart WiFi Zigbee chlorine meter (white-label of Tuya BLE-YL01) |
+| [BSD29_1](tuya/ts011f_plug_3.md) | Tuya Smart plug (with power monitoring by polling) (white-label of Tuya TS011F_plug_3) |
+| [BT400B](tuya/ts0215a_sos.md) | Tuya Zigbee Panic Button (white-label of Tuya TS0215A_sos) |
+| [CK-BL702-AL-01](tuya/ck-bl702-al-01.md) | Tuya Zigbee LED bulb |
+| [CTL-R1-TY-Zigbee](tuya/ctl-r1-ty-zigbee.md) | Tuya 24G radar human presence motion sensor. |
+| [D3-DPWK-TY](tuya/d3-dpwk-ty.md) | Tuya HVAC controller |
+| [DCR-RQJ](tuya/dcr-rqj.md) | Tuya Carbon monoxide sensor gas leak detector |
+| [DS-111](tuya/ts0004.md) | Tuya Smart light switch - 4 gang with neutral wire (white-label of Tuya TS0004) |
+| [DS04](tuya/ts0203.md) | Tuya Door sensor (white-label of Tuya TS0203) |
+| [DT82LEMA-1.2N](tuya/ts0601_cover_1.md) | Tuya Curtain motor/roller blind motor/window pusher/tubular motor (white-label of Tuya TS0601_cover_1) |
+| [E220-KR4N0Z0-HA](tuya/e220-kr4n0z0-ha.md) | Tuya Multiprise with 4 AC outlets and 2 USB super charging ports (16A) |
+| [EA4161C-BI](tuya/ea4161c-bi.md) | Tuya Single-phase multifunction energy meter (DIN Module) |
+| [ERS-10TZBVK-AA](tuya/ers-10tzbvk-aa.md) | Tuya Smart knob |
+| [GDC311ZBQ1](tuya/gdc311zbq1.md) | Tuya LoraTap garage door opener with wireless sensor |
+| [gq8b1uv](tuya/gq8b1uv.md) | Tuya Zigbee smart dimmer |
+| [GTZ02](siterwell/gs361a-h04.md) | Tuya Głowica termostatyczna (white-label of Siterwell GS361A-H04) |
+| [HG08007](tuya/ts0505b_1.md) | Tuya Livarno Home outdoor LED band (white-label of Tuya TS0505B_1) |
+| [HW500A](tuya/ts0202.md) | Tuya Motion sensor (white-label of Tuya TS0202) |
+| [HY08WE](tuya/hy08we.md) | Tuya Wall-mount thermostat |
+| [iH-F001](tuya/ts0203.md) | Tuya Door sensor (white-label of Tuya TS0203) |
+| [iH-F8260](moes/ufo-r11.md) | Tuya Universal smart IR remote control (white-label of Moes UFO-R11) |
+| [IH-K009](tuya/ih-k009.md) | Tuya Temperature & humidity sensor |
+| [IH-K663](tuya/ih-k663.md) | Tuya Smart button |
+| [IH012-RT01](tuya/ih012-rt01.md) | Tuya Motion sensor |
+| [IH012-RT02](tuya/ih012-rt02.md) | Tuya Motion sensor |
+| [iHSW02](tuya/whd02.md) | Tuya Wall switch module (white-label of Tuya WHD02) |
+| [JM-TRH-ZGB-V1](tuya/jm-trh-zgb-v1.md) | Tuya Temperature & humidity sensor with clock |
+| [KCTW1Z](tuya/kctw1z.md) | Tuya Temperature & humidity sensor with LCD |
+| [L1(ZW)](tuya/ts0501b_dimmer.md) | Tuya Light dimmer 0-10V (white-label of Tuya TS0501B_dimmer) |
+| [LCZ030](tuya/lcz030.md) | Tuya Temperature & humidity & illuminance sensor with display |
+| [LKWSZ211](tuya/lkwsz211.md) | Tuya Scene remote with 2 keys |
+| [LY-108](tuya/ts0601_cover_6.md) | Tuya Cover (white-label of Tuya TS0601_cover_6) |
+| [M10Z](tuya/ts0003_switch_3_gang_with_backlight.md) | Tuya 2 gang switch with 20A power socket (white-label of Tuya TS0003_switch_3_gang_with_backlight) |
+| [M515EGZT](tuya/ts0601_cover_1.md) | Tuya Curtain motor/roller blind motor/window pusher/tubular motor (white-label of Tuya TS0601_cover_1) |
+| [M9-zigbee-SL](tuya/m9-zigbee-sl.md) | Tuya Smart Switch (4 gang + 4 scene) with neutral wire and motion sensing |
+| [MC500A](tuya/ts0203.md) | Tuya Door sensor (white-label of Tuya TS0203) |
+| [MG-ZG01W](tuya/mg-zg01w.md) | Tuya 1 gang switch with power meter |
+| [MG-ZG02W](tuya/mg-zg02w.md) | Tuya 2 gang switch |
+| [MG-ZG03W](tuya/mg-zg03w.md) | Tuya 3 gang switch |
+| [MINI-ZSB](tuya/ts0041.md) | Tuya Smart button (white-label of Tuya TS0041) |
+| [MIR-HE200-TY](tuya/mir-he200-ty.md) | Tuya Human presence sensor with fall function |
+| [MTG035-ZB-RL](tuya/mtg075-zb-rl.md) | Tuya Human presence sensor with relay (white-label of Tuya MTG075-ZB-RL) |
+| [MTG075-ZB-RL](tuya/mtg075-zb-rl.md) | Tuya 2.4G/5.8G human presence sensor with relay |
+| [MTG275-ZB-RL](tuya/mtg075-zb-rl.md) | Tuya 2.4G/5.8G MmWave radar human presence motion sensor (white-label of Tuya MTG075-ZB-RL) |
+| [PA-44Z](tuya/pa-44z.md) | Tuya Photoelectric smoke detector |
+| [PC311-Z-TY](tuya/pc311-z-ty.md) | Tuya Bidirectional energy meter with 80A current clamp |
+| [PJ-1203-W](tuya/pj-mgw1203.md) | Tuya Electricity energy monitor (white-label of Tuya PJ-MGW1203) |
+| [PJ-1203A](tuya/pj-1203a.md) | Tuya Bidirectional energy meter with 80A current clamp |
+| [PJ-MGW1203](tuya/pj-mgw1203.md) | Tuya Clamp meter |
+| [PJ-ZGD01](tuya/pj-zgd01.md) | Tuya Garage door opener |
+| [QS-zigbee-S08-16A-RF](tuya/whd02.md) | Tuya Wall switch module (white-label of Tuya WHD02) |
+| [QS-Zigbee-SEC01-U](tuya/qs-zigbee-sec01-u.md) | Tuya Zigbee 3.0 smart light switch module 1 gang |
+| [QS-Zigbee-SEC02-U](tuya/qs-zigbee-sec02-u.md) | Tuya Zigbee 3.0 smart light switch module 2 gang |
+| [QT-07S](tuya/ts0222_temperature_humidity.md) | Tuya Soil sensor (white-label of Tuya TS0222_temperature_humidity) |
+| [RC-MCB](tuya/ts0601_din_1.md) | Tuya Zigbee DIN energy meter (white-label of Tuya TS0601_din_1) |
+| [RH3040](tuya/rh3040.md) | Tuya PIR sensor |
+| [RSH-HS06](tuya/rsh-hs06.md) | Tuya Temperature and humidity sensor |
+| [RSH-HS06_1](tuya/ih-k009.md) | Tuya Temperature & humidity sensor (white-label of Tuya IH-K009) |
+| [rtsc11r](tuya/rtsc11r.md) | Tuya 5.8G human presence sensor with relay |
+| [S-LUX-ZB](tuya/s-lux-zb.md) | Tuya Light sensor |
+| [SA12IZL](tuya/sa12izl.md) | Tuya Smart smoke alarm |
+| [SDM01](tuya/sdm01.md) | Tuya Smart energy monitor for 3P+N system |
+| [SH-SC07](tuya/ts0041.md) | Tuya Button scene switch (white-label of Tuya TS0041) |
+| [SM-AW713Z](tuya/ts0111_valve.md) | Tuya Smart water/gas valve (white-label of Tuya TS0111_valve) |
+| [SM0001](tuya/sm0001.md) | Tuya Switch |
+| [SM0201](tuya/sm0201.md) | Tuya Temperature & humidity sensor with LED screen |
+| [SM0202](tuya/sm0202.md) | Tuya Motion sensor |
+| [SNTZ007](tuya/sntz007.md) | Tuya Rechargeable Zigbee contact sensor |
+| [SNTZ009](tuya/sntz009.md) | Tuya Water leak sensor |
+| [SODA_S8](tuya/soda_s8.md) | Tuya SODA S8 premium window handle |
+| [SPM01](tuya/spm01.md) | Tuya Smart energy monitor for 1P+N system |
+| [SPM01V2](tuya/spm01v2.md) | Tuya Smart energy monitor for 1P+N system |
+| [SPM02](tuya/spm02.md) | Tuya Smart energy monitor for 3P+N system |
+| [SPM02V2](tuya/spm02v2.md) | Tuya Smart energy monitor for 3P+N system |
+| [SS9600ZB](tuya/ss9600zb.md) | Tuya 6 gang remote |
+| [SWS6TZ-WHITE](tuya/sws6tz-white.md) | Tuya 6 gang wall switch |
+| [SZR07U](tuya/szr07u.md) | Tuya 24GHz millimeter wave radar |
+| [SZT06 V2.0](tuya/szt06_v2_0.md) | Tuya Smart mini temperature and humidity sensor |
+| [SZTH02](tuya/ts0601_temperature_humidity_sensor_2.md) | Tuya Temperature and humidity sensor (white-label of Tuya TS0601_temperature_humidity_sensor_2) |
+| [TH01Z](nous/sz-t04.md) | Tuya Temperature and humidity sensor with clock (white-label of Nous SZ-T04) |
+| [TH02Z](tuya/wsd500a.md) | Tuya Temperature and humidity sensor (white-label of Tuya WSD500A) |
+| [TM-YKQ004](tuya/ts0044.md) | Tuya Zigbee 4 button remote - 12 scene (white-label of Tuya TS0044) |
+| [TM001-ZA/TM081](tuya/tm001-za_tm081.md) | Tuya Door and window sensor |
+| [TRV601](tuya/trv601.md) | Tuya Thermostatic radiator valve. |
+| [TRV602](tuya/trv602.md) | Tuya Thermostatic radiator valve. |
+| [TS0001](tuya/ts0001.md) | Tuya 1 gang switch |
+| [TS0001_fingerbot](tuya/ts0001_fingerbot.md) | Tuya Zigbee fingerbot plus |
+| [TS0001_power](tuya/ts0001_power.md) | Tuya Switch with power monitoring |
+| [TS0001_switch_1_gang](tuya/ts0001_switch_1_gang.md) | Tuya 1-Gang switch with backlight |
+| [TS0001_switch_module](tuya/ts0001_switch_module.md) | Tuya 1 gang switch module |
+| [TS0001_switch_module_1](tuya/ts0001_switch_module_1.md) | Tuya 1 gang switch module |
+| [TS0002](tuya/ts0002.md) | Tuya 2 gang switch |
+| [TS0002_power](tuya/ts0002_power.md) | Tuya 2 gang switch with power monitoring |
+| [TS0002_switch_2_gang](tuya/ts0002_switch_2_gang.md) | Tuya 2-Gang switch with backlight |
+| [TS0002_switch_module](tuya/ts0002_switch_module.md) | Tuya 2 gang switch module |
+| [TS0002_switch_module_1](tuya/ts0002_switch_module_1.md) | Tuya 1 gang switch module |
+| [TS0002_switch_module_2](tuya/ts0002_switch_module_2.md) | Tuya 2 gang switch module |
+| [TS0002_switch_module_3](tuya/ts0002_switch_module_3.md) | Tuya 2 gang switch with backlight |
+| [TS0002_switch_module_4](tuya/ts0002_switch_module_4.md) | Tuya 2 gang switch with backlight |
+| [TS0003](tuya/ts0003.md) | Tuya 3 gang switch |
+| [TS0003_1](tuya/ts0003.md) | Tuya 3 gang switch (white-label of Tuya TS0003) |
+| [TS0003_switch_3_gang](tuya/ts0003_switch_3_gang.md) | Tuya 3-Gang switch with backlight |
+| [TS0003_switch_3_gang_with_backlight](tuya/ts0003_switch_3_gang_with_backlight.md) | Tuya 3-Gang switch with backlight |
+| [TS0003_switch_module_1](tuya/ts0003_switch_module_1.md) | Tuya 3 gang switch module |
+| [TS0003_switch_module_2](tuya/ts0003_switch_module_2.md) | Tuya 3 gang switch module |
+| [TS0004](tuya/ts0004.md) | Tuya Smart light switch - 4 gang with neutral wire |
+| [TS0004_switch_module](tuya/ts0004_switch_module.md) | Tuya 4 gang switch module |
+| [TS0004_switch_module_2](tuya/ts0004_switch_module_2.md) | Tuya 4 gang switch module |
+| [TS0006](tuya/ts0006.md) | Tuya 6 gang switch module with neutral wire |
+| [TS000F_power](tuya/ts000f_power.md) | Tuya Switch with power monitoring |
+| [TS0011](tuya/ts0011.md) | Tuya Smart light switch - 1 gang |
+| [TS0011_switch_module](tuya/ts0011_switch_module.md) | Tuya 1 gang switch module - (without neutral) |
+| [TS0012](tuya/ts0012.md) | Tuya Smart light switch - 2 gang |
+| [TS0012_switch_module](tuya/ts0012_switch_module.md) | Tuya 2 gang switch module - (without neutral) |
+| [TS0013](tuya/ts0013.md) | Tuya Smart light switch - 3 gang without neutral wire |
+| [TS0013_switch_module](tuya/ts0013_switch_module.md) | Tuya 3 gang switch module - (without neutral) |
+| [TS0014](tuya/ts0014.md) | Tuya Smart light switch - 4 gang without neutral wire |
+| [TS0026](tuya/ts0026.md) | Tuya 6 button scene wall switch |
+| [TS0041](tuya/ts0041.md) | Tuya Wireless switch with 1 button |
+| [TS0042](tuya/ts0042.md) | Tuya Wireless switch with 2 buttons |
+| [TS0043](tuya/ts0043.md) | Tuya Wireless switch with 3 buttons |
+| [TS0044](tuya/ts0044.md) | Tuya Wireless switch with 4 buttons |
+| [TS0044_1](tuya/ts0044.md) | Tuya Zigbee 4 button remote - 12 scene (white-label of Tuya TS0044) |
+| [TS0046](tuya/ts0046.md) | Tuya Wireless switch with 6 buttons |
+| [TS0049](tuya/ts0049.md) | Tuya Water valve |
+| [TS004F](tuya/ts004f.md) | Tuya Wireless switch with 4 buttons |
+| [TS004F_6_button](tuya/ts004f_6_button.md) | Tuya Wireless switch with 6 buttons |
+| [TS0052](tuya/ts0052.md) | Tuya Zigbee dimmer module 1 channel |
+| [TS0052_2](tuya/ts0052_2.md) | Tuya Zigbee dimmer module 2 channel |
+| [TS0101](tuya/ts0101.md) | Tuya Zigbee Socket |
+| [TS0108](tuya/ts0108.md) | Tuya Socket with 2 USB |
+| [TS0111](tuya/ts0111.md) | Tuya Socket |
+| [TS0111_valve](tuya/ts0111_valve.md) | Tuya Smart water/gas valve |
+| [TS0115](tuya/ts0115.md) | Tuya Multiprise with 4 AC outlets and 2 USB super charging ports (10A or 16A) |
+| [TS011F_1](tuya/ts011f_1.md) | Tuya Switch |
+| [TS011F_2_gang_2_usb_wall](tuya/ts011f_2_gang_2_usb_wall.md) | Tuya 2 gang 2 usb wall outlet |
+| [TS011F_2_gang_power](tuya/ts011f_2_gang_power.md) | Tuya 2 gang socket with power monitoring and USB |
+| [TS011F_2_gang_wall](tuya/ts011f_2_gang_wall.md) | Tuya 2 gang wall outlet |
+| [TS011F_3_gang](tuya/ts011f_3_gang.md) | Tuya 3 gang wall ac outlet |
+| [TS011F_4](tuya/ts011f_4.md) | Tuya 2 gang plug |
+| [TS011F_5](tuya/ts011f_5.md) | Tuya 5 gang switch |
+| [TS011F_din_smart_relay](tuya/ts011f_din_smart_relay.md) | Tuya Din smart relay (with power monitoring) |
+| [TS011F_din_smart_relay_polling](tuya/ts011f_din_smart_relay_polling.md) | Tuya Din smart relay (with power monitoring via polling) |
+| [TS011F_plug_1](tuya/ts011f_plug_1.md) | Tuya Smart plug (with power monitoring) |
+| [TS011F_plug_2](tuya/ts011f_plug_2.md) | Tuya Smart plug (without power monitoring) |
+| [TS011F_plug_3](tuya/ts011f_plug_3.md) | Tuya Smart plug (with power monitoring by polling) |
+| [TS011F_socket_module](tuya/ts011f_socket_module.md) | Tuya Socket module |
+| [TS011F_switch_5_gang](tuya/ts011f_switch_5_gang.md) | Tuya 2 gang 2 usb 1 wall ac outlet |
+| [TS011F_wall_outlet](tuya/ts011f_wall_outlet.md) | Tuya In-wall outlet |
+| [TS011F_with_threshold](tuya/ts011f_with_threshold.md) | Tuya Din rail switch with power monitoring and threshold settings |
+| [TS0121_plug](tuya/ts0121_plug.md) | Tuya 10A UK or 16A EU smart plug |
+| [TS0201](tuya/ts0201.md) | Tuya Temperature & humidity sensor with display |
+| [TS0201_1](tuya/ts0201.md) | Tuya Zigbee 3.0 temperature humidity sensor with display (white-label of Tuya TS0201) |
+| [TS0201-z](tuya/ts0201-z.md) | Tuya Temperature & Humidity Sensor (pvxx/ZigbeeTLc) |
+| [TS0202](tuya/ts0202.md) | Tuya Motion sensor |
+| [TS0202_1](tuya/ts0202_1.md) | Tuya Motion sensor |
+| [TS0202_2](tuya/ts0202_2.md) | Tuya Motion sensor with scene switch |
+| [TS0202_3](tuya/ts0202_3.md) | Tuya Motion detector with illuminance |
+| [TS0203](tuya/ts0203.md) | Tuya Door sensor |
+| [TS0203_1](tuya/ts0203_1.md) | Tuya Door sensor with scene switch |
+| [TS0204](tuya/ts0204.md) | Tuya Gas sensor |
+| [TS0205](tuya/ts0205.md) | Tuya Smoke sensor |
+| [TS0205_smoke_2](tuya/ts0205.md) | Tuya Smoke sensor (white-label of Tuya TS0205) |
+| [TS0207_water_leak_detector](tuya/ts0207_water_leak_detector.md) | Tuya Water leak detector |
+| [TS0207_water_leak_detector_1](tuya/ts0207_water_leak_detector.md) | Tuya Zigbee water flood sensor + 1m probe cable (white-label of Tuya TS0207_water_leak_detector) |
+| [TS0207_water_leak_detector_3](tuya/ts0207_water_leak_detector.md) | Tuya Zigbee water leak sensor (white-label of Tuya TS0207_water_leak_detector) |
+| [TS0210](tuya/ts0210.md) | Tuya Vibration sensor |
+| [TS0215A_remote](tuya/ts0215a_remote.md) | Tuya Security remote control |
+| [TS0215A_sos](tuya/ts0215a_sos.md) | Tuya SOS button |
+| [TS0216](tuya/ts0216.md) | Tuya Sound and flash siren |
+| [TS0218](tuya/ts0218.md) | Tuya Button |
+| [TS0222](tuya/ts0222.md) | Tuya Light intensity sensor |
+| [TS0222_temperature_humidity](tuya/ts0222_temperature_humidity.md) | Tuya Temperature & humidity sensor |
+| [TS0224](tuya/ts0224.md) | Tuya Smart light & sound siren |
+| [TS030F](tuya/ts030f.md) | Tuya Smart blind controller |
+| [TS0501A](tuya/ts0501a.md) | Tuya Zigbee light |
+| [TS0501B](tuya/ts0501b.md) | Tuya Zigbee light |
+| [TS0501B_dimmer](tuya/ts0501b_dimmer.md) | Tuya Zigbee dimmer |
+| [TS0501B_dimmer_2](tuya/ts0501b_dimmer_2.md) | Tuya Zigbee dimmer |
+| [TS0502A](tuya/ts0502a.md) | Tuya Light controller |
+| [TS0502B](tuya/ts0502b.md) | Tuya Light controller |
+| [TS0503A](tuya/ts0503a.md) | Tuya Led strip controller |
+| [TS0503B](tuya/ts0503b.md) | Tuya Zigbee RGB light |
+| [TS0504A](tuya/ts0504a.md) | Tuya RGBW LED controller |
+| [TS0504B](tuya/ts0504b.md) | Tuya Zigbee RGBW light |
+| [TS0505A](tuya/ts0505a.md) | Tuya RGB+CCT light controller |
+| [TS0505A_led](tuya/ts0505a_led.md) | Tuya RGB+CCT LED |
+| [TS0505B_1](tuya/ts0505b_1.md) | Tuya Zigbee RGB+CCT light |
+| [TS0505B_1_1](tuya/ts0505b_1.md) | Tuya Zigbee 3.0 18W led light bulb E27 RGBCW (white-label of Tuya TS0505B_1) |
+| [TS0505B_2](tuya/ts0505b_2.md) | Tuya Zigbee RGB+CCT light |
+| [TS0505B_2_1](tuya/ts0505b_2.md) | Tuya Zigbee 3.0 18W led light bulb E27 RGBCW (white-label of Tuya TS0505B_2) |
+| [TS0505B_2_2](tuya/ts0505b_2.md) | Tuya Zigbee GU10/E14 5W smart bulb (white-label of Tuya TS0505B_2) |
+| [TS0505B_3](tuya/ts0505b_3.md) | Tuya Zigbee RGB+CCT light |
+| [TS0601_3_phase_clamp_meter](tuya/ts0601_3_phase_clamp_meter.md) | Tuya 3-phase clamp power meter |
+| [TS0601_3_phase_clamp_meter_relay](tuya/ts0601_3_phase_clamp_meter_relay.md) | Tuya 3-phase clamp power meter with relay |
+| [TS0601_air_quality_sensor](tuya/ts0601_air_quality_sensor.md) | Tuya Air quality sensor |
+| [TS0601_bidirectional_energy meter](tuya/ts0601_bidirectional_energy_meter.md) | Tuya Bidirectional energy meter with 150A Current Clamp |
+| [TS0601_co2_sensor](tuya/ts0601_co2_sensor.md) | Tuya NDIR co2 sensor |
+| [TS0601_contact_temperature_humidity_sensor](tuya/ts0601_contact_temperature_humidity_sensor.md) | Tuya Contact, temperature and humidity sensor |
+| [TS0601_cover_1](tuya/ts0601_cover_1.md) | Tuya Curtain motor/roller blind motor/window pusher/tubular motor |
+| [TS0601_cover_2](tuya/ts0601_cover_2.md) | Tuya Curtain motor fixed speed |
+| [TS0601_cover_3](tuya/ts0601_cover_3.md) | Tuya Cover motor |
+| [TS0601_cover_4](tuya/ts0601_cover_4.md) | Tuya Cover |
+| [TS0601_cover_5](tuya/ts0601_cover_5.md) | Tuya Curtain/blind switch |
+| [TS0601_cover_6](tuya/ts0601_cover_6.md) | Tuya Cover motor |
+| [TS0601_cover_7](tuya/ts0601_cover_7.md) | Tuya Cover motor |
+| [TS0601_cover_8](tuya/ts0601_cover_8.md) | Tuya Cover motor |
+| [TS0601_cover_9](tuya/ts0601_cover_9.md) | Tuya Cover motor |
+| [TS0601_cover_with_1_switch](tuya/ts0601_cover_with_1_switch.md) | Tuya Curtain/blind switch with 1 Gang switch |
+| [TS0601_cover_with_2_switch](tuya/ts0601_cover_with_2_switch.md) | Tuya Curtain/blind switch with 2 Gang switch |
+| [TS0601_dimmer_1_gang_1](tuya/ts0601_dimmer_1_gang_1.md) | Tuya 1 gang smart dimmer |
+| [TS0601_dimmer_1_gang_2](tuya/ts0601_dimmer_1_gang_2.md) | Tuya 1 gang smart dimmer |
+| [TS0601_dimmer_2](tuya/ts0601_dimmer_2.md) | Tuya 2 gang smart dimmer |
+| [TS0601_dimmer_3](tuya/ts0601_dimmer_3.md) | Tuya 3 gang smart dimmer |
+| [TS0601_dimmer_4](tuya/ts0601_dimmer_4.md) | Tuya 2 gang smart dimmer module |
+| [TS0601_dimmer_5](tuya/ts0601_dimmer_5.md) | Tuya 1 gang smart dimmer module |
+| [TS0601_dimmer_knob](tuya/ts0601_dimmer_knob.md) | Tuya Zigbee smart knob dimmer |
+| [TS0601_din](tuya/ts0601_din.md) | Tuya Zigbee smart energy meter DDS238-2 Zigbee |
+| [TS0601_din_1](tuya/ts0601_din_1.md) | Tuya Zigbee DIN energy meter |
+| [TS0601_din_2](tuya/ts0601_din_2.md) | Tuya Zigbee DIN energy meter |
+| [TS0601_din_3](tuya/ts0601_din_3.md) | Tuya Zigbee DIN energy meter |
+| [TS0601_fan_5_levels_and_light_switch](tuya/ts0601_fan_5_levels_and_light_switch.md) | Tuya Fan with 5 levels & light switch |
+| [TS0601_fan_and_light_switch](tuya/ts0601_fan_and_light_switch.md) | Tuya Fan & light switch |
+| [TS0601_fan_switch](tuya/ts0601_fan_switch.md) | Tuya Fan switch |
+| [TS0601_floor_thermostat](tuya/ts0601_floor_thermostat.md) | Tuya Zigbee thermostat for electric floors |
+| [TS0601_gas_sensor_1](tuya/ts0601_gas_sensor_1.md) | Tuya Gas sensor |
+| [TS0601_gas_sensor_2](tuya/ts0601_gas_sensor_2.md) | Tuya Gas sensor |
+| [TS0601_gas_sensor_3](tuya/ts0601_gas_sensor_3.md) | Tuya Gas sensor |
+| [TS0601_gas_sensor_4](tuya/ts0601_gas_sensor_4.md) | Tuya Gas sensor |
+| [TS0601_human_presence_sensor](tuya/ts0601_human_presence_sensor.md) | Tuya Human presence sensor Zigbee |
+| [TS0601_illuminance_temperature_humidity_sensor_1](tuya/ts0601_illuminance_temperature_humidity_sensor_1.md) | Tuya Illuminance, temperature & humidity sensor |
+| [TS0601_illuminance_temperature_humidity_sensor_2](tuya/ts0601_illuminance_temperature_humidity_sensor_2.md) | Tuya Illuminance sensor |
+| [TS0601_light](tuya/ts0601_light.md) | Tuya Light |
+| [TS0601_motion_sensor](tuya/ts0601_motion_sensor.md) | Tuya Human presence sensor AIR |
+| [TS0601_pir](tuya/ts0601_pir.md) | Tuya Haozee PIR sensor |
+| [TS0601_rcbo](tuya/ts0601_rcbo.md) | Tuya DIN mount RCBO with smart energy metering |
+| [TS0601_smart_air_house_keeper](tuya/ts0601_smart_air_house_keeper.md) | Tuya Smart air house keeper |
+| [TS0601_smart_CO_air_box](tuya/ts0601_smart_co_air_box.md) | Tuya Smart air box (carbon monoxide) |
+| [TS0601_smart_human_presence_sensor_1](tuya/ts0601_smart_human_presence_sensor_1.md) | Tuya Smart Human presence sensor |
+| [TS0601_smoke_1](tuya/ts0601_smoke_1.md) | Tuya Smoke sensor |
+| [TS0601_smoke_3](tuya/ts0601_smoke_3.md) | Tuya Photoelectric smoke detector |
+| [TS0601_smoke_4](tuya/ts0601_smoke_4.md) | Tuya Smoke sensor |
+| [TS0601_smoke_5](tuya/ts0601_smoke_5.md) | Tuya Smoke sensor |
+| [TS0601_smoke_6](tuya/ts0601_smoke_6.md) | Tuya Smoke sensor |
+| [TS0601_soil](tuya/ts0601_soil.md) | Tuya Soil sensor |
+| [TS0601_soil_2](tuya/ts0601_soil_2.md) | Tuya Soil sensor |
+| [TS0601_switch](tuya/ts0601_switch.md) | Tuya 1, 2, 3 or 4 gang switch |
+| [TS0601_switch_1_gang](tuya/ts0601_switch_1_gang.md) | Tuya 1 gang switch |
+| [TS0601_switch_10](tuya/ts0601_switch_10.md) | Tuya 10 gang switch |
+| [TS0601_switch_12](tuya/ts0601_switch_12.md) | Tuya ZXYH 12 gang switch |
+| [TS0601_switch_2_gang](tuya/ts0601_switch_2_gang.md) | Tuya 2 gang switch |
+| [TS0601_switch_3_gang](tuya/ts0601_switch_3_gang.md) | Tuya 3 gang switch |
+| [TS0601_switch_4_gang_1](tuya/ts0601_switch_4_gang_1.md) | Tuya 4 gang switch |
+| [TS0601_switch_4_gang_2](tuya/ts0601_switch_4_gang_2.md) | Tuya 4 gang switch with backlight |
+| [TS0601_switch_5_gang](tuya/ts0601_switch_5_gang.md) | Tuya 5 gang switch |
+| [TS0601_switch_6_gang](tuya/ts0601_switch_6_gang.md) | Tuya 6 gang switch |
+| [TS0601_switch_8](tuya/ts0601_switch_8.md) | Tuya ZYXH 8 gang switch |
+| [TS0601_switch_8_2](tuya/ts0601_switch_8_2.md) | Tuya 8 gang switch |
+| [TS0601_temperature_humidity_sensor_1](tuya/ts0601_temperature_humidity_sensor_1.md) | Tuya Temperature & humidity sensor |
+| [TS0601_temperature_humidity_sensor_2](tuya/ts0601_temperature_humidity_sensor_2.md) | Tuya Temperature and humidity sensor |
+| [TS0601_temperature_humidity_sensor_3](tuya/ts0601_temperature_humidity_sensor_3.md) | Tuya Temperature & humidity sensor |
+| [TS0601_thermostat](tuya/ts0601_thermostat.md) | Tuya Radiator valve with thermostat |
+| [TS0601_thermostat_1](tuya/ts0601_thermostat_1.md) | Tuya Thermostatic radiator valve |
+| [TS0601_thermostat_2](tuya/ts0601_thermostat_2.md) | Tuya Thermostat radiator valve |
+| [TS0601_thermostat_3](tuya/ts0601_thermostat_3.md) | Tuya Thermostatic radiator valve |
+| [TS0601_thermostat_4](tuya/ts0601_thermostat_4.md) | Tuya Thermostatic radiator valve |
+| [TS0601_vibration_sensor](tuya/ts0601_vibration_sensor.md) | Tuya Smart vibration sensor |
+| [TS0601_water_sensor](tuya/ts0601_water_sensor.md) | Tuya Water leak sensor |
+| [TS0603](tuya/ts0603.md) | Tuya Garage door opener |
+| [TS0726](tuya/ts0726.md) | Tuya 4 gang switch with neutral wire |
+| [TS1101_dimmer_module_1ch](tuya/ts1101_dimmer_module_1ch.md) | Tuya Zigbee dimmer module 1 channel |
+| [TS1101_dimmer_module_2ch](tuya/ts1101_dimmer_module_2ch.md) | Tuya Zigbee dimmer module 2 channel |
+| [TS110E_1gang_2](tuya/ts110e_1gang_2.md) | Tuya 1 channel dimmer |
+| [TS110E_2gang_1](tuya/ts110e_2gang_1.md) | Tuya 2 channel dimmer |
+| [TS110E_2gang_2](tuya/ts110e_2gang_2.md) | Tuya 2 channel dimmer |
+| [TS130F](tuya/ts130f.md) | Tuya Curtain/blind switch |
+| [TT001ZAV20](tuya/tt001zav20.md) | Tuya Temperature & humidity sensor |
+| [TV02-Zigbee](tuya/tv02-zigbee.md) | Tuya Thermostat radiator valve |
+| [TY-ZPR06](tuya/ts0202.md) | Tuya Motion sensor (white-label of Tuya TS0202) |
+| [TYBAC-006](tuya/tybac-006.md) | Tuya Wall-mount thermostat for 2-pipe fan-coil unit |
+| [TYZS1L](tuya/tyzs1l.md) | Tuya Led strip controller HSB |
+| [U86KCJ-ZP](tuya/u86kcj-zp.md) | Tuya Smart 6 key scene wall switch |
+| [U86KWF-ZPSJ](tuya/u86kwf-zpsj.md) | Tuya Environment controller |
+| [UFO-R4Z](tuya/zs06.md) | Tuya Universal smart IR remote control (white-label of Tuya ZS06) |
+| [WHD02](tuya/whd02.md) | Tuya Wall switch module |
+| [WLS-100z](tuya/wls-100z.md) | Tuya Water leak sensor |
+| [WSD500A](tuya/wsd500a.md) | Tuya Temperature & humidity sensor |
+| [WZ5_rgb_1](tuya/wz5_rgb_1.md) | Tuya Zigbee & RF 5 in 1 LED controller (RGB mode) |
+| [X5H-GB-B](tuya/x5h-gb-b.md) | Tuya Wall-mount thermostat |
+| [XFY-CGQ-ZIGB](tuya/xfy-cgq-zigb.md) | Tuya Illuminance sensor |
+| [XSH01B](tuya/ts0002_power.md) | Tuya 2 gang switch module with power monitoring (white-label of Tuya TS0002_power) |
+| [YK-S03](tuya/ble-yl01.md) | Tuya Smart pH and Chlorine Tester for Swimming Pool (white-label of Tuya BLE-YL01) |
+| [YSR-MINI-Z](tuya/ysr-mini-z.md) | Tuya 2 in 1 dimming remote control and scene control |
+| [YXZBRB58](tuya/yxzbrb58.md) | Tuya Smart human presence sensor |
+| [YXZBSL](tuya/yxzbsl.md) | Tuya Smart siren |
+| [ZB-Sm](tuya/zb-sm.md) | Tuya Tubular motor |
+| [ZD06](tuya/ts0203.md) | Tuya Door window sensor (white-label of Tuya TS0203) |
+| [ZD08](tuya/ts0203.md) | Tuya Door sensor (white-label of Tuya TS0203) |
+| [ZD82TN](tuya/ts0601_cover_1.md) | Tuya Curtain motor (white-label of Tuya TS0601_cover_1) |
+| [ZG-102Z](tuya/zg-102z.md) | Tuya Door sensor |
+| [ZG-102ZL](tuya/zg-102zl.md) | Tuya Luminance door sensor |
+| [ZG-2002-RF](tuya/ts0002.md) | Tuya Three mode Zigbee Switch (white-label of Tuya TS0002) |
+| [ZG-204ZL](tuya/zg-204zl.md) | Tuya Luminance motion sensor |
+| [ZG-204ZM](tuya/zg-204zm.md) | Tuya PIR 24Ghz human presence sensor |
+| [ZG-205Z/A](tuya/zg-205z_a.md) | Tuya 5.8Ghz/24Ghz Human presence sensor |
+| [ZG-205ZL](tuya/zg-205zl.md) | Tuya 24Ghz/5.8GHz human presence sensor |
+| [ZG-225Z](tuya/zg-225z.md) | Tuya Gas sensor |
+| [ZG-227Z](tuya/zg-227zl.md) | Tuya Temperature and humidity sensor (white-label of Tuya ZG-227ZL) |
+| [ZG-227ZL](tuya/zg-227zl.md) | Tuya Temperature & humidity LCD sensor |
+| [ZM-35H-Q](tuya/zm-35h-q.md) | Tuya Motion sensor |
+| [ZMS-102](tuya/ih012-rt01.md) | Tuya Motion sensor (white-label of Tuya IH012-RT01) |
+| [ZMS01](tuya/ts0202.md) | Tuya Motion sensor (white-label of Tuya TS0202) |
+| [ZN231392](tuya/zn231392.md) | Tuya Smart water/gas valve |
+| [ZP01](tuya/ts0202.md) | Tuya Motion sensor (white-label of Tuya TS0202) |
+| [ZS-TYG3-SM-21Z](tuya/zs-tyg3-sm-21z.md) | Tuya 2 gang smart switch with backlight and neutral wire |
+| [ZS-TYG3-SM-31Z](tuya/zs-tyg3-sm-31z.md) | Tuya 3 gang smart switch with backlight and neutral wire |
+| [ZS-TYG3-SM-41Z](tuya/zs-tyg3-sm-41z.md) | Tuya 4 gang smart switch with backlight and neutral wire |
+| [ZS-TYG3-SM-61Z](tuya/zs-tyg3-sm-61z.md) | Tuya Smart switch (4 gang + 2 scene) with backlight and neutral wire |
+| [ZS06](tuya/zs06.md) | Tuya Universal smart IR remote control |
+| [ZSS-QY-SSD-A-EN](tuya/zss-qy-ssd-a-en.md) | Tuya Smart smoke alarm |
+| [ZTH01](tuya/ts0601_temperature_humidity_sensor_2.md) | Tuya Temperature and humidity sensor (white-label of Tuya TS0601_temperature_humidity_sensor_2) |
+| [ZTH01/ZTH02](tuya/ts0201.md) | Tuya Temperature and humidity sensor (white-label of Tuya TS0201) |
+| [ZTH02](tuya/ts0601_temperature_humidity_sensor_2.md) | Tuya Temperature and humidity sensor (white-label of Tuya TS0601_temperature_humidity_sensor_2) |
+| [ZTH05](tuya/ts0601_temperature_humidity_sensor_2.md) | Tuya Temperature and humidity sensor (white-label of Tuya TS0601_temperature_humidity_sensor_2) |
+| [ZTH05Z](tuya/zth05z.md) | Tuya Temperature and humidity sensor |
+| [ZTH08-E](tuya/ts0601_temperature_humidity_sensor_2.md) | Tuya Temperature and humidity sensor (white-label of Tuya TS0601_temperature_humidity_sensor_2) |
+| [ZWT07](tuya/zwt07.md) | Tuya Wall-mount thermostat |
+| [ZWT198/ZWT100-BH](tuya/zwt198_zwt100-bh.md) | Tuya Avatto wall thermostat |
+| [ZY-M100-24G](tuya/zy-m100-24g.md) | Tuya 24G MmWave radar human presence motion sensor |
+| [ZY-M100-24GV2](tuya/zy-m100-24gv2.md) | Tuya 24G MmWave radar human presence motion sensor |
+| [ZY-M100-L](tuya/ts0601_smart_human_presence_sensor_1.md) | Tuya Ceiling human breathe sensor (white-label of Tuya TS0601_smart_human_presence_sensor_1) |
+| [ZY-M100-S_1](tuya/zy-m100-s_1.md) | Tuya Mini human breathe sensor |
+| [ZY-M100-S_2](tuya/zy-m100-s_2.md) | Tuya Mini human breathe sensor |
+| [ZYXH](tuya/zyxh.md) | Tuya 24 gang switch |
 
 
 # TUYATEC {#tuyatec}
 
 | Model | Description |
 | ----- | ----------- |
-| [GDKES-01TZXD](tuya/ts0011.md) | TUYATEC Smart light switch - 1 gang (white-label of TuYa TS0011) |
-| [GDKES-02TZXD](tuya/ts0012.md) | TUYATEC Smart light switch - 2 gang (white-label of TuYa TS0012) |
-| [GDKES-03TZXD](tuya/ts0013.md) | TUYATEC Smart light switch - 3 gang without neutral wire (white-label of TuYa TS0013) |
-| [GDKES-04TZXD](tuya/ts0014.md) | TUYATEC Smart light switch - 4 gang without neutral wire (white-label of TuYa TS0014) |
+| [GDKES-01TZXD](tuya/ts0011.md) | TUYATEC Smart light switch - 1 gang (white-label of Tuya TS0011) |
+| [GDKES-02TZXD](tuya/ts0012.md) | TUYATEC Smart light switch - 2 gang (white-label of Tuya TS0012) |
+| [GDKES-03TZXD](tuya/ts0013.md) | TUYATEC Smart light switch - 3 gang without neutral wire (white-label of Tuya TS0013) |
+| [GDKES-04TZXD](tuya/ts0014.md) | TUYATEC Smart light switch - 4 gang without neutral wire (white-label of Tuya TS0014) |
 
 
 # Ubisys {#ubisys}
@@ -6288,31 +6370,31 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [GTZ08](tuya/tv02-zigbee.md) | Unknown/id3.pl Thermostat radiator valve (white-label of TuYa TV02-Zigbee) |
+| [GTZ08](tuya/tv02-zigbee.md) | Unknown/id3.pl Thermostat radiator valve (white-label of Tuya TV02-Zigbee) |
 
 
 # UNSH {#unsh}
 
 | Model | Description |
 | ----- | ----------- |
-| [SMKG-1KNL-EU-Z](tuya/ts011f_with_threshold.md) | UNSH Smart Circuit Breaker (white-label of TuYa TS011F_with_threshold) |
+| [SMKG-1KNL-EU-Z](tuya/ts011f_with_threshold.md) | UNSH Smart Circuit Breaker (white-label of Tuya TS011F_with_threshold) |
 
 
 # UR Lighting {#ur_lighting}
 
 | Model | Description |
 | ----- | ----------- |
-| [TH008L10RGBCCT](tuya/ts0505b_1.md) | UR Lighting 10W RGB+CCT downlight (white-label of TuYa TS0505B_1) |
+| [TH008L10RGBCCT](tuya/ts0505b_1.md) | UR Lighting 10W RGB+CCT downlight (white-label of Tuya TS0505B_1) |
 
 
 # UseeLink {#useelink}
 
 | Model | Description |
 | ----- | ----------- |
-| [SM-0306E-2W](tuya/ts011f_5.md) | UseeLink 4 gang switch, with USB (white-label of TuYa TS011F_5) |
-| [SM-AZ713](tuya/ts011f_1.md) | UseeLink Smart water/gas valve (white-label of TuYa TS011F_1) |
-| [SM-O301-AZ](tuya/ts011f_5.md) | UseeLink AU 4 plug 10A power board + USB (white-label of TuYa TS011F_5) |
-| [SM-SO306E/K/M](tuya/ts0115.md) | UseeLink Multiprise with 4 AC outlets and 2 USB super charging ports (10A or 16A) (white-label of TuYa TS0115) |
+| [SM-0306E-2W](tuya/ts011f_5.md) | UseeLink 4 gang switch, with USB (white-label of Tuya TS011F_5) |
+| [SM-AZ713](tuya/ts011f_1.md) | UseeLink Smart water/gas valve (white-label of Tuya TS011F_1) |
+| [SM-O301-AZ](tuya/ts011f_5.md) | UseeLink AU 4 plug 10A power board + USB (white-label of Tuya TS011F_5) |
+| [SM-SO306E/K/M](tuya/ts0115.md) | UseeLink Multiprise with 4 AC outlets and 2 USB super charging ports (10A or 16A) (white-label of Tuya TS0115) |
 
 
 # VBLED {#vbled}
@@ -6350,7 +6432,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [TS011F](tuya/ts011f_plug_3.md) | VIKEFON Smart plug (with power monitoring by polling) (white-label of TuYa TS011F_plug_3) |
+| [TS011F](tuya/ts011f_plug_3.md) | VIKEFON Smart plug (with power monitoring by polling) (white-label of Tuya TS011F_plug_3) |
 
 
 # Villeroy & Boch {#villeroy_&_boch}
@@ -6392,7 +6474,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [VZ-222S](tuya/ts0014.md) | Vizo Smart light switch - 4 gang without neutral wire (white-label of TuYa TS0014) |
+| [VZ-222S](tuya/ts0014.md) | Vizo Smart light switch - 4 gang without neutral wire (white-label of Tuya TS0014) |
 
 
 # Vrey {#vrey}
@@ -6400,8 +6482,8 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [VR-X701U](vrey/vr-x701u.md) | Vrey 1 gang switch |
-| [VR-X712U-0013](tuya/ts0012.md) | Vrey Smart light switch - 2 gang (white-label of TuYa TS0012) |
-| [VR-X712U-0013](tuya/ts0011.md) | Vrey Smart light switch - 1 gang (white-label of TuYa TS0011) |
+| [VR-X712U-0013](tuya/ts0012.md) | Vrey Smart light switch - 2 gang (white-label of Tuya TS0012) |
+| [VR-X712U-0013](tuya/ts0011.md) | Vrey Smart light switch - 1 gang (white-label of Tuya TS0011) |
 
 
 # Wally {#wally}
@@ -6423,7 +6505,7 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [ZJSBL7-100Z](tuya/ts0601_rcbo.md) | WDYK DIN mount RCBO with smart energy metering (white-label of TuYa TS0601_rcbo) |
+| [ZJSBL7-100Z](tuya/ts0601_rcbo.md) | WDYK DIN mount RCBO with smart energy metering (white-label of Tuya TS0601_rcbo) |
 
 
 # Weiser {#weiser}
@@ -6438,14 +6520,14 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [WZ-M100-W](tuya/zy-m100-s_1.md) | Wenzhi Human presence sensor (white-label of TuYa ZY-M100-S_1) |
+| [WZ-M100-W](tuya/zy-m100-s_1.md) | Wenzhi Human presence sensor (white-label of Tuya ZY-M100-S_1) |
 
 
 # Wenzhou Taiye Electric {#wenzhou_taiye_electric}
 
 | Model | Description |
 | ----- | ----------- |
-| [TAC7361C BI](tuya/ts0601_3_phase_clamp_meter_relay.md) | Wenzhou Taiye Electric 3-phase clamp power meter with relay (white-label of TuYa TS0601_3_phase_clamp_meter_relay) |
+| [TAC7361C BI](tuya/ts0601_3_phase_clamp_meter_relay.md) | Wenzhou Taiye Electric 3-phase clamp power meter with relay (white-label of Tuya TS0601_3_phase_clamp_meter_relay) |
 
 
 # WETEN {#weten}
@@ -6493,8 +6575,8 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 | [R7048](woox/r7048.md) | Woox Smart humidity & temperature sensor |
 | [R7049](woox/r7049.md) | Woox Smart smoke alarm |
 | [R7051](woox/r7051.md) | Woox Smart siren |
-| [R7052](tuya/ts0215a_sos.md) | Woox Smart SOS button (white-label of TuYa TS0215A_sos) |
-| [R7054](tuya/ts0215a_remote.md) | Woox Security remote control (white-label of TuYa TS0215A_remote) |
+| [R7052](tuya/ts0215a_sos.md) | Woox Smart SOS button (white-label of Tuya TS0215A_sos) |
+| [R7054](tuya/ts0215a_remote.md) | Woox Security remote control (white-label of Tuya TS0215A_remote) |
 | [R7060](woox/r7060.md) | Woox Smart garden irrigation control |
 | [R9077](woox/r9077.md) | Woox RGB+CCT LED |
 
@@ -6555,14 +6637,15 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [DAC2161C](tuya/ts0601_din_3.md) | XOCA Zigbee DIN energy meter (white-label of TuYa TS0601_din_3) |
-| [DAC4121C](tuya/ea4161c-bi.md) | XOCA Single-phase multifunction energy meter (DIN Module) (white-label of TuYa EA4161C-BI) |
+| [DAC2161C](tuya/ts0601_din_3.md) | XOCA Zigbee DIN energy meter (white-label of Tuya TS0601_din_3) |
+| [DAC4121C](tuya/ea4161c-bi.md) | XOCA Single-phase multifunction energy meter (DIN Module) (white-label of Tuya EA4161C-BI) |
 
 
 # xyzroe {#xyzroe}
 
 | Model | Description |
 | ----- | ----------- |
+| [ZigDC](xyzroe/zigdc.md) | xyzroe ZigDC |
 | [ZigUSB](xyzroe/zigusb.md) | xyzroe Zigbee USB power monitor and switch |
 
 
@@ -6654,43 +6737,46 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [YS-MT750](tuya/ts0601_cover_1.md) | Yushun Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
-| [YS-MT750L](tuya/ts0601_cover_1.md) | Yushun Curtain motor (white-label of TuYa TS0601_cover_1) |
+| [YS-MT750](tuya/ts0601_cover_1.md) | Yushun Curtain motor/roller blind motor/window pusher/tubular motor (white-label of Tuya TS0601_cover_1) |
+| [YS-MT750L](tuya/ts0601_cover_1.md) | Yushun Curtain motor (white-label of Tuya TS0601_cover_1) |
 
 
 # Zemismart {#zemismart}
 
 | Model | Description |
 | ----- | ----------- |
-| [AM43](tuya/ts0601_cover_1.md) | Zemismart Roller blind motor (white-label of TuYa TS0601_cover_1) |
-| [BCM100DB](tuya/ts0601_cover_2.md) | Zemismart Curtain motor fixed speed (white-label of TuYa TS0601_cover_2) |
-| [BCM500DS-TYZ](tuya/ts0601_cover_1.md) | Zemismart Curtain motor (white-label of TuYa TS0601_cover_1) |
+| [AM43](tuya/ts0601_cover_1.md) | Zemismart Roller blind motor (white-label of Tuya TS0601_cover_1) |
+| [BCM100DB](tuya/ts0601_cover_2.md) | Zemismart Curtain motor fixed speed (white-label of Tuya TS0601_cover_2) |
+| [BCM500DS-TYZ](tuya/ts0601_cover_1.md) | Zemismart Curtain motor (white-label of Tuya TS0601_cover_1) |
 | [HGZB-DLC4-N15B](zemismart/hgzb-dlc4-n15b.md) | Zemismart RGB LED downlight |
 | [LXN56-SS27LX1.1](zemismart/lxn56-ss27lx1_1.md) | Zemismart Smart light switch - 2 gang with neutral wire |
 | [LXZB-12A](zemismart/lxzb-12a.md) | Zemismart RGB LED downlight |
-| [LXZB-ZB-09A](tuya/ts0505b_1.md) | Zemismart Zemismart LED Surface Mounted Downlight 9W RGBW (white-label of TuYa TS0505B_1) |
-| [M2805EGBZTN](tuya/ts0601_cover_1.md) | Zemismart Tubular motor (white-label of TuYa TS0601_cover_1) |
-| [M515EGB](tuya/ts0601_cover_1.md) | Zemismart Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
+| [LXZB-ZB-09A](tuya/ts0505b_1.md) | Zemismart Zemismart LED Surface Mounted Downlight 9W RGBW (white-label of Tuya TS0505B_1) |
+| [M2805EGBZTN](tuya/ts0601_cover_1.md) | Zemismart Tubular motor (white-label of Tuya TS0601_cover_1) |
+| [M515EGB](tuya/ts0601_cover_1.md) | Zemismart Curtain motor/roller blind motor/window pusher/tubular motor (white-label of Tuya TS0601_cover_1) |
 | [M515EGBZTN](zemismart/m515egbztn.md) | Zemismart Roller shade driver |
 | [TB25](zemismart/tb25.md) | Zemismart Smart light switch and socket - 2 gang with neutral wire |
 | [TB26-4](zemismart/tb26-4.md) | Zemismart 4-gang smart wall switch |
 | [TB26-6](zemismart/tb26-6.md) | Zemismart 6-gang smart wall switch |
 | [ZIGBEE-B09-UK](zemismart/zigbee-b09-uk.md) | Zemismart Zigbee smart outlet universal socket with USB port |
 | [ZM-AM02_cover](zemismart/zm-am02_cover.md) | Zemismart Zigbee/RF curtain converter |
-| [ZM-CSW002-D_switch](tuya/ts0002.md) | Zemismart 2 gang switch (white-label of TuYa TS0002) |
+| [ZM-CSW002-D_switch](tuya/ts0002.md) | Zemismart 2 gang switch (white-label of Tuya TS0002) |
 | [ZM-CSW032-D](zemismart/zm-csw032-d.md) | Zemismart Curtain/roller blind switch |
-| [ZM-H7](tuya/sm0001.md) | Zemismart Hand wave wall smart switch (white-label of TuYa SM0001) |
-| [ZM-L03E-Z](tuya/ts0003_switch_3_gang_with_backlight.md) | Zemismart 3 gang switch with neutral (white-label of TuYa TS0003_switch_3_gang_with_backlight) |
+| [ZM-H7](tuya/sm0001.md) | Zemismart Hand wave wall smart switch (white-label of Tuya SM0001) |
+| [ZM-L03E-Z](tuya/ts0003_switch_3_gang_with_backlight.md) | Zemismart 3 gang switch with neutral (white-label of Tuya TS0003_switch_3_gang_with_backlight) |
 | [ZM-RM02](zemismart/zm-rm02.md) | Zemismart Smart 6 key scene switch |
-| [ZM16EL-03/33](tuya/ts0601_cover_3.md) | Zemismart Cover motor (white-label of TuYa TS0601_cover_3) |
-| [ZM25EL](tuya/ts0601_cover_3.md) | Zemismart Cover motor (white-label of TuYa TS0601_cover_3) |
+| [ZM16EL-03/33](tuya/ts0601_cover_3.md) | Zemismart Cover motor (white-label of Tuya TS0601_cover_3) |
+| [ZM25EL](tuya/ts0601_cover_3.md) | Zemismart Cover motor (white-label of Tuya TS0601_cover_3) |
 | [ZM25R1](zemismart/zm25r1.md) | Zemismart Tubular motor |
 | [ZM25RX-08/30](zemismart/zm25rx-08_30.md) | Zemismart Tubular motor |
 | [ZM25TQ](zemismart/zm25tq.md) | Zemismart Tubular motor |
-| [ZM79E-DT](tuya/ts0601_cover_1.md) | Zemismart Curtain motor/roller blind motor/window pusher/tubular motor (white-label of TuYa TS0601_cover_1) |
-| [ZM85EL-2Z](tuya/ts0601_cover_3.md) | Zemismart Roman Rod I type U curtains track (white-label of TuYa TS0601_cover_3) |
-| [ZN-LC1E](tuya/ts130f.md) | Zemismart Smart curtain/shutter switch (white-label of TuYa TS130F) |
-| [ZN2S-RS3E-DH](tuya/ts0601_dimmer_3.md) | Zemismart 3 gang dimmer (white-label of TuYa TS0601_dimmer_3) |
+| [ZM79E-DT](tuya/ts0601_cover_1.md) | Zemismart Curtain motor/roller blind motor/window pusher/tubular motor (white-label of Tuya TS0601_cover_1) |
+| [ZM85EL-2Z](tuya/ts0601_cover_3.md) | Zemismart Roman Rod I type U curtains track (white-label of Tuya TS0601_cover_3) |
+| [ZMO-606-20A](zemismart/zmo-606-20a.md) | Zemismart Smart 20A outlet |
+| [ZMO-606-P2](zemismart/zmo-606-p2.md) | Zemismart Smart 2 poles outlet (20A + 10A) |
+| [ZMO-606-S2](zemismart/zmo-606-s2.md) | Zemismart Smart 2 gangs switch with outlet |
+| [ZN-LC1E](tuya/ts130f.md) | Zemismart Smart curtain/shutter switch (white-label of Tuya TS130F) |
+| [ZN2S-RS3E-DH](tuya/ts0601_dimmer_3.md) | Zemismart 3 gang dimmer (white-label of Tuya TS0601_dimmer_3) |
 | [ZW-EU-01](nue_3a/hgzb-01.md) | Zemismart Smart light relay - 1 gang (white-label of Nue / 3A HGZB-01) |
 | [ZW-EU-02](nue_3a/lxn59-2s7lx1_0.md) | Zemismart Smart light relay - 2 gang (white-label of Nue / 3A LXN59-2S7LX1.0) |
 
@@ -6720,5 +6806,5 @@ Unfortunately there are still 133 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
-| [TY-04Z](tuya/ts0601_switch_4_gang_1.md) | ZYXH 4 gang switch (white-label of TuYa TS0601_switch_4_gang_1) |
+| [TY-04Z](tuya/ts0601_switch_4_gang_1.md) | ZYXH 4 gang switch (white-label of Tuya TS0601_switch_4_gang_1) |
 

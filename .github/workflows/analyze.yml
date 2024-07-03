@@ -16,7 +16,7 @@ jobs:
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Get PR info
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
@@ -43,13 +43,13 @@ jobs:
           for info in pr/* ; do echo ::set-output name=$(basename $info)::$(cat $info); done
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: refs/pull/${{ steps.pr.outputs.number }}/merge
 
       - name: Get reports
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
@@ -73,7 +73,7 @@ jobs:
         run: unzip reports.zip
 
       - name: SonarCloud
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

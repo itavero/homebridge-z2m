@@ -8,14 +8,18 @@ on:
       - "releases?/**"
     tags:
       - v[0-9]+.[0-9]+.[0-9]+*
-    paths-ignore:
-      - "docs/**"
-      - "*.md"
+    paths:
+      - "**.ts"
+      - "**.js"
+      - "**.json"
+      - ".*"
 
   pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "*.md"
+    paths:
+      - "**.ts"
+      - "**.js"
+      - "**.json"
+      - ".*"
 
 jobs:
   build:

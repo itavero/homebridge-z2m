@@ -16,7 +16,6 @@ on:
     paths-ignore:
       - "docs/**"
       - "*.md"
-    types: [opened, assigned, synchronize, reopened]
 
 jobs:
   build:

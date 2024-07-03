@@ -55,12 +55,11 @@ jobs:
           node_modules/.bin/ts-node src/docgen/docgen.ts
           git diff --exit-code -s docs ||echo "updated=1" >> $GITHUB_OUTPUT
       
-      - uses: tibdex/github-app-token@v2
-        if: ${{ steps.docs.outputs.updated == 1 }}
+      - uses: actions/create-github-app-token@v1
         id: pr-token
         with:
-          app_id: ${{ secrets.PR_APP_ID }}
-          private_key: ${{ secrets.PR_APP_SECRET }}
+          app-id: ${{ secrets.PR_APP_ID }}
+          private-key: ${{ secrets.PR_APP_SECRET }}
 
       - name: Open/update PR
         if: ${{ steps.docs.outputs.updated == 1 }}

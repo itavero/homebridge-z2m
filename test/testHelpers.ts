@@ -27,8 +27,14 @@ export const loadExposesFromFile = (filename: string): ExposesEntry[] => {
   // Check if file exists
   let filePath = filename;
   if (!fs.existsSync(filePath)) {
-    // Try to combine path
-    filePath = path.join(__dirname, './exposes/', filename);
+    // Look for manually overriden path first.
+    // These files do not get updated by the documentation generation script.
+    const manualOverriddenPath = path.join(__dirname, './exposes/_manual/', filename);
+    if (fs.existsSync(manualOverriddenPath)) {
+      filePath = manualOverriddenPath;
+    } else {
+      filePath = path.join(__dirname, './exposes/', filename);
+    }
 
     if (!fs.existsSync(filePath)) {
       // Try to find it in the output of the documentation script

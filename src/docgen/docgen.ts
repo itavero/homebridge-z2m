@@ -406,12 +406,11 @@ function update_test_input(test_resources: string, json_source: string) {
       const dst = path.join(test_resources, file.name);
       const src = path.join(json_source, file.name);
       if (file.isDirectory()) {
-        if (!fs.existsSync(src)) {
-          console.log(`TEST INPUT: Source for ${dst} can NOT be FOUND. Removing old files.`);
-          fs.rmdirSync(dst, { recursive: true });
-        } else {
-          update_test_input(dst, src);
+        // Skip all directories named _manual
+        if (file.name === '_manual') {
+          continue;
         }
+        update_test_input(dst, src);
       } else if (file.isFile()) {
         if (!fs.existsSync(src)) {
           console.log(`TEST INPUT: Source for ${dst} can NOT be FOUND. Removing old file.`);

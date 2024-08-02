@@ -31,19 +31,14 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "type": "switch",
-    "features": [
-      {
-        "name": "state",
-        "label": "State",
-        "access": 2,
-        "type": "binary",
-        "property": "learn_ir_code",
-        "description": "Turn on to learn new IR code",
-        "value_on": "ON",
-        "value_off": "OFF"
-      }
-    ]
+    "name": "learn_ir_code",
+    "label": "Learn ir code",
+    "access": 2,
+    "type": "binary",
+    "property": "learn_ir_code",
+    "description": "Turn on to learn new IR code",
+    "value_on": "ON",
+    "value_off": "OFF"
   },
   {
     "name": "learned_ir_code",

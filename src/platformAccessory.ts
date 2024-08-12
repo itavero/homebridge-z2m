@@ -15,7 +15,7 @@ import {
 } from './z2mModels';
 import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
 import { QoS } from 'mqtt-packet';
-import { sanitizeAndFilterExposesEntries } from './helpers';
+import { sanitizeAccessoryName, sanitizeAndFilterExposesEntries } from './helpers';
 import { EXP_AVAILABILITY } from './experimental';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
@@ -424,7 +424,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         // Update accessory info
         // Note: getOrAddService is used so that the service is known in this.serviceIds and will not get filtered out.
         this.getOrAddService(new hap.Service.AccessoryInformation())
-          .updateCharacteristic(hap.Characteristic.Name, info.friendly_name)
+          .updateCharacteristic(hap.Characteristic.Name, sanitizeAccessoryName(info.friendly_name))
           .updateCharacteristic(hap.Characteristic.Manufacturer, info.definition.vendor ?? 'Zigbee2MQTT')
           .updateCharacteristic(hap.Characteristic.Model, info.definition.model ?? 'unknown')
           .updateCharacteristic(hap.Characteristic.SerialNumber, this.serialNumber)
@@ -497,7 +497,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     if (subType !== undefined) {
       name += ` ${subType}`;
     }
-    return name;
+    return sanitizeAccessoryName(name);
   }
 
   configureController(controller: Controller) {

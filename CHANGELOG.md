@@ -10,10 +10,14 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Changed
 
 - For numeric characteristics that have a range set, the range is automatically updated if an out of range value is received from Zigbee2MQTT.
+- Lights: `color_mode` is now always used (no longer an experimental flag; also see [#208](https://github.com/itavero/homebridge-z2m/issues/208))
 
 ### Fixed
 
 - Processing JSON availability payload should not result in a TypeError anymore.
+- Minor changes to be compatible with the upcoming Homebridge v2 release, amongst others:
+  - In Light accessory, set default value before configuring min/max values.
+  - Sanitize accessory names so they only contain alphanumeric, space, and apostrophe characters, and start with an alphanumeric character.
 
 ## [1.11.0-beta.7] - 2025-01-04
 

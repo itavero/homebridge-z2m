@@ -11,6 +11,23 @@ export function errorToString(e: unknown): string {
   return JSON.stringify(e);
 }
 
+/**
+ * Added because of the following warning from HAP-NodeJS:
+ * "The accessory '<SOME NAME HERE>' has an invalid 'Name' characteristic ('<SOME NAME HERE>'). Please use only alphanumeric, space, and
+ * apostrophe characters. Ensure it starts and ends with an alphabetic or numeric character, and avoid emojis. This may prevent the
+ * accessory from being added in the Home App or cause unresponsiveness."
+ * @param name
+ */
+export function sanitizeAccessoryName(name: string): string {
+  // Replace all non-alphanumeric characters with a space (except spaces of course)
+  const sanitized = name.replace(/[^a-zA-Z0-9' ]+/g, ' ');
+  // Make sure there's at most one space in a row, and remove leading/trailing spaces as well as leading apostrophes
+  return sanitized
+    .replace(/\s{2,}/g, ' ')
+    .replace(/^[ ']+/, '')
+    .trim();
+}
+
 export function getDiffFromArrays<T>(a: T[], b: T[]): T[] {
   return a.filter((x) => !b.includes(x)).concat(b.filter((x) => !a.includes(x)));
 }

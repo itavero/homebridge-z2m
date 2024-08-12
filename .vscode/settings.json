@@ -17,6 +17,9 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[markdown]": {
+    "editor.formatOnSave": false
+  },
   "cSpell.words": [
     "Elgato",
     "Zigbee"

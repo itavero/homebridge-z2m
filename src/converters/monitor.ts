@@ -98,7 +98,7 @@ export class NumericCharacteristicMonitor extends BaseCharacteristicMonitor {
     private readonly input_max: number,
     private readonly output_min?: number | undefined,
     private readonly output_max?: number | undefined,
-    private readonly ceilAlmostZeroValue: boolean = false
+    private readonly ceilAlmostZeroValue = false
   ) {
     super(key, service, characteristic);
     if (input_min === input_max) {

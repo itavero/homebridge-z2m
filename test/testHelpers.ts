@@ -18,10 +18,12 @@ import { BasicServiceCreatorManager } from '../src/converters/creators';
 import fs from 'fs';
 import path from 'path';
 
-export interface HomebridgeCharacteristicSetCallback {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (value: CharacteristicValue, cb: CharacteristicSetCallback, context?: any, connectionID?: SessionIdentifier): void;
-}
+export type HomebridgeCharacteristicSetCallback = (
+  value: CharacteristicValue,
+  cb: CharacteristicSetCallback,
+  context?: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  connectionID?: SessionIdentifier
+) => void;
 
 export const loadExposesFromFile = (filename: string): ExposesEntry[] => {
   // Check if file exists
@@ -127,7 +129,7 @@ class TestCharacteristic {
 
   constructor(
     readonly topLevelProperty: string,
-    readonly characteristic: WithUUID<{ new (): Characteristic }> | undefined,
+    readonly characteristic: WithUUID<new () => Characteristic> | undefined,
     readonly doExpectSet: boolean
   ) {
     if (characteristic !== undefined) {
@@ -136,13 +138,13 @@ class TestCharacteristic {
   }
 }
 
-export declare type ServiceIdentifier = string | WithUUID<{ new (): Service }>;
+export declare type ServiceIdentifier = string | WithUUID<new () => Service>;
 
 export interface ServiceHandlerContainer {
   addExpectedPropertyCheck(property: string): ServiceHandlerContainer;
   addExpectedCharacteristic(
     identifier: string,
-    characteristic: WithUUID<{ new (): Characteristic }>,
+    characteristic: WithUUID<new () => Characteristic>,
     doExpectSet?: boolean,
     property?: string
   ): ServiceHandlerContainer;
@@ -154,12 +156,12 @@ export interface ServiceHandlerContainer {
   checkCharacteristicUpdateValues(expectedUpdates: Map<string, CharacteristicValue>): ServiceHandlerContainer;
 
   checkCharacteristicUpdate(
-    characteristic: WithUUID<{ new (): Characteristic }> | string,
+    characteristic: WithUUID<new () => Characteristic> | string,
     value: CharacteristicValue
   ): ServiceHandlerContainer;
 
   checkCharacteristicUpdates(
-    expectedUpdates: Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>
+    expectedUpdates: Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>
   ): ServiceHandlerContainer;
 
   checkNoCharacteristicUpdates(): ServiceHandlerContainer;
@@ -198,7 +200,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
 
   addExpectedCharacteristic(
     identifier: string,
-    characteristic: WithUUID<{ new (): Characteristic }>,
+    characteristic: WithUUID<new () => Characteristic>,
     doExpectSet = false,
     property: string | undefined = undefined
   ): ServiceHandlerContainer {
@@ -236,16 +238,16 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
   }
 
   checkCharacteristicUpdate(
-    characteristic: WithUUID<{ new (): Characteristic }> | string,
+    characteristic: WithUUID<new () => Characteristic> | string,
     value: CharacteristicValue
   ): ServiceHandlerContainer {
     return this.checkCharacteristicUpdates(
-      new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([[characteristic, value]])
+      new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([[characteristic, value]])
     );
   }
 
   checkCharacteristicUpdates(
-    expectedUpdates: Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>
+    expectedUpdates: Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>
   ): ServiceHandlerContainer {
     expect(this.serviceMock.updateCharacteristic).toBeCalledTimes(expectedUpdates.size);
 
@@ -369,7 +371,7 @@ export class ServiceHandlersTestHarness {
     return id.UUID;
   }
 
-  generateServiceId(serviceType: WithUUID<{ new (): Service }> | string, subType: string | undefined = undefined): string {
+  generateServiceId(serviceType: WithUUID<new () => Service> | string, subType: string | undefined = undefined): string {
     let serviceIdentifier = typeof serviceType === 'string' ? serviceType : serviceType.UUID;
     if (subType !== undefined) {
       serviceIdentifier += '_' + subType;
@@ -378,7 +380,7 @@ export class ServiceHandlersTestHarness {
   }
 
   getOrAddHandler(
-    serviceType: WithUUID<{ new (): Service }> | string,
+    serviceType: WithUUID<new () => Service> | string,
     subType: string | undefined = undefined,
     serviceIdentifier: string | undefined = undefined
   ): ServiceHandlerContainer {
@@ -504,18 +506,18 @@ export class ServiceHandlersTestHarness {
   checkSingleUpdateState(
     json: string,
     serviceIdentifier: ServiceIdentifier,
-    characteristic: WithUUID<{ new (): Characteristic }> | string,
+    characteristic: WithUUID<new () => Characteristic> | string,
     value: CharacteristicValue,
     checkOtherHandlersIgnoreThisUpdate = true
   ) {
-    const map = new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>();
+    const map = new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>();
     map.set(characteristic, value);
     this.checkUpdateState(json, serviceIdentifier, map, checkOtherHandlersIgnoreThisUpdate);
   }
 
   checkUpdateStateIsIgnored(json: string) {
     const state = JSON.parse(json);
-    const noUpdates = new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>();
+    const noUpdates = new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>();
     for (const handler of this.handlers.values()) {
       expect(handler?.serviceHandler).toBeDefined();
       handler?.serviceHandler?.updateState(state);
@@ -526,7 +528,7 @@ export class ServiceHandlersTestHarness {
   checkUpdateState(
     json: string,
     serviceIdentifier: ServiceIdentifier,
-    expectedUpdates: Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>,
+    expectedUpdates: Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>,
     checkOtherHandlersIgnoreThisUpdate = true
   ) {
     const state = JSON.parse(json);
@@ -541,7 +543,7 @@ export class ServiceHandlersTestHarness {
     handler?.checkCharacteristicUpdates(expectedUpdates);
 
     if (checkOtherHandlersIgnoreThisUpdate) {
-      const noUpdates = new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>();
+      const noUpdates = new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>();
       for (const [id, otherHandler] of this.handlers) {
         if (id === serviceId) {
           // already verified

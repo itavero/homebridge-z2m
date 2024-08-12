@@ -104,17 +104,17 @@ export class SwitchActionMapping {
 }
 
 export class SwitchActionHelper {
-  private static readonly singleAction: Set<string> = new Set(['single', 'click', 'press']);
+  private static readonly singleAction = new Set<string>(['single', 'click', 'press']);
 
-  private static readonly doubleAction: Set<string> = new Set(['double']);
+  private static readonly doubleAction = new Set<string>(['double']);
 
-  private static readonly longAction: Set<string> = new Set(['hold', 'long']);
+  private static readonly longAction = new Set<string>(['hold', 'long']);
 
-  private static readonly tripleAction: Set<string> = new Set(['triple', 'tripple']);
+  private static readonly tripleAction = new Set<string>(['triple', 'tripple']);
 
-  private static readonly quadrupleAction: Set<string> = new Set(['quadruple']);
+  private static readonly quadrupleAction = new Set<string>(['quadruple']);
 
-  private static readonly ignoredAdditions: Set<string> = new Set(['release', 'hold-release']);
+  private static readonly ignoredAdditions = new Set<string>(['release', 'hold-release']);
 
   private static readonly separators: string[] = ['_', '-'];
 

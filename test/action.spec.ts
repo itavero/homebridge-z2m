@@ -238,7 +238,6 @@ describe('Action', () => {
     });
   });
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   describe('Aqara Opple switch 3 bands', () => {
     // Shared "state"
     const actionProperty = 'action';

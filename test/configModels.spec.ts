@@ -6,6 +6,7 @@ import { BasicServiceCreatorManager } from '../src/converters/creators';
 import * as hapNodeJs from 'hap-nodejs';
 import { setHap } from '../src/hap';
 
+/* eslint-disable-next-line @typescript-eslint/no-extraneous-class */
 class ConsoleLogger {
   /* eslint-disable no-console */
   static error(message: string) {

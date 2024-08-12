@@ -51,7 +51,7 @@ describe('Lock', () => {
       harness.checkUpdateState(
         '{"lock_state":"locked","state":"LOCK"}',
         hap.Service.LockMechanism,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.LockTargetState, hap.Characteristic.LockTargetState.SECURED],
           [hap.Characteristic.LockCurrentState, hap.Characteristic.LockCurrentState.SECURED],
         ])
@@ -63,7 +63,7 @@ describe('Lock', () => {
       harness.checkUpdateState(
         '{"battery":80,"linkquality":18,"lock_state":"unlocked","state":"UNLOCK"}',
         hap.Service.LockMechanism,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.LockTargetState, hap.Characteristic.LockTargetState.UNSECURED],
           [hap.Characteristic.LockCurrentState, hap.Characteristic.LockCurrentState.UNSECURED],
         ])

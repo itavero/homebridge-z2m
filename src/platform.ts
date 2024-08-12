@@ -314,7 +314,6 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
   }
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   private checkZigbee2MqttVersionAndConfig(payload: string, fullTopic: string) {
     const info = JSON.parse(payload);
     if ('version' in info) {
@@ -412,7 +411,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       if ('state' in state) {
         isAvailable = state.state === 'online';
       }
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
       // Ignore error as the string payload version is handled above
     }
     const deviceTopic = topic.slice(0, -1 * Zigbee2mqttPlatform.TOPIC_SUFFIX_AVAILABILITY.length);

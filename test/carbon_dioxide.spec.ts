@@ -56,7 +56,7 @@ describe('Carbon Dioxide Sensor', () => {
         harness.checkUpdateState(
           `{"co2":${co2DetectionThreshold},"battery_low":false}`,
           hap.Service.CarbonDioxideSensor,
-          new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+          new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
             [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
             [hap.Characteristic.CarbonDioxideDetected, hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_ABNORMAL],
             [hap.Characteristic.CarbonDioxideLevel, co2DetectionThreshold],
@@ -68,7 +68,7 @@ describe('Carbon Dioxide Sensor', () => {
         harness.checkUpdateState(
           `{"co2":${co2DetectionThreshold - 1},"battery_low":false}`,
           hap.Service.CarbonDioxideSensor,
-          new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+          new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
             [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
             [hap.Characteristic.CarbonDioxideDetected, hap.Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL],
             [hap.Characteristic.CarbonDioxideLevel, co2DetectionThreshold - 1],

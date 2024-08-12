@@ -19,9 +19,7 @@ export interface ConverterConfigValidatorCollection {
   allConverterConfigurationsAreValid(configurations: object, logger: BasicLogger | undefined): boolean;
 }
 
-interface ServiceCreatorConstructor {
-  new (converterConfigRegistry: ConverterConfigurationRegistry): ServiceCreator;
-}
+type ServiceCreatorConstructor = new (converterConfigRegistry: ConverterConfigurationRegistry) => ServiceCreator;
 
 export class BasicServiceCreatorManager
   implements ServiceCreatorManager, ConverterConfigValidatorCollection, ConverterConfigurationRegistry

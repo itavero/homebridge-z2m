@@ -137,7 +137,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":false,"smoke":false,"tamper":false}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
@@ -147,7 +147,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":true,"smoke":false,"tamper":false}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
@@ -157,7 +157,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":false,"smoke":true,"tamper":false}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
@@ -167,7 +167,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":false,"smoke":false,"tamper":true}',
         hap.Service.SmokeSensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.SmokeDetected, hap.Characteristic.SmokeDetected.SMOKE_NOT_DETECTED],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
@@ -384,7 +384,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":false,"water_leak":false}',
         waterLeakSensorId,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED],
         ])
@@ -393,7 +393,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":true,"water_leak":false}',
         waterLeakSensorId,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED],
         ])
@@ -402,7 +402,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":false,"water_leak":true}',
         waterLeakSensorId,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.LeakDetected, hap.Characteristic.LeakDetected.LEAK_DETECTED],
         ])
@@ -457,7 +457,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":true,"tamper":false}',
         gasLeakSensorId,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
         ]),
@@ -466,7 +466,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":true,"tamper":false}',
         hap.Service.CarbonMonoxideSensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.NOT_TAMPERED],
         ]),
@@ -476,7 +476,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":false,"tamper":true}',
         gasLeakSensorId,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
         ]),
@@ -485,7 +485,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":false,"tamper":true}',
         hap.Service.CarbonMonoxideSensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
         ]),
@@ -495,7 +495,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":true,"tamper":true}',
         gasLeakSensorId,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
         ]),
@@ -504,7 +504,7 @@ describe('Basic Sensors', () => {
       harness.checkUpdateState(
         '{"battery_low":true,"tamper":true}',
         hap.Service.CarbonMonoxideSensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.StatusLowBattery, hap.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW],
           [hap.Characteristic.StatusTampered, hap.Characteristic.StatusTampered.TAMPERED],
         ]),

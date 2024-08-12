@@ -3,7 +3,7 @@ import { BasicAccessory, ServiceHandler } from '../converters/interfaces';
 import { BasicLogger } from '../logger';
 
 export class DocsAccessory implements BasicAccessory {
-  readonly log: BasicLogger = <BasicLogger>(<unknown>{
+  readonly log: BasicLogger = {
     info: function () {
       // stub
     },
@@ -16,7 +16,7 @@ export class DocsAccessory implements BasicAccessory {
     debug: function () {
       // stub
     },
-  });
+  } as unknown as BasicLogger;
 
   private readonly services: Service[] = [];
   private readonly handlerIds = new Set<string>();

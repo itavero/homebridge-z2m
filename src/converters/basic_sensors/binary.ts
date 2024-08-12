@@ -8,7 +8,7 @@ import { BasicSensorHandler, IdentifierGenerator, ServiceConstructor } from './b
 export class BinarySensorTypeDefinition {
   public constructor(
     public readonly service: ServiceConstructor,
-    public readonly characteristic: WithUUID<{ new (): Characteristic }>,
+    public readonly characteristic: WithUUID<new () => Characteristic>,
     public readonly hapOnValue: CharacteristicValue,
     public readonly hapOffValue: CharacteristicValue,
     public readonly additionalSubType?: string | undefined
@@ -73,7 +73,7 @@ export abstract class BinarySensorHandler extends ConfigurableBinarySensorHandle
     identifierGen: IdentifierGenerator,
     logName: string,
     service: ServiceConstructor,
-    characteristic: WithUUID<{ new (): Characteristic }>,
+    characteristic: WithUUID<new () => Characteristic>,
     hapOnValue: CharacteristicValue,
     hapOffValue: CharacteristicValue,
     additionalSubType?: string | undefined

@@ -38,7 +38,6 @@ export enum ExposesKnownTypes {
   CLIMATE = 'climate',
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isExposesEntry = (x: any): x is ExposesEntry => {
   if (isNullOrUndefined(x) || isNullOrUndefined(x.type)) {
     return false;

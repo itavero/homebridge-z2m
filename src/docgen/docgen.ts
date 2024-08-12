@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 /* eslint-disable max-len */
 import fs from 'fs';
@@ -93,7 +91,7 @@ function makeClassNameHumanReadable(name: string): string {
   return name.replace(/([A-Z])/g, ' $1').trim();
 }
 
-function addServiceMapping(service: WithUUID<{ new (): Service }>, page?: string): [string, ServiceInfo] {
+function addServiceMapping(service: WithUUID<new () => Service>, page?: string): [string, ServiceInfo] {
   // Secretly also tries to add all the characteristics to the lookup table.
   try {
     const s = new service();
@@ -103,7 +101,8 @@ function addServiceMapping(service: WithUUID<{ new (): Service }>, page?: string
     for (const char of s.optionalCharacteristics) {
       characteristicNameMapping.set(char.UUID, makeClassNameHumanReadable(char.constructor.name));
     }
-  } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_) {
     // ignore
   }
 

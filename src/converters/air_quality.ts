@@ -58,7 +58,7 @@ abstract class PassthroughAirQualityProperty implements AirQualityProperty {
   constructor(
     public expose: ExposesEntryWithProperty,
     protected service: Service,
-    protected characteristic: WithUUID<{ new (): Characteristic }>
+    protected characteristic: WithUUID<new () => Characteristic>
   ) {
     this.latestAirQuality = hap.Characteristic.AirQuality.UNKNOWN;
     const c = getOrAddCharacteristic(service, characteristic);
@@ -184,9 +184,9 @@ class ParticulateMatter2Dot5Property extends PassthroughAirQualityProperty {
 }
 
 class AirQualitySensorHandler implements ServiceHandler {
-  public static readonly propertyFactories: WithExposesValidator<{
-    new (expose: ExposesEntryWithProperty, service: Service): AirQualityProperty;
-  }>[] = [VolatileOrganicCompoundsProperty, ParticulateMatter10Property, ParticulateMatter2Dot5Property];
+  public static readonly propertyFactories: WithExposesValidator<
+    new (expose: ExposesEntryWithProperty, service: Service) => AirQualityProperty
+  >[] = [VolatileOrganicCompoundsProperty, ParticulateMatter10Property, ParticulateMatter2Dot5Property];
 
   private readonly properties: AirQualityProperty[] = [];
   private readonly service: Service;

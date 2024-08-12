@@ -51,7 +51,7 @@ describe('Air Quality Sensor', () => {
       harness.checkUpdateState(
         '{"voc": 333}',
         hap.Service.AirQualitySensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.VOCDensity, 333],
           [hap.Characteristic.AirQuality, hap.Characteristic.AirQuality.EXCELLENT],
         ])
@@ -63,7 +63,7 @@ describe('Air Quality Sensor', () => {
       harness.checkUpdateState(
         '{"voc": 1000}',
         hap.Service.AirQualitySensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.VOCDensity, 1000],
           [hap.Characteristic.AirQuality, hap.Characteristic.AirQuality.GOOD],
         ])
@@ -75,7 +75,7 @@ describe('Air Quality Sensor', () => {
       harness.checkUpdateState(
         '{"voc": 1000}',
         hap.Service.AirQualitySensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.VOCDensity, 1000],
           [hap.Characteristic.AirQuality, hap.Characteristic.AirQuality.GOOD],
         ])
@@ -87,7 +87,7 @@ describe('Air Quality Sensor', () => {
       harness.checkUpdateState(
         '{"voc": 3333}',
         hap.Service.AirQualitySensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.VOCDensity, 3333],
           [hap.Characteristic.AirQuality, hap.Characteristic.AirQuality.FAIR],
         ])
@@ -99,7 +99,7 @@ describe('Air Quality Sensor', () => {
       harness.checkUpdateState(
         '{"voc": 8332}',
         hap.Service.AirQualitySensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.VOCDensity, 8332],
           [hap.Characteristic.AirQuality, hap.Characteristic.AirQuality.INFERIOR],
         ])
@@ -111,7 +111,7 @@ describe('Air Quality Sensor', () => {
       harness.checkUpdateState(
         '{"voc": 8333}',
         hap.Service.AirQualitySensor,
-        new Map<WithUUID<{ new (): Characteristic }> | string, CharacteristicValue>([
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
           [hap.Characteristic.VOCDensity, 8333],
           [hap.Characteristic.AirQuality, hap.Characteristic.AirQuality.POOR],
         ])

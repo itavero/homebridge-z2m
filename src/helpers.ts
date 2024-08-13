@@ -1,4 +1,4 @@
-import { Characteristic, Service, WithUUID } from 'homebridge';
+import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
 import { ExposesEntry, exposesHasFeatures, exposesHasNumericRangeProperty } from './z2mModels';
 
 export function errorToString(e: unknown): string {
@@ -46,6 +46,16 @@ export function roundToDecimalPlaces(input: number, decimalPlaces: number): numb
 
 export function copyExposesRangeToCharacteristic(exposes: ExposesEntry, characteristic: Characteristic): boolean {
   if (exposesHasNumericRangeProperty(exposes)) {
+    // Make sure value is within range before setting the range properties.
+    const current_value = characteristic.value as number;
+    if (current_value === undefined) {
+      characteristic.value = Math.round((exposes.value_min + exposes.value_max) / 2);
+    } else if (current_value < exposes.value_min) {
+      characteristic.value = exposes.value_min;
+    } else if (current_value > exposes.value_max) {
+      characteristic.value = exposes.value_max;
+    }
+
     characteristic.setProps({
       minValue: exposes.value_min,
       maxValue: exposes.value_max,
@@ -54,6 +64,31 @@ export function copyExposesRangeToCharacteristic(exposes: ExposesEntry, characte
     return true;
   }
   return false;
+}
+
+export function allowSingleValueForCharacteristic(characteristic: Characteristic, value: CharacteristicValue): Characteristic {
+  characteristic.value = value;
+  characteristic.setProps({
+    minValue: value as number,
+    maxValue: value as number,
+    validValues: [value as number],
+  });
+  return characteristic;
+}
+
+export function setValidValuesOnCharacteristic(characteristic: Characteristic, validValues: number[]): Characteristic {
+  if (validValues.length > 0) {
+    const current_value = characteristic.value as number;
+    if (current_value === undefined || !validValues.includes(current_value)) {
+      characteristic.value = validValues[0];
+    }
+    characteristic.setProps({
+      minValue: Math.min(...validValues),
+      maxValue: Math.max(...validValues),
+      validValues: validValues,
+    });
+  }
+  return characteristic;
 }
 
 export function groupByEndpoint<Entry extends ExposesEntry>(entries: Entry[]): Map<string | undefined, Entry[]> {

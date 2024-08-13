@@ -17,7 +17,7 @@ import {
   ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
-import { getOrAddCharacteristic } from '../helpers';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
 import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Controller, Service } from 'homebridge';
 import {
   CharacteristicMonitor,
@@ -308,14 +308,7 @@ class LightHandler implements ServiceHandler {
     if (this.colorTempExpose !== undefined) {
       const characteristic = getOrAddCharacteristic(service, hap.Characteristic.ColorTemperature);
 
-      // Set default value to average of min/max, before configuring min/max
-      characteristic.value = Math.round((this.colorTempExpose.value_min + this.colorTempExpose.value_max) / 2);
-
-      characteristic.setProps({
-        minValue: this.colorTempExpose.value_min,
-        maxValue: this.colorTempExpose.value_max,
-        minStep: 1,
-      });
+      copyExposesRangeToCharacteristic(this.colorTempExpose, characteristic);
 
       characteristic.on('set', this.handleSetColorTemperature.bind(this));
 

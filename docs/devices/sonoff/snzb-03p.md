@@ -20,7 +20,6 @@ the SONOFF SNZB-03P
   * Status Low Battery
 * [Occupancy Sensor](../../sensors.md)
   * Occupancy Detected
-  * Status Low Battery
 
 
 # Related

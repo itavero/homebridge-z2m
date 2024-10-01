@@ -4,7 +4,6 @@ import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
 import { loadExposesFromFile, ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
-import { EXP_COLOR_MODE } from '../src/experimental';
 
 describe('Light', () => {
   beforeAll(() => {
@@ -491,7 +490,6 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
-        newHarness.addExperimentalFeatureFlags(EXP_COLOR_MODE);
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)

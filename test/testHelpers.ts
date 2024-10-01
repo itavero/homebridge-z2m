@@ -215,7 +215,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
 
   checkCharacteristicPropertiesHaveBeenSet(identifier: string, props: Partial<CharacteristicProps>): ServiceHandlerContainer {
     const mock = this.getCharacteristicMock(identifier);
-    expect(mock.setProps).toBeCalledTimes(1).toBeCalledWith(props);
+    expect(mock.setProps).toHaveBeenCalledTimes(1).toHaveBeenCalledWith(props);
 
     return this;
   }

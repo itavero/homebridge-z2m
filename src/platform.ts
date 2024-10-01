@@ -23,7 +23,7 @@ import {
   isDeviceListEntryForGroup,
 } from './z2mModels';
 import * as semver from 'semver';
-import { errorToString, getDiffFromArrays } from './helpers';
+import { errorToString, getDiffFromArrays, sanitizeAccessoryName } from './helpers';
 import { BasicServiceCreatorManager } from './converters/creators';
 import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from './configHelpers';
 import { BasicLogger } from './logger';
@@ -568,9 +568,10 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
 
     if (!isDeviceListEntry(accessory.context.device)) {
-      this.log.warn(
-        `Restoring old (pre v1.0.0) accessory ${accessory.context.device.friendly_name} (${ieee_address}). This accessory ` +
-          `will not work until updated device information is received from Zigbee2MQTT v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.`
+      this.log.error(
+        `DEPRECATED: Restoring old (pre v1.0.0) accessory ${accessory.context.device.friendly_name} (${ieee_address}). This accessory ` +
+          `will not work until updated device information is received from Zigbee2MQTT v${Zigbee2mqttPlatform.MIN_Z2M_VERSION} or newer.` +
+          'This functionality will be removed in a future version.'
       );
     }
 
@@ -594,8 +595,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       existingAcc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(existingAcc));
     } else {
       // New entry
-      this.log.info('New accessory:', device.friendly_name);
-      const accessory = new this.api.platformAccessory(device.friendly_name, uuid);
+      const sanitized_name = sanitizeAccessoryName(device.friendly_name);
+      this.log.info(`New accessory: ${device.friendly_name} (${sanitized_name})`);
+      const accessory = new this.api.platformAccessory(sanitized_name, uuid);
       accessory.context.device = device;
       this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
       const acc = new Zigbee2mqttAccessory(this, accessory, this.getAdditionalConfigForDevice(device));

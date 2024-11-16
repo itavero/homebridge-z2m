@@ -18,6 +18,7 @@ import { WaterLeakSensorHandler, GasLeakSensorHandler } from './basic_sensors/le
 import { CarbonMonoxideSensorHandler } from './basic_sensors/carbon_monoxide';
 import { SmokeSensorHandler } from './basic_sensors/smoke';
 import { VibrationSensorHandler } from './basic_sensors/vibration';
+import { MovingSensorHandler } from './basic_sensors/moving';
 import { PresenceSensorHandler } from './basic_sensors/presence';
 import { OccupancySensorHandler } from './basic_sensors/occupancy';
 import { IdentifierGenerator } from './basic_sensors/basic';
@@ -52,6 +53,7 @@ export class BasicSensorCreator implements ServiceCreator {
     OccupancySensorHandler,
     PresenceSensorHandler,
     VibrationSensorHandler,
+    MovingSensorHandler,
     SmokeSensorHandler,
     CarbonMonoxideSensorHandler,
     WaterLeakSensorHandler,

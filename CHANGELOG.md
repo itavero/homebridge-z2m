@@ -7,6 +7,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- Expose `moving` as Motion Sensor.
+
 ### Changed
 
 - Lights: `color_mode` is now always used (no longer an experimental flag; also see [#208](https://github.com/itavero/homebridge-z2m/issues/208))

@@ -6,6 +6,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- Expose moving as motion sensor.
+
 ## [1.11.0-beta.6] - 2024-06-30
 
 ### Changed

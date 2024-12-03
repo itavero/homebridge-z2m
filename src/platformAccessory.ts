@@ -16,7 +16,7 @@ import {
 import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
 import { QoS } from 'mqtt-packet';
 import { sanitizeAndFilterExposesEntries } from './helpers';
-import { EXP_AVAILABILITY } from './experimental';
+import { EXP_AVAILABILITY, EXP_SKIP_BRIGHTNESS_UPDATE } from './experimental';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;
@@ -294,12 +294,16 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   private queueAllKeysForGet(): void {
-    const keys = [...this.serviceHandlers.values()]
+    let keys = [...this.serviceHandlers.values()]
       .map((h) => h.getableKeys)
       .reduce((a, b) => {
         return a.concat(b);
       }, []);
     if (keys.length > 0) {
+      // Do not ask Zigbee2MQTT for brightness, otherwise the cached brightness level gets lost when a given bulb's state is OFF.
+      if (this.platform.isExperimentalFeatureEnabled(EXP_SKIP_BRIGHTNESS_UPDATE) && keys.includes('brightness')) {
+        keys = keys.filter((key) => key !== 'brightness');
+      }
       this.queueKeyForGetAction(keys);
     }
   }

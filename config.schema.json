@@ -161,9 +161,29 @@
             "type": "object",
             "properties": {
               "adaptive_lighting": {
-                "title": "Enable Adaptive Lighting",
-                "type": "boolean",
-                "required": false
+                "title": "Adaptive Lighting",
+                "type": "object",
+                "required": false,
+                "properties": {
+                  "enabled": {
+                    "title": "Enable adaptive lighting",
+                    "type": "boolean",
+                    "default": true,
+                    "required": false
+                  },
+                  "only_when_on": {
+                    "title": "Only send color temperature updates when light is on",
+                    "type": "boolean",
+                    "default": true,
+                    "required": false
+                  },
+                  "transition": {
+                    "title": "Transition time",
+                    "type": "integer",
+                    "default": 0,
+                    "required": false
+                  }
+                }
               }
             }
           }

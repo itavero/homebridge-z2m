@@ -6,6 +6,12 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Changed
+
+- Adaptive Lighting:
+   - Enabled by default for lights that support it (can still be disabled).
+   - Internal color temperature reference is reset when brightness or state is changed via HomeKit.
+
 ## [1.11.0-beta.6] - 2024-06-30
 
 ### Changed

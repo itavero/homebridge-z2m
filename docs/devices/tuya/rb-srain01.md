@@ -61,8 +61,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "binary",
     "property": "cleaning_reminder",
     "description": "Cleaning reminder",
-    "value_on": "ON",
-    "value_off": "OFF"
+    "value_on": true,
+    "value_off": false
   },
   {
     "name": "rain_intensity",
@@ -70,15 +70,26 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 1,
     "type": "numeric",
     "property": "rain_intensity",
-    "description": "Rainfall intensity"
+    "description": "Rainfall intensity",
+    "unit": "mV"
+  },
+  {
+    "name": "rain",
+    "label": "Rain",
+    "access": 1,
+    "type": "binary",
+    "property": "rain",
+    "description": "Indicates whether the device detected rainfall",
+    "value_on": true,
+    "value_off": false
   },
   {
     "name": "battery",
     "label": "Battery",
-    "access": 1,
+    "access": 5,
     "type": "numeric",
     "property": "battery",
-    "description": "Remaining battery in %, can take up to 24 hours before reported",
+    "description": "Remaining battery in %",
     "category": "diagnostic",
     "unit": "%",
     "value_max": 100,

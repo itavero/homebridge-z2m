@@ -78,9 +78,7 @@ export class LightCreator implements ServiceCreator {
     let requestBrightness = false;
     let adaptiveLightingConfig: AdaptiveLightingConfig | undefined = undefined;
     if (isLightConfig(converterConfig)) {
-      if (converterConfig.request_brightness === true) {
-        requestBrightness = true;
-      }
+      requestBrightness = !!converterConfig.request_brightness;
       if (isAdaptiveLightingConfig(converterConfig.adaptive_lighting)) {
         adaptiveLightingConfig = converterConfig.adaptive_lighting;
       } else if (converterConfig.adaptive_lighting === true) {

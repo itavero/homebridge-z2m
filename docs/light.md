@@ -26,7 +26,8 @@ The table below shows how the different features within this `exposes` entry are
       "adaptive_lighting": {
         "only_when_on": true,
         "transition": 0.5
-      }
+      },
+      "request_brightness": false
     }
   }
 }

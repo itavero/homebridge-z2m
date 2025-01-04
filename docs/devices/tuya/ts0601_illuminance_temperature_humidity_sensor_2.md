@@ -16,6 +16,8 @@ the Tuya TS0601_illuminance_temperature_humidity_sensor_2
 
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
 * [Temperature Sensor](../../sensors.md)
   * Current Temperature
 

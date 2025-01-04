@@ -18,6 +18,9 @@ the Sercomm SZ-PIR04N
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
+  * Status Tampered
 * [Occupancy Sensor](../../sensors.md)
   * Occupancy Detected
   * Status Tampered

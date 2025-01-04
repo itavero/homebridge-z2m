@@ -20,6 +20,8 @@ the Tuya ZG-102ZL
   * Status Low Battery
 * [Contact Sensor](../../sensors.md)
   * Contact Sensor State
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
 
 
 # Related

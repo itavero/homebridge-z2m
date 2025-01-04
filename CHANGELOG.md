@@ -7,6 +7,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+## [1.11.0-beta.7] - 2025-01-04
+
 ### Changed
 
 - Light sensor will now use `illuminance` property if `illuminance_lux` is not available. This should fix compatibility with the new major v2 release of Zigbee2MQTT. (see [#966](https://github.com/itavero/homebridge-z2m/issues/966))
@@ -464,7 +466,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Restore BatteryService and WindowCovering properly on start up.
 - Improve state determination for WindowCovering.
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.6...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.7...HEAD
+[1.11.0-beta.7]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.6...v1.11.0-beta.7
 [1.11.0-beta.6]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.5...v1.11.0-beta.6
 [1.11.0-beta.5]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.4...v1.11.0-beta.5
 [1.11.0-beta.4]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.3...v1.11.0-beta.4

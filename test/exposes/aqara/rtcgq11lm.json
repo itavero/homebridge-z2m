@@ -42,21 +42,12 @@
     "unit": "mV"
   },
   {
-    "name": "illuminance_lux",
-    "label": "Illuminance (lux)",
-    "access": 1,
-    "type": "numeric",
-    "property": "illuminance",
-    "description": "Measured illuminance in lux",
-    "unit": "lx"
-  },
-  {
     "name": "illuminance",
     "label": "Illuminance",
     "access": 1,
     "type": "numeric",
     "property": "illuminance",
-    "description": "Measured illuminance in lux",
+    "description": "Measured illuminance",
     "unit": "lx"
   },
   {

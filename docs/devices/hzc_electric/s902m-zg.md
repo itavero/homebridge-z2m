@@ -18,6 +18,10 @@ the HZC Electric S902M-ZG
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
+  * Status Low Battery
+  * Status Tampered
 * [Occupancy Sensor](../../sensors.md)
   * Occupancy Detected
   * Status Low Battery

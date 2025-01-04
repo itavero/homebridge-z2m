@@ -8,6 +8,10 @@ import { Characteristic } from 'homebridge';
 
 export class LightSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'illuminance_lux';
+
+  // Since Zigbee2MQTT v2 illuminance_lux has been renamed to illuminance,
+  // by using illuminance as fallback both v1 and v2 are supported.
+  public static readonly fallbackExposesNames: string[] = ['illuminance'];
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
 
   public readonly mainCharacteristics: Characteristic[] = [];

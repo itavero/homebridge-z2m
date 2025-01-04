@@ -181,7 +181,7 @@ describe('Light', () => {
         newHarness.checkCreationExpectations();
         newHarness.checkHasMainCharacteristics();
 
-        newHarness.checkExpectedGetableKeys(['state', 'brightness', 'color_temp', 'color']);
+        newHarness.checkExpectedGetableKeys(['state', 'color_temp', 'color']);
 
         // Expect range of color temperature to be configured
         lightbulb.checkCharacteristicPropertiesHaveBeenSet('color_temp', {
@@ -507,7 +507,7 @@ describe('Light', () => {
         newHarness.checkCreationExpectations();
         newHarness.checkHasMainCharacteristics();
 
-        newHarness.checkExpectedGetableKeys(['state', 'brightness', 'color_temp', 'color']);
+        newHarness.checkExpectedGetableKeys(['state', 'color_temp', 'color']);
 
         // Expect range of color temperature to be configured
         lightbulb.checkCharacteristicPropertiesHaveBeenSet('color_temp', {
@@ -557,7 +557,7 @@ describe('Light', () => {
     });
   });
 
-  describe('Hue White Single bulb B22', () => {
+  describe('Hue White Single bulb B22 (allow request brightness)', () => {
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -571,6 +571,10 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+
+        // Enable adaptive lighting to check if it will be ignored (as this device does not have a color temperature)
+        newHarness.addConverterConfiguration('light', { request_brightness: true });
+
         newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
@@ -687,7 +691,7 @@ describe('Light', () => {
         newHarness.checkCreationExpectations();
         newHarness.checkHasMainCharacteristics();
 
-        newHarness.checkExpectedGetableKeys(['state', 'brightness', 'color_temp', 'color']);
+        newHarness.checkExpectedGetableKeys(['state', 'color_temp', 'color']);
 
         // Expect range of color temperature to be configured
         lightbulb.checkCharacteristicPropertiesHaveBeenSet('color_temp', {
@@ -829,7 +833,7 @@ describe('Light', () => {
         newHarness.checkCreationExpectations();
         newHarness.checkHasMainCharacteristics();
 
-        newHarness.checkExpectedGetableKeys(['state', 'brightness']);
+        newHarness.checkExpectedGetableKeys(['state']);
         harness = newHarness;
       }
 
@@ -885,7 +889,7 @@ describe('Light', () => {
         newHarness.checkCreationExpectations();
         newHarness.checkHasMainCharacteristics();
 
-        newHarness.checkExpectedGetableKeys(['state', 'brightness', 'color_temp']);
+        newHarness.checkExpectedGetableKeys(['state', 'color_temp']);
 
         // Expect range of color temperature to be configured
         lightbulb.checkCharacteristicPropertiesHaveBeenSet('color_temp', {

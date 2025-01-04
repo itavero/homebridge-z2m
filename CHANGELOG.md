@@ -114,7 +114,7 @@ Based on v1.9.2, as v1.9.3 was made later as a hotfix.
 
 ### Fixed
 
-- Added additional checks to prevent certain errors from occuring during creation of a service handler. (see [#443](https://github.com/itavero/homebridge-z2m/issues/443))
+- Added additional checks to prevent certain errors from occurring during creation of a service handler. (see [#443](https://github.com/itavero/homebridge-z2m/issues/443))
 - Removed some default values from `config.schema.json` to prevent certain illegal configurations from being created by accident.
 
 ## [1.9.0] - 2022-06-29
@@ -461,7 +461,7 @@ For `cover` devices the following changes/fixes are in this release:
 
 ### Changed
 
-- Restore BatteryServuce and WindowConvering properly on start up.
+- Restore BatteryService and WindowCovering properly on start up.
 - Improve state determination for WindowCovering.
 
 [unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.6...HEAD

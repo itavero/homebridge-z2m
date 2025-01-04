@@ -36,6 +36,7 @@ interface AdaptiveLightingConfig {
 
 interface LightConfig {
   adaptive_lighting?: boolean | AdaptiveLightingConfig;
+  request_brightness?: boolean;
 }
 
 const isAdaptiveLightingConfig = (x: unknown): x is AdaptiveLightingConfig =>
@@ -74,8 +75,12 @@ export class LightCreator implements ServiceCreator {
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
     const converterConfig = accessory.getConverterConfiguration(LightCreator.CONFIG_TAG);
+    let requestBrightness = false;
     let adaptiveLightingConfig: AdaptiveLightingConfig | undefined = undefined;
     if (isLightConfig(converterConfig)) {
+      if (converterConfig.request_brightness === true) {
+        requestBrightness = true;
+      }
       if (isAdaptiveLightingConfig(converterConfig.adaptive_lighting)) {
         adaptiveLightingConfig = converterConfig.adaptive_lighting;
       } else if (converterConfig.adaptive_lighting === true) {
@@ -84,7 +89,7 @@ export class LightCreator implements ServiceCreator {
     }
 
     try {
-      const handler = new LightHandler(expose, accessory, adaptiveLightingConfig);
+      const handler = new LightHandler(expose, accessory, requestBrightness, adaptiveLightingConfig);
       accessory.registerServiceHandler(handler);
     } catch (error) {
       accessory.log.warn(`Failed to setup light for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}": ${error}`);
@@ -138,6 +143,7 @@ class LightHandler implements ServiceHandler {
   constructor(
     expose: ExposesEntryWithFeatures,
     private readonly accessory: BasicAccessory,
+    private readonly requestBrightness: boolean,
     private readonly adaptiveLightingConfig?: AdaptiveLightingConfig
   ) {
     const endpoint = expose.endpoint;
@@ -182,7 +188,7 @@ class LightHandler implements ServiceHandler {
     if (exposesCanBeGet(this.stateExpose)) {
       keys.push(this.stateExpose.property);
     }
-    if (this.brightnessExpose !== undefined && exposesCanBeGet(this.brightnessExpose)) {
+    if (this.brightnessExpose !== undefined && exposesCanBeGet(this.brightnessExpose) && this.requestBrightness) {
       keys.push(this.brightnessExpose.property);
     }
     if (this.colorTempExpose !== undefined && exposesCanBeGet(this.colorTempExpose)) {

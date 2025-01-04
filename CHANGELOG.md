@@ -10,6 +10,9 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Changed
 
 - Light sensor will now use `illuminance` property if `illuminance_lux` is not available. This should fix compatibility with the new major v2 release of Zigbee2MQTT. (see [#966](https://github.com/itavero/homebridge-z2m/issues/966))
+- Brightness for a Light is no longer requested by default. This should prevent issues when the light is off.
+  Old behavior can be restored using the `request_brightness` option in the converter specific configuration.
+  (see [#882](https://github.com/itavero/homebridge-z2m/issues/882))
 
 ## [1.11.0-beta.6] - 2024-06-30
 

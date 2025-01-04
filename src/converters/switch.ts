@@ -116,7 +116,7 @@ class SwitchHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitor.callback(state);
+    this.monitor.callback(state, this.accessory.log);
   }
 
   private handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {

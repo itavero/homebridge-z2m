@@ -6,6 +6,7 @@ import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
 import { Characteristic, CharacteristicProps, CharacteristicValue } from 'homebridge';
 import { getOrAddCharacteristic } from '../helpers';
 import { SwitchActionHelper, SwitchActionMapping } from './action_helper';
+import { BasicLogger } from '../logger';
 
 export class StatelessProgrammableSwitchCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
@@ -54,6 +55,7 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
   public readonly identifier: string;
   private readonly monitor: CharacteristicMonitor;
   public readonly mainCharacteristics: Characteristic[] = [];
+  private readonly log: BasicLogger;
 
   constructor(
     accessory: BasicAccessory,
@@ -61,6 +63,7 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
     mapping: SwitchActionMapping
   ) {
     this.identifier = StatelessProgrammableSwitchHandler.generateIdentifier(actionExpose.endpoint, mapping.subType);
+    this.log = accessory.log;
 
     // Create service
     let subType = mapping.subType;
@@ -113,7 +116,7 @@ class StatelessProgrammableSwitchHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitor.callback(state);
+    this.monitor.callback(state, this.log);
   }
 
   static generateIdentifier(endpoint: string | undefined, mappingSubType: string | undefined) {

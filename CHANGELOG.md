@@ -11,6 +11,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - For numeric characteristics that have a range set, the range is automatically updated if an out of range value is received from Zigbee2MQTT.
 
+### Fixed
+
+- Processing JSON availability payload should not result in a TypeError anymore.
+
 ## [1.11.0-beta.7] - 2025-01-04
 
 ### Changed

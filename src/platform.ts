@@ -407,9 +407,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     // Check if payload is a JSON object or a plain string
     let isAvailable = false;
     if (statePayload.includes('{')) {
-      const state = JSON.parse(statePayload).availability;
-      if ('state' in state) {
-        isAvailable = state.state === 'online';
+      const json = JSON.parse(statePayload);
+      if (json !== undefined && 'availability' in json && json.availability !== undefined && 'state' in json.availability) {
+        isAvailable = json.availability.state === 'online';
       }
     } else {
       isAvailable = statePayload === 'online';

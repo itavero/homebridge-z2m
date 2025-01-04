@@ -127,7 +127,7 @@ class LockHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitors.forEach((m) => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state, this.accessory.log));
   }
 
   private handleSetState(value: CharacteristicValue, callback: CharacteristicSetCallback): void {

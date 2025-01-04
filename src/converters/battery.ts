@@ -141,7 +141,7 @@ class BatteryHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitors.forEach((m) => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state, this.accessory.log));
   }
 
   static generateIdentifier(endpoint: string | undefined) {

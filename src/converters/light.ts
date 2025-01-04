@@ -224,7 +224,7 @@ class LightHandler implements ServiceHandler {
       }
     }
 
-    this.monitors.forEach((m) => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state, this.accessory.log));
   }
 
   private disableAdaptiveLightingBasedOnState(colorModeIsTemperature: boolean, state: Record<string, unknown>) {

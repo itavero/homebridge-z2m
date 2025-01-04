@@ -4,12 +4,14 @@ import { CharacteristicMonitor, MappingCharacteristicMonitor } from '../monitor'
 import { Characteristic, CharacteristicValue, Service } from 'homebridge';
 import { getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
+import { BasicLogger } from '../../logger';
 
 export type ServiceConstructor = (serviceName: string, subType: string | undefined) => Service;
 
 export type IdentifierGenerator = (endpoint: string | undefined, accessory: BasicAccessory) => string;
 
 export abstract class BasicSensorHandler implements ServiceHandler {
+  protected log: BasicLogger;
   protected monitors: CharacteristicMonitor[] = [];
   protected tamperExpose?: ExposesEntryWithBinaryProperty;
   protected lowBatteryExpose?: ExposesEntryWithBinaryProperty;
@@ -25,6 +27,7 @@ export abstract class BasicSensorHandler implements ServiceHandler {
     service: ServiceConstructor,
     additionalSubType?: string | undefined
   ) {
+    this.log = accessory.log;
     const endpoint = sensorExpose.endpoint;
 
     let sub = endpoint;
@@ -92,6 +95,6 @@ export abstract class BasicSensorHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitors.forEach((m) => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state, this.log));
   }
 }

@@ -1,10 +1,15 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
-The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+
+### Changed
+
+- Light sensor will now use `illuminance` property if `illuminance_lux` is not available. This should fix compatibility with the new major v2 release of Zigbee2MQTT. (see [#966](https://github.com/itavero/homebridge-z2m/issues/966))
 
 ## [1.11.0-beta.6] - 2024-06-30
 
@@ -62,7 +67,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Added
 
-- **Adaptive Lighting**: Added support for Adaptive Lighting. Currently this needs to be enabled *manually* in the plugin configuration, using [converter specific configuration for `light`](https://z2m.dev/light.html#converter-specific-configuration-light). In a future release this might get enabled by default. (see [#30](https://github.com/itavero/homebridge-z2m/issues/30) / [#488](https://github.com/itavero/homebridge-z2m/pull/488))
+- **Adaptive Lighting**: Added support for Adaptive Lighting. Currently this needs to be enabled _manually_ in the plugin configuration, using [converter specific configuration for `light`](https://z2m.dev/light.html#converter-specific-configuration-light). In a future release this might get enabled by default. (see [#30](https://github.com/itavero/homebridge-z2m/issues/30) / [#488](https://github.com/itavero/homebridge-z2m/pull/488))
 
 ## [1.10.0] - 2022-12-09
 
@@ -114,7 +119,7 @@ Based on v1.9.2, as v1.9.3 was made later as a hotfix.
 ### Added
 
 - Some converters now have some additional configuration options which allows you to select an alternative implementation. (see
- [#458](https://github.com/itavero/homebridge-z2m/pull/458) and related issues)
+  [#458](https://github.com/itavero/homebridge-z2m/pull/458) and related issues)
   - `switch` can be configured as a `switch` (default) or `outlet`
   - `occupancy` can be configured as `occupancy` (default) or `motion`
 - `device_temperature` is now exposed as a temperature sensor. Due to a [change in Zigbee2MQTT](https://github.com/Koenkk/zigbee-herdsman-converters/pull/4267), you might need to update your Homebridge configuration to exclude `device_temperature` if you previously excluded `temperature` for some devices. (see [#456](https://github.com/itavero/homebridge-z2m/issues/456))
@@ -206,6 +211,7 @@ Based on v1.9.2, as v1.9.3 was made later as a hotfix.
 - Support for Air Quality Sensors (`voc`, `pm10`, `pm25`). (see [#241](https://github.com/itavero/homebridge-z2m/issues/241))
 
 ## [1.4.0] - 2021-08-16
+
 ### Added
 
 - The plugin will now log an error if the output format of Zigbee2MQTT (`experimental.output`) appears to have been configured incorrectly.
@@ -219,6 +225,7 @@ Based on v1.9.2, as v1.9.3 was made later as a hotfix.
   This should prevent the warnings mentioned in [#234](https://github.com/itavero/homebridge-z2m/issues/234).
 
 ## [1.3.0] - 2021-06-20
+
 ### Added
 
 - Support for horizontal tilt of a `cover` (see [#147](https://github.com/itavero/homebridge-z2m/pull/147))
@@ -226,11 +233,13 @@ Based on v1.9.2, as v1.9.3 was made later as a hotfix.
 ### Changed
 
 For `cover` devices the following changes/fixes are in this release:
+
 - Update target position, when the state is assumed to be _"stopped"_, to improve Home.app UX. (see [#189](https://github.com/itavero/homebridge-z2m/issues/189))
 - Only request `position` when it is actually "gettable" and we did not receive an update recently (which should normally happen if the device supports reporting).
 - Changed how the `PositionState` is updated based on the received positions. No longer try to interpret the direction (HomeKit does this automatically so it seems).
 
 ## [1.2.0] - 2021-05-14
+
 ### Added
 
 - Default device options can now be set using the `defaults` key in the plugin configuration.
@@ -238,6 +247,7 @@ For `cover` devices the following changes/fixes are in this release:
   when using certain (cloud) MQTT brokers. (see [#150](https://github.com/itavero/homebridge-z2m/pull/150))
 
 ## [1.1.3] - 2021-03-08
+
 ### Fixed
 
 - Names of services are correctly updated when the `friendly_name` from Zigbee2MQTT has been updated. For the updated names to show up in the
@@ -246,6 +256,7 @@ For `cover` devices the following changes/fixes are in this release:
   (Wrong default value for `force_update` argument of `updateDeviceInformation` has been corrected.))
 
 ## [1.1.2] - 2021-03-03
+
 ### Fixed
 
 - Set range for Color Temperature characteristic of Lightbulb to improve control experience. (see [#88](https://github.com/itavero/homebridge-z2m/issues/88))
@@ -256,11 +267,13 @@ For `cover` devices the following changes/fixes are in this release:
 - Ignore empty device updates. (PR [#78](https://github.com/itavero/homebridge-z2m/pull/78))
 
 ## [1.1.1] - 2021-02-09
+
 ### Fixed
 
 - Color change of lights using `color_hs` was not sent correctly. (fix for [#57](https://github.com/itavero/homebridge-z2m/issues/57))
 
 ## [1.1.0] - 2021-02-07
+
 ### Changed
 
 - Improved `config.schema.json` to improve the plugin configuration screen a bit.
@@ -273,16 +286,19 @@ For `cover` devices the following changes/fixes are in this release:
 - > ⚠️ **IMPORTANT**: Because of this major change, it might be that you have to reconfigure some of your accessories in your HomeKit setup, if you are coming from v0.0.10 or earlier, as names/identifiers of certain services might have changed. This should be a one time action only, because of this new major version.
 
 ## [1.1.0-beta.4] - 2021-02-07
+
 ### Fixed
 
 - Temperature sensors showed up as unavailable if the temperature dropped below 0°C, because the default range in HomeKit is 0 to 100°C (see [#49](https://github.com/itavero/homebridge-z2m/pull/49)).
 
 ## [1.1.0-beta.3] - 2021-01-30
+
 ### Fixed
 
 - `LockCurrentState` wasn't updated because the monitor was not initialized properly. (fix for [#46](https://github.com/itavero/homebridge-z2m/issues/46))
 
 ## [1.1.0-beta.2] - 2021-01-30
+
 ### Added
 
 - Device documentation is now available on the website and generated based on information from the zigbee-herdsman-converters package,
@@ -295,13 +311,16 @@ For `cover` devices the following changes/fixes are in this release:
   Homebridge logs up on startup to see if there is anything wrong with your plugin configuration or any of the dependencies.
 
 ## [1.1.0-beta.1][] - 2021-01-16
+
 ### Changed
+
 - Zigbee2MQTT minimal version check ignores the `-dev` suffix, so that the newer development build is also accepted.
 - Updated Name characteristic of the Accessory Information service with the `friendly_name` received from Zigbee2MQTT.
 - Fixed some typo's, both in code and documentation.
 - Changed casing of Zigbee2MQTT in logs and such.
 
 ## [1.1.0-beta.0][] - 2021-01-10
+
 ### Added
 
 - Remote control/push button support (devices that expose `action` will have a Stateless Programmable Switch service now).
@@ -318,15 +337,19 @@ For `cover` devices the following changes/fixes are in this release:
 - Plugin configuration is now (partially) validated on start up. An incorrect configuration will cause Homebridge to stop.
 
 ## [1.0.2][] - 2020-12-30
+
 ### Changed
 
 - Clean up old lodash dependency.
 
 ## [1.0.1][] - 2020-12-30
+
 ### Changed
+
 - Cleaned up published package by "fixing" `.npmignore`
 
 ## [1.0.0][] - 2020-12-30
+
 ### Changed
 
 - > ⚠️ **IMPORTANT**: Because the way this plugin works and constructs the accessories, it might be that you have to reconfigure some of your accessories in your HomeKit setup as names/identifiers of certain services might have changed. This should be a one time action, because of this new major version.
@@ -345,6 +368,7 @@ For `cover` devices the following changes/fixes are in this release:
 - Support for Electrical measurement information (added in 0.0.8) was removed. I personally did not have a use case for this information, so instead I decided to focus my efforts on other parts of this major release. If you miss this, please open up a feature request and also let me know what this information is useful for within a HomeKit context.
 
 ## [0.0.10][] - 2020-10-31
+
 ### Changed
 
 - Only try to parse JSON of a possible status update if we find a matching accessory. Previously errors could show up for the `action` / `click` topics, due to the fixed support fo friendly names with a `/` in v0.0.8.
@@ -355,6 +379,7 @@ For `cover` devices the following changes/fixes are in this release:
 - When performing a get operation, all keys (derived from the services that are present) will be added if none where specified. (previously indicated in [#19](https://github.com/itavero/homebridge-z2m/issues/19) that it shouldn't be empty)
 
 ## [0.0.9][] - 2020-10-20
+
 ### Added
 
 - Extended Battery Service with several keys: `battery_low`, `battery_state` and `ac_connected`. Note that `battery_low` will also fake the battery level in case the `battery` key is not present.
@@ -365,6 +390,7 @@ For `cover` devices the following changes/fixes are in this release:
 - Very slightly refactored the service creation for keys starting with `state_`, to make it more generic.
 
 ## [0.0.8][] - 2020-10-19
+
 ### Added
 
 - Electrical measurement information added for switches/lights that support it (using the Elgato Eve Energy characteristics).
@@ -375,6 +401,7 @@ For `cover` devices the following changes/fixes are in this release:
 - Fix support for friendly names that contain a (`/`) forward slash. (see [#19](https://github.com/itavero/homebridge-z2m/issues/19))
 
 ## [0.0.7][] - 2020-10-15
+
 ### Added
 
 - Restored support for Air Pressure Sensors.
@@ -387,6 +414,7 @@ For `cover` devices the following changes/fixes are in this release:
 - Added a try catch block and logging in the function that handles received MQTT messages. (see [#13](https://github.com/itavero/homebridge-z2m/issues/13))
 
 ## [0.0.6][] - 2020-09-09
+
 ### Added
 
 - Support for switches (relays) with more than two outputs (added a lot of keys starting with `state_`).
@@ -399,15 +427,17 @@ For `cover` devices the following changes/fixes are in this release:
 - Use global `hap` variable to access characteristics, instead of storing references in each ServiceWrapper.
 
 ## [0.0.5][] - 2020-07-05
+
 ### Changed
 
 - Removed support for Air Pressure Sensors (temporarily) due to [#6](https://github.com/itavero/homebridge-z2m/issues/6).
 
 ## [0.0.4][] - 2020-07-05
+
 ### Added
 
 - Devices can now be excluded using their `friendly_name` as well as their IEEE address.
-- Support for switches that use `state_left` and `state_right`.  ([#5](https://github.com/itavero/homebridge-z2m/issues/5))
+- Support for switches that use `state_left` and `state_right`. ([#5](https://github.com/itavero/homebridge-z2m/issues/5))
 - Support for Air Pressure Sensors
 
 ### Changed
@@ -419,16 +449,17 @@ For `cover` devices the following changes/fixes are in this release:
 - Hue Dimmer Switch appears as a light bulb ([#1](https://github.com/itavero/homebridge-z2m/issues/1))
 
 ## [0.0.3][] - 2020-07-01
+
 ### Added
 
 - Devices can now be excluded via the configuration (`devices` > `exclude`).
 
 ## [0.0.2][] - 2020-06-30
+
 ### Changed
 
 - Restore BatteryServuce and WindowConvering properly on start up.
 - Improve state determination for WindowCovering.
-
 
 [unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.6...HEAD
 [1.11.0-beta.6]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.5...v1.11.0-beta.6

@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/no-ignored-exceptions */
+/* eslint-disable sonarjs/slow-regex */
 /* eslint-disable no-console */
 /* eslint-disable max-len */
 import fs from 'fs';
@@ -68,7 +70,7 @@ function normalizeNameForAnchor(model: string): string {
 }
 
 function generateZigbee2MqttLink(device: ExtendedDeviceDefinition) {
-  const find = '[/| |:]';
+  const find = '[/| :]';
   const re = new RegExp(find, 'g');
   return 'https://www.zigbee2mqtt.io/devices/' + encodeURIComponent(device.model.replace(re, '_')) + '.html';
 }
@@ -393,8 +395,8 @@ allDevices.forEach((d) => {
       const controllers = accessory.getControllerNames();
       generateDevicePage(docs_base_path, d, services, controllers);
     }
-  } catch (Error) {
-    console.log(`Problem generating device page for ${d.vendor} ${d.model}: ${Error}`);
+  } catch (err) {
+    console.log(`Problem generating device page for ${d.vendor} ${d.model}: ${err}`);
   }
 });
 

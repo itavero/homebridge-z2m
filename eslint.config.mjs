@@ -49,6 +49,7 @@ export default [
       '@typescript-eslint/no-misused-new': ['error'],
       'sonarjs/cognitive-complexity': ['error', 20],
       '@typescript-eslint/no-dynamic-delete': 'off',
+      'sonarjs/todo-tag': ['off'],
     },
   },
   {
@@ -56,6 +57,7 @@ export default [
 
     rules: {
       'sonarjs/no-duplicate-string': ['off'],
+      'sonarjs/no-nested-functions': ['off'],
     },
   },
 ];

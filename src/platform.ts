@@ -405,15 +405,14 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   private async handleDeviceAvailability(topic: string, statePayload: string) {
     // Check if payload is a JSON object or a plain string
-    let isAvailable = statePayload === 'online';
-    try {
+    let isAvailable = false;
+    if (statePayload.includes('{')) {
       const state = JSON.parse(statePayload).availability;
       if ('state' in state) {
         isAvailable = state.state === 'online';
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_) {
-      // Ignore error as the string payload version is handled above
+    } else {
+      isAvailable = statePayload === 'online';
     }
     const deviceTopic = topic.slice(0, -1 * Zigbee2mqttPlatform.TOPIC_SUFFIX_AVAILABILITY.length);
     const accessory = this.accessories.find((acc) => acc.matchesIdentifier(deviceTopic));

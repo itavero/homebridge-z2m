@@ -89,7 +89,9 @@ export class BasicSensorCreator implements ServiceCreator {
         }
 
         if (values.length > 0 && !accessory.isServiceHandlerIdKnown(h.generateIdentifier(key, accessory))) {
-          values.forEach((e) => this.createService(accessory, e, (x) => new h(x, optionalProperties, accessory)));
+          for (const e of values) {
+            this.createService(accessory, e, (x) => new h(x, optionalProperties, accessory));
+          }
         }
       });
     });

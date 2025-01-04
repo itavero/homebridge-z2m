@@ -22,4 +22,3 @@ hooks:
 plugins:
   "@release-it/keep-a-changelog":
     addVersionUrl: true
-    addUnreleased: true

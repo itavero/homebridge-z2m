@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - main
-      - "releases?/**"
+      - 'releases?/**'
     tags:
       - v[0-9]+.[0-9]+.[0-9]+*
 
@@ -17,12 +17,12 @@ jobs:
     name: Verify
     runs-on: ubuntu-latest
     env:
-      node-version-analysis: 20.x
+      node-version-analysis: 22.x
 
     strategy:
       matrix:
         # the Node.js versions to build on
-        node-version: [18.x, 20.x]
+        node-version: [18.x, 20.x, 22.x]
 
     steps:
       - name: Checkout

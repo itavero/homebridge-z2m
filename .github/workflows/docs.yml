@@ -2,11 +2,11 @@ name: Update generated documentation
 
 on:
   schedule:
-    - cron: "0 16 * * *"
+    - cron: '30 19 * * 0-1,5-6'
   workflow_dispatch:
     inputs:
       forced:
-        description: "Force regeneration even if the Zigbee2MQTT versions did not change"
+        description: 'Force regeneration even if the Zigbee2MQTT versions did not change'
         required: false
         default: false
         type: boolean
@@ -20,10 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js 20.x
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 22.x
 
       - name: Determine Zigbee2MQTT version
         id: version
@@ -54,7 +54,7 @@ jobs:
           echo "updated=0" >> $GITHUB_OUTPUT
           node_modules/.bin/ts-node src/docgen/docgen.ts
           git diff --exit-code -s docs ||echo "updated=1" >> $GITHUB_OUTPUT
-      
+
       - uses: actions/create-github-app-token@v1
         id: pr-token
         with:
@@ -68,10 +68,10 @@ jobs:
         with:
           token: ${{ steps.pr-token.outputs.token }}
           assignees: itavero
-          commit-message: "Docs generated based on zigbee-herdsman-converters v${{ steps.version.outputs.herdsman }}"
+          commit-message: 'Docs generated based on zigbee-herdsman-converters v${{ steps.version.outputs.herdsman }}'
           branch: update-device-docs
           delete-branch: true
-          title: "Update device documentation (zigbee-herdsman-converters ${{ steps.version.outputs.herdsman }})"
+          title: 'Update device documentation (zigbee-herdsman-converters ${{ steps.version.outputs.herdsman }})'
           body: |-
             Documentation has been automatically regenerated, because a new version of :bee: Zigbee2MQTT and/or zigbee-herdsman-converters
             was detected or because a forced update was requested.

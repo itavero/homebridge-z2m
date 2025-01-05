@@ -40,7 +40,7 @@ jobs:
         id: pr
         run: |
           unzip reports.zip
-          for info in pr/* ; do echo ::set-output name=$(basename $info)::$(cat $info); done
+          cat pr_data.txt >> $GITHUB_OUTPUT
 
       - name: Checkout
         uses: actions/checkout@v4

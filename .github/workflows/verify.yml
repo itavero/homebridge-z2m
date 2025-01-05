@@ -47,11 +47,10 @@ jobs:
       - name: Export PR info
         if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
         run: |
-          mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/number
-          echo ${{ github.head_ref }} > ./pr/head_ref
-          echo ${{ github.sha }} > ./pr/head_sha
-          echo ${{ github.base_ref }} > ./pr/base_ref
+          echo number=${{ github.event.number }} > pr_data.txt
+          echo head_ref=${{ github.head_ref }} >> pr_data.txt
+          echo head_sha=${{ github.sha }} >> pr_data.txt
+          echo base_ref=${{ github.base_ref }} >> pr_data.txt
 
       - name: Archive reports and info (for PR)
         if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
@@ -60,7 +59,7 @@ jobs:
           name: reports
           retention-days: 7
           path: |
-            pr/
+            pr_data.txt
             coverage/lcov.info
             coverage/clover.xml
             reports/tests.xml

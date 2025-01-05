@@ -17,4 +17,4 @@ DOC_VERSIONS_FILE=src/docgen/versions.ts
 npm i --no-save zigbee-herdsman-converters@${HERDSMAN_VERSION}
 
 # Run documentation script
-ts-node src/docgen/docgen.ts
+npx ts-node src/docgen/docgen.ts

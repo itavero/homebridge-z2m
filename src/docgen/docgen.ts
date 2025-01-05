@@ -117,7 +117,7 @@ const serviceNameMapping = new Map<string, ServiceInfo>([
   addServiceMapping(hapNodeJs.Service.Lightbulb, 'light.md'),
   addServiceMapping(hapNodeJs.Service.StatelessProgrammableSwitch, 'action.md'),
   addServiceMapping(hapNodeJs.Service.WindowCovering, 'cover.md'),
-  addServiceMapping(hapNodeJs.Service.BatteryService, 'battery.md'),
+  addServiceMapping(hapNodeJs.Service.Battery, 'battery.md'),
   addServiceMapping(hapNodeJs.Service.LockMechanism, 'lock.md'),
   addServiceMapping(hapNodeJs.Service.Switch, 'switch.md'),
   addServiceMapping(hapNodeJs.Service.Thermostat, 'climate.md'),
@@ -146,7 +146,7 @@ const controllerMapping = new Map<string, ControllerMapping>([
   ['AdaptiveLightingController', new ControllerMapping('Adaptive Lighting', 'light.md')],
 ]);
 
-const servicesIgnoredForDeterminingSupport = new Set<string>([hapNodeJs.Service.BatteryService.UUID]);
+const servicesIgnoredForDeterminingSupport = new Set<string>([hapNodeJs.Service.Battery.UUID]);
 
 const ignoredExposesNames = new Set<string>(['linkquality', 'battery', 'battery_low']);
 

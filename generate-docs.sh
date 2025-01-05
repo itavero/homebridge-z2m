@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Determine vesrion of zigbee-herdsman-converters based on latest Zigbee2MQTT release
+# Determine version of zigbee-herdsman-converters based on latest Zigbee2MQTT release
 Z2M_VERSION=$(npm view zigbee2mqtt@latest version)
 HERDSMAN_VERSION=$(npm view "zigbee2mqtt@$Z2M_VERSION" dependencies.zigbee-herdsman-converters)
 

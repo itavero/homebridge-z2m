@@ -15,7 +15,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Fixed
 
 - Processing JSON availability payload should not result in a TypeError anymore.
-- Minor changes to be compatible with the upcoming Homebridge v2 release, amongst others:
+- Minor changes to be compatible with the upcoming Homebridge v2 release, among others:
   - In most services where the (numeric) range of a characteristic is limited, the value is now set correctly before doing so, to prevent warnings from HAP-NodeJS.
   - Sanitize accessory names so they only contain alphanumeric, space, and apostrophe characters, and start with an alphanumeric character.
 

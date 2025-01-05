@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
+## [Unreleased]
+
 ## [1.11.0-beta.9] - 2025-01-05
 
 ### Changed

@@ -16,7 +16,12 @@ import {
 } from '../z2mModels';
 import { hap } from '../hap';
 import { CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor } from './monitor';
-import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
+import {
+  allowSingleValueForCharacteristic,
+  copyExposesRangeToCharacteristic,
+  getOrAddCharacteristic,
+  setValidValuesOnCharacteristic,
+} from '../helpers';
 import { Characteristic, CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
 
 export class ThermostatCreator implements ServiceCreator {
@@ -179,11 +184,7 @@ class ThermostatHandler implements ServiceHandler {
         throw new Error('Cannot map current state');
       }
       const stateValues = [...stateMapping.values()].map((x) => x as number);
-      getOrAddCharacteristic(service, hap.Characteristic.CurrentHeatingCoolingState).setProps({
-        minValue: Math.min(...stateValues),
-        maxValue: Math.max(...stateValues),
-        validValues: stateValues,
-      });
+      setValidValuesOnCharacteristic(getOrAddCharacteristic(service, hap.Characteristic.CurrentHeatingCoolingState), stateValues);
       this.monitors.push(
         new MappingCharacteristicMonitor(
           this.currentStateExpose.property,
@@ -206,13 +207,10 @@ class ThermostatHandler implements ServiceHandler {
       }
 
       const targetValues = [...targetMapping.values()].map((x) => x as number);
-      getOrAddCharacteristic(service, hap.Characteristic.TargetHeatingCoolingState)
-        .setProps({
-          minValue: Math.min(...targetValues),
-          maxValue: Math.max(...targetValues),
-          validValues: targetValues,
-        })
-        .on('set', this.handleSetTargetState.bind(this));
+      setValidValuesOnCharacteristic(getOrAddCharacteristic(service, hap.Characteristic.TargetHeatingCoolingState), targetValues).on(
+        'set',
+        this.handleSetTargetState.bind(this)
+      );
       this.monitors.push(
         new MappingCharacteristicMonitor(
           this.targetModeExpose.property,
@@ -223,30 +221,21 @@ class ThermostatHandler implements ServiceHandler {
       );
     } else {
       // Assume heat only device
-      getOrAddCharacteristic(service, hap.Characteristic.CurrentHeatingCoolingState)
-        .setProps({
-          minValue: hap.Characteristic.CurrentHeatingCoolingState.HEAT,
-          maxValue: hap.Characteristic.CurrentHeatingCoolingState.HEAT,
-          validValues: [hap.Characteristic.CurrentHeatingCoolingState.HEAT],
-        })
-        .updateValue(hap.Characteristic.CurrentHeatingCoolingState.HEAT);
-      getOrAddCharacteristic(service, hap.Characteristic.TargetHeatingCoolingState)
-        .setProps({
-          minValue: hap.Characteristic.TargetHeatingCoolingState.HEAT,
-          maxValue: hap.Characteristic.TargetHeatingCoolingState.HEAT,
-          validValues: [hap.Characteristic.TargetHeatingCoolingState.HEAT],
-        })
-        .updateValue(hap.Characteristic.TargetHeatingCoolingState.HEAT);
+      allowSingleValueForCharacteristic(
+        getOrAddCharacteristic(service, hap.Characteristic.CurrentHeatingCoolingState),
+        hap.Characteristic.CurrentHeatingCoolingState.HEAT
+      ).updateValue(hap.Characteristic.CurrentHeatingCoolingState.HEAT);
+      allowSingleValueForCharacteristic(
+        getOrAddCharacteristic(service, hap.Characteristic.TargetHeatingCoolingState),
+        hap.Characteristic.TargetHeatingCoolingState.HEAT
+      ).updateValue(hap.Characteristic.TargetHeatingCoolingState.HEAT);
     }
 
     // Only support degrees Celsius
-    getOrAddCharacteristic(service, hap.Characteristic.TemperatureDisplayUnits)
-      .setProps({
-        minValue: hap.Characteristic.TemperatureDisplayUnits.CELSIUS,
-        maxValue: hap.Characteristic.TemperatureDisplayUnits.CELSIUS,
-        validValues: [hap.Characteristic.TemperatureDisplayUnits.CELSIUS],
-      })
-      .updateValue(hap.Characteristic.TemperatureDisplayUnits.CELSIUS);
+    allowSingleValueForCharacteristic(
+      getOrAddCharacteristic(service, hap.Characteristic.TemperatureDisplayUnits),
+      hap.Characteristic.TemperatureDisplayUnits.CELSIUS
+    ).updateValue(hap.Characteristic.TemperatureDisplayUnits.CELSIUS);
   }
 
   identifier: string;

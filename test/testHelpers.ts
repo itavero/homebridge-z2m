@@ -215,7 +215,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
 
   checkCharacteristicPropertiesHaveBeenSet(identifier: string, props: Partial<CharacteristicProps>): ServiceHandlerContainer {
     const mock = this.getCharacteristicMock(identifier);
-    expect(mock.setProps).toBeCalledTimes(1).toBeCalledWith(props);
+    expect(mock.setProps).toHaveBeenCalledTimes(1).toHaveBeenCalledWith(props);
 
     return this;
   }
@@ -249,10 +249,10 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
   checkCharacteristicUpdates(
     expectedUpdates: Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>
   ): ServiceHandlerContainer {
-    expect(this.serviceMock.updateCharacteristic).toBeCalledTimes(expectedUpdates.size);
+    expect(this.serviceMock.updateCharacteristic).toHaveBeenCalledTimes(expectedUpdates.size);
 
     for (const [characteristic, value] of expectedUpdates) {
-      expect(this.serviceMock.updateCharacteristic).toBeCalledWith(characteristic, value);
+      expect(this.serviceMock.updateCharacteristic).toHaveBeenCalledWith(characteristic, value);
     }
     return this;
   }
@@ -264,7 +264,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
   checkCharacteristicUpdateValues(expectedUpdates: Map<string, CharacteristicValue>): ServiceHandlerContainer {
     for (const [identifier, value] of expectedUpdates) {
       const mock = this.getCharacteristicMock(identifier);
-      expect(mock.updateValue).toBeCalledTimes(1).toBeCalledWith(value);
+      expect(mock.updateValue).toHaveBeenCalledTimes(1).toHaveBeenCalledWith(value);
     }
     return this;
   }
@@ -284,7 +284,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
     const callbackMock = jest.fn();
     mapping.setFunction(setValue, callbackMock);
 
-    expect(callbackMock).toBeCalledTimes(1).toBeCalledWith(null);
+    expect(callbackMock).toHaveBeenCalledTimes(1).toHaveBeenCalledWith(null);
 
     return this;
   }
@@ -458,7 +458,7 @@ export class ServiceHandlersTestHarness {
     let expectedCallsToGetOrAddService = 0;
     let expectedCallsToRegisterServiceHandler = 0;
 
-    expect(this.accessoryMock.configureController).toBeCalledTimes(this.numberOfExpectedControllers);
+    expect(this.accessoryMock.configureController).toHaveBeenCalledTimes(this.numberOfExpectedControllers);
 
     for (const handler of this.handlers.values()) {
       expect(this.accessoryMock.isServiceHandlerIdKnown).toHaveBeenCalledWith(handler.serviceIdentifier);
@@ -472,9 +472,9 @@ export class ServiceHandlersTestHarness {
         }
       }
 
-      expect(handler.serviceMock.getCharacteristic).toBeCalledTimes(characteristicCount);
+      expect(handler.serviceMock.getCharacteristic).toHaveBeenCalledTimes(characteristicCount);
 
-      expect(handler.serviceMock.addCharacteristic).toBeCalledTimes(characteristicCount);
+      expect(handler.serviceMock.addCharacteristic).toHaveBeenCalledTimes(characteristicCount);
 
       ++expectedCallsToRegisterServiceHandler;
       expect(this.accessoryMock.registerServiceHandler.mock.calls.length).toBeGreaterThanOrEqual(expectedCallsToRegisterServiceHandler);
@@ -489,9 +489,9 @@ export class ServiceHandlersTestHarness {
   private checkCharacteristicExpectations(handler: ServiceHandlerTestData) {
     for (const mapping of handler.characteristics.values()) {
       if (mapping.characteristic !== undefined) {
-        expect(handler.serviceMock.getCharacteristic).toBeCalledWith(mapping.characteristic);
+        expect(handler.serviceMock.getCharacteristic).toHaveBeenCalledWith(mapping.characteristic);
 
-        expect(handler.serviceMock.addCharacteristic).toBeCalledWith(mapping.characteristic);
+        expect(handler.serviceMock.addCharacteristic).toHaveBeenCalledWith(mapping.characteristic);
 
         if (mapping.doExpectSet && mapping.mock !== undefined) {
           expect(mapping.mock.on).toHaveBeenCalledTimes(1).toHaveBeenCalledWith(CharacteristicEventTypes.SET, expect.anything());
@@ -580,7 +580,7 @@ export class ServiceHandlersTestHarness {
   }
 
   checkSetDataQueued(expectedData: unknown) {
-    expect(this.accessoryMock.queueDataForSetAction).toBeCalledTimes(1).toBeCalledWith(expectedData);
+    expect(this.accessoryMock.queueDataForSetAction).toHaveBeenCalledTimes(1).toHaveBeenCalledWith(expectedData);
   }
 
   checkNoSetDataQueued() {
@@ -588,7 +588,7 @@ export class ServiceHandlersTestHarness {
   }
 
   checkGetKeysQueued(expectedKeys: string | string[]) {
-    expect(this.accessoryMock.queueKeyForGetAction).toBeCalledTimes(1).toBeCalledWith(expectedKeys);
+    expect(this.accessoryMock.queueKeyForGetAction).toHaveBeenCalledTimes(1).toHaveBeenCalledWith(expectedKeys);
   }
 
   checkNoGetKeysQueued() {

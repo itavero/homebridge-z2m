@@ -20,8 +20,5 @@
   "[markdown]": {
     "editor.formatOnSave": false
   },
-  "cSpell.words": [
-    "Elgato",
-    "Zigbee"
-  ]
+  "cSpell.words": ["Elgato", "Zigbee"]
 }

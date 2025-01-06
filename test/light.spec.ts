@@ -4,10 +4,146 @@ import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
 import { loadExposesFromFile, ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { BasicServiceCreatorManager } from '../src/converters/creators';
 
 describe('Light', () => {
   beforeAll(() => {
     setHap(hapNodeJs);
+  });
+
+  describe('Configuration is validated:', () => {
+    const manager = BasicServiceCreatorManager.getInstance();
+    test('number not accepted', () => {
+      const config = { light: 1 };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(false);
+    });
+
+    test('boolean not accepted', () => {
+      const config = { light: true };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(false);
+    });
+
+    test('accept boolean for request_brightness', () => {
+      const config = { light: { request_brightness: true } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('do not accept number for request_brightness', () => {
+      const config = { light: { request_brightness: 1 } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(false);
+    });
+
+    test('do not accept number for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: 1 } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(false);
+    });
+
+    test('accept boolean true for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: true } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('accept boolean false for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: false } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('accept empty object for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: {} } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('accept enabled boolean for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { enabled: false } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('accept enabled undefined for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { enabled: undefined } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('accept enabled as number for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { enabled: 1 } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(false);
+    });
+
+    test('accept only_when_on boolean for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { only_when_on: false } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('accept only_when_on undefined for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { only_when_on: undefined } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('do not accept only_when_on as number for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { only_when_on: 1 } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(false);
+    });
+
+    test('accept transition set to 0 for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { transition: 0 } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('accept transition set to undefined for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { transition: undefined } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('do not accept transition less than 0 for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { transition: -1 } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(false);
+    });
+
+    test('do not accept boolean for transition in adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { transition: true } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(false);
+    });
+
+    test('accept min_delta set to 10 for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { min_delta: 10 } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('accept min_delta set to undefined for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { min_delta: undefined } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('do not accept min_delta less than 1 for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { min_delta: 0 } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(false);
+    });
+
+    test('do not accept boolean for min_delta in adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: { min_delta: false } } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(false);
+    });
   });
 
   describe('Hue White and color ambiance Play Lightbar', () => {
@@ -165,6 +301,8 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+        newHarness.addConverterConfiguration('light', { adaptive_lighting: { enabled: false } });
+        newHarness.numberOfExpectedControllers = 0;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
@@ -336,7 +474,7 @@ describe('Light', () => {
     });
   });
 
-  describe('Hue White + Color Play COLOR_MODE (experimental)', () => {
+  describe('Hue White + Color Play', () => {
     const deviceModelJson = `{
   "date_code": "20191218",
   "definition": {
@@ -490,6 +628,8 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+        newHarness.addConverterConfiguration('light', { adaptive_lighting: false });
+        newHarness.numberOfExpectedControllers = 0;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
@@ -674,6 +814,7 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+        newHarness.numberOfExpectedControllers = 1;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
@@ -801,6 +942,7 @@ describe('Light', () => {
       harness.checkSetDataQueued({ color: { hue: 300, saturation: 100 } });
     });
   });
+
   describe('Namron Zigbee Dimmer (Adaptive Lighting ignored)', () => {
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
@@ -859,7 +1001,7 @@ describe('Light', () => {
     });
   });
 
-  describe('Innr RB-249-T (Adaptive Lighting turned on)', () => {
+  describe('Innr RB-249-T', () => {
     // Shared "state"
     let deviceExposes: ExposesEntry[] = [];
     let harness: ServiceHandlersTestHarness;
@@ -873,7 +1015,6 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
-        newHarness.addConverterConfiguration('light', { adaptive_lighting: true });
         newHarness.numberOfExpectedControllers = 1;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)

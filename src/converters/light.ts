@@ -29,8 +29,10 @@ import {
 import { convertHueSatToXy, convertMiredColorTemperatureToHueSat, convertXyToHueSat } from '../colorhelper';
 
 interface AdaptiveLightingConfig {
+  enabled?: boolean;
   only_when_on?: boolean;
   transition?: number;
+  min_delta?: number;
 }
 
 interface LightConfig {
@@ -38,22 +40,54 @@ interface LightConfig {
   request_brightness?: boolean;
 }
 
-const isAdaptiveLightingConfig = (x: unknown): x is AdaptiveLightingConfig =>
-  x !== undefined &&
-  (typeof (x as AdaptiveLightingConfig).only_when_on === 'boolean' || (x as AdaptiveLightingConfig).only_when_on === undefined) &&
-  (typeof (x as AdaptiveLightingConfig).transition === 'number' || (x as AdaptiveLightingConfig).transition === undefined);
+const isAdaptiveLightingConfig = (x: unknown): x is AdaptiveLightingConfig => {
+  if (x === null || typeof x !== 'object') {
+    return false;
+  }
 
-const isLightConfig = (x: unknown): x is LightConfig =>
-  x !== undefined &&
-  ((x as LightConfig).adaptive_lighting === undefined ||
-    typeof (x as LightConfig).adaptive_lighting === 'boolean' ||
-    isAdaptiveLightingConfig((x as LightConfig).adaptive_lighting));
+  const config = x as AdaptiveLightingConfig;
+  if (config.enabled !== undefined && typeof config.enabled !== 'boolean') {
+    return false;
+  }
+  if (config.only_when_on !== undefined && typeof config.only_when_on !== 'boolean') {
+    return false;
+  }
+  if (config.transition !== undefined) {
+    if (typeof config.transition !== 'number' || config.transition < 0) {
+      return false;
+    }
+  }
+  if (config.min_delta !== undefined) {
+    if (typeof config.min_delta !== 'number' || config.min_delta < 1) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const isLightConfig = (x: unknown): x is LightConfig => {
+  if (x === null || typeof x !== 'object') {
+    return false;
+  }
+
+  const config = x as LightConfig;
+
+  if (config.adaptive_lighting !== undefined) {
+    if (typeof config.adaptive_lighting !== 'boolean' && !isAdaptiveLightingConfig(config.adaptive_lighting)) {
+      return false;
+    }
+  }
+
+  return !(config.request_brightness !== undefined && typeof config.request_brightness !== 'boolean');
+};
 
 export class LightCreator implements ServiceCreator {
   public static readonly CONFIG_TAG = 'light';
-  private static readonly DEFAULT_CONFIG_WHEN_ON = {
+  private static readonly ADAPTIVE_LIGHTING_DEFAULT_CONFIG = {
+    enabled: true,
     only_when_on: true,
     transition: undefined,
+    min_delta: 1,
   };
 
   constructor(converterConfigRegistry: ConverterConfigurationRegistry) {
@@ -75,13 +109,14 @@ export class LightCreator implements ServiceCreator {
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
     const converterConfig = accessory.getConverterConfiguration(LightCreator.CONFIG_TAG);
     let requestBrightness = false;
-    let adaptiveLightingConfig: AdaptiveLightingConfig | undefined = undefined;
+    let adaptiveLightingConfig: AdaptiveLightingConfig = { ...LightCreator.ADAPTIVE_LIGHTING_DEFAULT_CONFIG };
     if (isLightConfig(converterConfig)) {
       requestBrightness = !!converterConfig.request_brightness;
+
       if (isAdaptiveLightingConfig(converterConfig.adaptive_lighting)) {
-        adaptiveLightingConfig = converterConfig.adaptive_lighting;
-      } else if (converterConfig.adaptive_lighting === true) {
-        adaptiveLightingConfig = LightCreator.DEFAULT_CONFIG_WHEN_ON;
+        adaptiveLightingConfig = { ...LightCreator.ADAPTIVE_LIGHTING_DEFAULT_CONFIG, ...converterConfig.adaptive_lighting };
+      } else if (converterConfig.adaptive_lighting === false) {
+        adaptiveLightingConfig.enabled = false;
       }
     }
 
@@ -134,14 +169,14 @@ class LightHandler implements ServiceHandler {
   private received_saturation = false;
 
   private get adaptiveLightingEnabled(): boolean {
-    return this.adaptiveLightingConfig !== undefined;
+    return this.adaptiveLightingConfig.enabled === true;
   }
 
   constructor(
     expose: ExposesEntryWithFeatures,
     private readonly accessory: BasicAccessory,
     private readonly requestBrightness: boolean,
-    private readonly adaptiveLightingConfig?: AdaptiveLightingConfig
+    private readonly adaptiveLightingConfig: AdaptiveLightingConfig
   ) {
     const endpoint = expose.endpoint;
     this.identifier = LightHandler.generateIdentifier(endpoint);
@@ -367,8 +402,14 @@ class LightHandler implements ServiceHandler {
 
   private handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    data[this.stateExpose.property] = (value as boolean) ? this.stateExpose.value_on : this.stateExpose.value_off;
+    const is_on = value as boolean;
+    data[this.stateExpose.property] = is_on ? this.stateExpose.value_on : this.stateExpose.value_off;
     this.accessory.queueDataForSetAction(data);
+
+    // If turned on, reset the last adaptive lighting temperature.
+    if (is_on) {
+      this.resetAdaptiveLightingTemperature();
+    }
     callback(null);
   }
 
@@ -391,6 +432,8 @@ class LightHandler implements ServiceHandler {
         );
       }
       this.accessory.queueDataForSetAction(data);
+      // If brightness is set, reset the last adaptive lighting temperature.
+      this.resetAdaptiveLightingTemperature();
       callback(null);
     } else {
       callback(new Error('brightness not supported'));
@@ -517,23 +560,24 @@ class LightHandler implements ServiceHandler {
     // Adaptive Lighting active?
     if (this.colorTempExpose !== undefined && this.adaptiveLighting !== undefined && this.adaptiveLighting.isAdaptiveLightingActive()) {
       const lightIsOn = this.service.getCharacteristic(hap.Characteristic.On).value as boolean;
-      if (this.adaptiveLightingConfig?.only_when_on && lightIsOn === false) {
+      if (this.adaptiveLightingConfig.only_when_on && lightIsOn === false) {
         this.accessory.log.debug(`adaptive_lighting: ${this.accessory.displayName}: skipped, light is off`);
         return false;
       }
       if (this.lastAdaptiveLightingTemperature === undefined) {
         this.lastAdaptiveLightingTemperature = value;
       } else {
+        const min_delta = this.adaptiveLightingConfig.min_delta ?? 1;
         const change = Math.abs(this.lastAdaptiveLightingTemperature - value);
-        if (change < 1) {
+        if (change < min_delta) {
           this.accessory.log.debug(
-            `adaptive_lighting: ${this.accessory.displayName}: skipped ${this.colorTempExpose.property} (new: ${value}; ` +
-              `old: ${this.lastAdaptiveLightingTemperature})`
+            `adaptive_lighting: ${this.accessory.displayName}: skipped ${this.colorTempExpose.property} (min_delta: ${min_delta}; ` +
+              `new: ${value}; old: ${this.lastAdaptiveLightingTemperature})`
           );
           return false;
         }
 
-        if (lightIsOn && this.adaptiveLightingConfig?.transition !== undefined && this.adaptiveLightingConfig.transition > 0) {
+        if (lightIsOn && this.adaptiveLightingConfig.transition !== undefined && this.adaptiveLightingConfig.transition > 0) {
           this.accessory.queueDataForSetAction({ transition: this.adaptiveLightingConfig.transition });
         }
 
@@ -545,14 +589,6 @@ class LightHandler implements ServiceHandler {
     }
 
     return true;
-  }
-
-  private updateHueAndSaturationBasedOnColorTemperature(value: number): void {
-    if (this.colorHueCharacteristic !== undefined && this.colorSaturationCharacteristic !== undefined) {
-      const color = hap.ColorUtils.colorTemperatureToHueAndSaturation(value, true);
-      this.colorHueCharacteristic.updateValue(color.hue);
-      this.colorSaturationCharacteristic.updateValue(color.saturation);
-    }
   }
 }
 

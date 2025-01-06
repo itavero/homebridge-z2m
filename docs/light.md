@@ -17,7 +17,7 @@ The table below shows how the different features within this `exposes` entry are
   Additionally you can also configure the following options for Adaptive Lighting:
   - `enabled`: Set to `true` to enable Adaptive Lighting. Defaults to `true`. (same as setting `adaptive_lighting` to a boolean value)
     > ⚠️ **Note**: if the accessory previously had Adaptive Lighting enabled and you try to disable it, you may need to remove it from the Homebridge accessory cache for it to take effect.
-    > You can use Homebridge Config UI X to this by going to _Settings_ and choose _Remove Single Accessory_ (listed in the _Accessories_ section).
+    > You can use Homebridge Config UI X to this by going to *Settings* and choose *Remove Single Accessory* (listed in the *Accessories* section).
   - `only_when_on`: Only update the color temperature when the light is on. Defaults to `true`.
   - `transition`: Transition time to send along with the color temperature change when the light is on. If not defined, `transition` will not be send.
   - `min_delta`: Minimum difference in color temperature to trigger an update. Defaults to `1`, which is also the minimum allowed value.
@@ -31,7 +31,7 @@ The table below shows how the different features within this `exposes` entry are
         "enabled": true,
         "only_when_on": true,
         "transition": 1,
-	"min_delta": 10
+        "min_delta": 10
       },
       "request_brightness": false
     }

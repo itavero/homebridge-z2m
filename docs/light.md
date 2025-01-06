@@ -18,6 +18,7 @@ The table below shows how the different features within this `exposes` entry are
   - `enabled`: Set to `true` to enable Adaptive Lighting. Defaults to `true`. (same as setting `adaptive_lighting` to a boolean value)
   - `only_when_on`: Only update the color temperature when the light is on. Defaults to `true`.
   - `transition`: Transition time to send along with the color temperature change when the light is on. If not defined, `transition` will not be send.
+  - `min_delta`: Minimum difference in color temperature to trigger an update. Defaults to `1`, which is also the minimum allowed value.
 - `request_brightness`: Set to `true` to allow the brightness to be requested (if possible). Defaults to `false`, as this can cause issues when the light is off.
 
 ```json
@@ -27,7 +28,8 @@ The table below shows how the different features within this `exposes` entry are
       "adaptive_lighting": {
         "enabled": true,
         "only_when_on": true,
-        "transition": 0.5
+        "transition": 1,
+	"min_delta": 10
       },
       "request_brightness": false
     }

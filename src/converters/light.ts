@@ -32,6 +32,7 @@ interface AdaptiveLightingConfig {
   enabled?: boolean;
   only_when_on?: boolean;
   transition?: number;
+  min_delta?: number;
 }
 
 interface LightConfig {
@@ -39,12 +40,30 @@ interface LightConfig {
   request_brightness?: boolean;
 }
 
-const isAdaptiveLightingConfig = (x: unknown): x is AdaptiveLightingConfig =>
-  x !== undefined &&
-  typeof x !== 'boolean' &&
-  (typeof (x as AdaptiveLightingConfig).enabled === 'boolean' || (x as AdaptiveLightingConfig).enabled === undefined) &&
-  (typeof (x as AdaptiveLightingConfig).only_when_on === 'boolean' || (x as AdaptiveLightingConfig).only_when_on === undefined) &&
-  (typeof (x as AdaptiveLightingConfig).transition === 'number' || (x as AdaptiveLightingConfig).transition === undefined);
+const isAdaptiveLightingConfig = (x: unknown): x is AdaptiveLightingConfig => {
+  if (x === undefined || typeof x === 'boolean') {
+    return false;
+  }
+
+  const config = x as AdaptiveLightingConfig;
+  if (config.enabled !== undefined && typeof config.enabled !== 'boolean') {
+    return false;
+  }
+  if (config.only_when_on !== undefined && typeof config.only_when_on !== 'boolean') {
+    return false;
+  }
+  if (config.transition !== undefined) {
+    if (typeof config.transition !== 'number' || config.transition < 0) {
+      return false;
+    }
+  }
+  if (config.min_delta !== undefined) {
+    if (typeof config.min_delta !== 'number' || config.min_delta < 1) {
+      return false;
+    }
+  }
+  return true;
+};
 
 const isLightConfig = (x: unknown): x is LightConfig =>
   x !== undefined &&
@@ -54,10 +73,11 @@ const isLightConfig = (x: unknown): x is LightConfig =>
 
 export class LightCreator implements ServiceCreator {
   public static readonly CONFIG_TAG = 'light';
-  private static readonly DEFAULT_CONFIG = {
+  private static readonly ADAPTIVE_LIGHTING_DEFAULT_CONFIG = {
     enabled: true,
     only_when_on: true,
     transition: undefined,
+    min_delta: 1,
   };
 
   constructor(converterConfigRegistry: ConverterConfigurationRegistry) {
@@ -79,14 +99,12 @@ export class LightCreator implements ServiceCreator {
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
     const converterConfig = accessory.getConverterConfiguration(LightCreator.CONFIG_TAG);
     let requestBrightness = false;
-    let adaptiveLightingConfig: AdaptiveLightingConfig = { ...LightCreator.DEFAULT_CONFIG };
+    let adaptiveLightingConfig: AdaptiveLightingConfig = { ...LightCreator.ADAPTIVE_LIGHTING_DEFAULT_CONFIG };
     if (isLightConfig(converterConfig)) {
       requestBrightness = !!converterConfig.request_brightness;
+
       if (isAdaptiveLightingConfig(converterConfig.adaptive_lighting)) {
-        adaptiveLightingConfig = converterConfig.adaptive_lighting;
-        if (adaptiveLightingConfig.enabled === undefined) {
-          adaptiveLightingConfig.enabled = true;
-        }
+        adaptiveLightingConfig = { ...LightCreator.ADAPTIVE_LIGHTING_DEFAULT_CONFIG, ...converterConfig.adaptive_lighting };
       } else if (converterConfig.adaptive_lighting === false) {
         adaptiveLightingConfig.enabled = false;
       }
@@ -539,11 +557,12 @@ class LightHandler implements ServiceHandler {
       if (this.lastAdaptiveLightingTemperature === undefined) {
         this.lastAdaptiveLightingTemperature = value;
       } else {
+        const min_delta = this.adaptiveLightingConfig.min_delta ?? 1;
         const change = Math.abs(this.lastAdaptiveLightingTemperature - value);
-        if (change < 1) {
+        if (change < min_delta) {
           this.accessory.log.debug(
-            `adaptive_lighting: ${this.accessory.displayName}: skipped ${this.colorTempExpose.property} (new: ${value}; ` +
-              `old: ${this.lastAdaptiveLightingTemperature})`
+            `adaptive_lighting: ${this.accessory.displayName}: skipped ${this.colorTempExpose.property} (min_delta: ${min_delta}; ` +
+              `new: ${value}; old: ${this.lastAdaptiveLightingTemperature})`
           );
           return false;
         }

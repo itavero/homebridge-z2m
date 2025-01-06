@@ -4,10 +4,37 @@ import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
 import 'jest-chain';
 import { loadExposesFromFile, ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
+import { BasicServiceCreatorManager } from '../src/converters/creators';
 
 describe('Light', () => {
   beforeAll(() => {
     setHap(hapNodeJs);
+  });
+
+  describe('Configuration is validated:', () => {
+    const manager = BasicServiceCreatorManager.getInstance();
+    // test('number not accepted', () => {
+    //   const config = { light: 1 };
+    //   const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+    //   expect(isValid).toBe(false);
+    // });
+    // test('boolean only not accepted', () => {
+    //   const config = { light: true };
+    //   const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+    //   expect(isValid).toBe(false);
+    // });
+
+    test('accept boolean true for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: true } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
+
+    test('accept boolean false for adaptive_lighting', () => {
+      const config = { light: { adaptive_lighting: false } };
+      const isValid = manager.allConverterConfigurationsAreValid(config, undefined);
+      expect(isValid).toBe(true);
+    });
   });
 
   describe('Hue White and color ambiance Play Lightbar', () => {
@@ -338,7 +365,7 @@ describe('Light', () => {
     });
   });
 
-  describe('Hue White + Color Play COLOR_MODE (experimental)', () => {
+  describe('Hue White + Color Play', () => {
     const deviceModelJson = `{
   "date_code": "20191218",
   "definition": {

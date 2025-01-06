@@ -41,7 +41,7 @@ interface LightConfig {
 }
 
 const isAdaptiveLightingConfig = (x: unknown): x is AdaptiveLightingConfig => {
-  if (x === undefined || typeof x === 'boolean') {
+  if (x === null || typeof x !== 'object') {
     return false;
   }
 
@@ -65,11 +65,21 @@ const isAdaptiveLightingConfig = (x: unknown): x is AdaptiveLightingConfig => {
   return true;
 };
 
-const isLightConfig = (x: unknown): x is LightConfig =>
-  x !== undefined &&
-  ((x as LightConfig).adaptive_lighting === undefined ||
-    typeof (x as LightConfig).adaptive_lighting === 'boolean' ||
-    isAdaptiveLightingConfig((x as LightConfig).adaptive_lighting));
+const isLightConfig = (x: unknown): x is LightConfig => {
+  if (x === null || typeof x !== 'object') {
+    return false;
+  }
+
+  const config = x as LightConfig;
+
+  if (config.adaptive_lighting !== undefined) {
+    if (typeof config.adaptive_lighting !== 'boolean' && !isAdaptiveLightingConfig(config.adaptive_lighting)) {
+      return false;
+    }
+  }
+
+  return !(config.request_brightness !== undefined && typeof config.request_brightness !== 'boolean');
+};
 
 export class LightCreator implements ServiceCreator {
   public static readonly CONFIG_TAG = 'light';

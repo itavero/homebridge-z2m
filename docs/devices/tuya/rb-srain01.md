@@ -18,86 +18,9 @@ the Tuya RB-SRAIN01
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
 
-
-
-## Exposes
-
-This is the information provided by Zigbee2MQTT for this device:
-
-```json
-[
-  {
-    "name": "illuminance",
-    "label": "Illuminance",
-    "access": 1,
-    "type": "numeric",
-    "property": "illuminance",
-    "description": "Raw measured illuminance",
-    "unit": "lx"
-  },
-  {
-    "name": "illuminance_average_20min",
-    "label": "Illuminance average 20min",
-    "access": 1,
-    "type": "numeric",
-    "property": "illuminance_average_20min",
-    "description": "Illuminance average for the last 20 minutes",
-    "unit": "lx"
-  },
-  {
-    "name": "illuminance_maximum_today",
-    "label": "Illuminance maximum today",
-    "access": 1,
-    "type": "numeric",
-    "property": "illuminance_maximum_today",
-    "description": "Illuminance maximum for the last 24 hours",
-    "unit": "lx"
-  },
-  {
-    "name": "cleaning_reminder",
-    "label": "Cleaning reminder",
-    "access": 1,
-    "type": "binary",
-    "property": "cleaning_reminder",
-    "description": "Cleaning reminder",
-    "value_on": "ON",
-    "value_off": "OFF"
-  },
-  {
-    "name": "rain_intensity",
-    "label": "Rain intensity",
-    "access": 1,
-    "type": "numeric",
-    "property": "rain_intensity",
-    "description": "Rainfall intensity"
-  },
-  {
-    "name": "battery",
-    "label": "Battery",
-    "access": 1,
-    "type": "numeric",
-    "property": "battery",
-    "description": "Remaining battery in %, can take up to 24 hours before reported",
-    "category": "diagnostic",
-    "unit": "%",
-    "value_max": 100,
-    "value_min": 0
-  },
-  {
-    "name": "linkquality",
-    "label": "Linkquality",
-    "access": 1,
-    "type": "numeric",
-    "property": "linkquality",
-    "description": "Link quality (signal strength)",
-    "category": "diagnostic",
-    "unit": "lqi",
-    "value_max": 255,
-    "value_min": 0
-  }
-]
-```
 
 # Related
 * [Other devices from Tuya](../index.md#tuya)

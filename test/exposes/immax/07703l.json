@@ -11,20 +11,14 @@
     "value_off": false
   },
   {
+    "name": "child_lock",
     "label": "Child lock",
-    "type": "lock",
-    "features": [
-      {
-        "name": "state",
-        "label": "State",
-        "access": 3,
-        "type": "binary",
-        "property": "child_lock",
-        "description": "Enables/disables physical input on the device",
-        "value_on": "LOCK",
-        "value_off": "UNLOCK"
-      }
-    ]
+    "access": 3,
+    "type": "binary",
+    "property": "child_lock",
+    "description": "Enables/disables physical input on the device",
+    "value_on": "LOCK",
+    "value_off": "UNLOCK"
   },
   {
     "label": "Away mode",

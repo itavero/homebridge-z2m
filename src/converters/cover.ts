@@ -200,7 +200,7 @@ class CoverHandler implements ServiceHandler {
   }
 
   updateState(state: Record<string, unknown>): void {
-    this.monitors.forEach((m) => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state, this.accessory.log));
 
     if (this.motorStateExpose !== undefined && this.motorStateExpose.property in state) {
       const latestMotorState = state[this.motorStateExpose.property] as string;

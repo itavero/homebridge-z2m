@@ -18,6 +18,8 @@ the Tuya ZG-204ZL
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
 * [Occupancy Sensor](../../sensors.md)
   * Occupancy Detected
 

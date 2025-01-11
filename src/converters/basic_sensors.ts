@@ -34,6 +34,7 @@ interface BasicSensorConstructor {
 
 declare type WithBasicSensorProperties<T> = T & {
   exposesName: string;
+  fallbackExposesNames?: string[];
   exposesType: ExposesKnownTypes;
   generateIdentifier: IdentifierGenerator;
 };
@@ -80,9 +81,19 @@ export class BasicSensorCreator implements ServiceCreator {
         .filter((e) => exposesHasBinaryProperty(e) && (e.name === 'battery_low' || e.name === 'tamper'))
         .map((e) => e as ExposesEntryWithBinaryProperty);
       BasicSensorCreator.handlers.forEach((h) => {
-        const values = value.filter((e) => e.name === h.exposesName && e.type === h.exposesType);
+        const possibleNames = [h.exposesName, ...(h.fallbackExposesNames ?? [])];
+        let values: ExposesEntryWithProperty[] = [];
+        for (const name of possibleNames) {
+          values = value.filter((e) => e.name === name && e.type === h.exposesType);
+          if (values.length > 0) {
+            break;
+          }
+        }
+
         if (values.length > 0 && !accessory.isServiceHandlerIdKnown(h.generateIdentifier(key, accessory))) {
-          values.forEach((e) => this.createService(accessory, e, (x) => new h(x, optionalProperties, accessory)));
+          for (const e of values) {
+            this.createService(accessory, e, (x) => new h(x, optionalProperties, accessory));
+          }
         }
       });
     });

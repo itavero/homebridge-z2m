@@ -23,6 +23,8 @@ these devices
   * Status Low Battery
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
 * [Temperature Sensor](../../sensors.md)
   * Current Temperature
 

@@ -18,6 +18,8 @@ the Custom devices (DiY) ZeeFlora
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
 * [Temperature Sensor](../../sensors.md)
   * Current Temperature
 

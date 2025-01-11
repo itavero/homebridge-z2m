@@ -40,7 +40,7 @@ jobs:
         id: pr
         run: |
           unzip reports.zip
-          for info in pr/* ; do echo ::set-output name=$(basename $info)::$(cat $info); done
+          cat pr_data.txt >> $GITHUB_OUTPUT
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -86,12 +86,22 @@ jobs:
             -Dsonar.pullrequest.branch=${{ steps.pr.outputs.head_ref }}
             -Dsonar.pullrequest.base=${{ steps.pr.outputs.base_ref }}
 
-      - name: Publish Code Coverage
+      - name: Publish Coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           override_pr: ${{ steps.pr.outputs.number }}
           override_commit: ${{ steps.pr.outputs.head_sha }}
           files: ./coverage/clover.xml
+          flags: tests
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Publish Test Results to Codecov
+        uses: codecov/test-results-action@v1
+        with:
+          override_pr: ${{ steps.pr.outputs.number }}
+          override_commit: ${{ steps.pr.outputs.head_sha }}
+          files: ./reports/junit.xml
           flags: tests
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}

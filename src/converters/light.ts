@@ -17,7 +17,7 @@ import {
   ExposesPredicate,
 } from '../z2mModels';
 import { hap } from '../hap';
-import { getOrAddCharacteristic } from '../helpers';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
 import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Controller, Service } from 'homebridge';
 import {
   CharacteristicMonitor,
@@ -27,7 +27,6 @@ import {
   PassthroughCharacteristicMonitor,
 } from './monitor';
 import { convertHueSatToXy, convertMiredColorTemperatureToHueSat, convertXyToHueSat } from '../colorhelper';
-import { EXP_COLOR_MODE } from '../experimental';
 
 interface AdaptiveLightingConfig {
   only_when_on?: boolean;
@@ -36,6 +35,7 @@ interface AdaptiveLightingConfig {
 
 interface LightConfig {
   adaptive_lighting?: boolean | AdaptiveLightingConfig;
+  request_brightness?: boolean;
 }
 
 const isAdaptiveLightingConfig = (x: unknown): x is AdaptiveLightingConfig =>
@@ -74,8 +74,10 @@ export class LightCreator implements ServiceCreator {
 
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory): void {
     const converterConfig = accessory.getConverterConfiguration(LightCreator.CONFIG_TAG);
+    let requestBrightness = false;
     let adaptiveLightingConfig: AdaptiveLightingConfig | undefined = undefined;
     if (isLightConfig(converterConfig)) {
+      requestBrightness = !!converterConfig.request_brightness;
       if (isAdaptiveLightingConfig(converterConfig.adaptive_lighting)) {
         adaptiveLightingConfig = converterConfig.adaptive_lighting;
       } else if (converterConfig.adaptive_lighting === true) {
@@ -84,7 +86,7 @@ export class LightCreator implements ServiceCreator {
     }
 
     try {
-      const handler = new LightHandler(expose, accessory, adaptiveLightingConfig);
+      const handler = new LightHandler(expose, accessory, requestBrightness, adaptiveLightingConfig);
       accessory.registerServiceHandler(handler);
     } catch (error) {
       accessory.log.warn(`Failed to setup light for accessory ${accessory.displayName} from expose "${JSON.stringify(expose)}": ${error}`);
@@ -138,6 +140,7 @@ class LightHandler implements ServiceHandler {
   constructor(
     expose: ExposesEntryWithFeatures,
     private readonly accessory: BasicAccessory,
+    private readonly requestBrightness: boolean,
     private readonly adaptiveLightingConfig?: AdaptiveLightingConfig
   ) {
     const endpoint = expose.endpoint;
@@ -182,7 +185,7 @@ class LightHandler implements ServiceHandler {
     if (exposesCanBeGet(this.stateExpose)) {
       keys.push(this.stateExpose.property);
     }
-    if (this.brightnessExpose !== undefined && exposesCanBeGet(this.brightnessExpose)) {
+    if (this.brightnessExpose !== undefined && exposesCanBeGet(this.brightnessExpose) && this.requestBrightness) {
       keys.push(this.brightnessExpose.property);
     }
     if (this.colorTempExpose !== undefined && exposesCanBeGet(this.colorTempExpose)) {
@@ -207,20 +210,18 @@ class LightHandler implements ServiceHandler {
 
       // Use color_mode to filter out the non-active color information
       // to prevent "incorrect" updates (leading to "glitches" in the Home.app)
-      if (this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE)) {
-        if (this.colorTempExpose !== undefined && this.colorTempExpose.property in state && !colorModeIsTemperature) {
-          // Color mode is NOT Color Temperature. Remove color temperature information.
-          delete state[this.colorTempExpose.property];
-        }
+      if (this.colorTempExpose !== undefined && this.colorTempExpose.property in state && !colorModeIsTemperature) {
+        // Color mode is NOT Color Temperature. Remove color temperature information.
+        delete state[this.colorTempExpose.property];
+      }
 
-        if (this.colorExpose?.property !== undefined && this.colorExpose.property in state && colorModeIsTemperature) {
-          // Color mode is Color Temperature. Remove HS/XY color information.
-          delete state[this.colorExpose.property];
-        }
+      if (this.colorExpose?.property !== undefined && this.colorExpose.property in state && colorModeIsTemperature) {
+        // Color mode is Color Temperature. Remove HS/XY color information.
+        delete state[this.colorExpose.property];
       }
     }
 
-    this.monitors.forEach((m) => m.callback(state));
+    this.monitors.forEach((m) => m.callback(state, this.accessory.log));
   }
 
   private disableAdaptiveLightingBasedOnState(colorModeIsTemperature: boolean, state: Record<string, unknown>) {
@@ -306,25 +307,15 @@ class LightHandler implements ServiceHandler {
     ) as ExposesEntryWithNumericRangeProperty;
     if (this.colorTempExpose !== undefined) {
       const characteristic = getOrAddCharacteristic(service, hap.Characteristic.ColorTemperature);
-      characteristic.setProps({
-        minValue: this.colorTempExpose.value_min,
-        maxValue: this.colorTempExpose.value_max,
-        minStep: 1,
-      });
 
-      // Set default value
-      characteristic.value = this.colorTempExpose.value_min;
+      copyExposesRangeToCharacteristic(this.colorTempExpose, characteristic);
 
       characteristic.on('set', this.handleSetColorTemperature.bind(this));
 
       this.monitors.push(new PassthroughCharacteristicMonitor(this.colorTempExpose.property, service, hap.Characteristic.ColorTemperature));
 
       // Also supports colors?
-      if (
-        this.accessory.isExperimentalFeatureEnabled(EXP_COLOR_MODE) &&
-        this.colorTempExpose !== undefined &&
-        this.colorExpose !== undefined
-      ) {
+      if (this.colorTempExpose !== undefined && this.colorExpose !== undefined) {
         // Add monitor to convert Color Temperature to Hue / Saturation
         // based on the 'color_mode'
         this.monitors.push(new ColorTemperatureToHueSatMonitor(service, this.colorTempExpose.property));

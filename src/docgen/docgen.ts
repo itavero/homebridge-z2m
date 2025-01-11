@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/no-ignored-exceptions */
+/* eslint-disable sonarjs/slow-regex */
 /* eslint-disable no-console */
 /* eslint-disable max-len */
 import fs from 'fs';
@@ -68,7 +70,7 @@ function normalizeNameForAnchor(model: string): string {
 }
 
 function generateZigbee2MqttLink(device: ExtendedDeviceDefinition) {
-  const find = '[/| |:]';
+  const find = '[/| :]';
   const re = new RegExp(find, 'g');
   return 'https://www.zigbee2mqtt.io/devices/' + encodeURIComponent(device.model.replace(re, '_')) + '.html';
 }
@@ -393,8 +395,8 @@ allDevices.forEach((d) => {
       const controllers = accessory.getControllerNames();
       generateDevicePage(docs_base_path, d, services, controllers);
     }
-  } catch (Error) {
-    console.log(`Problem generating device page for ${d.vendor} ${d.model}: ${Error}`);
+  } catch (err) {
+    console.log(`Problem generating device page for ${d.vendor} ${d.model}: ${err}`);
   }
 });
 
@@ -435,18 +437,26 @@ const devices: Map<string, ExtendedDeviceDefinition[]> = allDevices
     if (dev.vendor.length === 0) {
       console.log(dev);
     }
-    const existing = map.get(dev.vendor);
+    const normalizedVendor = normalizeNameForAnchor(dev.vendor);
+    const existing = map.get(normalizedVendor);
     if (existing !== undefined) {
       existing.push(dev);
     } else {
-      map.set(dev.vendor, [dev]);
+      map.set(normalizedVendor, [dev]);
     }
     return map;
   }, new Map<string, ExtendedDeviceDefinition[]>());
 
-const vendors = [...devices.keys()].sort((a, b) => {
-  return a.toLowerCase().localeCompare(b.toLowerCase());
-});
+interface VendorName {
+  anchor: string;
+  display: string;
+}
+
+const vendors: VendorName[] = Array.from(devices.entries())
+  .map(([vendor, dev]) => {
+    return { anchor: vendor, display: dev.length > 0 ? dev[0].vendor : vendor };
+  })
+  .sort((a, b) => a.display.localeCompare(b.display));
 
 // Generate index page
 let indexPage = `---
@@ -485,13 +495,13 @@ Unfortunately there are still ${unsupportedDeviceCounter} devices that are not (
 
 `;
 
-const letters = [...new Set(vendors.map((v) => v.substr(0, 1).toUpperCase()))].sort();
+const letters = [...new Set(vendors.map((v) => v.display.substring(0, 1).toUpperCase()))].sort();
 for (const letter of letters) {
   indexPage += `## ${letter}
 <div style="clear:both" />
 ${vendors
-  .filter((v) => v.substr(0, 1).toUpperCase() === letter)
-  .map((v) => `<span class="vendor">[${v}](index.md#${normalizeNameForAnchor(v)})</span>`)
+  .filter((v) => v.display.substring(0, 1).toUpperCase() === letter)
+  .map((v) => `<span class="vendor">[${v.display}](index.md#${v.anchor})</span>`)
   .join('\n')}
 <div style="clear:both" />
 
@@ -499,7 +509,7 @@ ${vendors
 }
 
 for (const vendor of vendors) {
-  const vendorDevices = devices.get(vendor)?.sort((a, b) => {
+  const vendorDevices = devices.get(vendor.anchor)?.sort((a, b) => {
     return a.model.toLowerCase().localeCompare(b.model.toLowerCase());
   });
 
@@ -508,7 +518,7 @@ for (const vendor of vendors) {
   }
 
   indexPage += `
-# ${vendor} {#${normalizeNameForAnchor(vendor)}}
+# ${vendor.display} {#${vendor.anchor}}
 
 | Model | Description |
 | ----- | ----------- |

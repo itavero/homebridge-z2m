@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - main
-      - "releases?/**"
+      - 'releases?/**'
     tags:
       - v[0-9]+.[0-9]+.[0-9]+*
 
@@ -17,12 +17,12 @@ jobs:
     name: Verify
     runs-on: ubuntu-latest
     env:
-      node-version-analysis: 20.x
+      node-version-analysis: 22.x
 
     strategy:
       matrix:
         # the Node.js versions to build on
-        node-version: [18.x, 20.x]
+        node-version: [18.x, 20.x, 22.x]
 
     steps:
       - name: Checkout
@@ -47,11 +47,10 @@ jobs:
       - name: Export PR info
         if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
         run: |
-          mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/number
-          echo ${{ github.head_ref }} > ./pr/head_ref
-          echo ${{ github.sha }} > ./pr/head_sha
-          echo ${{ github.base_ref }} > ./pr/base_ref
+          echo number=${{ github.event.number }} > pr_data.txt
+          echo head_ref=${{ github.head_ref }} >> pr_data.txt
+          echo head_sha=${{ github.sha }} >> pr_data.txt
+          echo base_ref=${{ github.base_ref }} >> pr_data.txt
 
       - name: Archive reports and info (for PR)
         if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
@@ -60,10 +59,11 @@ jobs:
           name: reports
           retention-days: 7
           path: |
-            pr/
+            pr_data.txt
             coverage/lcov.info
             coverage/clover.xml
             reports/tests.xml
+            reports/junit.xml
 
       - name: SonarCloud (on push)
         uses: sonarsource/sonarcloud-github-action@v2
@@ -77,6 +77,15 @@ jobs:
         if: github.event_name == 'push' && matrix.node-version == env.node-version-analysis
         with:
           files: ./coverage/clover.xml
+          flags: tests
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Codecov Test Results (on push)
+        uses: codecov/test-results-action@v1
+        if: github.event_name == 'push' && matrix.node-version == env.node-version-analysis
+        with:
+          files: ./reports/junit.xml
           flags: tests
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}

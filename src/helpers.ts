@@ -1,4 +1,4 @@
-import { Characteristic, Service, WithUUID } from 'homebridge';
+import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
 import { ExposesEntry, exposesHasFeatures, exposesHasNumericRangeProperty } from './z2mModels';
 
 export function errorToString(e: unknown): string {
@@ -9,6 +9,23 @@ export function errorToString(e: unknown): string {
     return e.message; // works, `e` narrowed to Error
   }
   return JSON.stringify(e);
+}
+
+/**
+ * Added because of the following warning from HAP-NodeJS:
+ * "The accessory '<SOME NAME HERE>' has an invalid 'Name' characteristic ('<SOME NAME HERE>'). Please use only alphanumeric, space, and
+ * apostrophe characters. Ensure it starts and ends with an alphabetic or numeric character, and avoid emojis. This may prevent the
+ * accessory from being added in the Home App or cause unresponsiveness."
+ * @param name
+ */
+export function sanitizeAccessoryName(name: string): string {
+  // Replace all non-alphanumeric characters with a space (except spaces of course)
+  const sanitized = name.replace(/[^a-zA-Z0-9' ]+/g, ' ');
+  // Make sure there's at most one space in a row, and remove leading/trailing spaces as well as leading apostrophes
+  return sanitized
+    .replace(/\s{2,}/g, ' ')
+    .replace(/^[ ']+/, '')
+    .trim();
 }
 
 export function getDiffFromArrays<T>(a: T[], b: T[]): T[] {
@@ -29,6 +46,16 @@ export function roundToDecimalPlaces(input: number, decimalPlaces: number): numb
 
 export function copyExposesRangeToCharacteristic(exposes: ExposesEntry, characteristic: Characteristic): boolean {
   if (exposesHasNumericRangeProperty(exposes)) {
+    // Make sure value is within range before setting the range properties.
+    const current_value = characteristic.value as number;
+    if (current_value === undefined) {
+      characteristic.value = Math.round((exposes.value_min + exposes.value_max) / 2);
+    } else if (current_value < exposes.value_min) {
+      characteristic.value = exposes.value_min;
+    } else if (current_value > exposes.value_max) {
+      characteristic.value = exposes.value_max;
+    }
+
     characteristic.setProps({
       minValue: exposes.value_min,
       maxValue: exposes.value_max,
@@ -37,6 +64,31 @@ export function copyExposesRangeToCharacteristic(exposes: ExposesEntry, characte
     return true;
   }
   return false;
+}
+
+export function allowSingleValueForCharacteristic(characteristic: Characteristic, value: CharacteristicValue): Characteristic {
+  characteristic.value = value;
+  characteristic.setProps({
+    minValue: value as number,
+    maxValue: value as number,
+    validValues: [value as number],
+  });
+  return characteristic;
+}
+
+export function setValidValuesOnCharacteristic(characteristic: Characteristic, validValues: number[]): Characteristic {
+  if (validValues.length > 0) {
+    const current_value = characteristic.value as number;
+    if (current_value === undefined || !validValues.includes(current_value)) {
+      characteristic.value = validValues[0];
+    }
+    characteristic.setProps({
+      minValue: Math.min(...validValues),
+      maxValue: Math.max(...validValues),
+      validValues: validValues,
+    });
+  }
+  return characteristic;
 }
 
 export function groupByEndpoint<Entry extends ExposesEntry>(entries: Entry[]): Map<string | undefined, Entry[]> {

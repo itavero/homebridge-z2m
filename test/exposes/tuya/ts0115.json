@@ -95,7 +95,7 @@
     "access": 7,
     "type": "enum",
     "property": "power_on_behavior",
-    "description": "Controls the behavior when the device is powered on after power loss. If you get an `UNSUPPORTED_ATTRIBUTE` error, the device does not support it.",
+    "description": "Controls the behavior when the device is powered on after power loss",
     "category": "config",
     "values": [
       "off",

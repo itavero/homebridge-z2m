@@ -160,5 +160,4 @@ In the latest (or next) release the following features can be enabled:
 
 | Flag | Global | Device | Description |
 | ---- | ------ | ------ | ----------- |
-| `COLOR_MODE` | ✅ | ✅ | Possible workaround/fix for issue described in issue [#208](https://github.com/itavero/homebridge-z2m/issues/208) |
 | `AVAILABILITY` | ✅ | ✅ | Enable Availability feature. Without this flag, the logic will still be executed, except for changing the status of characteristics. (see [#56](https://github.com/itavero/homebridge-z2m/issues/56) / [#593](https://github.com/itavero/homebridge-z2m/issues/593)) |

@@ -645,4 +645,50 @@ describe('Basic Sensors', () => {
       );
     });
   });
+
+  describe('SmartThings IM6001-MPP01', () => {
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+    let movingSensorId: string;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('smartthings/im6001-mpp01.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Check service creation
+        movingSensorId = 'moving_' + hap.Service.MotionSensor.UUID;
+        newHarness
+          .getOrAddHandler(hap.Service.MotionSensor, 'moving', movingSensorId)
+          .addExpectedCharacteristic('moving', hap.Characteristic.MotionDetected)
+          .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
+          .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
+        newHarness.prepareCreationMocks();
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
+        newHarness.checkExpectedGetableKeys([]);
+        harness = newHarness;
+      }
+      harness?.clearMocks();
+    });
+
+    afterEach(() => {
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
+    });
+
+    test('Update moving', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"moving":false}', movingSensorId, hap.Characteristic.MotionDetected, false);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"moving":true}', movingSensorId, hap.Characteristic.MotionDetected, true);
+    });
+  });
 });

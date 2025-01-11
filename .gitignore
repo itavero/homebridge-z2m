@@ -139,3 +139,4 @@ inspectionProfiles/
 reports/
 _*.json
 **/_*.ts
+.DS_Store

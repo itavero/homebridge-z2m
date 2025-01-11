@@ -7,6 +7,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- Expose `moving` as Motion Sensor. (see [#956](https://github.com/itavero/homebridge-z2m/pull/956))
+
 ## [1.11.0-beta.9] - 2025-01-05
 
 ### Changed

@@ -664,7 +664,9 @@ describe('Basic Sensors', () => {
         movingSensorId = 'moving_' + hap.Service.MotionSensor.UUID;
         newHarness
           .getOrAddHandler(hap.Service.MotionSensor, 'moving', movingSensorId)
-          .addExpectedCharacteristic('moving', hap.Characteristic.MotionDetected);
+          .addExpectedCharacteristic('moving', hap.Characteristic.MotionDetected)
+          .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
+          .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
         newHarness.prepareCreationMocks();
 
         newHarness.callCreators(deviceExposes);

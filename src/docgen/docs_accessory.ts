@@ -1,6 +1,7 @@
 import { Controller, Service } from 'homebridge';
 import { BasicAccessory, ServiceHandler } from '../converters/interfaces';
 import { BasicLogger } from '../logger';
+import { sanitizeAccessoryName } from '../helpers';
 
 export class DocsAccessory implements BasicAccessory {
   readonly log: BasicLogger = {
@@ -44,7 +45,7 @@ export class DocsAccessory implements BasicAccessory {
     if (subType !== undefined) {
       name += ` ${subType}`;
     }
-    return name;
+    return sanitizeAccessoryName(name);
   }
 
   getServicesAndCharacteristics(): Map<string, string[]> {

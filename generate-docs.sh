@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Determine vesrion of zigbee-herdsman-converters based on latest Zigbee2MQTT release
+# Determine version of zigbee-herdsman-converters based on latest Zigbee2MQTT release
 Z2M_VERSION=$(npm view zigbee2mqtt@latest version)
 HERDSMAN_VERSION=$(npm view "zigbee2mqtt@$Z2M_VERSION" dependencies.zigbee-herdsman-converters)
 
@@ -17,4 +17,4 @@ DOC_VERSIONS_FILE=src/docgen/versions.ts
 npm i --no-save zigbee-herdsman-converters@${HERDSMAN_VERSION}
 
 # Run documentation script
-ts-node src/docgen/docgen.ts
+npx ts-node src/docgen/docgen.ts

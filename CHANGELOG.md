@@ -11,6 +11,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Expose `moving` as Motion Sensor. (see [#956](https://github.com/itavero/homebridge-z2m/pull/956))
 
+## [1.11.0-beta.9] - 2025-01-05
+
 ### Changed
 
 - Lights: `color_mode` is now always used (no longer an experimental flag; also see [#208](https://github.com/itavero/homebridge-z2m/issues/208))
@@ -490,7 +492,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Restore BatteryService and WindowCovering properly on start up.
 - Improve state determination for WindowCovering.
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.8...HEAD
+[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.9...HEAD
+[1.11.0-beta.9]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.8...v1.11.0-beta.9
 [1.11.0-beta.8]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.7...v1.11.0-beta.8
 [1.11.0-beta.7]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.6...v1.11.0-beta.7
 [1.11.0-beta.6]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.5...v1.11.0-beta.6

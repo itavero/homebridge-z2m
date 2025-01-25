@@ -22,6 +22,10 @@ the SmartThings F-MLT-US-2
   * Contact Sensor State
   * Status Low Battery
   * Status Tampered
+* [Motion Sensor](../../sensors.md)
+  * Motion Detected
+  * Status Low Battery
+  * Status Tampered
 * [Temperature Sensor](../../sensors.md)
   * Current Temperature
   * Status Low Battery

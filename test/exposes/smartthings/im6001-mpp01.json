@@ -1,0 +1,100 @@
+[
+  {
+    "name": "temperature",
+    "label": "Temperature",
+    "access": 1,
+    "type": "numeric",
+    "property": "temperature",
+    "description": "Measured temperature value",
+    "unit": "°C"
+  },
+  {
+    "name": "contact",
+    "label": "Contact",
+    "access": 1,
+    "type": "binary",
+    "property": "contact",
+    "description": "Indicates if the contact is closed (= true) or open (= false)",
+    "value_on": false,
+    "value_off": true
+  },
+  {
+    "name": "battery_low",
+    "label": "Battery low",
+    "access": 1,
+    "type": "binary",
+    "property": "battery_low",
+    "description": "Indicates if the battery of this device is almost empty",
+    "category": "diagnostic",
+    "value_on": true,
+    "value_off": false
+  },
+  {
+    "name": "tamper",
+    "label": "Tamper",
+    "access": 1,
+    "type": "binary",
+    "property": "tamper",
+    "description": "Indicates whether the device is tampered",
+    "value_on": true,
+    "value_off": false
+  },
+  {
+    "name": "battery",
+    "label": "Battery",
+    "access": 1,
+    "type": "numeric",
+    "property": "battery",
+    "description": "Remaining battery in %, can take up to 24 hours before reported",
+    "category": "diagnostic",
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
+  },
+  {
+    "name": "moving",
+    "label": "Moving",
+    "access": 1,
+    "type": "binary",
+    "property": "moving",
+    "description": "Indicates if the device is moving",
+    "value_on": true,
+    "value_off": false
+  },
+  {
+    "name": "x_axis",
+    "label": "X axis",
+    "access": 1,
+    "type": "numeric",
+    "property": "x_axis",
+    "description": "Accelerometer X value"
+  },
+  {
+    "name": "y_axis",
+    "label": "Y axis",
+    "access": 1,
+    "type": "numeric",
+    "property": "y_axis",
+    "description": "Accelerometer Y value"
+  },
+  {
+    "name": "z_axis",
+    "label": "Z axis",
+    "access": 1,
+    "type": "numeric",
+    "property": "z_axis",
+    "description": "Accelerometer Z value"
+  },
+  {
+    "name": "linkquality",
+    "label": "Linkquality",
+    "access": 1,
+    "type": "numeric",
+    "property": "linkquality",
+    "description": "Link quality (signal strength)",
+    "category": "diagnostic",
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
+  }
+]

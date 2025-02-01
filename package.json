@@ -86,7 +86,7 @@
     "@types/node": "^22.0.2",
     "@types/semver": "^7.3.4",
     "eslint": "^9.9.0",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-sonarjs": "^3.0.1",
     "globals": "^15.9.0",

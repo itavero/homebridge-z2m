@@ -64,18 +64,6 @@ This is the information provided by Zigbee2MQTT for this device:
       "enhanced_move_to_hue_and_saturation",
       "hue_stop"
     ]
-  },
-  {
-    "name": "linkquality",
-    "label": "Linkquality",
-    "access": 1,
-    "type": "numeric",
-    "property": "linkquality",
-    "description": "Link quality (signal strength)",
-    "category": "diagnostic",
-    "unit": "lqi",
-    "value_max": 255,
-    "value_min": 0
   }
 ]
 ```

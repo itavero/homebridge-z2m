@@ -82,17 +82,5 @@
       "button_6_double",
       "button_6_triple"
     ]
-  },
-  {
-    "name": "linkquality",
-    "label": "Linkquality",
-    "access": 1,
-    "type": "numeric",
-    "property": "linkquality",
-    "description": "Link quality (signal strength)",
-    "category": "diagnostic",
-    "unit": "lqi",
-    "value_max": 255,
-    "value_min": 0
   }
 ]

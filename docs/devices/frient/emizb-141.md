@@ -77,18 +77,6 @@ This is the information provided by Zigbee2MQTT for this device:
     "description": "Current summation value sent to the display. e.g. 570 = 0,570 kWh",
     "value_max": 268435455,
     "value_min": 0
-  },
-  {
-    "name": "linkquality",
-    "label": "Linkquality",
-    "access": 1,
-    "type": "numeric",
-    "property": "linkquality",
-    "description": "Link quality (signal strength)",
-    "category": "diagnostic",
-    "unit": "lqi",
-    "value_max": 255,
-    "value_min": 0
   }
 ]
 ```

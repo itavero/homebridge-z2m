@@ -159,18 +159,6 @@ This is the information provided by Zigbee2MQTT for this device:
     "description": "Fast process enable/disable when people 1 to 0. default : enable",
     "value_on": "enable",
     "value_off": "disable"
-  },
-  {
-    "name": "linkquality",
-    "label": "Linkquality",
-    "access": 1,
-    "type": "numeric",
-    "property": "linkquality",
-    "description": "Link quality (signal strength)",
-    "category": "diagnostic",
-    "unit": "lqi",
-    "value_max": 255,
-    "value_min": 0
   }
 ]
 ```

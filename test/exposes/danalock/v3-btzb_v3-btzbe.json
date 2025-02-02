@@ -136,17 +136,5 @@
     "type": "numeric",
     "property": "action_user",
     "description": "ID of user that triggered the action on the lock"
-  },
-  {
-    "name": "linkquality",
-    "label": "Linkquality",
-    "access": 1,
-    "type": "numeric",
-    "property": "linkquality",
-    "description": "Link quality (signal strength)",
-    "category": "diagnostic",
-    "unit": "lqi",
-    "value_max": 255,
-    "value_min": 0
   }
 ]

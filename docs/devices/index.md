@@ -25,12 +25,12 @@ span.vendor {
 </style>
 
 # Device support
-This page lists the devices currently supported by Zigbee2MQTT v2.1.0 (which depends on zigbee-herdsman-converters v21.27.1).
+This page lists the devices currently supported by Zigbee2MQTT v2.1.1 (which depends on zigbee-herdsman-converters v21.31.0).
 Using an automated script, we have checked which HomeKit Services (and Characteristics) would be created for each of these devices.
 That way you have some kind of idea of what kind of devices are supported.
 
-Currently there are **3930 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
-Unfortunately there are still 165 devices that are not (yet) supported by this plugin, but are supported by Zigbee2MQTT (and expose more than just a _link quality_).
+Currently there are **3940 supported devices** for which homebridge-z2m will expose at least one HomeKit service.
+Unfortunately there are still 167 devices that are not (yet) supported by this plugin, but are supported by Zigbee2MQTT (and expose more than just a _link quality_).
 
 ## A
 <div style="clear:both" />
@@ -412,6 +412,7 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 <span class="vendor">[Profalux](index.md#profalux)</span>
 <span class="vendor">[Prolight](index.md#prolight)</span>
 <span class="vendor">[PSMART](index.md#psmart)</span>
+<span class="vendor">[Purmo/Radson](index.md#purmo_radson)</span>
 <span class="vendor">[PushOk Hardware](index.md#pushok_hardware)</span>
 <div style="clear:both" />
 
@@ -694,6 +695,7 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 | [81809FBA](adurosmart/81809fba.md) | AduroSmart ERIA colors and white shades smart light bulb A19/BR30 |
 | [81810](adurosmart/81810.md) | AduroSmart Zigbee Aduro Eria B22 bulb - warm white |
 | [81812/81814](adurosmart/81812_81814.md) | AduroSmart Eria tunable white A19/BR30 smart bulb |
+| [81813-V2](adurosmart/81813-v2.md) | AduroSmart BR30 light bulb |
 | [81825](adurosmart/81825.md) | AduroSmart ERIA smart wireless dimming switch |
 | [81848](adurosmart/81848.md) | AduroSmart ERIA smart plug (with power measurements) |
 | [81849](adurosmart/81849.md) | AduroSmart ERIA built-in multi dimmer module 300W |
@@ -1080,6 +1082,7 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 | [ZGB-WS-EU](tuya/ts0601_switch.md) | AVATTO 1, 2, 3 or 4 gang switch (white-label of Tuya TS0601_switch) |
 | [ZTS02](tuya/ts0002.md) | AVATTO 2-Gang switch with backlight, countdown and inching (white-label of Tuya TS0002) |
 | [ZWPM16](avatto/zwpm16.md) | AVATTO Zigbee smart energy meter |
+| [ZWPM16-2](avatto/zwpm16-2.md) | AVATTO Zigbee smart energy meter 80A/2CH |
 | [ZWSH16](avatto/zwsh16.md) | AVATTO Smart Temperature and Humidity Detector |
 | [ZWSM16-1-Zigbee](tuya/ts0001_switch_module.md) | AVATTO 1 gang switch module (white-label of Tuya TS0001_switch_module) |
 | [ZWSM16-2-Zigbee](tuya/ts0002_limited.md) | AVATTO 2 gang switch module (white-label of Tuya TS0002_limited) |
@@ -1838,6 +1841,7 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
+| [EFEKTA_Air_Quality_Station](efekta/efekta_air_quality_station.md) | EFEKTA Air quality station |
 | [EFEKTA_CO2_Smart_Monitor](efekta/efekta_co2_smart_monitor.md) | EFEKTA EFEKTA CO2 Smart Monitor, ws2812b indicator, can control the relay, binding |
 | [EFEKTA_eFlower_Pro](efekta/efekta_eflower_pro.md) | EFEKTA Plant Wattering Sensor with e-ink display 2.13 |
 | [EFEKTA_eON213wz](efekta/efekta_eon213wz.md) | EFEKTA Mini weather station, digital barometer, forecast, charts, temperature, humidity |
@@ -1945,17 +1949,17 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [43076](enbrighten/43076.md) | Enbrighten Zigbee in-wall smart switch |
-| [43078](enbrighten/43078.md) | Enbrighten Zigbee in-wall smart switch |
+| [43078](enbrighten/43078.md) | Enbrighten Zigbee in-wall smart switch with energy monitoring |
 | [43080](enbrighten/43080.md) | Enbrighten Zigbee in-wall smart dimmer |
 | [43082](enbrighten/43082.md) | Enbrighten Zigbee in-wall smart dimmer |
-| [43084](enbrighten/43084.md) | Enbrighten Zigbee in-wall smart switch |
-| [43090](enbrighten/43090.md) | Enbrighten Zigbee in-wall smart dimmer |
-| [43094](enbrighten/43094.md) | Enbrighten Zigbee in-wall smart switch ZB4102 |
-| [43096](enbrighten/43096.md) | Enbrighten Zigbee plug-in smart dimmer with dual controlled outlets |
-| [43100](enbrighten/43100.md) | Enbrighten Plug-in Zigbee outdoor smart switch |
-| [43102](enbrighten/43102.md) | Enbrighten Zigbee in-wall outlet |
-| [43109](enbrighten/43109.md) | Enbrighten Zigbee in-wall smart switch |
-| [43113](enbrighten/43113.md) | Enbrighten Zigbee in-wall smart dimmer |
+| [43084](enbrighten/43076.md) | Enbrighten Zigbee in-wall smart toggle style switch (white-label of Enbrighten 43076) |
+| [43090](enbrighten/43080.md) | Enbrighten Zigbee in-wall smart toggle style dimmer (white-label of Enbrighten 43080) |
+| [43094](enbrighten/43076.md) | Enbrighten Zigbee plug-in indoor smart switch with dual outlets on one control (white-label of Enbrighten 43076) |
+| [43096](enbrighten/43080.md) | Enbrighten Zigbee plug-in smart dimmer with dual outlets on one control (white-label of Enbrighten 43080) |
+| [43100](enbrighten/43076.md) | Enbrighten Zigbee plug-in outdoor smart switch (white-label of Enbrighten 43076) |
+| [43102](enbrighten/43076.md) | Enbrighten Zigbee in-wall tamper-resistant smart outlet (white-label of Enbrighten 43076) |
+| [43109](enbrighten/43076.md) | Enbrighten Zigbee in-wall smart switch (white-label of Enbrighten 43076) |
+| [43113](enbrighten/43080.md) | Enbrighten Zigbee in-wall smart dimmer (white-label of Enbrighten 43080) |
 
 
 # EnOcean {#enocean}
@@ -2135,6 +2139,7 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 
 | Model | Description |
 | ----- | ----------- |
+| [FB56-DOS06HM1.1](feibit/fb56-dos06hm1_1.md) | Feibit 3A / Nue Zigbee door sensor |
 | [FMRC209W](feibit/fmrc209w.md) | Feibit 2-Button Dimmer Switch |
 | [FZCWD2HW-YH](feibit/fzcwd2hw-yh.md) | Feibit Smart LED Recessed Light |
 | [FZCWF2LW-BW](feibit/fzcwf2lw-bw.md) | Feibit Smart LED Retrofit Light |
@@ -3089,9 +3094,9 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 | [SP 222](innr/sp_222.md) | Innr Smart plug |
 | [SP 224](innr/sp_224.md) | Innr Smart plug |
 | [SP 234](innr/sp_234.md) | Innr Smart plug |
-| [SP 240](innr/sp_240.md) | Innr Smart plug |
-| [SP 242](innr/sp_242.md) | Innr Smart plug |
-| [SP 244](innr/sp_244.md) | Innr Smart plug |
+| [SP 240](innr/sp_240.md) | Innr Smart plug (EU) |
+| [SP 242](innr/sp_240.md) | Innr Smart plug (UK) (white-label of Innr SP 240) |
+| [SP 244](innr/sp_240.md) | Innr Smart plug (US) (white-label of Innr SP 240) |
 | [ST 110](innr/st_110.md) | Innr Strip Light |
 | [UC 110](innr/uc_110.md) | Innr Under cabinet light |
 
@@ -4529,7 +4534,8 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 | [T40S6Z](orvibo/t40s6z.md) | ORVIBO MixSwitch 6 gangs |
 | [T40W1Z](orvibo/t40w1z.md) | ORVIBO MixSwitch 1 gang |
 | [T40W2Z](orvibo/t40w2z.md) | ORVIBO MixSwitch 2 gangs |
-| [T40W3Z](orvibo/t40w3z.md) | ORVIBO MixSwitch 3 gangs |
+| [T40W3Z_v1](orvibo/t40w3z_v1.md) | ORVIBO MixSwitch 3 gangs |
+| [T40W3Z_v2](orvibo/t40w3z_v2.md) | ORVIBO MixSwitch 3 gangs |
 | [T40W4Z](orvibo/t40w4z.md) | ORVIBO MixSwitch 4 gangs |
 | [T41W1Z](orvibo/t41w1z.md) | ORVIBO MixSwitch 1 gang (without neutral wire) |
 | [T41W2Z](orvibo/t41w2z.md) | ORVIBO MixSwitch 2 gang (without neutral wire) |
@@ -5309,6 +5315,7 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [PO-BOCO-ELEC](powernity/po-boco-elec.md) | Powernity Pilot wire heating module |
+| [PO-THCO-EAU](powernity/po-thco-eau.md) | Powernity Thermostat radiator valve |
 
 
 # Profalux {#profalux}
@@ -5340,6 +5347,13 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 | [T442](tuya/ts0002_limited.md) | PSMART 2 gang switch module (white-label of Tuya TS0002_limited) |
 | [T461](tuya/ts0001_switch_module_1.md) | PSMART 1 gang switch module (white-label of Tuya TS0001_switch_module_1) |
 | [T462](tuya/ts0002.md) | PSMART 2 Gang switch with backlight, countdown, inching (white-label of Tuya TS0002) |
+
+
+# Purmo/Radson {#purmo_radson}
+
+| Model | Description |
+| ----- | ----------- |
+| [Yali Parada Plus](purmo_radson/yali_parada_plus.md) | Purmo/Radson Electric oil-filled radiator |
 
 
 # PushOk Hardware {#pushok_hardware}
@@ -6276,6 +6290,7 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 | [UP-SA-9127D](sunricher/up-sa-9127d.md) | Sunricher LED-Trading 2 channel AC switch |
 | [ZG192910-4](sunricher/zg192910-4.md) | Sunricher Zigbee LED-controller |
 | [ZG2819S-CCT](sunricher/zg2819s-cct.md) | Sunricher Zigbee handheld remote CCT 4 channels |
+| [ZG2819S-RGBW](iluminize/511_344.md) | Sunricher Zigbee handheld remote RGBW 4 channels (white-label of Iluminize 511.344) |
 | [ZG2835](sunricher/zg2835.md) | Sunricher ZigBee knob smart dimmer |
 | [ZG2835RAC](sunricher/zg2835rac.md) | Sunricher ZigBee knob smart dimmer |
 | [ZG2858A](sunricher/zg2858a.md) | Sunricher Zigbee handheld remote RGBCCT 3 channels |
@@ -7017,6 +7032,7 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [7377019](viessmann/7377019.md) | Viessmann ViCare CO2, temperature and humidity sensor |
+| [7963223](viessmann/7963223.md) | Viessmann ViCare climate sensor |
 | [ZK03839](viessmann/zk03839.md) | Viessmann ViCare climate sensor |
 | [ZK03840](viessmann/zk03840.md) | Viessmann ViCare radiator thermostat valve |
 
@@ -7316,9 +7332,12 @@ Unfortunately there are still 165 devices that are not (yet) supported by this p
 | Model | Description |
 | ----- | ----------- |
 | [E2BP-UP](yokis/e2bp-up.md) | YOKIS Flush-mounted independent 2-channel transmitter |
+| [E2BPA-UP](yokis/e2bpa-up.md) | YOKIS Flush-mounted independent 2-channel transmitter (main powered) |
 | [E4BP-UP](yokis/e4bp-up.md) | YOKIS Flush-mounted independent 4-channel transmitter |
+| [E4BPX-UP](yokis/e4bpx-up.md) | YOKIS Flush-mounted independent 4-channel transmitter (with antenna) |
 | [GALET4-UP](yokis/galet4-up.md) | YOKIS 4-button remote control |
 | [MTR1300E-UP](yokis/mtr1300e-up.md) | YOKIS Remote power switch with timer 1300W |
+| [MTR1300EB-UP](yokis/mtr1300e-up.md) | YOKIS Remote power switch with timer 1300W (white-label of YOKIS MTR1300E-UP) |
 | [MTR2000E-UP](yokis/mtr2000e-up.md) | YOKIS Remote power switch with timer 2000W |
 | [MTR500E-UP](yokis/mtr500e-up.md) | YOKIS Remote power switch with timer 500W |
 | [MTV300E-UP](yokis/mtv300e-up.md) | YOKIS Remote dimmer with timer 300W |

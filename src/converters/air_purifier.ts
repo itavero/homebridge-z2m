@@ -159,7 +159,7 @@ class RotationSpeedProperty extends PassthroughAirPurifierProperty {
 
   handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    let speed = Math.floow((value as boolean) / 11.11);
+    const speed = Math.floow((value as boolean) / 11.11);
     if (speed > 0) {
       data['fan_mode'] = speed;
     } else {
@@ -182,7 +182,7 @@ class LockPhysicalControlsProperty extends PassthroughAirPurifierProperty {
   }
 
   convertToAirPurifier(sensorValue: CharacteristicValue): number | undefined {
-    if (typeof sensorValue === 'undefined' || sensorValue == null) {
+    if (typeof sensorValue === 'undefined' || sensorValue === null) {
       return Characteristic.LockPhysicalControls.CONTROL_LOCK_DISABLED;
     }
 
@@ -217,7 +217,7 @@ class AirPurifierHandler implements ServiceHandler {
     const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
     accessory.log.debug(`Configuring Air Purifier for ${serviceName}`);
     this.service = accessory.getOrAddService(new hap.Service.AirPurifier(serviceName, endpoint));
-    this.mainCharacteristics.push(getOrAddCharacteristic(this.service,hap.Characteristic.AirPurifier));
+    this.mainCharacteristics.push(getOrAddCharacteristic(this.service, hap.Characteristic.AirPurifier));
 
     for (const e of exposes) {
       const factory = AirPurifierHandler.propertyFactories.find((f) => f.canUseExposesEntry(e));

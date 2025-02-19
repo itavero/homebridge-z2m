@@ -94,9 +94,9 @@ class CurrentAirPurifierStateProperty extends PassthroughAirPurifierProperty {
   }
 
   convertToAirPurifier(sensorValue: CharacteristicValue): number | undefined {
-    if (sensorValue === "ON") {
+    if (sensorValue === 'ON') {
       return hap.Characteristic.CurrentAirPurifierState.PURIFYING_AIR;
-    } else if (sensorValue === "OFF") {
+    } else if (sensorValue === 'OFF') {
       return hap.Characteristic.CurrentAirPurifierState.IDLE;
     }
 
@@ -105,7 +105,7 @@ class CurrentAirPurifierStateProperty extends PassthroughAirPurifierProperty {
 
   handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    data["fan_state"] = (value as boolean) ? "ON" : "OFF";
+    data['fan_state'] = (value as boolean) ? 'ON' : 'OFF';
     this.accessory.queueDataForSetAction(data);
     callback(null);
   }
@@ -123,7 +123,7 @@ class TargetAirPurifierStateProperty extends PassthroughAirPurifierProperty {
   }
 
   convertToAirPurifier(sensorValue: CharacteristicValue): number | undefined {
-    if (sensorValue === "auto") {
+    if (sensorValue === 'auto') {
       return hap.Characteristic.TargetAirPurifierState.AUTO;
     }
 
@@ -132,7 +132,7 @@ class TargetAirPurifierStateProperty extends PassthroughAirPurifierProperty {
 
   handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    data["fan_mode"] = (value as boolean) ? "auto" : "off";
+    data['fan_mode'] = (value as boolean) ? 'auto' : 'off';
     this.accessory.queueDataForSetAction(data);
     callback(null);
   }
@@ -161,9 +161,9 @@ class RotationSpeedProperty extends PassthroughAirPurifierProperty {
     const data = {};
     let speed = Math.floow((value as boolean) / 11.11);
     if (speed > 0) {
-      data["fan_mode"] = speed;
+      data['fan_mode'] = speed;
     } else {
-      data["fan_mode"] = "off";
+      data['fan_mode'] = 'off';
     }
     this.accessory.queueDataForSetAction(data);
     callback(null);
@@ -191,7 +191,7 @@ class LockPhysicalControlsProperty extends PassthroughAirPurifierProperty {
 
   handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    data["child_lock"] = (value as boolean) ? "LOCK" : "UNLOCK";
+    data['child_lock'] = (value as boolean) ? 'LOCK' : 'UNLOCK';
     this.accessory.queueDataForSetAction(data);
     callback(null);
   }

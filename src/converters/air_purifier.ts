@@ -9,7 +9,7 @@ import {
 } from '../z2mModels';
 import { hap } from '../hap';
 import { copyExposesRangeToCharacteristic, getOrAddCharacteristic, groupByEndpoint } from '../helpers';
-import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Service, WithUUID } from 'homebridge';
 
 export class AirPurifierCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
@@ -218,7 +218,8 @@ class AirPurifierHandler implements ServiceHandler {
     const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
     accessory.log.debug(`Configuring Air Purifier for ${serviceName}`);
     this.service = accessory.getOrAddService(new hap.Service.AirPurifier(serviceName, endpoint));
-    this.mainCharacteristics.push(getOrAddCharacteristic(this.service, hap.Characteristic.AirPurifier));
+    this.mainCharacteristics.push(getOrAddCharacteristic(this.service, hap.Characteristic.CurrentAirPurifierState));
+    this.mainCharacteristics.push(getOrAddCharacteristic(this.service, hap.Characteristic.TargetAirPurifierState));
 
     for (const e of exposes) {
       const factory = AirPurifierHandler.propertyFactories.find((f) => f.canUseExposesEntry(e));

@@ -96,7 +96,8 @@ class CurrentAirPurifierStateProperty extends PassthroughAirPurifierProperty {
   convertToAirPurifier(sensorValue: CharacteristicValue): number | undefined {
     if (sensorValue === 'ON') {
       return hap.Characteristic.CurrentAirPurifierState.PURIFYING_AIR;
-    } else if (sensorValue === 'OFF') {
+    }
+    if (sensorValue === 'OFF') {
       return hap.Characteristic.CurrentAirPurifierState.IDLE;
     }
 

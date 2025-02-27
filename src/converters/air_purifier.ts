@@ -89,8 +89,8 @@ class CurrentAirPurifierStateProperty extends PassthroughAirPurifierProperty {
     return exposesHasNumericProperty(entry) && entry.name === CurrentAirPurifierStateProperty.NAME;
   }
 
-  constructor(expose: ExposesEntryWithProperty, service: Service) {
-    super(expose, service, hap.Characteristic.CurrentAirPurifierState);
+  constructor(expose: ExposesEntryWithProperty, accessory: BasicAccessory, service: Service) {
+    super(expose, accessory, service, hap.Characteristic.CurrentAirPurifierState);
   }
 
   convertToAirPurifier(sensorValue: CharacteristicValue): number | undefined {
@@ -119,8 +119,8 @@ class TargetAirPurifierStateProperty extends PassthroughAirPurifierProperty {
     return exposesHasNumericProperty(entry) && entry.name === TargetAirPurifierStateProperty.NAME;
   }
 
-  constructor(expose: ExposesEntryWithProperty, service: Service) {
-    super(expose, service, hap.Characteristic.TargetAirPurifierState);
+  constructor(expose: ExposesEntryWithProperty, accessory: BasicAccessory, service: Service) {
+    super(expose, accessory, service, hap.Characteristic.TargetAirPurifierState);
   }
 
   convertToAirPurifier(sensorValue: CharacteristicValue): number | undefined {
@@ -146,8 +146,8 @@ class RotationSpeedProperty extends PassthroughAirPurifierProperty {
     return exposesHasNumericProperty(entry) && entry.name === RotationSpeedProperty.NAME;
   }
 
-  constructor(expose: ExposesEntryWithProperty, service: Service) {
-    super(expose, service, hap.Characteristic.RotationSpeed);
+  constructor(expose: ExposesEntryWithProperty, accessory: BasicAccessory, service: Service) {
+    super(expose, accessory, service, hap.Characteristic.RotationSpeed);
   }
 
   convertToAirPurifier(sensorValue: CharacteristicValue): number | undefined {
@@ -160,7 +160,7 @@ class RotationSpeedProperty extends PassthroughAirPurifierProperty {
 
   handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    const speed = Math.floor((value as boolean) / 11.11);
+    const speed = Math.floor((value as number) / 11.11);
     if (speed > 0) {
       data['fan_mode'] = speed;
     } else {
@@ -178,16 +178,16 @@ class LockPhysicalControlsProperty extends PassthroughAirPurifierProperty {
     return exposesHasNumericProperty(entry) && entry.name === LockPhysicalControlsProperty.NAME;
   }
 
-  constructor(expose: ExposesEntryWithProperty, service: Service) {
-    super(expose, service, hap.Characteristic.LockPhysicalControls);
+  constructor(expose: ExposesEntryWithProperty, accessory: BasicAccessory, service: Service) {
+    super(expose, accessory, service, hap.Characteristic.LockPhysicalControls);
   }
 
   convertToAirPurifier(sensorValue: CharacteristicValue): number | undefined {
     if (typeof sensorValue === 'undefined' || sensorValue === null) {
-      return Characteristic.LockPhysicalControls.CONTROL_LOCK_DISABLED;
+      return hap.Characteristic.LockPhysicalControls.CONTROL_LOCK_DISABLED;
     }
 
-    return Characteristic.LockPhysicalControls.CONTROL_LOCK_ENABLED;
+    return hap.Characteristic.LockPhysicalControls.CONTROL_LOCK_ENABLED;
   }
 
   handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
@@ -200,7 +200,7 @@ class LockPhysicalControlsProperty extends PassthroughAirPurifierProperty {
 
 class AirPurifierHandler implements ServiceHandler {
   public static readonly propertyFactories: WithExposesValidator<
-    new (expose: ExposesEntryWithProperty, service: Service) => AirPurifierProperty
+    new (expose: ExposesEntryWithProperty, accessory: BasicAccessory, service: Service) => AirPurifierProperty
   >[] = [CurrentAirPurifierStateProperty, TargetAirPurifierStateProperty, RotationSpeedProperty, LockPhysicalControlsProperty];
 
   private readonly properties: AirPurifierProperty[] = [];

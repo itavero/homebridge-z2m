@@ -74,7 +74,7 @@
     "lidl"
   ],
   "dependencies": {
-    "color-convert": "^2.0.1",
+    "color-convert": "^3.0.1",
     "mqtt": "^5.3.4",
     "semver": "^7.3.2"
   },

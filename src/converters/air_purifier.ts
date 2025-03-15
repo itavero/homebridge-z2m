@@ -71,8 +71,8 @@ abstract class PassthroughAirPurifierProperty implements AirPurifierProperty {
     if (this.expose.property in state) {
       const sensorValue = state[this.expose.property] as CharacteristicValue;
       if (sensorValue !== null && sensorValue !== undefined) {
-        this.service.updateCharacteristic(this.characteristic, sensorValue);
         this.state = this.convertToAirPurifier(sensorValue) ?? 0;
+        this.service.updateCharacteristic(this.characteristic, this.state);
       }
     }
   }
@@ -86,7 +86,7 @@ class CurrentAirPurifierStateProperty extends PassthroughAirPurifierProperty {
   private static readonly NAME = 'fan_state';
 
   static canUseExposesEntry(entry: ExposesEntry): boolean {
-    return exposesHasNumericProperty(entry) && entry.name === CurrentAirPurifierStateProperty.NAME;
+    return exposesHasProperty(entry) && entry.name === CurrentAirPurifierStateProperty.NAME;
   }
 
   constructor(expose: ExposesEntryWithProperty, accessory: BasicAccessory, service: Service) {
@@ -116,7 +116,7 @@ class TargetAirPurifierStateProperty extends PassthroughAirPurifierProperty {
   private static readonly NAME = 'fan_mode';
 
   static canUseExposesEntry(entry: ExposesEntry): boolean {
-    return exposesHasNumericProperty(entry) && entry.name === TargetAirPurifierStateProperty.NAME;
+    return exposesHasProperty(entry) && entry.name === TargetAirPurifierStateProperty.NAME;
   }
 
   constructor(expose: ExposesEntryWithProperty, accessory: BasicAccessory, service: Service) {
@@ -133,7 +133,7 @@ class TargetAirPurifierStateProperty extends PassthroughAirPurifierProperty {
 
   handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    data['fan_mode'] = (value as boolean) ? 'auto' : 'off';
+    data['fan_mode'] = (value as boolean) ? 'off' : 'auto';
     this.accessory.queueDataForSetAction(data);
     callback(null);
   }
@@ -155,12 +155,12 @@ class RotationSpeedProperty extends PassthroughAirPurifierProperty {
       return 0;
     }
 
-    return Math.ceil(sensorValue * 11.11);
+    return sensorValue;
   }
 
   handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    const speed = Math.floor((value as number) / 11.11);
+    const speed = Math.floor((value as number));
     if (speed > 0) {
       data['fan_mode'] = speed;
     } else {
@@ -175,7 +175,7 @@ class LockPhysicalControlsProperty extends PassthroughAirPurifierProperty {
   private static readonly NAME = 'child_lock';
 
   static canUseExposesEntry(entry: ExposesEntry): boolean {
-    return exposesHasNumericProperty(entry) && entry.name === LockPhysicalControlsProperty.NAME;
+    return exposesHasProperty(entry) && entry.name === LockPhysicalControlsProperty.NAME;
   }
 
   constructor(expose: ExposesEntryWithProperty, accessory: BasicAccessory, service: Service) {

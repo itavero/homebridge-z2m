@@ -103,6 +103,10 @@ class CurrentAirPurifierStateProperty extends PassthroughAirPurifierProperty {
 
     return hap.Characteristic.CurrentAirPurifierState.INACTIVE;
   }
+
+  handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
+    callback(null);
+  }
 }
 
 class TargetAirPurifierStateProperty extends PassthroughAirPurifierProperty {

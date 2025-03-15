@@ -157,7 +157,7 @@ class RotationSpeedProperty extends PassthroughAirPurifierProperty {
 
   handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    const speed = Math.floor((value as number));
+    const speed = Math.floor(value as number);
     if (speed > 0) {
       data['fan_mode'] = speed;
     } else {

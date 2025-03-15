@@ -133,7 +133,7 @@ class TargetAirPurifierStateProperty extends PassthroughAirPurifierProperty {
 
   handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
     const data = {};
-    data['fan_mode'] = (value as boolean) ? 'off' : 'auto';
+    data['fan_mode'] = (value as boolean) ? 'auto' : 'off';
     this.accessory.queueDataForSetAction(data);
     callback(null);
   }

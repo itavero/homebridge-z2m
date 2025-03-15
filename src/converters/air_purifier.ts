@@ -103,13 +103,6 @@ class CurrentAirPurifierStateProperty extends PassthroughAirPurifierProperty {
 
     return hap.Characteristic.CurrentAirPurifierState.INACTIVE;
   }
-
-  handleSetOn(value: CharacteristicValue, callback: CharacteristicSetCallback): void {
-    const data = {};
-    data['fan_state'] = (value as boolean) ? 'ON' : 'OFF';
-    this.accessory.queueDataForSetAction(data);
-    callback(null);
-  }
 }
 
 class TargetAirPurifierStateProperty extends PassthroughAirPurifierProperty {

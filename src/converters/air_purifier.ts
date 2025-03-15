@@ -183,7 +183,7 @@ class LockPhysicalControlsProperty extends PassthroughAirPurifierProperty {
   }
 
   convertToAirPurifier(sensorValue: CharacteristicValue): number | undefined {
-    if (typeof sensorValue === 'undefined' || sensorValue === null) {
+    if (typeof sensorValue === 'undefined' || sensorValue === null || sensorValue === "UNLOCK") {
       return hap.Characteristic.LockPhysicalControls.CONTROL_LOCK_DISABLED;
     }
 

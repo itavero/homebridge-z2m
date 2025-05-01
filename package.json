@@ -80,7 +80,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
-    "@release-it/keep-a-changelog": "^5.0.0",
+    "@release-it/keep-a-changelog": "^7.0.0",
     "@types/color-convert": "^2.0.0",
     "@types/jest": "^29.5.11",
     "@types/node": "^22.0.2",

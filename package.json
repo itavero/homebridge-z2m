@@ -83,7 +83,7 @@
     "@release-it/keep-a-changelog": "^5.0.0",
     "@types/color-convert": "^2.0.0",
     "@types/jest": "^29.5.11",
-    "@types/node": "^22.0.2",
+    "@types/node": "^24.0.10",
     "@types/semver": "^7.3.4",
     "eslint": "^9.9.0",
     "eslint-config-prettier": "^10.0.1",

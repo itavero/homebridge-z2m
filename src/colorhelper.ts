@@ -1,4 +1,4 @@
-import * as color_convert from 'color-convert';
+import convert from 'color-convert';
 import { roundToDecimalPlaces } from './helpers';
 
 // The functions in this file are mostly based on the documentation/code provided by Philips Hue.
@@ -13,7 +13,7 @@ function reverseGammaCorrection(v: number): number {
 }
 
 export function convertHueSatToXy(hue: number, saturation: number): [number, number] {
-  const rgb = color_convert.hsv.rgb([hue, saturation, 100]);
+  const rgb = convert.hsv.rgb([hue, saturation, 100]);
 
   const red: number = gammaCorrection(rgb[0] / 255);
   const green: number = gammaCorrection(rgb[1] / 255);
@@ -80,7 +80,7 @@ export function convertXyToHueSat(x: number, y: number): [number, number] {
   g = g === max ? 255 : 255 * (g / max);
   b = b === max ? 255 : 255 * (b / max);
 
-  const hsv = color_convert.rgb.hsv([r, g, b]);
+  const hsv = convert.rgb.hsv([r, g, b]);
 
   return [hsv[0], hsv[1]];
 }

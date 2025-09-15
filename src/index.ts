@@ -7,7 +7,7 @@ import { setHap } from './hap';
 /**
  * This method registers the platform with Homebridge
  */
-export = (api: API) => {
+export default (api: API): void => {
   setHap(api.hap);
   api.registerPlatform(PLATFORM_NAME, Zigbee2mqttPlatform);
 };

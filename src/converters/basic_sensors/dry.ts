@@ -13,17 +13,17 @@ export class DrySensorHandler extends BinarySensorHandler {
       expose as ExposesEntryWithBinaryProperty,
       otherExposes,
       DrySensorHandler.generateIdentifier,
-      'Dry Sensor (Water Shortage)',
-      (n, t) => new hap.Service.LeakSensor(n, t),
-      hap.Characteristic.LeakDetected,
-      hap.Characteristic.LeakDetected.LEAK_DETECTED,
-      hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED,
+      'Dry Sensor',
+      (n, t) => new hap.Service.ContactSensor(n, t),
+      hap.Characteristic.ContactSensorState,
+      hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED,
+      hap.Characteristic.ContactSensorState.CONTACT_DETECTED,
       'dry'
     );
   }
 
   public static generateIdentifier(endpoint: string | undefined) {
-    let identifier = 'dry_' + hap.Service.LeakSensor.UUID;
+    let identifier = 'dry_' + hap.Service.ContactSensor.UUID;
     if (endpoint !== undefined) {
       identifier += '_' + endpoint.trim();
     }

@@ -1,0 +1,29 @@
+[
+  {
+    "type": "numeric",
+    "name": "soil_moisture",
+    "property": "soil_moisture",
+    "unit": "%",
+    "access": 1,
+    "value_min": 0,
+    "value_max": 100,
+    "description": "Measured soil moisture value"
+  },
+  {
+    "type": "binary",
+    "name": "dry",
+    "property": "dry",
+    "value_on": true,
+    "value_off": false,
+    "access": 1,
+    "description": "Indicates if the soil is dry"
+  },
+  {
+    "type": "numeric",
+    "name": "illuminance",
+    "property": "illuminance",
+    "unit": "lx",
+    "access": 1,
+    "description": "Measured illuminance (light level)"
+  }
+]

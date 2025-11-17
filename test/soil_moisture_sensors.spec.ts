@@ -1,301 +1,95 @@
-import { SoilMoistureSensorHandler } from '../src/converters/basic_sensors/soil_moisture';
-import { DrySensorHandler } from '../src/converters/basic_sensors/dry';
-import { BasicAccessory } from '../src/converters/interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../src/z2mModels';
-import { hap } from '../src/hap';
+import { resetAllWhenMocks, verifyAllWhenMocksCalled } from 'jest-when';
+import { ExposesEntry } from '../src/z2mModels';
+import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from 'hap-nodejs';
-import { setHap } from '../src/hap';
-import { Service, Characteristic } from 'homebridge';
+import 'jest-chain';
+import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 
 describe('Soil Moisture Sensors', () => {
   beforeAll(() => {
     setHap(hapNodeJs);
   });
 
-  describe('SoilMoistureSensorHandler', () => {
-    let mockAccessory: BasicAccessory;
-    let mockService: Service;
-    let mockCharacteristic: Characteristic;
-    let serviceSpy: jest.SpyInstance;
+  describe('Soil Moisture, Dry, and Light Sensor', () => {
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+    let soilMoistureSensorId: string;
+    let drySensorId: string;
+    let lightSensorId: string;
 
     beforeEach(() => {
-      mockCharacteristic = {
-        props: {
-          minValue: 0,
-          maxValue: 100,
-        },
-        setProps: jest.fn().mockReturnThis(),
-      } as unknown as Characteristic;
-      mockService = {
-        updateCharacteristic: jest.fn(),
-        getCharacteristic: jest.fn().mockReturnValue(mockCharacteristic),
-        addCharacteristic: jest.fn().mockReturnValue(mockCharacteristic),
-      } as unknown as Service;
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('_manual/soil_moisture_sensor.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
+        const newHarness = new ServiceHandlersTestHarness();
 
-      mockAccessory = {
-        log: {
-          debug: jest.fn(),
-          warn: jest.fn(),
-          error: jest.fn(),
-        },
-        displayName: 'Test Soil Sensor',
-        getDefaultServiceDisplayName: jest.fn().mockReturnValue('Test Service'),
-        getOrAddService: jest.fn().mockReturnValue(mockService),
-        queueDataForSetAction: jest.fn(),
-        registerServiceHandler: jest.fn(),
-        isServiceHandlerIdKnown: jest.fn().mockReturnValue(false),
-        getConverterConfiguration: jest.fn(),
-      } as unknown as BasicAccessory;
+        // Check service creation
+        soilMoistureSensorId = 'soil_' + hap.Service.HumiditySensor.UUID;
+        drySensorId = 'dry_' + hap.Service.ContactSensor.UUID;
+        lightSensorId = hap.Service.LightSensor.UUID;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      serviceSpy = jest.spyOn(hap.Service, 'HumiditySensor').mockImplementation(() => mockService as unknown as any);
+        newHarness
+          .getOrAddHandler(hap.Service.HumiditySensor, 'soil', soilMoistureSensorId)
+          .addExpectedCharacteristic('soil_moisture', hap.Characteristic.CurrentRelativeHumidity);
+        newHarness
+          .getOrAddHandler(hap.Service.ContactSensor, 'dry', drySensorId)
+          .addExpectedCharacteristic('dry', hap.Characteristic.ContactSensorState);
+        newHarness
+          .getOrAddHandler(hap.Service.LightSensor, undefined, lightSensorId)
+          .addExpectedCharacteristic('illuminance', hap.Characteristic.CurrentAmbientLightLevel);
 
-      // Mock the characteristic
-      (hap.Characteristic as any).CurrentRelativeHumidity = mockCharacteristic; // eslint-disable-line @typescript-eslint/no-explicit-any
+        newHarness.prepareCreationMocks();
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
+        newHarness.checkExpectedGetableKeys([]);
+        harness = newHarness;
+      }
+      harness?.clearMocks();
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
     });
 
-    test('should have correct static properties', () => {
-      expect(SoilMoistureSensorHandler.exposesName).toBe('soil_moisture');
-      expect(SoilMoistureSensorHandler.exposesType).toBe(ExposesKnownTypes.NUMERIC);
+    test('Update soil moisture', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"soil_moisture":45}', soilMoistureSensorId, hap.Characteristic.CurrentRelativeHumidity, 45);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"soil_moisture":78}', soilMoistureSensorId, hap.Characteristic.CurrentRelativeHumidity, 78);
     });
 
-    test('should generate correct identifier without endpoint', () => {
-      const identifier = SoilMoistureSensorHandler.generateIdentifier(undefined);
-      expect(identifier).toBe('soil_' + hap.Service.HumiditySensor.UUID);
+    test('Update dry state - not dry (contact detected)', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"dry":false}',
+        drySensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_DETECTED
+      );
     });
 
-    test('should generate correct identifier with endpoint', () => {
-      const identifier = SoilMoistureSensorHandler.generateIdentifier('endpoint1');
-      expect(identifier).toBe('soil_' + hap.Service.HumiditySensor.UUID + '_endpoint1');
+    test('Update dry state - dry (contact not detected)', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"dry":true}',
+        drySensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED
+      );
     });
 
-    test('should create handler with correct service', () => {
-      const expose: ExposesEntryWithProperty = {
-        type: 'numeric',
-        name: 'soil_moisture',
-        property: 'soil_moisture',
-        unit: '%',
-        access: 1,
-      };
-
-      const handler = new SoilMoistureSensorHandler(expose, [], mockAccessory);
-
-      expect(serviceSpy).toHaveBeenCalledWith(expect.any(String), 'soil');
-      expect(mockAccessory.log.debug).toHaveBeenCalledWith(expect.stringContaining('Configuring SoilMoistureSensor'));
-      expect(handler.mainCharacteristics).toHaveLength(1);
-      expect(handler.identifier).toBe('soil_' + hap.Service.HumiditySensor.UUID);
-    });
-
-    test('should handle state updates', () => {
-      const expose: ExposesEntryWithProperty = {
-        type: 'numeric',
-        name: 'soil_moisture',
-        property: 'soil_moisture',
-        unit: '%',
-        access: 1,
-      };
-
-      const handler = new SoilMoistureSensorHandler(expose, [], mockAccessory);
-      const state = { soil_moisture: 45 };
-
-      handler.updateState(state);
-
-      expect(mockService.updateCharacteristic).toHaveBeenCalledWith(mockCharacteristic, 45);
-    });
-
-    test('should have correct getable keys', () => {
-      const expose: ExposesEntryWithProperty = {
-        type: 'numeric',
-        name: 'soil_moisture',
-        property: 'soil_moisture',
-        unit: '%',
-        access: 1, // Read-only
-      };
-
-      const handler = new SoilMoistureSensorHandler(expose, [], mockAccessory);
-      expect(handler.getableKeys).toEqual([]);
-    });
-
-    test('should handle expose with value range', () => {
-      const expose: ExposesEntryWithProperty = {
-        type: 'numeric',
-        name: 'soil_moisture',
-        property: 'soil_moisture',
-        unit: '%',
-        access: 1,
-        value_min: 0,
-        value_max: 100,
-      };
-
-      mockCharacteristic.setProps = jest.fn().mockReturnValue(mockCharacteristic);
-
-      // Create handler to test prop setting
-      const handler = new SoilMoistureSensorHandler(expose, [], mockAccessory);
-      expect(handler).toBeDefined();
-
-      expect(mockCharacteristic.setProps).toHaveBeenCalledWith({
-        minValue: 0,
-        maxValue: 100,
-        minStep: 1,
-      });
-    });
-  });
-
-  describe('DrySensorHandler', () => {
-    let mockAccessory: BasicAccessory;
-    let mockService: Service;
-    let mockCharacteristic: Characteristic;
-    let serviceSpy: jest.SpyInstance;
-
-    beforeEach(() => {
-      mockCharacteristic = {
-        props: {
-          minValue: 0,
-          maxValue: 1,
-        },
-        setProps: jest.fn().mockReturnThis(),
-      } as unknown as Characteristic;
-      mockService = {
-        updateCharacteristic: jest.fn(),
-        getCharacteristic: jest.fn().mockReturnValue(mockCharacteristic),
-        addCharacteristic: jest.fn().mockReturnValue(mockCharacteristic),
-      } as unknown as Service;
-
-      mockAccessory = {
-        log: {
-          debug: jest.fn(),
-          warn: jest.fn(),
-          error: jest.fn(),
-        },
-        displayName: 'Test Dry Sensor',
-        getDefaultServiceDisplayName: jest.fn().mockReturnValue('Test Service'),
-        getOrAddService: jest.fn().mockReturnValue(mockService),
-        queueDataForSetAction: jest.fn(),
-        registerServiceHandler: jest.fn(),
-        isServiceHandlerIdKnown: jest.fn().mockReturnValue(false),
-        getConverterConfiguration: jest.fn(),
-      } as unknown as BasicAccessory;
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      serviceSpy = jest.spyOn(hap.Service, 'LeakSensor').mockImplementation(() => mockService as unknown as any);
-
-      // Mock the characteristic
-      (hap.Characteristic as any).LeakDetected = mockCharacteristic; // eslint-disable-line @typescript-eslint/no-explicit-any
-
-      // Mock the static properties of LeakDetected characteristic
-      (hap.Characteristic.LeakDetected as any).LEAK_DETECTED = 1; // eslint-disable-line @typescript-eslint/no-explicit-any
-      (hap.Characteristic.LeakDetected as any).LEAK_NOT_DETECTED = 0; // eslint-disable-line @typescript-eslint/no-explicit-any
-    });
-
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
-    test('should have correct static properties', () => {
-      expect(DrySensorHandler.exposesName).toBe('dry');
-      expect(DrySensorHandler.exposesType).toBe(ExposesKnownTypes.BINARY);
-    });
-
-    test('should generate correct identifier without endpoint', () => {
-      const identifier = DrySensorHandler.generateIdentifier(undefined);
-      expect(identifier).toBe('dry_' + hap.Service.LeakSensor.UUID);
-    });
-
-    test('should generate correct identifier with endpoint', () => {
-      const identifier = DrySensorHandler.generateIdentifier('endpoint1');
-      expect(identifier).toBe('dry_' + hap.Service.LeakSensor.UUID + '_endpoint1');
-    });
-
-    test('should create handler with correct service', () => {
-      const expose: ExposesEntryWithBinaryProperty = {
-        type: 'binary',
-        name: 'dry',
-        property: 'dry',
-        value_on: true,
-        value_off: false,
-        access: 1,
-      };
-
-      const handler = new DrySensorHandler(expose, [], mockAccessory);
-
-      expect(serviceSpy).toHaveBeenCalledWith(expect.any(String), 'dry');
-      expect(mockAccessory.log.debug).toHaveBeenCalledWith(expect.stringContaining('Configuring Dry Sensor (Water Shortage)'));
-      expect(handler.identifier).toBe('dry_' + hap.Service.LeakSensor.UUID);
-    });
-
-    test('should handle state updates - dry true (water shortage)', () => {
-      const expose: ExposesEntryWithBinaryProperty = {
-        type: 'binary',
-        name: 'dry',
-        property: 'dry',
-        value_on: true,
-        value_off: false,
-        access: 1,
-      };
-
-      const handler = new DrySensorHandler(expose, [], mockAccessory);
-      const state = { dry: true };
-
-      handler.updateState(state);
-
-      expect(mockService.updateCharacteristic).toHaveBeenCalledWith(mockCharacteristic, hap.Characteristic.LeakDetected.LEAK_DETECTED);
-    });
-
-    test('should handle state updates - dry false (no water shortage)', () => {
-      const expose: ExposesEntryWithBinaryProperty = {
-        type: 'binary',
-        name: 'dry',
-        property: 'dry',
-        value_on: true,
-        value_off: false,
-        access: 1,
-      };
-
-      const handler = new DrySensorHandler(expose, [], mockAccessory);
-      const state = { dry: false };
-
-      handler.updateState(state);
-
-      expect(mockService.updateCharacteristic).toHaveBeenCalledWith(mockCharacteristic, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED);
-    });
-
-    test('should have correct getable keys', () => {
-      const expose: ExposesEntryWithBinaryProperty = {
-        type: 'binary',
-        name: 'dry',
-        property: 'dry',
-        value_on: true,
-        value_off: false,
-        access: 1, // Read-only
-      };
-
-      const handler = new DrySensorHandler(expose, [], mockAccessory);
-      expect(handler.getableKeys).toEqual([]);
-    });
-
-    test('should handle custom value_on and value_off', () => {
-      const expose: ExposesEntryWithBinaryProperty = {
-        type: 'binary',
-        name: 'dry',
-        property: 'dry',
-        value_on: 'DRY',
-        value_off: 'WET',
-        access: 1,
-      };
-
-      const handler = new DrySensorHandler(expose, [], mockAccessory);
-
-      // Test with custom value_on
-      handler.updateState({ dry: 'DRY' });
-      expect(mockService.updateCharacteristic).toHaveBeenCalledWith(mockCharacteristic, hap.Characteristic.LeakDetected.LEAK_DETECTED);
-
-      // Test with custom value_off
-      handler.updateState({ dry: 'WET' });
-      expect(mockService.updateCharacteristic).toHaveBeenCalledWith(mockCharacteristic, hap.Characteristic.LeakDetected.LEAK_NOT_DETECTED);
+    test('Update illuminance', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"illuminance":1200}', lightSensorId, hap.Characteristic.CurrentAmbientLightLevel, 1200);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"illuminance":50}', lightSensorId, hap.Characteristic.CurrentAmbientLightLevel, 50);
     });
   });
 });

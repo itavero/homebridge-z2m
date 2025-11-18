@@ -88,7 +88,16 @@ export class BasicSensorCreator implements ServiceCreator {
         const possibleNames = [h.exposesName, ...(h.fallbackExposesNames ?? [])];
         let values: ExposesEntryWithProperty[] = [];
         for (const name of possibleNames) {
-          values = value.filter((e) => e.name === name && e.type === h.exposesType);
+          values = value.filter((e) => {
+            if (e.name === name && e.type === h.exposesType) {
+              // For binary types, ensure we have the required binary properties
+              if (h.exposesType === ExposesKnownTypes.BINARY) {
+                return exposesHasBinaryProperty(e);
+              }
+              return true;
+            }
+            return false;
+          });
           if (values.length > 0) {
             break;
           }

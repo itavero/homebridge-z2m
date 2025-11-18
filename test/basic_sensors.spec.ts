@@ -709,12 +709,12 @@ describe('Basic Sensors', () => {
         const newHarness = new ServiceHandlersTestHarness();
 
         // Check service creation
-        soilMoistureSensorId = 'soil_moisture_' + hap.Service.HumiditySensor.UUID;
+        soilMoistureSensorId = 'soil_' + hap.Service.HumiditySensor.UUID;
         drySensorId = 'dry_' + hap.Service.ContactSensor.UUID;
         lightSensorId = hap.Service.LightSensor.UUID;
 
         newHarness
-          .getOrAddHandler(hap.Service.HumiditySensor, 'soil_moisture', soilMoistureSensorId)
+          .getOrAddHandler(hap.Service.HumiditySensor, 'soil', soilMoistureSensorId)
           .addExpectedCharacteristic('soil_moisture', hap.Characteristic.CurrentRelativeHumidity);
         newHarness
           .getOrAddHandler(hap.Service.ContactSensor, 'dry', drySensorId)

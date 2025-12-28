@@ -169,6 +169,8 @@ export interface ServiceHandlerContainer {
 
   getCharacteristicMock(identifier: string): MockProxy<Characteristic> & Characteristic;
   prepareGetCharacteristicMock(property: string): void;
+
+  addCachedCharacteristicUUID(uuid: string): ServiceHandlerContainer;
 }
 
 class ServiceHandlerTestData implements ServiceHandlerContainer {
@@ -289,6 +291,11 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
     return this;
   }
 
+  addCachedCharacteristicUUID(uuid: string): ServiceHandlerContainer {
+    this.addedCharacteristicUUIDs.add(uuid);
+    return this;
+  }
+
   clearMocks(): void {
     mockClear(this.serviceMock);
     for (const mapping of this.characteristics.values()) {
@@ -306,6 +313,7 @@ export class ServiceHandlersTestHarness {
   readonly accessoryMock: MockProxy<BasicAccessory> & BasicAccessory;
 
   public numberOfExpectedControllers = 0;
+  public numberOfExpectedControllerRemovals = 0;
 
   constructor() {
     this.accessoryMock = mock<BasicAccessory>();
@@ -459,6 +467,7 @@ export class ServiceHandlersTestHarness {
     let expectedCallsToRegisterServiceHandler = 0;
 
     expect(this.accessoryMock.configureController).toHaveBeenCalledTimes(this.numberOfExpectedControllers);
+    expect(this.accessoryMock.removeController).toHaveBeenCalledTimes(this.numberOfExpectedControllerRemovals);
 
     for (const handler of this.handlers.values()) {
       expect(this.accessoryMock.isServiceHandlerIdKnown).toHaveBeenCalledWith(handler.serviceIdentifier);

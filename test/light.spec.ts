@@ -959,4 +959,107 @@ describe('Light', () => {
       });
     });
   });
+
+  describe('Adaptive Lighting Controller Cleanup', () => {
+    afterEach(() => {
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
+    });
+
+    test('removes cached AL controller when disabled and cached characteristics exist', () => {
+      // Load a device with brightness and color temperature
+      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
+      expect(deviceExposes.length).toBeGreaterThan(0);
+
+      const harness = new ServiceHandlersTestHarness();
+      // AL is disabled in config
+      harness.addConverterConfiguration('light', { adaptive_lighting: false });
+      // Expect configureController to be called (to claim cached) AND removeController (to clean up)
+      harness.numberOfExpectedControllers = 1;
+      harness.numberOfExpectedControllerRemovals = 1;
+
+      const lightbulb = harness
+        .getOrAddHandler(hap.Service.Lightbulb)
+        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
+        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
+
+      // Simulate cached AL characteristics from a previous session
+      lightbulb.addCachedCharacteristicUUID(hap.Characteristic.SupportedCharacteristicValueTransitionConfiguration.UUID);
+
+      harness.prepareCreationMocks();
+      harness.callCreators(deviceExposes);
+      harness.checkCreationExpectations();
+    });
+
+    test('skips removal when no cached AL characteristics exist', () => {
+      // Load a device with brightness and color temperature
+      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
+      expect(deviceExposes.length).toBeGreaterThan(0);
+
+      const harness = new ServiceHandlersTestHarness();
+      // AL is disabled in config
+      harness.addConverterConfiguration('light', { adaptive_lighting: false });
+      // No controllers should be configured or removed since there are no cached AL characteristics
+      harness.numberOfExpectedControllers = 0;
+      harness.numberOfExpectedControllerRemovals = 0;
+
+      harness
+        .getOrAddHandler(hap.Service.Lightbulb)
+        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
+        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
+
+      // No cached AL characteristics - testCharacteristic will return false
+
+      harness.prepareCreationMocks();
+      harness.callCreators(deviceExposes);
+      harness.checkCreationExpectations();
+    });
+
+    test('does not attempt AL cleanup for lights without color temperature', () => {
+      // Load a device with only brightness (no color temperature)
+      const deviceExposes = loadExposesFromFile('namron/4512700.json');
+      expect(deviceExposes.length).toBeGreaterThan(0);
+
+      const harness = new ServiceHandlersTestHarness();
+      // AL is disabled in config
+      harness.addConverterConfiguration('light', { adaptive_lighting: false });
+      // No controllers should be configured or removed since device lacks color temp
+      harness.numberOfExpectedControllers = 0;
+      harness.numberOfExpectedControllerRemovals = 0;
+
+      harness
+        .getOrAddHandler(hap.Service.Lightbulb)
+        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true);
+
+      harness.prepareCreationMocks();
+      harness.callCreators(deviceExposes);
+      harness.checkCreationExpectations();
+    });
+
+    test('configures AL controller normally when enabled', () => {
+      // Load a device with brightness and color temperature
+      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
+      expect(deviceExposes.length).toBeGreaterThan(0);
+
+      const harness = new ServiceHandlersTestHarness();
+      // AL is enabled in config
+      harness.addConverterConfiguration('light', { adaptive_lighting: true });
+      // Controller should be configured but NOT removed
+      harness.numberOfExpectedControllers = 1;
+      harness.numberOfExpectedControllerRemovals = 0;
+
+      harness
+        .getOrAddHandler(hap.Service.Lightbulb)
+        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
+        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
+
+      harness.prepareCreationMocks();
+      harness.callCreators(deviceExposes);
+      harness.checkCreationExpectations();
+    });
+  });
 });

@@ -40,6 +40,8 @@ interface LightConfig {
 
 const isAdaptiveLightingConfig = (x: unknown): x is AdaptiveLightingConfig =>
   x !== undefined &&
+  typeof x === 'object' &&
+  x !== null &&
   (typeof (x as AdaptiveLightingConfig).only_when_on === 'boolean' || (x as AdaptiveLightingConfig).only_when_on === undefined) &&
   (typeof (x as AdaptiveLightingConfig).transition === 'number' || (x as AdaptiveLightingConfig).transition === undefined);
 
@@ -347,16 +349,25 @@ class LightHandler implements ServiceHandler {
   }
 
   private tryCreateAdaptiveLighting(service: Service) {
-    // Adaptive lighting is not enabled
-    if (!this.adaptiveLightingEnabled) {
-      return;
-    }
-
-    // Need at least brightness and color temperature to add Adaptive Lighting
+    // Need at least brightness and color temperature for AL to be possible
     if (this.brightnessExpose === undefined || this.colorTempExpose === undefined) {
       return;
     }
 
+    if (!this.adaptiveLightingEnabled) {
+      // AL is disabled in config - check if there's a cached controller to remove
+      // The AL controller adds SupportedCharacteristicValueTransitionConfiguration to the service
+      if (service.testCharacteristic(hap.Characteristic.SupportedCharacteristicValueTransitionConfiguration)) {
+        // AL was previously enabled - claim and remove the cached controller
+        const tempController = new hap.AdaptiveLightingController(service);
+        this.accessory.configureController(tempController);
+        this.accessory.removeController(tempController);
+        this.accessory.log.debug(`Removed cached Adaptive Lighting controller for ${this.accessory.displayName}`);
+      }
+      return;
+    }
+
+    // AL is enabled - create and configure normally
     this.adaptiveLighting = new hap.AdaptiveLightingController(service).on('disable', this.resetAdaptiveLightingTemperature.bind(this));
     this.accessory.configureController(this.adaptiveLighting);
   }

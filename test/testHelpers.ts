@@ -272,7 +272,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
   }
 
   checkNoCharacteristicUpdates(): ServiceHandlerContainer {
-    expect(this.serviceMock.updateCharacteristic).not.toBeCalled();
+    expect(this.serviceMock.updateCharacteristic).not.toHaveBeenCalled();
     return this;
   }
 
@@ -593,7 +593,7 @@ export class ServiceHandlersTestHarness {
   }
 
   checkNoSetDataQueued() {
-    expect(this.accessoryMock.queueDataForSetAction).not.toBeCalled();
+    expect(this.accessoryMock.queueDataForSetAction).not.toHaveBeenCalled();
   }
 
   checkGetKeysQueued(expectedKeys: string | string[]) {
@@ -601,7 +601,7 @@ export class ServiceHandlersTestHarness {
   }
 
   checkNoGetKeysQueued() {
-    expect(this.accessoryMock.queueKeyForGetAction).not.toBeCalled();
+    expect(this.accessoryMock.queueKeyForGetAction).not.toHaveBeenCalled();
   }
 
   clearMocks(): void {

@@ -17,6 +17,8 @@ The table below shows how the different features within this `exposes` entry are
   Additionally you can also configure the following options for Adaptive Lighting:
   - `only_when_on`: Only update the color temperature when the light is on. Defaults to `true`.
   - `transition`: Transition time to send along with the color temperature change when the light is on. If not defined, `transition` will not be send.
+
+  When disabling Adaptive Lighting, the cached controller is automatically removed on the next Homebridge restart. You no longer need to manually clear the accessory cache.
 - `request_brightness`: Set to `true` to allow the brightness to be requested (if possible). Defaults to `false`, as this can cause issues when the light is off.
 
 ```json

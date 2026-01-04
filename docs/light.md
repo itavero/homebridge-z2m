@@ -13,10 +13,13 @@ The table below shows how the different features within this `exposes` entry are
 
 ## Converter specific configuration (`light`)
 
-- `adaptive_lighting`: Set to `true` to enable [Adaptive Lighting](https://support.apple.com/guide/iphone/control-accessories-iph0a717a8fd/ios#iph79e72e212). Apple requires a home hub for Adaptive Lighting to work. This feature is only available for lights that expose a *Color Temperature* characteristic.
-  Additionally you can also configure the following options for Adaptive Lighting:
+- `adaptive_lighting`: [Adaptive Lighting](https://support.apple.com/guide/iphone/control-accessories-iph0a717a8fd/ios#iph79e72e212) is **enabled by default** for lights that expose a *Color Temperature* characteristic. Apple requires a home hub for Adaptive Lighting to work.
+  Set to `false` to disable Adaptive Lighting.
+  Additionally you can configure the following options for Adaptive Lighting:
+  - `enabled`: Set to `false` to disable Adaptive Lighting. Defaults to `true`.
   - `only_when_on`: Only update the color temperature when the light is on. Defaults to `true`.
-  - `transition`: Transition time to send along with the color temperature change when the light is on. If not defined, `transition` will not be send.
+  - `transition`: Transition time (in seconds) to send along with the color temperature change when the light is on. If not defined, `transition` will not be sent.
+  - `min_delta`: Minimum difference in color temperature (in mired) before sending an update to the light. Useful for reducing MQTT traffic. Defaults to `1`.
 
   When disabling Adaptive Lighting, the cached controller is automatically removed on the next Homebridge restart. You no longer need to manually clear the accessory cache.
 - `request_brightness`: Set to `true` to allow the brightness to be requested (if possible). Defaults to `false`, as this can cause issues when the light is off.
@@ -26,10 +29,23 @@ The table below shows how the different features within this `exposes` entry are
   "converters": {
     "light": {
       "adaptive_lighting": {
+        "enabled": true,
         "only_when_on": true,
-        "transition": 0.5
+        "transition": 1,
+        "min_delta": 10
       },
       "request_brightness": false
+    }
+  }
+}
+```
+
+To disable Adaptive Lighting:
+```json
+{
+  "converters": {
+    "light": {
+      "adaptive_lighting": false
     }
   }
 }

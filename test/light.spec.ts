@@ -165,6 +165,8 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+        // Adaptive Lighting is enabled by default for lights with color_temp
+        newHarness.numberOfExpectedControllers = 1;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
@@ -490,6 +492,8 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+        // Adaptive Lighting is enabled by default for lights with color_temp
+        newHarness.numberOfExpectedControllers = 1;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
@@ -674,6 +678,8 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+        // Adaptive Lighting is enabled by default for lights with color_temp
+        newHarness.numberOfExpectedControllers = 1;
         const lightbulb = newHarness
           .getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)

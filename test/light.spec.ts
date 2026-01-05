@@ -1125,101 +1125,20 @@ describe('Light', () => {
       harness.checkCreationExpectations();
     });
 
-    test('ignores invalid adaptive_lighting config (non-boolean enabled)', () => {
-      // Load a device with brightness and color temperature
+    test.each([
+      { name: 'non-boolean enabled', config: { enabled: 'yes' } },
+      { name: 'invalid min_delta (zero)', config: { min_delta: 0 } },
+      { name: 'invalid min_delta (negative)', config: { min_delta: -5 } },
+      { name: 'invalid min_delta (non-number)', config: { min_delta: 'low' } },
+      { name: 'non-number transition', config: { transition: 'slow' } },
+      { name: 'non-boolean only_when_on', config: { only_when_on: 'yes' } },
+    ])('ignores invalid adaptive_lighting config ($name)', ({ config }) => {
       const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
       expect(deviceExposes.length).toBeGreaterThan(0);
 
       const harness = new ServiceHandlersTestHarness();
-      // Invalid config: enabled should be boolean, not string
-      // This should be treated as if no config was provided, so AL is enabled by default
-      harness.addConverterConfiguration('light', {
-        adaptive_lighting: {
-          enabled: 'yes', // invalid - should be boolean
-        },
-      });
-      // AL should be enabled by default since invalid config is ignored
-      harness.numberOfExpectedControllers = 1;
-      harness.numberOfExpectedControllerRemovals = 0;
-
-      harness
-        .getOrAddHandler(hap.Service.Lightbulb)
-        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
-        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
-        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
-
-      harness.prepareCreationMocks();
-      harness.callCreators(deviceExposes);
-      harness.checkCreationExpectations();
-    });
-
-    test('ignores invalid adaptive_lighting config (invalid min_delta)', () => {
-      // Load a device with brightness and color temperature
-      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
-      expect(deviceExposes.length).toBeGreaterThan(0);
-
-      const harness = new ServiceHandlersTestHarness();
-      // Invalid config: min_delta should be >= 1
-      harness.addConverterConfiguration('light', {
-        adaptive_lighting: {
-          min_delta: 0, // invalid - should be >= 1
-        },
-      });
-      // AL should be enabled by default since invalid config is ignored
-      harness.numberOfExpectedControllers = 1;
-      harness.numberOfExpectedControllerRemovals = 0;
-
-      harness
-        .getOrAddHandler(hap.Service.Lightbulb)
-        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
-        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
-        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
-
-      harness.prepareCreationMocks();
-      harness.callCreators(deviceExposes);
-      harness.checkCreationExpectations();
-    });
-
-    test('ignores invalid adaptive_lighting config (non-number transition)', () => {
-      // Load a device with brightness and color temperature
-      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
-      expect(deviceExposes.length).toBeGreaterThan(0);
-
-      const harness = new ServiceHandlersTestHarness();
-      // Invalid config: transition should be number
-      harness.addConverterConfiguration('light', {
-        adaptive_lighting: {
-          transition: 'slow', // invalid - should be number
-        },
-      });
-      // AL should be enabled by default since invalid config is ignored
-      harness.numberOfExpectedControllers = 1;
-      harness.numberOfExpectedControllerRemovals = 0;
-
-      harness
-        .getOrAddHandler(hap.Service.Lightbulb)
-        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
-        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
-        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
-
-      harness.prepareCreationMocks();
-      harness.callCreators(deviceExposes);
-      harness.checkCreationExpectations();
-    });
-
-    test('ignores invalid adaptive_lighting config (non-boolean only_when_on)', () => {
-      // Load a device with brightness and color temperature
-      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
-      expect(deviceExposes.length).toBeGreaterThan(0);
-
-      const harness = new ServiceHandlersTestHarness();
-      // Invalid config: only_when_on should be boolean
-      harness.addConverterConfiguration('light', {
-        adaptive_lighting: {
-          only_when_on: 'yes', // invalid - should be boolean
-        },
-      });
-      // AL should be enabled by default since invalid config is ignored
+      // Invalid config should be treated as if no config was provided, so AL is enabled by default
+      harness.addConverterConfiguration('light', { adaptive_lighting: config });
       harness.numberOfExpectedControllers = 1;
       harness.numberOfExpectedControllerRemovals = 0;
 

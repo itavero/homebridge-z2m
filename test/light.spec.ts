@@ -1153,4 +1153,110 @@ describe('Light', () => {
       harness.checkCreationExpectations();
     });
   });
+
+  describe('Adaptive Lighting disable based on state', () => {
+    let isActiveSpy: jest.SpyInstance;
+    let disableSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      // Spy on AdaptiveLightingController prototype methods
+      isActiveSpy = jest.spyOn(hap.AdaptiveLightingController.prototype, 'isAdaptiveLightingActive');
+      disableSpy = jest.spyOn(hap.AdaptiveLightingController.prototype, 'disableAdaptiveLighting');
+    });
+
+    afterEach(() => {
+      isActiveSpy.mockRestore();
+      disableSpy.mockRestore();
+      verifyAllWhenMocksCalled();
+      resetAllWhenMocks();
+    });
+
+    test('disables AL when color mode changes away from color_temp', () => {
+      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
+      expect(deviceExposes.length).toBeGreaterThan(0);
+
+      const harness = new ServiceHandlersTestHarness();
+      harness.numberOfExpectedControllers = 1;
+
+      harness
+        .getOrAddHandler(hap.Service.Lightbulb)
+        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
+        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
+
+      harness.prepareCreationMocks();
+      harness.callCreators(deviceExposes);
+      harness.checkCreationExpectations();
+
+      // Mock AL as active
+      isActiveSpy.mockReturnValue(true);
+
+      // Send state update with color_mode NOT being color_temp (e.g., user switched to color mode)
+      harness.checkUpdateStateIsIgnored('{"color_mode":"xy","color":{"x":0.5,"y":0.5}}');
+
+      // Verify disableAdaptiveLighting was called because color mode changed away from color_temp
+      expect(disableSpy).toHaveBeenCalled();
+    });
+
+    test('does not disable AL when color mode is color_temp and no previous temperature cached', () => {
+      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
+      expect(deviceExposes.length).toBeGreaterThan(0);
+
+      const harness = new ServiceHandlersTestHarness();
+      harness.numberOfExpectedControllers = 1;
+
+      harness
+        .getOrAddHandler(hap.Service.Lightbulb)
+        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
+        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
+
+      harness.prepareCreationMocks();
+      harness.callCreators(deviceExposes);
+      harness.checkCreationExpectations();
+
+      // Mock AL as active
+      isActiveSpy.mockReturnValue(true);
+
+      // Send state update with color_mode being color_temp
+      // Since lastAdaptiveLightingTemperature is not set (AL hasn't sent any updates yet),
+      // disableAdaptiveLighting should NOT be called
+      harness.checkSingleUpdateState(
+        '{"color_mode":"color_temp","color_temp":300}',
+        hap.Service.Lightbulb,
+        hap.Characteristic.ColorTemperature,
+        300
+      );
+
+      // Verify disableAdaptiveLighting was NOT called
+      expect(disableSpy).not.toHaveBeenCalled();
+    });
+
+    test('does not check AL disable when AL is not active', () => {
+      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
+      expect(deviceExposes.length).toBeGreaterThan(0);
+
+      const harness = new ServiceHandlersTestHarness();
+      harness.numberOfExpectedControllers = 1;
+
+      harness
+        .getOrAddHandler(hap.Service.Lightbulb)
+        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
+        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
+
+      harness.prepareCreationMocks();
+      harness.callCreators(deviceExposes);
+      harness.checkCreationExpectations();
+
+      // Mock AL as NOT active
+      isActiveSpy.mockReturnValue(false);
+
+      // Send state update with color_mode NOT being color_temp
+      harness.checkUpdateStateIsIgnored('{"color_mode":"xy","color":{"x":0.5,"y":0.5}}');
+
+      // Verify disableAdaptiveLighting was NOT called because AL is not active
+      expect(disableSpy).not.toHaveBeenCalled();
+    });
+  });
 });

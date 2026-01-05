@@ -4,6 +4,16 @@ module.exports = {
   setupFilesAfterEnv: ['jest-chain'],
   coverageReporters: ['json', 'lcov', 'text', 'clover'],
   collectCoverageFrom: ['src/**/*.ts', '!src/docgen/*.ts'],
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        diagnostics: {
+          ignoreCodes: [151002],
+        },
+      },
+    ],
+  },
   reporters: [
     'default',
     [

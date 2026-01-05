@@ -3,7 +3,7 @@ import 'jest-chain';
 import 'jest';
 import { isPluginConfiguration } from '../src/configModels';
 import { BasicServiceCreatorManager } from '../src/converters/creators';
-import * as hapNodeJs from 'hap-nodejs';
+import * as hapNodeJs from '@homebridge/hap-nodejs';
 import { setHap } from '../src/hap';
 
 /* eslint-disable-next-line @typescript-eslint/no-extraneous-class */

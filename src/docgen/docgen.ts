@@ -385,6 +385,8 @@ const allDevices: ExtendedDeviceDefinition[] = [
   ...definitions
     .filter((d) => typeof d.exposes === 'function' || d.exposes?.find((e) => e.name !== 'linkquality') !== undefined)
     .map((d) => {
+      // Trim vendor name to avoid issues with leading/trailing whitespace
+      d.vendor = d.vendor.trim();
       if (typeof d.exposes === 'function') {
         // Call function to generate array of exposes information.
         console.log(`Generating exposes array for ${d.vendor} ${d.model}`);
@@ -400,7 +402,7 @@ for (const definition of allDevices) {
       const whiteLabelDefinition = {
         ...definition,
         model: whiteLabel.model,
-        vendor: whiteLabel.vendor ?? definition.vendor,
+        vendor: (whiteLabel.vendor ?? definition.vendor).trim(),
         description: whiteLabel.description ?? definition.description,
         isWhiteLabel: true,
         whiteLabelOf: definition,
@@ -463,12 +465,8 @@ function update_test_input(test_resources: string, json_source: string) {
 update_test_input(test_exposes_base_path, exposes_base_path);
 
 // Group devices per vendor
-const devices: Map<string, ExtendedDeviceDefinition[]> = allDevices
-  .map((d) => {
-    d.vendor = d.vendor.trim();
-    return d;
-  })
-  .reduce((map: Map<string, ExtendedDeviceDefinition[]>, dev: ExtendedDeviceDefinition): Map<string, ExtendedDeviceDefinition[]> => {
+const devices: Map<string, ExtendedDeviceDefinition[]> = allDevices.reduce(
+  (map: Map<string, ExtendedDeviceDefinition[]>, dev: ExtendedDeviceDefinition): Map<string, ExtendedDeviceDefinition[]> => {
     if (dev.vendor.length === 0) {
       console.log(dev);
     }
@@ -480,7 +478,9 @@ const devices: Map<string, ExtendedDeviceDefinition[]> = allDevices
       map.set(normalizedVendor, [dev]);
     }
     return map;
-  }, new Map<string, ExtendedDeviceDefinition[]>());
+  },
+  new Map<string, ExtendedDeviceDefinition[]>()
+);
 
 interface VendorName {
   anchor: string;

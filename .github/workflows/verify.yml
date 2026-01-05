@@ -17,7 +17,7 @@ jobs:
     name: Verify
     runs-on: ubuntu-latest
     env:
-      node-version-analysis: 22.x
+      node-version-analysis: 24.x
 
     strategy:
       matrix:

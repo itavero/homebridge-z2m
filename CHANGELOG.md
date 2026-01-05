@@ -11,7 +11,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Adaptive Lighting is now **enabled by default** for lights with a Color Temperature characteristic.
   Set `adaptive_lighting` to `false` in the converter configuration to disable it.
-  (see [#868](https://github.com/itavero/homebridge-z2m/pull/868))
+  (see [#1146](https://github.com/itavero/homebridge-z2m/pull/1146))
 - Reset the cached color temperature for Adaptive Lighting when the light is turned on or when brightness is changed via HomeKit, ensuring the next Adaptive Lighting update is sent to the light.
 
 ### Added

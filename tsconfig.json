@@ -5,6 +5,7 @@
     "lib": [
       "ES2022"
     ],
+    "skipLibCheck": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,

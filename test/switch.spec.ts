@@ -20,7 +20,7 @@ describe('Switch', () => {
         // Only test service creation for first test case and reuse harness afterwards
         if (deviceExposes.length === 0 && harness === undefined) {
           // Load exposes from JSON
-          deviceExposes = loadExposesFromFile('ikea/e1603_e1702_e1708.json');
+          deviceExposes = loadExposesFromFile('ikea/e160x_e170x_e190x.json');
           expect(deviceExposes.length).toBeGreaterThan(0);
           const newHarness = new ServiceHandlersTestHarness();
 
@@ -81,7 +81,7 @@ describe('Switch', () => {
         // Only test service creation for first test case and reuse harness afterwards
         if (deviceExposes.length === 0 && harness === undefined) {
           // Load exposes from JSON
-          deviceExposes = loadExposesFromFile('ikea/e1603_e1702_e1708.json');
+          deviceExposes = loadExposesFromFile('ikea/e160x_e170x_e190x.json');
           const newHarness = new ServiceHandlersTestHarness();
 
           // Check service creation

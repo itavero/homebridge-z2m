@@ -53,7 +53,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 1,
     "type": "numeric",
     "property": "remaining_watering_time",
-    "description": "Remaning watering time (for auto shutdown). Updates every minute, and every 10s in the last minute.",
+    "description": "Remaining watering time (for auto shutdown). Updates every minute, and every 10s in the last minute.",
     "unit": "sec",
     "value_min": 0
   },

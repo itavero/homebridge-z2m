@@ -16,6 +16,8 @@ the Bosch BTH-RM230Z
 
 * [Humidity Sensor](../../sensors.md)
   * Current Relative Humidity
+* [Switch](../../switch.md)
+  * On
 
 
 # Related

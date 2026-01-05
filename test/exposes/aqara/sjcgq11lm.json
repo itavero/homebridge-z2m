@@ -12,27 +12,6 @@
     "value_min": 0
   },
   {
-    "name": "water_leak",
-    "label": "Water leak",
-    "access": 1,
-    "type": "binary",
-    "property": "water_leak",
-    "description": "Indicates whether the device detected a water leak",
-    "value_on": true,
-    "value_off": false
-  },
-  {
-    "name": "battery_low",
-    "label": "Battery low",
-    "access": 1,
-    "type": "binary",
-    "property": "battery_low",
-    "description": "Indicates if the battery of this device is almost empty",
-    "category": "diagnostic",
-    "value_on": true,
-    "value_off": false
-  },
-  {
     "name": "voltage",
     "label": "Voltage",
     "access": 1,
@@ -69,5 +48,26 @@
     "property": "trigger_count",
     "description": "Indicates how many times the sensor was triggered (since last scheduled report)",
     "category": "diagnostic"
+  },
+  {
+    "name": "water_leak",
+    "label": "Water leak",
+    "access": 1,
+    "type": "binary",
+    "property": "water_leak",
+    "description": "Indicates whether the device detected a water leak",
+    "value_on": true,
+    "value_off": false
+  },
+  {
+    "name": "battery_low",
+    "label": "Battery low",
+    "access": 1,
+    "type": "binary",
+    "property": "battery_low",
+    "description": "Indicates whether the battery of the device is almost empty",
+    "category": "diagnostic",
+    "value_on": true,
+    "value_off": false
   }
 ]

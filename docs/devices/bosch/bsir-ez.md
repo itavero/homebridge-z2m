@@ -28,38 +28,105 @@ This is the information provided by Zigbee2MQTT for this device:
 ```json
 [
   {
-    "name": "alarm_state",
-    "label": "Alarm state",
-    "access": 7,
+    "name": "device_state",
+    "label": "Device state",
+    "access": 5,
+    "type": "enum",
+    "property": "device_state",
+    "description": "Current state of the siren and light. Please keep in mind that these activate after the specified delay time (except when using an external alarm trigger).",
+    "values": [
+      "siren_active_from_external_trigger",
+      "light_active_from_external_trigger",
+      "siren_and_light_active_from_external_trigger",
+      "siren_active",
+      "light_active",
+      "siren_and_light_active",
+      "idle"
+    ]
+  },
+  {
+    "name": "trigger_alarm",
+    "label": "Trigger alarm",
+    "access": 2,
+    "type": "enum",
+    "property": "trigger_alarm",
+    "description": "Trigger an alarm on the device",
+    "category": "config",
+    "values": [
+      "trigger"
+    ]
+  },
+  {
+    "name": "stop_alarm",
+    "label": "Stop alarm",
+    "access": 2,
+    "type": "enum",
+    "property": "stop_alarm",
+    "description": "Stop an active alarm on the device. Please keep in mind that the alarm stops automatically after the configured duration for the light and siren is expired.",
+    "category": "config",
+    "values": [
+      "stop"
+    ]
+  },
+  {
+    "name": "external_trigger",
+    "label": "External trigger state",
+    "access": 1,
     "type": "binary",
-    "property": "alarm_state",
-    "description": "Alarm turn ON/OFF",
-    "value_on": "ON",
-    "value_off": "OFF"
+    "property": "external_trigger",
+    "description": "Indicates whether an external alarm via the 'TRIGGER_IN' connectors on the back of the device is being received. Please keep in mind that the device automatically activates/deactivates an alarm in that case.",
+    "value_on": true,
+    "value_off": false
   },
   {
-    "name": "light_delay",
-    "label": "Light delay",
-    "access": 7,
-    "type": "numeric",
-    "property": "light_delay",
-    "description": "Flashing light delay",
-    "unit": "s",
-    "value_max": 30,
-    "value_min": 0,
-    "value_step": 1
+    "name": "tamper",
+    "label": "Tamper state",
+    "access": 1,
+    "type": "binary",
+    "property": "tamper",
+    "description": "Indicates whether the device is tampered",
+    "category": "diagnostic",
+    "value_on": true,
+    "value_off": false
   },
   {
-    "name": "siren_delay",
-    "label": "Siren delay",
+    "name": "power_outage",
+    "label": "Power outage state",
+    "access": 1,
+    "type": "binary",
+    "property": "power_outage",
+    "description": "Indicates the configured primary power source experiences a power outage. This only works when using ac or dc power.",
+    "category": "diagnostic",
+    "value_on": "outage_detected",
+    "value_off": "power_ok"
+  },
+  {
+    "name": "alarm_mode",
+    "label": "Alarm mode",
     "access": 7,
-    "type": "numeric",
-    "property": "siren_delay",
-    "description": "Siren alarm delay",
-    "unit": "s",
-    "value_max": 30,
-    "value_min": 0,
-    "value_step": 1
+    "type": "enum",
+    "property": "alarm_mode",
+    "description": "Select if you only want a visual warning, an acoustic warning or both",
+    "category": "config",
+    "values": [
+      "only_light",
+      "only_siren",
+      "siren_and_light"
+    ]
+  },
+  {
+    "name": "siren_volume",
+    "label": "Siren volume",
+    "access": 7,
+    "type": "enum",
+    "property": "siren_volume",
+    "description": "Volume of the siren",
+    "category": "config",
+    "values": [
+      "reduced",
+      "medium",
+      "loud"
+    ]
   },
   {
     "name": "siren_duration",
@@ -68,7 +135,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "siren_duration",
     "description": "Duration of the alarm siren",
-    "unit": "m",
+    "category": "config",
+    "unit": "min",
     "value_max": 15,
     "value_min": 1,
     "value_step": 1
@@ -80,44 +148,46 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "light_duration",
     "description": "Duration of the alarm light",
-    "unit": "m",
+    "category": "config",
+    "unit": "min",
     "value_max": 15,
     "value_min": 1,
     "value_step": 1
   },
   {
-    "name": "siren_volume",
-    "label": "Siren volume",
+    "name": "siren_delay",
+    "label": "Siren delay",
     "access": 7,
-    "type": "enum",
-    "property": "siren_volume",
-    "description": "Volume of the alarm",
-    "values": [
-      "low",
-      "medium",
-      "high"
-    ]
+    "type": "numeric",
+    "property": "siren_delay",
+    "description": "Delay of the siren activation after an alarm is being triggered",
+    "category": "config",
+    "unit": "sec",
+    "value_max": 180,
+    "value_min": 0,
+    "value_step": 1
   },
   {
-    "name": "siren_and_light",
-    "label": "Siren and light",
+    "name": "light_delay",
+    "label": "Light delay",
     "access": 7,
-    "type": "enum",
-    "property": "siren_and_light",
-    "description": "Siren and Light behaviour during alarm ",
-    "values": [
-      "only_light",
-      "only_siren",
-      "siren_and_light"
-    ]
+    "type": "numeric",
+    "property": "light_delay",
+    "description": "Delay of the light activation after an alarm is being triggered",
+    "category": "config",
+    "unit": "sec",
+    "value_max": 180,
+    "value_min": 0,
+    "value_step": 1
   },
   {
-    "name": "power_source",
-    "label": "Power source",
+    "name": "primary_power_source",
+    "label": "Primary power source",
     "access": 7,
     "type": "enum",
-    "property": "power_source",
-    "description": "Siren power source",
+    "property": "primary_power_source",
+    "description": "Select which power source you want to use. Note: The battery is always being used as backup source.",
+    "category": "config",
     "values": [
       "solar_panel",
       "ac_power_supply",
@@ -125,72 +195,41 @@ This is the information provided by Zigbee2MQTT for this device:
     ]
   },
   {
-    "name": "warning",
-    "label": "Warning",
-    "access": 2,
-    "type": "composite",
-    "property": "warning",
-    "features": [
-      {
-        "name": "mode",
-        "label": "Mode",
-        "access": 2,
-        "type": "enum",
-        "property": "mode",
-        "description": "Mode of the warning (sound effect)",
-        "values": [
-          "stop",
-          "burglar",
-          "fire",
-          "emergency",
-          "police_panic",
-          "fire_panic",
-          "emergency_panic"
-        ]
-      }
+    "name": "current_power_source",
+    "label": "Current power source",
+    "access": 5,
+    "type": "enum",
+    "property": "current_power_source",
+    "description": "Currently used power source for device operation",
+    "category": "diagnostic",
+    "values": [
+      "battery",
+      "solar_panel",
+      "ac_power",
+      "dc_power"
     ]
   },
   {
-    "name": "test",
-    "label": "Test",
+    "name": "solar_panel_voltage",
+    "label": "Solar panel voltage",
     "access": 1,
-    "type": "binary",
-    "property": "test",
-    "description": "Indicates whether the device is being tested",
-    "value_on": true,
-    "value_off": false
-  },
-  {
-    "name": "tamper",
-    "label": "Tamper",
-    "access": 1,
-    "type": "binary",
-    "property": "tamper",
-    "description": "Indicates whether the device is tampered",
-    "value_on": true,
-    "value_off": false
+    "type": "numeric",
+    "property": "solar_panel_voltage",
+    "description": "Current voltage level received from the integrated solar panel",
+    "category": "diagnostic",
+    "unit": "volt"
   },
   {
     "name": "battery",
     "label": "Battery",
-    "access": 1,
+    "access": 5,
     "type": "numeric",
     "property": "battery",
-    "description": "Remaining battery in %, can take up to 24 hours before reported",
+    "description": "Remaining battery in %",
     "category": "diagnostic",
     "unit": "%",
     "value_max": 100,
     "value_min": 0
-  },
-  {
-    "name": "voltage",
-    "label": "Voltage",
-    "access": 1,
-    "type": "numeric",
-    "property": "voltage",
-    "description": "Voltage of the battery in millivolts",
-    "category": "diagnostic",
-    "unit": "mV"
   },
   {
     "name": "battery_low",
@@ -198,18 +237,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 1,
     "type": "binary",
     "property": "battery_low",
-    "description": "Indicates if the battery of this device is almost empty",
+    "description": "Empty battery indicator",
     "category": "diagnostic",
-    "value_on": true,
-    "value_off": false
-  },
-  {
-    "name": "ac_status",
-    "label": "Ac status",
-    "access": 1,
-    "type": "binary",
-    "property": "ac_status",
-    "description": "Is the device plugged in",
     "value_on": true,
     "value_off": false
   }

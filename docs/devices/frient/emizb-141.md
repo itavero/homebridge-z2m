@@ -34,7 +34,6 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "numeric",
     "property": "power",
     "description": "Instantaneous measured power",
-    "category": "diagnostic",
     "unit": "W"
   },
   {

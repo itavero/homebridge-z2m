@@ -194,7 +194,47 @@ See [AFFECTED-DEVICES.md](AFFECTED-DEVICES.md) for the complete device list.
 
 These could benefit from a Phase 2 enhancement to expose bidirectional energy monitoring.
 
-## Key Implementation Detail: Property Matching
+## Key Implementation Details
+
+### Expose Structure: `name` vs `property` vs `endpoint`
+
+In Zigbee2MQTT exposes, there's an important distinction between fields:
+
+```typescript
+// Multi-endpoint device (e.g., Aeotec ZGA003 - 2-channel switch)
+{
+  "name": "power",           // Generic type - use for MATCHING
+  "endpoint": "1",           // Channel identifier - use for GROUPING
+  "property": "power_1",     // Actual MQTT state key - use for READING VALUES
+  "type": "numeric",
+  "unit": "W"
+}
+
+// Single-endpoint device (e.g., TuYa TS011F_plug_1)
+{
+  "name": "power",           // Generic type
+  "property": "power",       // No endpoint suffix
+  "type": "numeric",
+  "unit": "W"
+}
+
+// Aggregate measurement device (e.g., Aqara LLKZMK11LM - 2 relays, 1 meter)
+{
+  "name": "power",           // Single power measurement for both relays
+  "property": "power",       // No endpoint - measures total
+  "type": "numeric",
+  "unit": "W"
+}
+```
+
+**Implementation implications:**
+1. **Match on `name`** - Check if `expose.name` is exactly `"power"`, `"voltage"`, `"current"`, or `"energy"`
+2. **Group by `endpoint`** - Use existing `groupByEndpoint()` helper to create separate services per endpoint
+3. **Read from `property`** - Use `expose.property` (e.g., `"power_1"`, `"power_2"`) in `PassthroughCharacteristicMonitor`
+
+This pattern already exists in `BasicSensorCreator` and ensures multi-channel devices get separate electrical sensors per channel.
+
+### Property Matching (Exact Match Required)
 
 The critical implementation detail is using **exact string matching** for property names, not substring/regex matching:
 

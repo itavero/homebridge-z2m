@@ -17,6 +17,14 @@ import { Z2mMockBroker } from '../test/smoke/z2m-mock';
 const SMOKETEST_DIR = join(__dirname, '..', '.smoketest');
 const PROJECT_DIR = join(__dirname, '..');
 
+// Timeout constants
+/** Time to wait for plugin to subscribe to MQTT topics after Homebridge starts */
+const SUBSCRIPTION_TIMEOUT_MS = 15000;
+/** Time to wait for plugin to process devices and create accessories after Z2M startup */
+const ACCESSORY_CREATION_WAIT_MS = 5000;
+/** Time to wait for Homebridge to shut down gracefully after SIGTERM */
+const SHUTDOWN_GRACE_PERIOD_MS = 1000;
+
 interface TestResult {
   success: boolean;
   errors: string[];
@@ -82,24 +90,23 @@ async function runSmokeTest(): Promise<TestResult> {
   // Ensure setup is complete
   await ensureSmokeTestSetup();
 
-  // Allocate random ports
-  const mqttPort = await getAvailablePort();
-  const hapPort = await getAvailablePort();
-  console.log(`\n[Smoke Test] Using ports - MQTT: ${mqttPort}, HAP: ${hapPort}`);
-
-  // Generate temp config
-  const configDir = await generateTestConfig(mqttPort, hapPort);
-  console.log(`[Smoke Test] Config directory: ${configDir}`);
-
   const broker = new Z2mMockBroker();
   let homebridge: ChildProcess | null = null;
+  let configDir = '';
 
   try {
-    // Step 1: Start mock MQTT broker
+    // Step 1: Start mock MQTT broker (port 0 = auto-assign to avoid TOCTOU race)
     console.log('[Smoke Test] Starting mock MQTT broker...');
-    await broker.start(mqttPort);
+    const mqttPort = await broker.start(0);
 
-    // Step 2: Start Homebridge from isolated installation
+    // Step 2: Allocate HAP port and generate config
+    const hapPort = await getAvailablePort();
+    console.log(`\n[Smoke Test] Using ports - MQTT: ${mqttPort}, HAP: ${hapPort}`);
+
+    configDir = await generateTestConfig(mqttPort, hapPort);
+    console.log(`[Smoke Test] Config directory: ${configDir}`);
+
+    // Step 3: Start Homebridge from isolated installation
     console.log('[Smoke Test] Starting Homebridge...');
     const homebridgeBin = join(SMOKETEST_DIR, 'node_modules', '.bin', 'homebridge');
 
@@ -117,8 +124,8 @@ async function runSmokeTest(): Promise<TestResult> {
       }
     );
 
-    // Step 3: Set up log parsing
-    const subscriptionPromise = broker.waitForSubscription(15000);
+    // Step 4: Set up log parsing
+    const subscriptionPromise = broker.waitForSubscription(SUBSCRIPTION_TIMEOUT_MS);
 
     homebridge.stdout?.on('data', (data) => {
       const lines = data.toString().split('\n');
@@ -168,21 +175,22 @@ async function runSmokeTest(): Promise<TestResult> {
       }
     });
 
-    // Step 4: Wait for plugin to subscribe
+    // Step 5: Wait for plugin to subscribe
     await subscriptionPromise;
     console.log('[Smoke Test] Plugin subscribed to MQTT topics');
 
-    // Step 5: Simulate Z2M startup
+    // Step 6: Simulate Z2M startup
     console.log('[Smoke Test] Simulating Zigbee2MQTT startup...');
     await broker.simulateZ2mStartup();
 
-    // Step 6: Wait for plugin to process devices
+    // Step 7: Wait for plugin to process devices
     console.log('[Smoke Test] Waiting for accessory creation...');
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, ACCESSORY_CREATION_WAIT_MS));
 
-    // Step 7: Validate results
+    // Step 8: Validate results
     result.success =
       result.mqttConnected &&
+      result.z2mOnline &&
       result.errors.length === 0 &&
       result.accessoriesCreated.length > 0;
 
@@ -193,10 +201,12 @@ async function runSmokeTest(): Promise<TestResult> {
     if (homebridge) {
       console.log('[Smoke Test] Stopping Homebridge...');
       homebridge.kill('SIGTERM');
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, SHUTDOWN_GRACE_PERIOD_MS));
     }
     await broker.stop();
-    await rm(configDir, { recursive: true, force: true });
+    if (configDir) {
+      await rm(configDir, { recursive: true, force: true });
+    }
   }
 
   return result;

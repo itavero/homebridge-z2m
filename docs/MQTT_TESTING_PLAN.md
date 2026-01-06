@@ -211,27 +211,75 @@ export class Z2mMockBroker {
 
 ### 4. Smoke Test Runner (`scripts/smoke-test.ts`)
 
-Main orchestration script:
+Main orchestration script with random port allocation:
 
 ```typescript
 #!/usr/bin/env npx ts-node
 import { spawn, ChildProcess } from 'child_process';
+import { createServer } from 'net';
+import { mkdtemp, writeFile, rm } from 'fs/promises';
+import { join } from 'path';
+import { tmpdir } from 'os';
+import { AddressInfo } from 'net';
 import { Z2mMockBroker } from '../test/smoke/z2m-mock';
 
 interface TestResult {
   success: boolean;
   errors: string[];
-  warnings: string[];
   accessoriesCreated: string[];
+  mqttConnected: boolean;
+}
+
+// Get a random available port
+async function getAvailablePort(): Promise<number> {
+  return new Promise((resolve) => {
+    const server = createServer();
+    server.listen(0, () => {
+      const port = (server.address() as AddressInfo).port;
+      server.close(() => resolve(port));
+    });
+  });
+}
+
+// Generate temporary config directory with dynamic ports
+async function generateTestConfig(mqttPort: number, hapPort: number): Promise<string> {
+  const config = {
+    bridge: {
+      name: "Homebridge Z2M Smoke Test",
+      username: "CC:22:3D:E3:CE:30",
+      port: hapPort,
+      pin: "031-45-154"
+    },
+    platforms: [{
+      platform: "zigbee2mqtt",
+      mqtt: {
+        base_topic: "zigbee2mqtt",
+        server: `mqtt://localhost:${mqttPort}`
+      }
+    }]
+  };
+
+  const tempDir = await mkdtemp(join(tmpdir(), 'hb-z2m-smoke-'));
+  await writeFile(join(tempDir, 'config.json'), JSON.stringify(config, null, 2));
+  return tempDir;
 }
 
 async function runSmokeTest(): Promise<TestResult> {
   const result: TestResult = {
     success: false,
     errors: [],
-    warnings: [],
     accessoriesCreated: [],
+    mqttConnected: false,
   };
+
+  // Allocate random ports
+  const mqttPort = await getAvailablePort();
+  const hapPort = await getAvailablePort();
+  console.log(`Using ports - MQTT: ${mqttPort}, HAP: ${hapPort}`);
+
+  // Generate temp config
+  const configDir = await generateTestConfig(mqttPort, hapPort);
+  console.log(`Config directory: ${configDir}`);
 
   const broker = new Z2mMockBroker();
   let homebridge: ChildProcess | null = null;
@@ -239,7 +287,7 @@ async function runSmokeTest(): Promise<TestResult> {
   try {
     // Step 1: Start mock MQTT broker
     console.log('Starting mock MQTT broker...');
-    await broker.start(1883);
+    await broker.start(mqttPort);
 
     // Step 2: Start Homebridge
     console.log('Starting Homebridge...');
@@ -247,7 +295,7 @@ async function runSmokeTest(): Promise<TestResult> {
       'homebridge',
       '-I',  // Insecure mode (no pairing required)
       '-D',  // Debug logging
-      '-U', './test/smoke',  // Config directory
+      '-U', configDir,  // Temp config directory
     ], {
       stdio: ['pipe', 'pipe', 'pipe'],
       env: { ...process.env, FORCE_COLOR: '0' },
@@ -257,18 +305,23 @@ async function runSmokeTest(): Promise<TestResult> {
     const subscriptionPromise = broker.waitForSubscription(15000);
 
     // Collect and parse Homebridge output
-    let output = '';
     homebridge.stdout?.on('data', (data) => {
       const line = data.toString();
-      output += line;
       process.stdout.write(line);
 
-      // Parse for success indicators
-      if (line.includes('accessory') && line.includes('added')) {
-        const match = line.match(/\[([^\]]+)\]/);
-        if (match) result.accessoriesCreated.push(match[1]);
+      // Detect MQTT connection
+      if (/\[zigbee2mqtt\].*Connected/i.test(line)) {
+        result.mqttConnected = true;
       }
-      if (line.includes('error') || line.includes('Error')) {
+
+      // Detect accessory registration (friendly names in brackets)
+      const accessoryMatch = line.match(/\[([^\]]+)\].*(?:Configuring|registered)/i);
+      if (accessoryMatch && accessoryMatch[1] !== 'zigbee2mqtt') {
+        result.accessoriesCreated.push(accessoryMatch[1]);
+      }
+
+      // Detect errors (but ignore "error" in device names)
+      if (/\[zigbee2mqtt\].*(?:error|Error|ERROR)/.test(line)) {
         result.errors.push(line.trim());
       }
     });
@@ -281,6 +334,7 @@ async function runSmokeTest(): Promise<TestResult> {
 
     // Wait for subscription
     await subscriptionPromise;
+    console.log('Plugin subscribed to MQTT topics');
 
     // Step 4: Simulate Z2M startup
     console.log('Simulating Zigbee2MQTT startup...');
@@ -291,6 +345,7 @@ async function runSmokeTest(): Promise<TestResult> {
 
     // Step 6: Validate results
     result.success =
+      result.mqttConnected &&
       result.errors.length === 0 &&
       result.accessoriesCreated.length > 0;
 
@@ -303,6 +358,7 @@ async function runSmokeTest(): Promise<TestResult> {
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
     await broker.stop();
+    await rm(configDir, { recursive: true, force: true });
   }
 
   return result;
@@ -311,7 +367,7 @@ async function runSmokeTest(): Promise<TestResult> {
 // Main execution
 runSmokeTest().then((result) => {
   console.log('\n=== SMOKE TEST RESULTS ===');
-  console.log(`Success: ${result.success}`);
+  console.log(`MQTT Connected: ${result.mqttConnected}`);
   console.log(`Accessories created: ${result.accessoriesCreated.length}`);
   result.accessoriesCreated.forEach(a => console.log(`  - ${a}`));
 
@@ -320,6 +376,7 @@ runSmokeTest().then((result) => {
     result.errors.forEach(e => console.log(`  - ${e}`));
   }
 
+  console.log(`\nResult: ${result.success ? 'PASS ✓' : 'FAIL ✗'}`);
   process.exit(result.success ? 0 : 1);
 });
 ```
@@ -413,25 +470,20 @@ jobs:
 ```
 homebridge-z2m/
 ├── scripts/
-│   └── smoke-test.ts           # Main test runner
+│   └── smoke-test.ts           # Main test runner (generates temp config)
 ├── test/
 │   └── smoke/
-│       ├── config.json         # Homebridge test config
 │       ├── z2m-mock.ts         # Aedes broker + Z2M simulator
-│       ├── fixtures/
-│       │   ├── bridge-info.json
-│       │   ├── bridge-devices.json
-│       │   ├── bridge-groups.json
-│       │   └── device-states/
-│       │       ├── motion-sensor.json
-│       │       ├── light-bulb.json
-│       │       └── temperature-sensor.json
-│       └── persist/            # Homebridge cache dir (gitignored)
-│           └── .gitkeep
+│       └── fixtures/
+│           ├── bridge-info.json
+│           ├── bridge-devices.json
+│           └── bridge-groups.json
 └── .github/
     └── workflows/
         └── verify.yml          # Updated with smoke-test job
 ```
+
+Note: Homebridge config is generated at runtime in a temp directory with random ports, then cleaned up after the test.
 
 ---
 
@@ -505,16 +557,91 @@ The smoke test **fails** if:
 
 ---
 
-## Open Questions
+## Design Decisions
 
-1. **Homebridge Version**: Should we test against Homebridge 1.x and 2.x beta?
-   - *Recommendation*: Start with latest stable, add matrix later
+### 1. Homebridge Version: Fixed for Repeatability
 
-2. **Log Parsing Robustness**: How to reliably detect accessory creation from logs?
-   - *Recommendation*: Look for specific plugin log patterns, document expected format
+**Decision**: Pin to a specific stable Homebridge version in devDependencies.
 
-3. **Parallel Execution**: Can multiple smoke tests run in parallel (different ports)?
-   - *Recommendation*: Use random ports if needed for parallel CI jobs
+```json
+{
+  "devDependencies": {
+    "homebridge": "^1.8.0"
+  }
+}
+```
+
+The smoke test will use the version installed via `npm ci`, ensuring reproducible results. Version matrix testing can be added later if needed.
+
+### 2. Log Parsing: Use Homebridge's Bracket Prefix Format
+
+**Decision**: Parse logs using Homebridge's standard `[name]` prefix format.
+
+Homebridge prefixes log entries with the plugin or accessory name in brackets:
+```
+[zigbee2mqtt] Connecting to MQTT server at mqtt://localhost:1883
+[zigbee2mqtt] Connected to MQTT broker
+[living_room_motion] Initializing accessory...
+[bedroom_light] Initializing accessory...
+```
+
+**Detection patterns**:
+```typescript
+// Plugin connected
+/\[zigbee2mqtt\].*Connected/i
+
+// Accessory registered (look for device friendly names)
+/\[([^\]]+)\].*(?:Initializing|registered|added)/i
+
+// Errors
+/\[zigbee2mqtt\].*(?:error|Error|ERROR)/
+```
+
+### 3. Random Ports: Generate Temporary Configuration
+
+**Decision**: Use random available ports and generate config at runtime.
+
+Benefits:
+- Avoids conflicts with running Homebridge instances
+- Allows parallel test execution
+- Validates port availability before starting
+
+```typescript
+async function getAvailablePort(): Promise<number> {
+  return new Promise((resolve) => {
+    const server = createServer();
+    server.listen(0, () => {
+      const port = (server.address() as AddressInfo).port;
+      server.close(() => resolve(port));
+    });
+  });
+}
+
+async function generateTestConfig(mqttPort: number, hapPort: number): Promise<string> {
+  const config = {
+    bridge: {
+      name: "Homebridge Z2M Smoke Test",
+      username: "CC:22:3D:E3:CE:30",
+      port: hapPort,
+      pin: "031-45-154"
+    },
+    platforms: [{
+      platform: "zigbee2mqtt",
+      mqtt: {
+        base_topic: "zigbee2mqtt",
+        server: `mqtt://localhost:${mqttPort}`
+      }
+    }]
+  };
+
+  const tempDir = await mkdtemp(join(tmpdir(), 'hb-z2m-smoke-'));
+  const configPath = join(tempDir, 'config.json');
+  await writeFile(configPath, JSON.stringify(config, null, 2));
+  return tempDir;
+}
+```
+
+The temp directory is cleaned up after the test completes.
 
 ---
 

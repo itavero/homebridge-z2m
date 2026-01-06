@@ -1,4 +1,5 @@
 #!/usr/bin/env ts-node
+/* eslint-disable no-console */
 /**
  * Smoke test runner for homebridge-z2m.
  * Starts a mock MQTT broker simulating Zigbee2MQTT and runs Homebridge
@@ -115,8 +116,10 @@ async function runSmokeTest(): Promise<TestResult> {
       [
         '-I', // Insecure mode (no pairing required)
         '-D', // Debug logging
-        '-U', configDir, // Config directory
-        '-P', PROJECT_DIR, // Plugin path (current project)
+        '-U',
+        configDir, // Config directory
+        '-P',
+        PROJECT_DIR, // Plugin path (current project)
       ],
       {
         stdio: ['pipe', 'pipe', 'pipe'],
@@ -130,7 +133,9 @@ async function runSmokeTest(): Promise<TestResult> {
     homebridge.stdout?.on('data', (data) => {
       const lines = data.toString().split('\n');
       for (const line of lines) {
-        if (!line.trim()) continue;
+        if (!line.trim()) {
+          continue;
+        }
         process.stdout.write(`  ${line}\n`);
 
         // Detect MQTT connection
@@ -188,12 +193,7 @@ async function runSmokeTest(): Promise<TestResult> {
     await new Promise((resolve) => setTimeout(resolve, ACCESSORY_CREATION_WAIT_MS));
 
     // Step 8: Validate results
-    result.success =
-      result.mqttConnected &&
-      result.z2mOnline &&
-      result.errors.length === 0 &&
-      result.accessoriesCreated.length > 0;
-
+    result.success = result.mqttConnected && result.z2mOnline && result.errors.length === 0 && result.accessoriesCreated.length > 0;
   } catch (error) {
     result.errors.push(String(error));
   } finally {

@@ -1,4 +1,5 @@
 #!/usr/bin/env ts-node
+/* eslint-disable no-console, sonarjs/no-os-command-from-path */
 /**
  * Setup script for smoke test environment.
  * Creates an isolated Homebridge installation in .smoketest/ directory.

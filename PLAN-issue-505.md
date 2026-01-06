@@ -12,11 +12,38 @@ Add support for exposing electrical measurements (power, voltage, current, energ
 - No power/electrical measurement support currently exists
 
 ### Zigbee2MQTT Exposes for Power Devices
-Power monitoring devices expose these numeric properties:
-- `power` - Active power in Watts (W)
-- `voltage` - Voltage in Volts (V)
-- `current` - Current in Amperes (A)
-- `energy` - Total energy consumed in kWh
+
+#### Core Properties (Single-Phase Devices)
+| Property | Description | Unit |
+|----------|-------------|------|
+| `power` | Instantaneous measured power | W |
+| `voltage` | Measured electrical potential | V |
+| `current` | Instantaneous measured electrical current | A |
+| `energy` | Sum of consumed energy | kWh |
+
+#### Multi-Phase Properties (3-Phase Meters)
+Multi-phase devices use suffixes for per-phase measurements. Three naming conventions exist:
+- `_l1`, `_l2`, `_l3` (e.g., `power_l1`, `voltage_l1`)
+- `_phase_a`, `_phase_b`, `_phase_c` (e.g., `power_phase_a`, `voltage_phase_a`)
+- `_a`, `_b`, `_c` (e.g., `voltage_a`, `current_a`)
+
+#### Extended Properties (Lower Priority - Future Work)
+| Property | Description | Unit |
+|----------|-------------|------|
+| `produced_energy` | Energy fed back to grid (solar) | kWh |
+| `power_reactive` / `reactive_power` | Reactive power | VAR |
+| `reactive_energy` | Reactive energy | kVArh |
+| `power_factor` | Power factor | % |
+| `power_apparent` | Apparent power | VA |
+| `energy_t1`, `energy_t2`, etc. | Tariff-based energy | kWh |
+
+#### Properties to Exclude (Not Electrical Measurements)
+These properties contain "power", "current", "voltage", or "energy" but are NOT electrical measurements:
+- `power_outage_memory`, `power_on_behavior`, `power_outage_count` - Device settings
+- `current_heating_setpoint`, `current_level_startup` - Thermostat/light settings
+- `current_status`, `current_switch`, `current_value`, `current_position` - Status values
+- `over_voltage_setting`, `under_voltage_threshold` - Protection settings
+- `energy_saving_mode_*` - Device settings
 
 ### Eve HomeKit Characteristics (for Eve app compatibility)
 | UUID | Name | Format | Z2M Property |
@@ -88,11 +115,15 @@ const CHARACTERISTIC_KWH_UUID = 'E863F10C-079E-48FF-8F27-9C2605A29F52';
 ### Step 2: Handler Implementation Details
 
 The handler should:
-1. Filter exposes for properties named `power`, `voltage`, `current`, or `energy`
+1. Filter exposes using an **exact match allowlist** approach:
+   - Match ONLY these exact property names: `power`, `voltage`, `current`, `energy`
+   - Verify `type === 'numeric'` and `access` includes PUBLISHED (0x1)
+   - This avoids false matches like `power_outage_memory` or `current_heating_setpoint`
 2. Group them by endpoint (for multi-endpoint devices)
 3. Create one ElectricalSensor service per endpoint
 4. Add only the characteristics that the device actually exposes
 5. Configure appropriate min/max ranges from expose metadata
+6. Use `PassthroughCharacteristicMonitor` for direct value pass-through (values are already in correct units)
 
 ### Step 3: Register Creator (`src/converters/creators.ts`)
 
@@ -118,16 +149,54 @@ Test cases:
 
 ## Scope Boundaries
 
-### In Scope
-- Power (W), Voltage (V), Current (A), Energy (kWh) characteristics
+### In Scope (Phase 1)
+- **Core properties only**: `power`, `voltage`, `current`, `energy` (exact matches)
 - Eve app compatibility through custom UUIDs
-- Multi-endpoint device support
+- Multi-endpoint device support (e.g., multi-gang switches with individual power monitoring)
 - Proper characteristic ranges from device exposes
 
 ### Out of Scope (Future Enhancements)
-- FakeGato historical data support (mentioned in issue but requires significant additional work)
-- Power factor, reactive power, apparent power (less common)
-- Cost calculation features
+- **3-phase support**: `power_l1`, `voltage_phase_a`, `current_a`, etc. (requires separate services per phase)
+- **Extended metrics**: `produced_energy`, `reactive_power`, `power_factor`, `power_apparent`
+- **Tariff-based energy**: `energy_t1`, `energy_t2`, etc.
+- **FakeGato historical data** (mentioned in issue but requires separate dependency and significant work)
+- **Cost calculation features**
+
+### Device Coverage Analysis
+
+Based on the exposes analysis, this implementation will support:
+- **200+ devices** with `power` property
+- **300+ devices** with `voltage` property
+- **150+ devices** with `current` property
+- **200+ devices** with `energy` property
+
+Common device types:
+- Smart plugs (TuYa, Xiaomi, Aqara, etc.)
+- Smart switches with power monitoring
+- Dedicated power meters
+- Smart outlets
+
+## Key Implementation Detail: Property Matching
+
+The critical implementation detail is using **exact string matching** for property names, not substring/regex matching:
+
+```typescript
+// CORRECT: Exact match only
+const ELECTRICAL_PROPERTIES = ['power', 'voltage', 'current', 'energy'];
+const isElectricalProperty = (expose) =>
+  ELECTRICAL_PROPERTIES.includes(expose.name) &&
+  expose.type === 'numeric' &&
+  (expose.access & 0x1) !== 0; // PUBLISHED
+
+// WRONG: Would match power_outage_memory, current_heating_setpoint, etc.
+const isElectricalProperty = (expose) =>
+  expose.name.includes('power') || expose.name.includes('current');
+```
+
+This ensures we don't create spurious electrical sensors for:
+- `power_outage_memory` (enum, not a measurement)
+- `current_heating_setpoint` (thermostat setting)
+- `power_on_behavior` (device configuration)
 
 ## Testing Strategy
 

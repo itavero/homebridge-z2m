@@ -68,44 +68,51 @@ Minimal Homebridge config that loads only this plugin:
 
 ### 2. Mock Device Fixtures (`test/smoke/fixtures/`)
 
-Pre-built Zigbee2MQTT message payloads:
+**Minimal approach**: Start with 1-2 devices to validate basic functionality. Expand later as needed.
 
 ```
 test/smoke/fixtures/
-  bridge-info.json          # Z2M version info
-  bridge-devices.json       # Device list with exposes
-  bridge-groups.json        # Empty groups array
-  device-states/
-    motion-sensor.json      # Aqara motion sensor state
-    light-bulb.json         # Philips Hue bulb state
-    temperature-sensor.json # Temperature/humidity sensor
+  bridge-info.json          # Z2M version info (version, config)
+  bridge-devices.json       # Minimal device list (1-2 devices)
 ```
 
-**Example `bridge-devices.json`** (derived from existing test exposes):
+**`bridge-info.json`**:
+```json
+{
+  "version": "1.40.0",
+  "commit": "unknown",
+  "coordinator": { "type": "zStack3x0", "meta": {} },
+  "config": {}
+}
+```
+
+**`bridge-devices.json`** (1 light, 1 sensor - from existing test exposes):
 ```json
 [
   {
-    "ieee_address": "0x00158d0001234567",
-    "friendly_name": "living_room_motion",
-    "supported": true,
-    "definition": {
-      "vendor": "Aqara",
-      "model": "RTCGQ11LM",
-      "exposes": [/* from test/exposes/aqara/rtcgq11lm.json */]
-    }
-  },
-  {
     "ieee_address": "0x00178d0009876543",
-    "friendly_name": "bedroom_light",
+    "friendly_name": "test_light",
     "supported": true,
     "definition": {
       "vendor": "Philips",
       "model": "8718696449691",
       "exposes": [/* from test/exposes/philips/8718696449691.json */]
     }
+  },
+  {
+    "ieee_address": "0x00158d0001234567",
+    "friendly_name": "test_sensor",
+    "supported": true,
+    "definition": {
+      "vendor": "Aqara",
+      "model": "WSDCGQ11LM",
+      "exposes": [/* from test/exposes/aqara/wsdcgq12lm.json */]
+    }
   }
 ]
 ```
+
+Groups are sent as an empty array `[]` by the mock server.
 
 ### 3. MQTT Broker + Z2M Simulator (`test/smoke/z2m-mock.ts`)
 
@@ -436,21 +443,28 @@ jobs:
 
 ```
 homebridge-z2m/
+├── .smoketest/                 # Isolated Homebridge installation (gitignored)
+│   ├── package.json
+│   └── node_modules/
+│       └── homebridge/
 ├── scripts/
-│   └── smoke-test.ts           # Main test runner (generates temp config)
+│   ├── smoke-test.ts           # Main test runner
+│   └── setup-smoke-test.ts     # Sets up .smoketest/ directory
 ├── test/
 │   └── smoke/
 │       ├── z2m-mock.ts         # Aedes broker + Z2M simulator
 │       └── fixtures/
 │           ├── bridge-info.json
-│           ├── bridge-devices.json
-│           └── bridge-groups.json
+│           └── bridge-devices.json  # Minimal: 1-2 devices
 └── .github/
     └── workflows/
-        └── verify.yml          # Updated with smoke-test job
+        └── smoke-test.yml      # Separate workflow for smoke test
 ```
 
-Note: Homebridge config is generated at runtime in a temp directory with random ports, then cleaned up after the test.
+**Notes**:
+- `.smoketest/` is gitignored and created by setup script
+- Homebridge config is generated at runtime in temp directory with random ports
+- Fixtures start minimal (1-2 devices), can expand later
 
 ---
 
@@ -482,32 +496,48 @@ The smoke test **fails** if:
 {
   "devDependencies": {
     "aedes": "^0.51.0",
-    "@types/aedes": "^0.48.0",
-    "homebridge": "1.8.5"
+    "@types/aedes": "^0.48.0"
   }
 }
 ```
 
-### Local Homebridge Installation
+### Separate Homebridge Installation
 
-The smoke test uses a **locally installed Homebridge** from `node_modules`, not a global installation. This ensures:
+The smoke test uses a **dedicated Homebridge installation** in `.smoketest/`, completely isolated from the development devDependencies. This ensures:
 
-- **Reproducibility**: Same version across all environments (local dev, CI)
-- **Isolation**: Doesn't interfere with any global Homebridge installation
-- **Version control**: Pin to a specific version (e.g., `1.8.5`) for consistent testing
+- **Reproducibility**: Same Homebridge version across all test runs
+- **Isolation**: Development can use any Homebridge version (including 2.x beta)
+- **No conflicts**: Test installation doesn't affect `node_modules/`
 
-The test runner uses `npx homebridge` which automatically resolves to `./node_modules/.bin/homebridge`:
+**Setup approach** (run once or as pre-test step):
+
+```bash
+# Create isolated test environment
+mkdir -p .smoketest
+cd .smoketest
+npm init -y
+npm install homebridge@1.8.5  # Latest stable
+cd ..
+```
+
+**Add to `.gitignore`**:
+```
+.smoketest/
+```
+
+The test runner uses the isolated installation:
 
 ```typescript
-homebridge = spawn('npx', [
-  'homebridge',
+homebridge = spawn('node', [
+  '.smoketest/node_modules/homebridge/lib/cli.js',
   '-I',
   '-D',
   '-U', configDir,
+  '-P', process.cwd(),  // Plugin path (current project)
 ], { /* ... */ });
 ```
 
-Developers can continue using any Homebridge version globally for development, while the smoke test always uses the pinned version.
+A setup script (`scripts/setup-smoke-test.ts`) will handle creating/updating the `.smoketest/` directory if needed.
 
 ---
 
@@ -548,22 +578,21 @@ Developers can continue using any Homebridge version globally for development, w
 
 ## Design Decisions
 
-### 1. Homebridge Version: Fixed for Repeatability
+### 1. Homebridge Version: Separate Test Installation
 
-**Decision**: Pin to a specific stable Homebridge version in devDependencies (exact version, no caret).
+**Decision**: Install a specific stable Homebridge version to `.smoketest/` directory, isolated from devDependencies.
 
-```json
-{
-  "devDependencies": {
-    "homebridge": "1.8.5"
-  }
-}
+```
+.smoketest/
+├── package.json
+└── node_modules/
+    └── homebridge@1.8.5
 ```
 
-The smoke test uses the **locally installed** Homebridge from `node_modules`, not a global installation. This ensures:
-- Reproducible results across all environments
-- Isolation from any global Homebridge installation
-- Developers can use any version globally for development
+This approach:
+- Keeps development devDependencies unchanged (can use 2.x beta for types)
+- Provides reproducible test results with pinned stable version
+- Isolates test environment completely from development
 
 Version matrix testing can be added later if needed.
 

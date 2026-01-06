@@ -164,17 +164,35 @@ Test cases:
 
 ### Device Coverage Analysis
 
-Based on the exposes analysis, this implementation will support:
-- **200+ devices** with `power` property
-- **300+ devices** with `voltage` property
-- **150+ devices** with `current` property
-- **200+ devices** with `energy` property
+Based on the exposes analysis, this implementation will support **677 unique devices**:
 
-Common device types:
-- Smart plugs (TuYa, Xiaomi, Aqara, etc.)
-- Smart switches with power monitoring
-- Dedicated power meters
-- Smart outlets
+| Property | Device Count |
+|----------|-------------|
+| `power` | 399 devices |
+| `voltage` | 540 devices |
+| `current` | 267 devices |
+| `energy` | 348 devices |
+
+Common device types from **120+ vendors**:
+- Smart plugs (TuYa, Xiaomi, Aqara, Innr, Ledvance, etc.)
+- Smart switches with power monitoring (Aqara, Shelly, Sinope, etc.)
+- Dedicated power meters (Develco, Frient, Bituo Technik, etc.)
+- Smart outlets (Aurora, Heiman, Third Reality, etc.)
+- DIN rail meters (Tongou, Schneider Electric, etc.)
+
+See [AFFECTED-DEVICES.md](AFFECTED-DEVICES.md) for the complete device list.
+
+### Devices with Extended Properties (Future Enhancement)
+
+**54 devices** have extended properties (`produced_energy`, `power_factor`, `power_apparent`, etc.):
+- Bituo Technik power meters (11 devices) - full bidirectional metering
+- Tuya DIN rail meters (SDM/SPM series) - `produced_energy`, `power_factor`
+- Shelly switches (4 devices) - `produced_energy` for solar monitoring
+- Third Reality plugs (5 devices) - `power_factor`
+- Legrand (4 devices) - `power_apparent`
+- NodOn SEM-4-1-00 - `produced_energy`, `power_factor`
+
+These could benefit from a Phase 2 enhancement to expose bidirectional energy monitoring.
 
 ## Key Implementation Detail: Property Matching
 

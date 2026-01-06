@@ -385,40 +385,7 @@ runSmokeTest().then((result) => {
 
 ## GitHub Actions Integration
 
-### Option A: Add to Existing Workflow
-
-```yaml
-# .github/workflows/verify.yml
-jobs:
-  build:
-    # ... existing steps ...
-
-  smoke-test:
-    name: Smoke Test
-    runs-on: ubuntu-latest
-    needs: build  # Only run if build passes
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Run Smoke Test
-        run: npm run smoke-test
-        timeout-minutes: 2
-```
-
-### Option B: Separate Workflow (for cleaner organization)
+Separate workflow file for the smoke test, using current LTS Node version:
 
 ```yaml
 # .github/workflows/smoke-test.yml
@@ -440,7 +407,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: 22.x  # Current LTS
 
       - run: npm ci
       - run: npm run build
@@ -515,10 +482,32 @@ The smoke test **fails** if:
 {
   "devDependencies": {
     "aedes": "^0.51.0",
-    "@types/aedes": "^0.48.0"
+    "@types/aedes": "^0.48.0",
+    "homebridge": "1.8.5"
   }
 }
 ```
+
+### Local Homebridge Installation
+
+The smoke test uses a **locally installed Homebridge** from `node_modules`, not a global installation. This ensures:
+
+- **Reproducibility**: Same version across all environments (local dev, CI)
+- **Isolation**: Doesn't interfere with any global Homebridge installation
+- **Version control**: Pin to a specific version (e.g., `1.8.5`) for consistent testing
+
+The test runner uses `npx homebridge` which automatically resolves to `./node_modules/.bin/homebridge`:
+
+```typescript
+homebridge = spawn('npx', [
+  'homebridge',
+  '-I',
+  '-D',
+  '-U', configDir,
+], { /* ... */ });
+```
+
+Developers can continue using any Homebridge version globally for development, while the smoke test always uses the pinned version.
 
 ---
 
@@ -561,17 +550,22 @@ The smoke test **fails** if:
 
 ### 1. Homebridge Version: Fixed for Repeatability
 
-**Decision**: Pin to a specific stable Homebridge version in devDependencies.
+**Decision**: Pin to a specific stable Homebridge version in devDependencies (exact version, no caret).
 
 ```json
 {
   "devDependencies": {
-    "homebridge": "^1.8.0"
+    "homebridge": "1.8.5"
   }
 }
 ```
 
-The smoke test will use the version installed via `npm ci`, ensuring reproducible results. Version matrix testing can be added later if needed.
+The smoke test uses the **locally installed** Homebridge from `node_modules`, not a global installation. This ensures:
+- Reproducible results across all environments
+- Isolation from any global Homebridge installation
+- Developers can use any version globally for development
+
+Version matrix testing can be added later if needed.
 
 ### 2. Log Parsing: Use Homebridge's Bracket Prefix Format
 

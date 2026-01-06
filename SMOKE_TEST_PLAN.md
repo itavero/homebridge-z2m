@@ -414,7 +414,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.x  # Current LTS
+          node-version: 24.x  # Current LTS
 
       - run: npm ci
       - run: npm run build
@@ -495,11 +495,12 @@ The smoke test **fails** if:
 ```json
 {
   "devDependencies": {
-    "aedes": "^0.51.0",
-    "@types/aedes": "^0.48.0"
+    "aedes": "^0.51.0"
   }
 }
 ```
+
+Note: Aedes includes TypeScript types in the package.
 
 ### Separate Homebridge Installation
 

@@ -146,3 +146,6 @@ _*.json
 *.local.json
 .claude/local/
 .copilot/config.json
+
+# Smoke test isolated Homebridge installation
+.smoketest/

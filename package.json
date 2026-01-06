@@ -43,6 +43,8 @@
     "lint-fix": "eslint --fix --max-warnings=0 'src/**/*.ts' 'test/**/*.ts'",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && npm link && homebridge -I -D",
+    "smoke-test": "npm run build && ts-node scripts/smoke-test.ts",
+    "smoke-test:setup": "ts-node scripts/setup-smoke-test.ts",
     "check-release": "release-it --dry-run -VV",
     "release": "release-it",
     "check-pre-release": "release-it --dry-run -VV --npm.tag=next",
@@ -79,6 +81,7 @@
     "semver": "^7.3.2"
   },
   "devDependencies": {
+    "aedes": "^0.51.0",
     "@eslint/js": "^9.9.0",
     "@release-it/keep-a-changelog": "^7.0.0",
     "@types/color-convert": "^2.0.0",

@@ -414,7 +414,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24.x  # Current LTS
+          node-version: 22.x  # Homebridge 1.8.5 doesn't support Node 24 yet
 
       - run: npm ci
       - run: npm run build

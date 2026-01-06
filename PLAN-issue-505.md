@@ -234,6 +234,40 @@ In Zigbee2MQTT exposes, there's an important distinction between fields:
 
 This pattern already exists in `BasicSensorCreator` and ensures multi-channel devices get separate electrical sensors per channel.
 
+### Property Names with Fallbacks
+
+Some devices use alternative property names instead of the standard ones. **17 devices** need fallback support:
+
+| Characteristic | Primary | Fallbacks (in order) | Devices Affected |
+|----------------|---------|----------------------|------------------|
+| Power | `power` | `active_power`, `load` | 4 devices |
+| Voltage | `voltage` | `mains_voltage`, `rms_voltage` | 10 devices |
+| Current | `current` | *(none needed)* | 0 devices |
+| Energy | `energy` | `consumed_energy`, `energy_consumed`, `energy_wh` | 3 devices |
+
+**Devices requiring fallbacks:**
+- `perenio/pehpl0x` - uses `active_power`, `rms_voltage`, `consumed_energy`
+- `tuya/zb-sm` - uses `active_power`
+- `efekta/*` (9 devices) - use `mains_voltage`
+- `ctm_lyng/mtouch_one`, `elko/4523430` - use `load` (may have different semantics)
+- `powernity/po-boco-elec` - uses `energy_consumed`
+- `tuya/mg-gpo04zslp` - uses `energy_wh`
+
+**Implementation approach:**
+```typescript
+// Define property names with fallbacks (first match wins)
+const POWER_NAMES = ['power', 'active_power', 'load'];
+const VOLTAGE_NAMES = ['voltage', 'mains_voltage', 'rms_voltage'];
+const CURRENT_NAMES = ['current'];  // No fallbacks needed
+const ENERGY_NAMES = ['energy', 'consumed_energy', 'energy_consumed', 'energy_wh'];
+
+// Find first matching expose for each characteristic
+const findExpose = (exposes, names) =>
+  exposes.find(e => names.includes(e.name) && e.type === 'numeric');
+```
+
+**Note:** Devices with BOTH primary and fallback names (e.g., Bituo Technik with `power` + `total_power`) will correctly use the primary name due to the precedence order.
+
 ### Property Matching (Exact Match Required)
 
 The critical implementation detail is using **exact string matching** for property names, not substring/regex matching:

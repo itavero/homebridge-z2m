@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x  # Homebridge 1.8.5 doesn't support Node 24 yet
+          node-version: 22.x  # Current LTS
 
       - name: Install dependencies
         run: npm ci

@@ -42,8 +42,13 @@ function setupSmokeTestEnvironment(): void {
           needsInstall = false;
         }
       }
-    } catch {
-      // Invalid package.json, will recreate
+    } catch (error) {
+      // Invalid package.json - log and recreate
+      if (error instanceof SyntaxError) {
+        log(`Warning: Invalid JSON in package.json, will recreate: ${error.message}`);
+      } else {
+        log(`Warning: Could not read package.json, will recreate`);
+      }
     }
   }
 

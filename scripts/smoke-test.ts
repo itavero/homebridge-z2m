@@ -154,8 +154,8 @@ async function runSmokeTest(): Promise<TestResult> {
           result.accessoriesCreated.push(newAccessoryMatch[1]);
         }
 
-        // Detect errors from the plugin (but not general debug messages)
-        if (/\[zigbee2mqtt\].*(?:ERROR|Error:)/i.test(line)) {
+        // Detect errors from the plugin - match error levels and failure keywords
+        if (/\[zigbee2mqtt\].*(?:ERROR|Error:|failed|offline|exception)/i.test(line)) {
           result.errors.push(line.trim());
         }
       }
@@ -165,8 +165,9 @@ async function runSmokeTest(): Promise<TestResult> {
       const line = data.toString().trim();
       if (line) {
         process.stderr.write(`  [stderr] ${line}\n`);
-        // Ignore Homebridge 2.0 notice and empty lines
-        if (!line.includes('Homebridge 2.0') && !line.includes('NOTICE TO USERS') && line.length > 10) {
+        // Filter out known Homebridge informational notices
+        const isInfoNotice = /Homebridge\s+2\.0|NOTICE\s+TO\s+USERS|upgrade\s+notice/i.test(line);
+        if (!isInfoNotice) {
           result.errors.push(line);
         }
       }
@@ -201,7 +202,11 @@ async function runSmokeTest(): Promise<TestResult> {
     if (homebridge) {
       console.log('[Smoke Test] Stopping Homebridge...');
       homebridge.kill('SIGTERM');
-      await new Promise((resolve) => setTimeout(resolve, SHUTDOWN_GRACE_PERIOD_MS));
+      // Wait for process to exit, with timeout fallback
+      await Promise.race([
+        new Promise<void>((resolve) => homebridge!.on('exit', () => resolve())),
+        new Promise<void>((resolve) => setTimeout(resolve, SHUTDOWN_GRACE_PERIOD_MS)),
+      ]);
     }
     await broker.stop();
     if (configDir) {

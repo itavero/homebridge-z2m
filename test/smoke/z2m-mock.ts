@@ -35,8 +35,13 @@ export class Z2mMockBroker {
     this.server = createServer(this.aedes.handle);
 
     return new Promise((resolve, reject) => {
-      this.server!.on('error', reject);
+      const onError = (err: Error) => reject(err);
+      this.server!.on('error', onError);
       this.server!.listen(port, () => {
+        // Remove the startup error handler and add a persistent one for runtime errors
+        this.server!.off('error', onError);
+        this.server!.on('error', (err) => console.error('[Z2M Mock] Server error:', err));
+
         const addr = this.server!.address();
         this.port = typeof addr === 'object' && addr ? addr.port : port;
         console.log(`[Z2M Mock] MQTT broker started on port ${this.port}`);
@@ -132,21 +137,19 @@ export class Z2mMockBroker {
   }
 
   async stop(): Promise<void> {
-    return new Promise((resolve) => {
-      if (this.server) {
-        this.server.close(() => {
-          if (this.aedes) {
-            this.aedes.close(() => {
-              console.log('[Z2M Mock] Broker stopped');
-              resolve();
-            });
-          } else {
-            resolve();
-          }
-        });
-      } else {
-        resolve();
-      }
-    });
+    const done = () => {
+      console.log('[Z2M Mock] Broker stopped');
+      this.server = null;
+      this.aedes = null;
+    };
+
+    // Close aedes first, then server
+    if (this.aedes) {
+      await new Promise<void>((resolve) => this.aedes!.close(() => resolve()));
+    }
+    if (this.server) {
+      await new Promise<void>((resolve) => this.server!.close(() => resolve()));
+    }
+    done();
   }
 }

@@ -1,0 +1,91 @@
+[
+  {
+    "type": "switch",
+    "features": [
+      {
+        "name": "state",
+        "label": "State",
+        "access": 7,
+        "type": "binary",
+        "property": "state",
+        "description": "On/off state of the switch",
+        "value_on": "ON",
+        "value_off": "OFF"
+      }
+    ]
+  },
+  {
+    "name": "power",
+    "label": "Power",
+    "access": 1,
+    "type": "numeric",
+    "property": "power",
+    "description": "Instantaneous measured power",
+    "unit": "W"
+  },
+  {
+    "name": "current",
+    "label": "Current",
+    "access": 1,
+    "type": "numeric",
+    "property": "current",
+    "description": "Instantaneous measured electrical current",
+    "unit": "A"
+  },
+  {
+    "name": "voltage",
+    "label": "Voltage",
+    "access": 1,
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Measured electrical potential value",
+    "unit": "V"
+  },
+  {
+    "name": "energy",
+    "label": "Energy",
+    "access": 1,
+    "type": "numeric",
+    "property": "energy",
+    "description": "Sum of consumed energy",
+    "unit": "kWh"
+  },
+  {
+    "name": "power_outage_memory",
+    "label": "Power outage memory",
+    "access": 7,
+    "type": "enum",
+    "property": "power_outage_memory",
+    "description": "Recover state after power outage",
+    "values": [
+      "on",
+      "off",
+      "restore"
+    ]
+  },
+  {
+    "name": "indicator_mode",
+    "label": "Indicator mode",
+    "access": 7,
+    "type": "enum",
+    "property": "indicator_mode",
+    "description": "LED indicator mode",
+    "values": [
+      "off",
+      "off/on",
+      "on/off",
+      "on"
+    ]
+  },
+  {
+    "name": "linkquality",
+    "label": "Link quality",
+    "access": 1,
+    "type": "numeric",
+    "property": "linkquality",
+    "description": "Link quality (signal strength)",
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "power",
+    "label": "Power",
+    "access": 1,
+    "type": "numeric",
+    "property": "power",
+    "description": "Instantaneous measured power",
+    "unit": "W"
+  },
+  {
+    "name": "current",
+    "label": "Current",
+    "access": 1,
+    "type": "numeric",
+    "property": "current",
+    "description": "Instantaneous measured electrical current",
+    "unit": "A"
+  },
+  {
+    "name": "voltage",
+    "label": "Voltage",
+    "access": 1,
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Measured electrical potential value",
+    "unit": "V"
+  },
+  {
+    "name": "energy",
+    "label": "Energy",
+    "access": 1,
+    "type": "numeric",
+    "property": "energy",
+    "description": "Sum of consumed energy",
+    "unit": "kWh"
+  },
+  {
+    "name": "produced_energy",
+    "label": "Produced energy",
+    "access": 1,
+    "type": "numeric",
+    "property": "produced_energy",
+    "description": "Sum of produced energy",
+    "unit": "kWh"
+  },
+  {
+    "name": "linkquality",
+    "label": "Link quality",
+    "access": 1,
+    "type": "numeric",
+    "property": "linkquality",
+    "description": "Link quality (signal strength)",
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
+  }
+]

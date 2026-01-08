@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { hap, setHap } from '../src/hap';
 import { ExposesEntry } from '../src/z2mModels';
 import * as hapNodeJs from '@homebridge/hap-nodejs';

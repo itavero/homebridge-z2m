@@ -1,8 +1,6 @@
-import { resetAllWhenMocks, verifyAllWhenMocksCalled } from 'jest-when';
 import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from '@homebridge/hap-nodejs';
-import 'jest-chain';
 import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 
 describe('Switch', () => {
@@ -38,8 +36,7 @@ describe('Switch', () => {
       });
 
       afterEach(() => {
-        verifyAllWhenMocksCalled();
-        resetAllWhenMocks();
+        vi.resetAllMocks();
       });
 
       describe('Status update is handled:', () => {
@@ -100,8 +97,7 @@ describe('Switch', () => {
       });
 
       afterEach(() => {
-        verifyAllWhenMocksCalled();
-        resetAllWhenMocks();
+        vi.resetAllMocks();
       });
 
       test('Status update is handled: On', () => {
@@ -160,8 +156,7 @@ describe('Switch', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status update is handled: On (L1)', () => {

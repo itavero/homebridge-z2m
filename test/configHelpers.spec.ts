@@ -1,4 +1,3 @@
-import 'jest-chain';
 import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from '../src/configHelpers';
 
 describe('Zigbee2MQTT Config Helper functions', () => {

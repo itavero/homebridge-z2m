@@ -1,8 +1,6 @@
-import { resetAllWhenMocks, verifyAllWhenMocksCalled } from 'jest-when';
 import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from '@homebridge/hap-nodejs';
-import 'jest-chain';
 import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 import { Characteristic, CharacteristicValue, WithUUID } from '@homebridge/hap-nodejs';
 
@@ -42,8 +40,7 @@ describe('Air Quality Sensor', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status update is handled: VOC 333 / Excellent', () => {

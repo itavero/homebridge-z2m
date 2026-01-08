@@ -36,9 +36,9 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest --coverage && eslint --max-warnings=0 'src/**/*.ts' 'test/**/*.ts'",
-    "coverage": "jest --coverage && open coverage/lcov-report/index.html",
-    "watch:test": "jest --watch",
+    "test": "vitest run --coverage && eslint --max-warnings=0 'src/**/*.ts' 'test/**/*.ts'",
+    "coverage": "vitest run --coverage && open coverage/lcov-report/index.html",
+    "watch:test": "vitest",
     "lint": "eslint --max-warnings=0 'src/**/*.ts' 'test/**/*.ts'",
     "lint-fix": "eslint --fix --max-warnings=0 'src/**/*.ts' 'test/**/*.ts'",
     "build": "rimraf ./dist && tsc",
@@ -81,13 +81,14 @@
     "semver": "^7.3.2"
   },
   "devDependencies": {
-    "aedes": "^0.51.0",
     "@eslint/js": "^9.9.0",
     "@release-it/keep-a-changelog": "^7.0.0",
     "@types/color-convert": "^2.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.10",
     "@types/semver": "^7.3.4",
+    "@vitest/coverage-v8": "^4.0.16",
+    "aedes": "^0.51.0",
     "eslint": "^9.9.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.1",
@@ -108,6 +109,9 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^8.1.0"
+    "typescript-eslint": "^8.1.0",
+    "vitest": "^4.0.16",
+    "vitest-mock-extended": "^3.1.0",
+    "vitest-when": "^0.10.0"
   }
 }

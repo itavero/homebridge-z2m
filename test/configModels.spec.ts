@@ -1,6 +1,4 @@
 import { PlatformConfig } from 'homebridge';
-import 'jest-chain';
-import 'jest';
 import { isPluginConfiguration } from '../src/configModels';
 import { BasicServiceCreatorManager } from '../src/converters/creators';
 import * as hapNodeJs from '@homebridge/hap-nodejs';

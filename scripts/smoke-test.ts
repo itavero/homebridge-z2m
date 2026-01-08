@@ -165,9 +165,12 @@ async function runSmokeTest(): Promise<TestResult> {
       const line = data.toString().trim();
       if (line) {
         process.stderr.write(`  [stderr] ${line}\n`);
-        // Filter out known Homebridge informational notices
-        const isInfoNotice = /Homebridge\s+2\.0|NOTICE\s+TO\s+USERS|upgrade\s+notice/i.test(line);
-        if (!isInfoNotice) {
+        // Filter out known Homebridge informational notices and expected warnings
+        const isIgnorable =
+          /Homebridge\s+2\.0|NOTICE\s+TO\s+USERS|upgrade\s+notice/i.test(line) ||
+          /Warning:\s*skipping\s+plugin/i.test(line) || // Duplicate plugin warning
+          /Disconnected\s+from\s+MQTT/i.test(line); // Expected during shutdown
+        if (!isIgnorable) {
           result.errors.push(line);
         }
       }

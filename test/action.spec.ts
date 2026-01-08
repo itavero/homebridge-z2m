@@ -1,7 +1,7 @@
 import { resetAllWhenMocks, verifyAllWhenMocksCalled } from 'jest-when';
 import { hap, setHap } from '../src/hap';
 import { ExposesEntry } from '../src/z2mModels';
-import * as hapNodeJs from 'hap-nodejs';
+import * as hapNodeJs from '@homebridge/hap-nodejs';
 import 'jest-chain';
 import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 import { sanitizeAndFilterExposesEntries } from '../src/helpers';

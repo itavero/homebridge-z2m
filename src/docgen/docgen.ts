@@ -8,9 +8,9 @@ import { Definition, Expose, prepareDefinition } from 'zigbee-herdsman-converter
 import { BasicServiceCreatorManager } from '../converters/creators';
 import { DocsAccessory } from './docs_accessory';
 import { ExposesEntry } from '../z2mModels';
-import * as hapNodeJs from 'hap-nodejs';
+import * as hapNodeJs from '@homebridge/hap-nodejs';
 import { setHap } from '../hap';
-import { Service, WithUUID } from 'hap-nodejs';
+import { Service, WithUUID } from '@homebridge/hap-nodejs';
 import { version_herdsman_converters, version_zigbee2mqtt } from './versions';
 
 // Load all definitions from device files (zigbee-herdsman-converters no longer exports definitions directly)

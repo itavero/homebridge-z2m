@@ -1,0 +1,17 @@
+{
+  "version": "2.7.2",
+  "commit": "unknown",
+  "coordinator": {
+    "type": "zStack3x0",
+    "meta": {
+      "transportrev": 2,
+      "product": 1,
+      "majorrel": 2,
+      "minorrel": 7,
+      "maintrel": 1,
+      "revision": 20221226
+    }
+  },
+  "log_level": "info",
+  "permit_join": false
+}

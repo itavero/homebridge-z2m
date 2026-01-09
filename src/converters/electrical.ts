@@ -20,6 +20,7 @@ const CHARACTERISTIC_WATT_NAME = 'Consumption';
 const CHARACTERISTIC_VOLT_NAME = 'Voltage';
 const CHARACTERISTIC_AMPERE_NAME = 'Current';
 const CHARACTERISTIC_KWH_NAME = 'Total Consumption';
+const CHARACTERISTIC_PRODUCED_KWH_NAME = 'Total Production';
 
 // Property names with fallbacks (first match wins)
 const POWER_NAMES = ['power', 'active_power', 'load'];
@@ -87,6 +88,18 @@ function createAmpereCharacteristic(): Characteristic {
 
 function createKilowattHourCharacteristic(): Characteristic {
   const characteristic = new hap.Characteristic(CHARACTERISTIC_KWH_NAME, CHARACTERISTIC_KWH_UUID, {
+    format: hap.Formats.FLOAT,
+    perms: [hap.Perms.PAIRED_READ, hap.Perms.NOTIFY],
+    minValue: 0,
+    maxValue: 4294967295,
+    minStep: 0.001,
+  });
+  characteristic.value = 0;
+  return characteristic;
+}
+
+function createProducedKilowattHourCharacteristic(): Characteristic {
+  const characteristic = new hap.Characteristic(CHARACTERISTIC_PRODUCED_KWH_NAME, CHARACTERISTIC_KWH_UUID, {
     format: hap.Formats.FLOAT,
     perms: [hap.Perms.PAIRED_READ, hap.Perms.NOTIFY],
     minValue: 0,
@@ -220,12 +233,12 @@ export class ProducedEnergySensorHandler implements ServiceHandler {
     accessory.log.debug(`Configuring ProducedEnergySensor for ${this.serviceName}`);
 
     // Add kWh characteristic for produced energy
-    this.service.addCharacteristic(createKilowattHourCharacteristic());
-    this.monitors.push(new PassthroughCharacteristicMonitor(producedEnergyExpose.property, this.service, CHARACTERISTIC_KWH_NAME));
+    this.service.addCharacteristic(createProducedKilowattHourCharacteristic());
+    this.monitors.push(new PassthroughCharacteristicMonitor(producedEnergyExpose.property, this.service, CHARACTERISTIC_PRODUCED_KWH_NAME));
   }
 
   get mainCharacteristics(): (Characteristic | undefined)[] {
-    return [this.service.getCharacteristic(CHARACTERISTIC_KWH_NAME)];
+    return [this.service.getCharacteristic(CHARACTERISTIC_PRODUCED_KWH_NAME)];
   }
 
   get getableKeys(): string[] {

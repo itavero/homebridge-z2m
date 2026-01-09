@@ -14,7 +14,7 @@ The following table shows the supported exposes entries and the corresponding ch
 | `voltage` | `mains_voltage`, `rms_voltage` | Voltage | `E863F10A-079E-48FF-8F27-9C2605A29F52` | V |
 | `current` | - | Current | `E863F126-079E-48FF-8F27-9C2605A29F52` | A |
 | `energy` | `consumed_energy`, `energy_consumed`, `energy_wh` | Total Consumption | `E863F10C-079E-48FF-8F27-9C2605A29F52` | kWh |
-| `produced_energy` | `energy_produced` | Total Consumption | `E863F10C-079E-48FF-8F27-9C2605A29F52` | kWh |
+| `produced_energy` | `energy_produced` | Total Production | `E863F10C-079E-48FF-8F27-9C2605A29F52` | kWh |
 
 ## Service UUID
 

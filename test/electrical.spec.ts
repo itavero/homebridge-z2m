@@ -1,8 +1,7 @@
-import { resetAllWhenMocks, verifyAllWhenMocksCalled } from 'jest-when';
+import { vi } from 'vitest';
 import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from '@homebridge/hap-nodejs';
-import 'jest-chain';
 import { ServiceHandlersTestHarness } from './testHelpers';
 
 // Custom Service UUID (from homebridge-3em-energy-meter)
@@ -13,6 +12,7 @@ const CHARACTERISTIC_WATT = 'Consumption';
 const CHARACTERISTIC_VOLT = 'Voltage';
 const CHARACTERISTIC_AMPERE = 'Current';
 const CHARACTERISTIC_KWH = 'Total Consumption';
+const CHARACTERISTIC_PRODUCED_KWH = 'Total Production';
 
 describe('Electrical Sensors', () => {
   beforeAll(() => {
@@ -72,8 +72,7 @@ describe('Electrical Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Update power', (): void => {
@@ -167,8 +166,7 @@ describe('Electrical Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Update consumed energy', (): void => {
@@ -178,7 +176,7 @@ describe('Electrical Sensors', () => {
 
     test('Update produced energy', (): void => {
       expect(harness).toBeDefined();
-      harness.checkSingleUpdateState('{"produced_energy":50.25}', producedEnergySensorId, CHARACTERISTIC_KWH, 50.25);
+      harness.checkSingleUpdateState('{"produced_energy":50.25}', producedEnergySensorId, CHARACTERISTIC_PRODUCED_KWH, 50.25);
     });
   });
 
@@ -242,8 +240,7 @@ describe('Electrical Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Update power on endpoint 1', (): void => {
@@ -294,8 +291,7 @@ describe('Electrical Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Update power', (): void => {
@@ -379,8 +375,7 @@ describe('Electrical Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Should only track power property', (): void => {

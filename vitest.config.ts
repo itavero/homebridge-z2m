@@ -10,11 +10,6 @@ export default defineConfig({
       include: ['src/**/*.ts'],
       exclude: ['src/docgen/*.ts'],
     },
-    setupFiles: ['./vitest.setup.ts'],
-    reporters: [
-      'default',
-      ['vitest-sonar-reporter', { outputFile: 'reports/tests.xml' }],
-      ['junit', { outputFile: 'reports/junit.xml' }],
-    ],
+    reporters: ['default', ['vitest-sonar-reporter', { outputFile: 'reports/tests.xml' }], ['junit', { outputFile: 'reports/junit.xml' }]],
   },
 });

@@ -4,9 +4,15 @@ import * as hapNodeJs from '@homebridge/hap-nodejs';
 import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 import { vi } from 'vitest';
 
-vi.useFakeTimers();
-
 describe('Cover', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   beforeAll(() => {
     setHap(hapNodeJs);
   });

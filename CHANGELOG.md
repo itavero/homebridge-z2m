@@ -7,6 +7,13 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### ⚠️ Breaking Changes
+
+- **Minimum Zigbee2MQTT version is now v2.0.0**
+  - The `bridge/state` topic now expects JSON format (`{"state":"online"}`) instead of plain strings
+  - The deprecated `bridge/config` topic is no longer handled (removed in z2m 2.0)
+  - Users running Zigbee2MQTT v1.x must upgrade to v2.0.0 or later before updating this plugin
+
 ### Changed
 
 - Adaptive Lighting is now **enabled by default** for lights with a Color Temperature characteristic.

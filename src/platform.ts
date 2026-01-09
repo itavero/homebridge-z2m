@@ -245,7 +245,12 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         topic = topic.substring(Zigbee2mqttPlatform.TOPIC_BRIDGE.length);
         if (topic === 'devices') {
           // Update accessories
-          this.lastReceivedDevices = JSON.parse(payload.toString());
+          try {
+            this.lastReceivedDevices = JSON.parse(payload.toString());
+          } catch (parseErr) {
+            this.log.error(`Failed to parse bridge/devices payload: ${errorToString(parseErr)}`);
+            return;
+          }
 
           if (this.config?.exclude_grouped_devices === true) {
             if (this.lastReceivedGroups.length === 0) {
@@ -262,7 +267,12 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
             this.groupUpdatePending = false;
           }
         } else if (topic === 'groups') {
-          this.lastReceivedGroups = JSON.parse(payload.toString());
+          try {
+            this.lastReceivedGroups = JSON.parse(payload.toString());
+          } catch (parseErr) {
+            this.log.error(`Failed to parse bridge/groups payload: ${errorToString(parseErr)}`);
+            return;
+          }
           if (this.lastReceivedDevices.length === 0) {
             this.groupUpdatePending = true;
           } else {

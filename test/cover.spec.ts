@@ -1,13 +1,18 @@
-import { resetAllWhenMocks, verifyAllWhenMocksCalled } from 'jest-when';
 import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from '@homebridge/hap-nodejs';
-import 'jest-chain';
 import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
-
-jest.useFakeTimers();
+import { vi } from 'vitest';
 
 describe('Cover', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   beforeAll(() => {
     setHap(hapNodeJs);
   });
@@ -57,8 +62,7 @@ describe('Cover', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status update is handled: Position changes', () => {
@@ -132,7 +136,7 @@ describe('Cover', () => {
       harness.clearMocks();
 
       // Check timer - should request position
-      jest.runOnlyPendingTimers();
+      vi.runOnlyPendingTimers();
       windowCovering.checkNoCharacteristicUpdates();
       harness.checkNoGetKeysQueued();
 
@@ -142,7 +146,7 @@ describe('Cover', () => {
       harness.clearMocks();
 
       // Check timer - should request position
-      jest.runOnlyPendingTimers();
+      vi.runOnlyPendingTimers();
       harness.checkGetKeysQueued('position');
       harness.clearMocks();
     });
@@ -207,8 +211,7 @@ describe('Cover', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Check new changed Tilt', () => {
@@ -323,8 +326,7 @@ describe('Cover', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status update is handled: Position changes', () => {
@@ -392,7 +394,7 @@ describe('Cover', () => {
       harness.clearMocks();
 
       // Check timer - should request position
-      jest.runOnlyPendingTimers();
+      vi.runOnlyPendingTimers();
       windowCovering.checkNoCharacteristicUpdates();
       harness.checkNoGetKeysQueued();
 
@@ -402,7 +404,7 @@ describe('Cover', () => {
       harness.clearMocks();
 
       // Check timer - should request position
-      jest.runOnlyPendingTimers();
+      vi.runOnlyPendingTimers();
       harness.checkGetKeysQueued('tilt');
       harness.clearMocks();
     });
@@ -459,8 +461,7 @@ describe('Cover', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status update is handled: Position changes', () => {

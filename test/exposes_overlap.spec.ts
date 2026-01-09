@@ -1,4 +1,3 @@
-import 'jest-chain';
 import { exposesCollectionsAreEqual, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures, exposesGetOverlap } from '../src/z2mModels';
 
 describe('exposesGetOverlap', () => {

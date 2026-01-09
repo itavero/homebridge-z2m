@@ -1,8 +1,7 @@
-import { resetAllWhenMocks, verifyAllWhenMocksCalled } from 'jest-when';
+import { vi } from 'vitest';
 import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from '@homebridge/hap-nodejs';
-import 'jest-chain';
 import { loadExposesFromFile, ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
 
 describe('Light', () => {
@@ -202,8 +201,7 @@ describe('Light', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     describe('Status update is handled:', () => {
@@ -529,8 +527,7 @@ describe('Light', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status update: color_mode = color_temp', () => {
@@ -601,8 +598,7 @@ describe('Light', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status update is handled: State On', () => {
@@ -715,8 +711,7 @@ describe('Light', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status update is handled: State On', () => {
@@ -850,8 +845,7 @@ describe('Light', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('HomeKit: Turn On', () => {
@@ -913,8 +907,7 @@ describe('Light', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status update is handled: State On', () => {
@@ -968,8 +961,7 @@ describe('Light', () => {
 
   describe('Adaptive Lighting Controller Cleanup', () => {
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('removes cached AL controller when disabled and cached characteristics exist', () => {
@@ -1155,20 +1147,19 @@ describe('Light', () => {
   });
 
   describe('Adaptive Lighting disable based on state', () => {
-    let isActiveSpy: jest.SpyInstance;
-    let disableSpy: jest.SpyInstance;
+    let isActiveSpy: ReturnType<typeof vi.spyOn>;
+    let disableSpy: ReturnType<typeof vi.spyOn>;
 
     beforeEach(() => {
       // Spy on AdaptiveLightingController prototype methods
-      isActiveSpy = jest.spyOn(hap.AdaptiveLightingController.prototype, 'isAdaptiveLightingActive');
-      disableSpy = jest.spyOn(hap.AdaptiveLightingController.prototype, 'disableAdaptiveLighting');
+      isActiveSpy = vi.spyOn(hap.AdaptiveLightingController.prototype, 'isAdaptiveLightingActive');
+      disableSpy = vi.spyOn(hap.AdaptiveLightingController.prototype, 'disableAdaptiveLighting');
     });
 
     afterEach(() => {
       isActiveSpy.mockRestore();
       disableSpy.mockRestore();
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('disables AL when color mode changes away from color_temp', () => {

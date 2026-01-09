@@ -11,10 +11,10 @@ import {
 } from 'homebridge';
 import { BasicAccessory, ServiceHandler } from '../src/converters/interfaces';
 import { DeviceDefinition, DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry, isExposesEntry } from '../src/z2mModels';
-import { mock, mockClear, MockProxy } from 'jest-mock-extended';
-import { when } from 'jest-when';
-import 'jest-chain';
+import { mock, mockClear, MockProxy } from 'vitest-mock-extended';
+import { when } from 'vitest-when';
 import { BasicServiceCreatorManager } from '../src/converters/creators';
+import { vi } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 
@@ -236,7 +236,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
       throw new Error(`Unknown property ${property} passed to prepareGetCharacteristicMock`);
     }
 
-    when(this.serviceMock.getCharacteristic).calledWith(mapping.characteristic).mockReturnValue(mapping.mock);
+    when(this.serviceMock.getCharacteristic).calledWith(mapping.characteristic).thenReturn(mapping.mock);
   }
 
   checkCharacteristicUpdate(
@@ -283,7 +283,7 @@ class ServiceHandlerTestData implements ServiceHandlerContainer {
       throw new Error(`No set callback for identifier ${identifier} found.`);
     }
 
-    const callbackMock = jest.fn();
+    const callbackMock = vi.fn();
     mapping.setFunction(setValue, callbackMock);
 
     expect(callbackMock).toHaveBeenCalledTimes(1).toHaveBeenCalledWith(null);
@@ -417,11 +417,11 @@ export class ServiceHandlersTestHarness {
     for (const data of this.handlers.values()) {
       for (const mapping of data.characteristics.values()) {
         if (mapping.characteristic !== undefined) {
-          when(data.serviceMock.getCharacteristic).calledWith(mapping.characteristic).mockReturnValue(undefined);
+          when(data.serviceMock.getCharacteristic).calledWith(mapping.characteristic).thenReturn(undefined);
 
           when(data.serviceMock.addCharacteristic)
             .calledWith(mapping.characteristic)
-            .mockImplementation((characteristic: Characteristic) => {
+            .thenDo((characteristic: Characteristic) => {
               data.addedCharacteristicUUIDs.add(characteristic.UUID);
               return mapping.mock;
             });

@@ -1,5 +1,4 @@
 import { SwitchActionHelper } from '../src/converters/action_helper';
-import 'jest-chain';
 
 function simple_single_press(id: string, label: number) {
   return {

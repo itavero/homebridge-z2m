@@ -1,4 +1,3 @@
-import 'jest-chain';
 import { getAllEndpoints, sanitizeAndFilterExposesEntries } from '../src/helpers';
 import { exposesCollectionsAreEqual, normalizeExposes } from '../src/z2mModels';
 import { loadExposesFromFile } from './testHelpers';

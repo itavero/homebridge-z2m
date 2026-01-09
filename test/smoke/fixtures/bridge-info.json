@@ -2,6 +2,7 @@
   "version": "2.7.2",
   "commit": "unknown",
   "coordinator": {
+    "ieee_address": "0x00124b0018ed2c00",
     "type": "zStack3x0",
     "meta": {
       "transportrev": 2,
@@ -12,6 +13,32 @@
       "revision": 20221226
     }
   },
+  "zigbee_herdsman_converters": {
+    "version": "25.98.0"
+  },
+  "zigbee_herdsman": {
+    "version": "0.35.0"
+  },
+  "network": {
+    "channel": 11,
+    "pan_id": 6754,
+    "extended_pan_id": [221, 221, 221, 221, 221, 221, 221, 221]
+  },
   "log_level": "info",
-  "permit_join": false
+  "permit_join": false,
+  "config": {
+    "homeassistant": false,
+    "permit_join": false,
+    "availability": false,
+    "mqtt": {
+      "base_topic": "zigbee2mqtt"
+    },
+    "serial": {
+      "port": "/dev/ttyUSB0"
+    },
+    "devices": {},
+    "groups": {}
+  },
+  "config_schema": {},
+  "restart_required": false
 }

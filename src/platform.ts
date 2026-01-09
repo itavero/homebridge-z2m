@@ -30,7 +30,7 @@ import { BasicLogger } from './logger';
 import { ConfigurableLogger } from './configurableLogger';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
-  private static readonly MIN_Z2M_VERSION = '1.17.0';
+  private static readonly MIN_Z2M_VERSION = '2.0.0';
   private static readonly TOPIC_BRIDGE = 'bridge/';
   private static readonly TOPIC_SUFFIX_AVAILABILITY = '/availability';
 
@@ -273,7 +273,17 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
             this.deviceUpdatePending = false;
           }
         } else if (topic === 'state') {
-          const state = payload.toString();
+          // z2m 2.0+ sends JSON: {"state":"online"} or {"state":"offline"}
+          // Earlier versions sent plain strings: "online" or "offline"
+          const statePayload = payload.toString();
+          let state: string;
+          try {
+            const parsed = JSON.parse(statePayload);
+            state = parsed.state ?? statePayload;
+          } catch {
+            // Fallback for plain string format (legacy z2m versions)
+            state = statePayload;
+          }
           if (state !== this.lastZigbee2MqttState) {
             this.lastZigbee2MqttState = state;
             const isOnline = state !== 'offline';
@@ -288,8 +298,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
               this.updateServerAvailabilityForAllDevices(isOnline);
             }
           }
-        } else if (topic === 'info' || topic === 'config') {
-          // New topic (bridge/info) and legacy topic (bridge/config) should both contain the version number.
+        } else if (topic === 'info') {
+          // bridge/info contains version and config information
+          // Note: bridge/config was removed in z2m 2.0
           this.checkZigbee2MqttVersionAndConfig(payload.toString(), fullTopic);
         }
       } else if (topic.endsWith(Zigbee2mqttPlatform.TOPIC_SUFFIX_AVAILABILITY)) {

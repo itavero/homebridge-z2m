@@ -16,6 +16,8 @@ The following table shows the supported exposes entries and the corresponding ch
 | `energy` | `consumed_energy`, `energy_consumed`, `energy_wh` | Total Consumption | `E863F10C-079E-48FF-8F27-9C2605A29F52` | kWh |
 | `produced_energy` | `energy_produced` | Total Production | `E863F10C-079E-48FF-8F27-9C2605A29F52` | kWh |
 
+> **Note:** Total Consumption and Total Production share the same UUID (`E863F10C`) because the Eve app and other HomeKit apps recognize this UUID as a kWh energy measurement. The characteristic name provides the context (consumption vs. production), while the shared UUID ensures apps correctly interpret and display the value in kilowatt-hours.
+
 ## Service UUID
 
 All electrical characteristics are added to a custom service with UUID `00000001-0000-1777-8000-775D67EC4377`.

@@ -20,6 +20,7 @@ describe('Electrical Sensors', () => {
   });
 
   describe('Smart plug with power monitoring (power, voltage, current, energy)', () => {
+    // Harness is reused across tests for performance; clearMocks() resets state between tests
     let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
@@ -105,6 +106,7 @@ describe('Electrical Sensors', () => {
   });
 
   describe('Bidirectional meter with consumed and produced energy', () => {
+    // Harness is reused across tests for performance; clearMocks() resets state between tests
     let harness: ServiceHandlersTestHarness;
     const producedEnergySensorId = 'produced_' + ELECTRICAL_SERVICE_UUID;
 
@@ -181,6 +183,7 @@ describe('Electrical Sensors', () => {
   });
 
   describe('Multi-endpoint switch with power monitoring', () => {
+    // Harness is reused across tests for performance; clearMocks() resets state between tests
     let harness: ServiceHandlersTestHarness;
     const electricalSensorId1 = ELECTRICAL_SERVICE_UUID + '_1';
     const electricalSensorId2 = ELECTRICAL_SERVICE_UUID + '_2';
@@ -261,6 +264,7 @@ describe('Electrical Sensors', () => {
   });
 
   describe('Device with only power expose', () => {
+    // Harness is reused across tests for performance; clearMocks() resets state between tests
     let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
@@ -369,6 +373,7 @@ describe('Electrical Sensors', () => {
   });
 
   describe('Device with power_outage_memory (should be excluded)', () => {
+    // Harness is reused across tests for performance; clearMocks() resets state between tests
     let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {

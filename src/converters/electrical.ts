@@ -114,6 +114,15 @@ function createElectricalSensorService(displayName: string, subtype?: string): S
   return new hap.Service(displayName, ELECTRICAL_SERVICE_UUID, subtype);
 }
 
+// Helper to get or add a custom characteristic (for characteristics not in HAP spec)
+function getOrAddCustomCharacteristic(service: Service, name: string, factory: () => Characteristic): Characteristic {
+  const existing = service.getCharacteristic(name);
+  if (existing) {
+    return existing;
+  }
+  return service.addCharacteristic(factory());
+}
+
 export class ElectricalSensorHandler implements ServiceHandler {
   protected log: BasicLogger;
   protected monitors: CharacteristicMonitor[] = [];
@@ -135,22 +144,22 @@ export class ElectricalSensorHandler implements ServiceHandler {
 
     accessory.log.debug(`Configuring ElectricalSensor for ${this.serviceName}`);
 
-    // Add characteristics based on available exposes
+    // Add characteristics based on available exposes (using getOrAdd to handle cached services)
     if (electricalExposes.power) {
       this.powerExpose = electricalExposes.power;
-      this.service.addCharacteristic(createWattCharacteristic());
+      getOrAddCustomCharacteristic(this.service, CHARACTERISTIC_WATT_NAME, createWattCharacteristic);
       this.monitors.push(new PassthroughCharacteristicMonitor(electricalExposes.power.property, this.service, CHARACTERISTIC_WATT_NAME));
     }
 
     if (electricalExposes.voltage) {
       this.voltageExpose = electricalExposes.voltage;
-      this.service.addCharacteristic(createVoltCharacteristic());
+      getOrAddCustomCharacteristic(this.service, CHARACTERISTIC_VOLT_NAME, createVoltCharacteristic);
       this.monitors.push(new PassthroughCharacteristicMonitor(electricalExposes.voltage.property, this.service, CHARACTERISTIC_VOLT_NAME));
     }
 
     if (electricalExposes.current) {
       this.currentExpose = electricalExposes.current;
-      this.service.addCharacteristic(createAmpereCharacteristic());
+      getOrAddCustomCharacteristic(this.service, CHARACTERISTIC_AMPERE_NAME, createAmpereCharacteristic);
       this.monitors.push(
         new PassthroughCharacteristicMonitor(electricalExposes.current.property, this.service, CHARACTERISTIC_AMPERE_NAME)
       );
@@ -158,7 +167,7 @@ export class ElectricalSensorHandler implements ServiceHandler {
 
     if (electricalExposes.energy) {
       this.energyExpose = electricalExposes.energy;
-      this.service.addCharacteristic(createKilowattHourCharacteristic());
+      getOrAddCustomCharacteristic(this.service, CHARACTERISTIC_KWH_NAME, createKilowattHourCharacteristic);
       this.monitors.push(new PassthroughCharacteristicMonitor(electricalExposes.energy.property, this.service, CHARACTERISTIC_KWH_NAME));
     }
   }
@@ -232,8 +241,8 @@ export class ProducedEnergySensorHandler implements ServiceHandler {
 
     accessory.log.debug(`Configuring ProducedEnergySensor for ${this.serviceName}`);
 
-    // Add kWh characteristic for produced energy
-    this.service.addCharacteristic(createProducedKilowattHourCharacteristic());
+    // Add kWh characteristic for produced energy (using getOrAdd to handle cached services)
+    getOrAddCustomCharacteristic(this.service, CHARACTERISTIC_PRODUCED_KWH_NAME, createProducedKilowattHourCharacteristic);
     this.monitors.push(new PassthroughCharacteristicMonitor(producedEnergyExpose.property, this.service, CHARACTERISTIC_PRODUCED_KWH_NAME));
   }
 

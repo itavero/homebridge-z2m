@@ -30,7 +30,7 @@ import { BasicLogger } from './logger';
 import { ConfigurableLogger } from './configurableLogger';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
-  private static readonly MIN_Z2M_VERSION = '2.0.0';
+  private static readonly MIN_Z2M_VERSION = '1.17.0';
   private static readonly TOPIC_BRIDGE = 'bridge/';
   private static readonly TOPIC_SUFFIX_AVAILABILITY = '/availability';
 

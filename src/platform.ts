@@ -598,11 +598,17 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       this.log.info(`New accessory: ${device.friendly_name} (${sanitized_name})`);
       let accessory = new this.api.platformAccessory(sanitized_name, uuid);
 
-      // Workaround for Homebridge bug: Check if the HAP accessory is already bridged
-      // This can happen when Homebridge doesn't clear the injectedAccessory static property
-      // after restoring cached accessories. See: https://github.com/homebridge/homebridge/issues/XXXX
+      // Diagnostic: Check HAP accessory state before and after registration
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const hapAccessory = (accessory as any)._associatedHAPAccessory;
+      this.log.debug(
+        `Before registerPlatformAccessories: HAP accessory "${hapAccessory?.displayName}" ` +
+          `bridge=${hapAccessory?.bridge?.displayName ?? 'null'}, UUID=${hapAccessory?.UUID}`
+      );
+
+      // Workaround for Homebridge 2.0 beta bug: Check if the HAP accessory is already bridged
+      // This can happen when Homebridge doesn't clear the injectedAccessory static property
+      // after restoring cached accessories. See: https://github.com/homebridge/homebridge/issues/XXXX
       if (hapAccessory?.bridge) {
         this.log.warn(
           'Detected Homebridge bug: New PlatformAccessory received already-bridged HAP accessory. ' +

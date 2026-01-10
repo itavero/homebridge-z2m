@@ -10,7 +10,7 @@ import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 const SMOKETEST_DIR = join(__dirname, '..', '.smoketest');
-const HOMEBRIDGE_VERSION = '1.11.1'; // Pinned stable version
+const HOMEBRIDGE_VERSION = '2.0.0-beta.68'; // Testing beta for bridging bug
 
 function log(message: string): void {
   console.log(`[Setup] ${message}`);

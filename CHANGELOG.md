@@ -9,6 +9,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Changed
 
+- Updated MQTT topic handling for Zigbee2MQTT 2.0 compatibility:
+  - The `bridge/state` topic now supports both JSON format (`{"state":"online"}`) and plain strings for backwards compatibility
+  - The deprecated `bridge/config` topic is no longer handled (use `bridge/info` instead)
+
 - Adaptive Lighting is now **enabled by default** for lights with a Color Temperature characteristic.
   Set `adaptive_lighting` to `false` in the converter configuration to disable it.
   (see [#1146](https://github.com/itavero/homebridge-z2m/pull/1146))

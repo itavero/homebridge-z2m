@@ -23,7 +23,7 @@ import {
   isDeviceListEntryForGroup,
 } from './z2mModels';
 import * as semver from 'semver';
-import { errorToString, getDiffFromArrays, sanitizeAccessoryName } from './helpers';
+import { errorToString, getDiffFromArrays, parseBridgeOnlineState, sanitizeAccessoryName } from './helpers';
 import { BasicServiceCreatorManager } from './converters/creators';
 import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from './configHelpers';
 import { BasicLogger } from './logger';
@@ -43,7 +43,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private readonly accessories: Zigbee2mqttAccessory[] = [];
   private didReceiveDevices: boolean;
   private lastReceivedZigbee2MqttVersion: string | undefined;
-  private lastZigbee2MqttState: string | undefined;
+  private lastZigbee2MqttOnline: boolean | undefined;
 
   private lastReceivedDevices: DeviceListEntry[] = [];
   private lastReceivedGroups: GroupListEntry[] = [];
@@ -192,11 +192,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private onMqttConnected(): void {
     this.log.info('Connected to MQTT server');
     if (this.connectionPreviouslyClosed) {
-      if (this.lastZigbee2MqttState !== 'offline') {
+      if (this.lastZigbee2MqttOnline !== false) {
         this.log.debug('Update availability for all devices now that MQTT connection is recovered.');
         this.updateServerAvailabilityForAllDevices(true);
       } else {
-        this.log.debug('MQTT connection recovered, but last Zigbee2MQTT state was offline. Not updating availability.');
+        this.log.debug('MQTT connection recovered, but Zigbee2MQTT was offline. Not updating availability.');
       }
     }
     this.connectionPreviouslyClosed = false;
@@ -245,7 +245,12 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         topic = topic.substring(Zigbee2mqttPlatform.TOPIC_BRIDGE.length);
         if (topic === 'devices') {
           // Update accessories
-          this.lastReceivedDevices = JSON.parse(payload.toString());
+          try {
+            this.lastReceivedDevices = JSON.parse(payload.toString());
+          } catch (parseErr) {
+            this.log.error(`Failed to parse bridge/devices payload: ${errorToString(parseErr)}`);
+            return;
+          }
 
           if (this.config?.exclude_grouped_devices === true) {
             if (this.lastReceivedGroups.length === 0) {
@@ -262,7 +267,12 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
             this.groupUpdatePending = false;
           }
         } else if (topic === 'groups') {
-          this.lastReceivedGroups = JSON.parse(payload.toString());
+          try {
+            this.lastReceivedGroups = JSON.parse(payload.toString());
+          } catch (parseErr) {
+            this.log.error(`Failed to parse bridge/groups payload: ${errorToString(parseErr)}`);
+            return;
+          }
           if (this.lastReceivedDevices.length === 0) {
             this.groupUpdatePending = true;
           } else {
@@ -273,10 +283,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
             this.deviceUpdatePending = false;
           }
         } else if (topic === 'state') {
-          const state = payload.toString();
-          if (state !== this.lastZigbee2MqttState) {
-            this.lastZigbee2MqttState = state;
-            const isOnline = state !== 'offline';
+          const isOnline = parseBridgeOnlineState(payload.toString());
+          if (isOnline !== this.lastZigbee2MqttOnline) {
+            this.lastZigbee2MqttOnline = isOnline;
             if (!isOnline) {
               this.log.error('Zigbee2MQTT is OFFLINE!');
               this.zigbee2MqttHasBeenOffline = true;
@@ -288,8 +297,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
               this.updateServerAvailabilityForAllDevices(isOnline);
             }
           }
-        } else if (topic === 'info' || topic === 'config') {
-          // New topic (bridge/info) and legacy topic (bridge/config) should both contain the version number.
+        } else if (topic === 'info') {
+          // bridge/info contains version and config information
+          // Note: bridge/config was removed in z2m 2.0
           this.checkZigbee2MqttVersionAndConfig(payload.toString(), fullTopic);
         }
       } else if (topic.endsWith(Zigbee2mqttPlatform.TOPIC_SUFFIX_AVAILABILITY)) {

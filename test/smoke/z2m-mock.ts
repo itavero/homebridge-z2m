@@ -81,8 +81,8 @@ export class Z2mMockBroker {
   }
 
   async simulateZ2mStartup(): Promise<void> {
-    // 1. Bridge comes online
-    this.publish('bridge/state', 'online');
+    // 1. Bridge comes online (z2m 2.0+ uses JSON format)
+    this.publish('bridge/state', { state: 'online' });
     await this.delay(Z2M_MESSAGE_DELAY_MS);
 
     // 2. Send bridge info

@@ -30,7 +30,13 @@ const ENERGY_CONSUMED_NAMES = ['energy', 'consumed_energy', 'energy_consumed'];
 const ENERGY_PRODUCED_NAMES = ['produced_energy', 'energy_produced'];
 
 // All electrical property names (for filtering)
-const ALL_ELECTRICAL_NAMES = [...POWER_NAMES, ...VOLTAGE_NAMES, ...CURRENT_NAMES, ...ENERGY_CONSUMED_NAMES, ...ENERGY_PRODUCED_NAMES];
+const ALL_ELECTRICAL_NAMES = new Set([
+  ...POWER_NAMES,
+  ...VOLTAGE_NAMES,
+  ...CURRENT_NAMES,
+  ...ENERGY_CONSUMED_NAMES,
+  ...ENERGY_PRODUCED_NAMES,
+]);
 
 interface ElectricalExposes {
   power?: ExposesEntryWithProperty;
@@ -130,10 +136,10 @@ export class ElectricalSensorHandler implements ServiceHandler {
   protected serviceName: string;
   identifier = '';
 
-  private powerExpose?: ExposesEntryWithProperty;
-  private voltageExpose?: ExposesEntryWithProperty;
-  private currentExpose?: ExposesEntryWithProperty;
-  private energyExpose?: ExposesEntryWithProperty;
+  private readonly powerExpose?: ExposesEntryWithProperty;
+  private readonly voltageExpose?: ExposesEntryWithProperty;
+  private readonly currentExpose?: ExposesEntryWithProperty;
+  private readonly energyExpose?: ExposesEntryWithProperty;
 
   constructor(accessory: BasicAccessory, electricalExposes: ElectricalExposes, endpoint: string | undefined) {
     this.log = accessory.log;
@@ -227,7 +233,7 @@ export class ProducedEnergySensorHandler implements ServiceHandler {
   identifier = '';
 
   private static readonly SUBTYPE = 'produced';
-  private producedEnergyExpose: ExposesEntryWithProperty;
+  private readonly producedEnergyExpose: ExposesEntryWithProperty;
 
   constructor(accessory: BasicAccessory, producedEnergyExpose: ExposesEntryWithProperty, endpoint: string | undefined) {
     this.log = accessory.log;
@@ -272,8 +278,7 @@ export class ElectricalSensorCreator implements ServiceCreator {
     // Filter for numeric electrical exposes
     const electricalExposes = exposes
       .filter(
-        (e) =>
-          exposesHasProperty(e) && exposesIsPublished(e) && e.type === ExposesKnownTypes.NUMERIC && ALL_ELECTRICAL_NAMES.includes(e.name)
+        (e) => exposesHasProperty(e) && exposesIsPublished(e) && e.type === ExposesKnownTypes.NUMERIC && ALL_ELECTRICAL_NAMES.has(e.name)
       )
       .map((e) => e as ExposesEntryWithProperty);
 

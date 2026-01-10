@@ -22,6 +22,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - New `min_delta` option for Adaptive Lighting configuration, allowing you to set a minimum difference in color temperature (in mired) before sending an update to reduce MQTT traffic. Defaults to `1`.
 - New `enabled` option for Adaptive Lighting configuration, allowing explicit enable/disable control within an object configuration.
+- Expose electrical measurement properties (`power`, `voltage`, `current`, `energy`, `produced_energy`) using Eve-compatible custom characteristics, visible in the Eve app and other HomeKit apps that support custom characteristics. (see [#505](https://github.com/itavero/homebridge-z2m/issues/505))
 
 ## [1.11.0-beta.10] - 2025-01-25
 

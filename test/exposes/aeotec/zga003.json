@@ -1,0 +1,87 @@
+[
+  {
+    "type": "switch",
+    "endpoint": "1",
+    "features": [
+      {
+        "name": "state",
+        "label": "State",
+        "access": 7,
+        "type": "binary",
+        "endpoint": "1",
+        "property": "state_1",
+        "description": "On/off state of the switch",
+        "value_on": "ON",
+        "value_off": "OFF"
+      }
+    ]
+  },
+  {
+    "type": "switch",
+    "endpoint": "2",
+    "features": [
+      {
+        "name": "state",
+        "label": "State",
+        "access": 7,
+        "type": "binary",
+        "endpoint": "2",
+        "property": "state_2",
+        "description": "On/off state of the switch",
+        "value_on": "ON",
+        "value_off": "OFF"
+      }
+    ]
+  },
+  {
+    "name": "power",
+    "label": "Power",
+    "access": 1,
+    "type": "numeric",
+    "endpoint": "1",
+    "property": "power_1",
+    "description": "Instantaneous measured power",
+    "unit": "W"
+  },
+  {
+    "name": "energy",
+    "label": "Energy",
+    "access": 1,
+    "type": "numeric",
+    "endpoint": "1",
+    "property": "energy_1",
+    "description": "Sum of consumed energy",
+    "unit": "kWh"
+  },
+  {
+    "name": "power",
+    "label": "Power",
+    "access": 1,
+    "type": "numeric",
+    "endpoint": "2",
+    "property": "power_2",
+    "description": "Instantaneous measured power",
+    "unit": "W"
+  },
+  {
+    "name": "energy",
+    "label": "Energy",
+    "access": 1,
+    "type": "numeric",
+    "endpoint": "2",
+    "property": "energy_2",
+    "description": "Sum of consumed energy",
+    "unit": "kWh"
+  },
+  {
+    "name": "linkquality",
+    "label": "Link quality",
+    "access": 1,
+    "type": "numeric",
+    "property": "linkquality",
+    "description": "Link quality (signal strength)",
+    "unit": "lqi",
+    "value_max": 255,
+    "value_min": 0
+  }
+]

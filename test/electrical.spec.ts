@@ -334,6 +334,38 @@ describe('Electrical Sensors', () => {
 
       harness.checkCreationExpectations();
     });
+
+    test('Should not create electrical sensor for voltage-only device (e.g., battery voltage)', (): void => {
+      const harness = new ServiceHandlersTestHarness();
+
+      // Create device with only voltage (like a door sensor reporting battery voltage)
+      const exposes: ExposesEntry[] = [
+        {
+          name: 'voltage',
+          access: 1,
+          type: 'numeric',
+          property: 'voltage',
+          unit: 'V',
+        },
+        {
+          name: 'contact',
+          access: 1,
+          type: 'binary',
+          property: 'contact',
+          value_on: true,
+          value_off: false,
+        },
+      ];
+
+      // Expect only contact sensor, no electrical sensor
+      harness.getOrAddHandler(hap.Service.ContactSensor).addExpectedCharacteristic('contact', hap.Characteristic.ContactSensorState);
+
+      harness.prepareCreationMocks();
+
+      harness.callCreators(exposes);
+
+      harness.checkCreationExpectations();
+    });
   });
 
   describe('Device with power_outage_memory (should be excluded)', () => {

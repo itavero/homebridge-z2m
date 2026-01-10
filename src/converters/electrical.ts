@@ -239,7 +239,7 @@ export class ProducedEnergySensorHandler implements ServiceHandler {
     this.log = accessory.log;
     this.producedEnergyExpose = producedEnergyExpose;
 
-    const subType = endpoint !== undefined ? `${endpoint} ${ProducedEnergySensorHandler.SUBTYPE}` : ProducedEnergySensorHandler.SUBTYPE;
+    const subType = endpoint === undefined ? ProducedEnergySensorHandler.SUBTYPE : `${endpoint} ${ProducedEnergySensorHandler.SUBTYPE}`;
     this.serviceName = accessory.getDefaultServiceDisplayName(subType);
     this.identifier = ProducedEnergySensorHandler.generateIdentifier(endpoint);
 

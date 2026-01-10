@@ -289,7 +289,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
           let state: string;
           try {
             const parsed = JSON.parse(statePayload);
-            state = parsed.state ?? statePayload;
+            if (parsed && typeof parsed === 'object' && typeof parsed.state === 'string') {
+              state = parsed.state;
+            } else {
+              state = statePayload;
+            }
           } catch {
             // Fallback for plain string format (legacy z2m versions)
             state = statePayload;

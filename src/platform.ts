@@ -23,7 +23,7 @@ import {
   isDeviceListEntryForGroup,
 } from './z2mModels';
 import * as semver from 'semver';
-import { errorToString, getDiffFromArrays, sanitizeAccessoryName } from './helpers';
+import { errorToString, getDiffFromArrays, parseBridgeStatePayload, sanitizeAccessoryName } from './helpers';
 import { BasicServiceCreatorManager } from './converters/creators';
 import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from './configHelpers';
 import { BasicLogger } from './logger';
@@ -283,21 +283,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
             this.deviceUpdatePending = false;
           }
         } else if (topic === 'state') {
-          // z2m 2.0+ sends JSON: {"state":"online"} or {"state":"offline"}
-          // Earlier versions sent plain strings: "online" or "offline"
-          const statePayload = payload.toString();
-          let state: string;
-          try {
-            const parsed = JSON.parse(statePayload);
-            if (parsed && typeof parsed === 'object' && typeof parsed.state === 'string') {
-              state = parsed.state;
-            } else {
-              state = statePayload;
-            }
-          } catch {
-            // Fallback for plain string format (legacy z2m versions)
-            state = statePayload;
-          }
+          const state = parseBridgeStatePayload(payload.toString());
           if (state !== this.lastZigbee2MqttState) {
             this.lastZigbee2MqttState = state;
             const isOnline = state !== 'offline';

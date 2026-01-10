@@ -1,39 +1,39 @@
-import { getAllEndpoints, parseBridgeStatePayload, sanitizeAndFilterExposesEntries } from '../src/helpers';
+import { getAllEndpoints, parseBridgeOnlineState, sanitizeAndFilterExposesEntries } from '../src/helpers';
 import { exposesCollectionsAreEqual, normalizeExposes } from '../src/z2mModels';
 import { loadExposesFromFile } from './testHelpers';
 
 describe('Helper functions', () => {
-  describe('parseBridgeStatePayload', () => {
-    test('parses z2m 2.0+ JSON format with state online', () => {
-      expect(parseBridgeStatePayload('{"state":"online"}')).toBe('online');
+  describe('parseBridgeOnlineState', () => {
+    test('returns true for z2m 2.0+ JSON format with state online', () => {
+      expect(parseBridgeOnlineState('{"state":"online"}')).toBe(true);
     });
 
-    test('parses z2m 2.0+ JSON format with state offline', () => {
-      expect(parseBridgeStatePayload('{"state":"offline"}')).toBe('offline');
+    test('returns false for z2m 2.0+ JSON format with state offline', () => {
+      expect(parseBridgeOnlineState('{"state":"offline"}')).toBe(false);
     });
 
-    test('parses legacy plain string format online', () => {
-      expect(parseBridgeStatePayload('online')).toBe('online');
+    test('returns true for legacy plain string format online', () => {
+      expect(parseBridgeOnlineState('online')).toBe(true);
     });
 
-    test('parses legacy plain string format offline', () => {
-      expect(parseBridgeStatePayload('offline')).toBe('offline');
+    test('returns false for legacy plain string format offline', () => {
+      expect(parseBridgeOnlineState('offline')).toBe(false);
     });
 
-    test('returns raw payload for JSON without state property', () => {
-      expect(parseBridgeStatePayload('{"foo":"bar"}')).toBe('{"foo":"bar"}');
+    test('returns true for JSON without state property (assumes online)', () => {
+      expect(parseBridgeOnlineState('{"foo":"bar"}')).toBe(true);
     });
 
-    test('returns raw payload for JSON with non-string state', () => {
-      expect(parseBridgeStatePayload('{"state":123}')).toBe('{"state":123}');
+    test('returns true for JSON with non-string state (assumes online)', () => {
+      expect(parseBridgeOnlineState('{"state":123}')).toBe(true);
     });
 
-    test('returns raw payload for JSON array', () => {
-      expect(parseBridgeStatePayload('["online"]')).toBe('["online"]');
+    test('returns true for JSON array (assumes online)', () => {
+      expect(parseBridgeOnlineState('["online"]')).toBe(true);
     });
 
-    test('returns raw payload for JSON null', () => {
-      expect(parseBridgeStatePayload('null')).toBe('null');
+    test('returns true for JSON null (assumes online)', () => {
+      expect(parseBridgeOnlineState('null')).toBe(true);
     });
   });
 

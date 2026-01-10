@@ -12,22 +12,25 @@ export function errorToString(e: unknown): string {
 }
 
 /**
- * Parse bridge/state payload from Zigbee2MQTT.
+ * Parse bridge/state payload from Zigbee2MQTT and return online status.
  * Supports both z2m 2.0+ JSON format ({"state":"online"}) and legacy plain string format ("online").
  * @param payload The raw payload string from MQTT
- * @returns The state string (e.g., "online" or "offline")
+ * @returns true if Zigbee2MQTT is online, false otherwise
  */
-export function parseBridgeStatePayload(payload: string): string {
+export function parseBridgeOnlineState(payload: string): boolean {
+  let state: string;
   try {
     const parsed = JSON.parse(payload);
     if (parsed && typeof parsed === 'object' && typeof parsed.state === 'string') {
-      return parsed.state;
+      state = parsed.state;
+    } else {
+      state = payload;
     }
   } catch {
-    // Not valid JSON, fall through to return raw payload
+    // Not valid JSON, treat as plain string format (legacy z2m versions)
+    state = payload;
   }
-  // Fallback for plain string format (legacy z2m versions) or unexpected JSON structure
-  return payload;
+  return state !== 'offline';
 }
 
 /**

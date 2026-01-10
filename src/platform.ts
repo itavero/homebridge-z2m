@@ -23,7 +23,7 @@ import {
   isDeviceListEntryForGroup,
 } from './z2mModels';
 import * as semver from 'semver';
-import { errorToString, getDiffFromArrays, parseBridgeStatePayload, sanitizeAccessoryName } from './helpers';
+import { errorToString, getDiffFromArrays, parseBridgeOnlineState, sanitizeAccessoryName } from './helpers';
 import { BasicServiceCreatorManager } from './converters/creators';
 import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from './configHelpers';
 import { BasicLogger } from './logger';
@@ -43,7 +43,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private readonly accessories: Zigbee2mqttAccessory[] = [];
   private didReceiveDevices: boolean;
   private lastReceivedZigbee2MqttVersion: string | undefined;
-  private lastZigbee2MqttState: string | undefined;
+  private lastZigbee2MqttOnline: boolean | undefined;
 
   private lastReceivedDevices: DeviceListEntry[] = [];
   private lastReceivedGroups: GroupListEntry[] = [];
@@ -192,11 +192,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private onMqttConnected(): void {
     this.log.info('Connected to MQTT server');
     if (this.connectionPreviouslyClosed) {
-      if (this.lastZigbee2MqttState !== 'offline') {
+      if (this.lastZigbee2MqttOnline !== false) {
         this.log.debug('Update availability for all devices now that MQTT connection is recovered.');
         this.updateServerAvailabilityForAllDevices(true);
       } else {
-        this.log.debug('MQTT connection recovered, but last Zigbee2MQTT state was offline. Not updating availability.');
+        this.log.debug('MQTT connection recovered, but Zigbee2MQTT was offline. Not updating availability.');
       }
     }
     this.connectionPreviouslyClosed = false;
@@ -283,10 +283,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
             this.deviceUpdatePending = false;
           }
         } else if (topic === 'state') {
-          const state = parseBridgeStatePayload(payload.toString());
-          if (state !== this.lastZigbee2MqttState) {
-            this.lastZigbee2MqttState = state;
-            const isOnline = state !== 'offline';
+          const isOnline = parseBridgeOnlineState(payload.toString());
+          if (isOnline !== this.lastZigbee2MqttOnline) {
+            this.lastZigbee2MqttOnline = isOnline;
             if (!isOnline) {
               this.log.error('Zigbee2MQTT is OFFLINE!');
               this.zigbee2MqttHasBeenOffline = true;

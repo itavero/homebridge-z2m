@@ -304,6 +304,47 @@ describe('Electrical Sensors', () => {
     });
   });
 
+  describe('Device with only energy expose', () => {
+    // Harness is reused across tests for performance; clearMocks() resets state between tests
+    let harness: ServiceHandlersTestHarness;
+
+    beforeEach(() => {
+      if (harness === undefined) {
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Create minimal device exposes with only energy
+        const exposes: ExposesEntry[] = [
+          {
+            name: 'energy',
+            access: 1,
+            type: 'numeric',
+            property: 'energy',
+            unit: 'kWh',
+          },
+        ];
+
+        newHarness.getOrAddHandler(ELECTRICAL_SERVICE_UUID);
+
+        newHarness.prepareCreationMocks();
+
+        newHarness.callCreators(exposes);
+
+        newHarness.checkExpectedGetableKeys(['energy']);
+        harness = newHarness;
+      }
+      harness?.clearMocks();
+    });
+
+    afterEach(() => {
+      vi.resetAllMocks();
+    });
+
+    test('Update energy', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"energy":123.45}', ELECTRICAL_SERVICE_UUID, CHARACTERISTIC_KWH, 123.45);
+    });
+  });
+
   describe('Device with no electrical exposes', () => {
     test('Should not create electrical sensor for non-electrical device', (): void => {
       const harness = new ServiceHandlersTestHarness();

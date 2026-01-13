@@ -298,11 +298,12 @@ export class ElectricalSensorCreator implements ServiceCreator {
         energy: findExpose(endpointExposes, ENERGY_CONSUMED_NAMES),
       };
 
-      // Only create electrical sensor if we have power or current
+      // Only create electrical sensor if we have power, current, or energy
       // (voltage alone is typically just battery voltage, not useful for power monitoring)
-      const hasPowerOrCurrent = electricalData.power !== undefined || electricalData.current !== undefined;
+      const hasPowerCurrentOrEnergy =
+        electricalData.power !== undefined || electricalData.current !== undefined || electricalData.energy !== undefined;
 
-      if (hasPowerOrCurrent && !accessory.isServiceHandlerIdKnown(ElectricalSensorHandler.generateIdentifier(endpoint))) {
+      if (hasPowerCurrentOrEnergy && !accessory.isServiceHandlerIdKnown(ElectricalSensorHandler.generateIdentifier(endpoint))) {
         this.createElectricalSensorHandler(accessory, electricalData, endpoint);
       }
 

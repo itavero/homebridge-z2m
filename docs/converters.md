@@ -1,5 +1,8 @@
 # Service Handlers
-The plugin currently includes handlers for the following types of devices/services:
+
+The plugin currently includes handlers for the following types of devices/services.
+
+For developers looking to add new service handlers, see the [Architecture Documentation](architecture.md) for a detailed guide on how the converter system works.
 
 * [Light](light.md)
 * [Switch](switch.md)

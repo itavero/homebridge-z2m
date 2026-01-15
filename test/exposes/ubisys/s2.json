@@ -72,7 +72,6 @@
     "type": "numeric",
     "property": "power",
     "description": "Instantaneous measured power",
-    "category": "diagnostic",
     "unit": "W"
   },
   {

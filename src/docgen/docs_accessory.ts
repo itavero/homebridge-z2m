@@ -94,6 +94,11 @@ export class DocsAccessory implements BasicAccessory {
     this.controllers.add(controller.constructor.name);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  removeController(controller: Controller): void {
+    // Do nothing - this is a stub for the interface
+  }
+
   getControllerNames(): string[] {
     return [...this.controllers].sort();
   }

@@ -18,8 +18,6 @@ the MAZDA TR-M2Z
   * Battery Level
   * Charging State
   * Status Low Battery
-* [Switch](../../switch.md)
-  * On
 * [Thermostat](../../climate.md)
   * Current Heating Cooling State
   * Current Temperature

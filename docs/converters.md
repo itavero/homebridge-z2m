@@ -19,3 +19,5 @@ The plugin currently includes handlers for the following types of devices/servic
   * Carbon Monoxide
   * Water Leak
   * Gas
+* [Air Quality](air_quality.md)
+* [Electrical Measurements](electrical.md) (power, voltage, current, energy)

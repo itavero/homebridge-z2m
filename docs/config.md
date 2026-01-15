@@ -95,7 +95,7 @@ Within the `devices` array, you can set options for specific devices, based on t
 This identifier should be put in the `id` property.
 
 Currently the following options are available:
-* `exclude`: if set to `true` this device will not be fully ignored.
+* `exclude`: if set to `true` this device will be fully ignored.
 * `ignore_availability`: If set to `true`, the availability information provided by Zigbee2MQTT for this device will be ignored by the plugin.
 * `ignore_z2m_online`: If set to `true`, the online/offline information of Zigbee2MQTT will be ignored. This means the device might show up as available, even though Zigbee2MQTT is offline or the connection to the MQTT broker is lost.
 * `excluded_keys`: an array of properties/keys (known as the `property` in the exposes information) that should be ignored/excluded for this device.

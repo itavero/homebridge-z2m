@@ -55,6 +55,14 @@ This is the information provided by Zigbee2MQTT for this device:
       "brightness_move_up",
       "brightness_move_down"
     ]
+  },
+  {
+    "name": "action_group",
+    "label": "Action group",
+    "access": 1,
+    "type": "numeric",
+    "property": "action_group",
+    "description": "Group where the action was triggered on"
   }
 ]
 ```

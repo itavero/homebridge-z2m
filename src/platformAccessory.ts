@@ -503,4 +503,8 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   configureController(controller: Controller) {
     this.accessory.configureController(controller);
   }
+
+  removeController(controller: Controller) {
+    this.accessory.removeController(controller);
+  }
 }

@@ -10,6 +10,7 @@ import { SwitchCreator } from './switch';
 import { StatelessProgrammableSwitchCreator } from './action';
 import { ThermostatCreator } from './climate';
 import { AirQualitySensorCreator } from './air_quality';
+import { AirPurifierCreator } from './air_purifier';
 import { ElectricalSensorCreator } from './electrical';
 
 export interface ServiceCreatorManager {
@@ -32,6 +33,7 @@ export class BasicServiceCreatorManager
     LockCreator,
     BasicSensorCreator,
     AirQualitySensorCreator,
+    AirPurifierCreator,
     ElectricalSensorCreator,
     StatelessProgrammableSwitchCreator,
     ThermostatCreator,

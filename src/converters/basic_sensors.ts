@@ -24,6 +24,12 @@ import { OccupancySensorHandler } from './basic_sensors/occupancy';
 import { IdentifierGenerator } from './basic_sensors/basic';
 import { DeviceTemperatureSensorHandler } from './basic_sensors/device_temperature';
 import { CarbonDioxideSensorHandler } from './basic_sensors/carbon_dioxide';
+import { RainSensorHandler } from './basic_sensors/rain';
+import { RainIntensitySensorHandler } from './basic_sensors/rain_intensity';
+import { IlluminanceRawSensorHandler } from './basic_sensors/illuminance_raw';
+import { IlluminanceAverageSensorHandler } from './basic_sensors/illuminance_average';
+import { IlluminanceMaximumSensorHandler } from './basic_sensors/illuminance_maximum';
+import { CleaningReminderSensorHandler } from './basic_sensors/cleaning_reminder';
 import { BasicLogger } from '../logger';
 
 type ExposeToHandlerFunction = (expose: ExposesEntryWithProperty) => ServiceHandler;
@@ -61,6 +67,12 @@ export class BasicSensorCreator implements ServiceCreator {
     GasLeakSensorHandler,
     DeviceTemperatureSensorHandler,
     CarbonDioxideSensorHandler,
+    RainSensorHandler,
+    RainIntensitySensorHandler,
+    IlluminanceRawSensorHandler,
+    IlluminanceAverageSensorHandler,
+    IlluminanceMaximumSensorHandler,
+    CleaningReminderSensorHandler,
   ];
 
   private static configs: WithConfigurableConverter<unknown>[] = [OccupancySensorHandler];

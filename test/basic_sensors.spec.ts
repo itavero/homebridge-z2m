@@ -680,4 +680,149 @@ describe('Basic Sensors', () => {
       harness.checkSingleUpdateState('{"moving":true}', movingSensorId, hap.Characteristic.MotionDetected, true);
     });
   });
+
+  describe('Tuya RB-SRAIN01 rain sensor', () => {
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+    let rainSensorId: string;
+    let rainIntensitySensorId: string;
+    let illuminanceRawSensorId: string;
+    let illuminanceAvgSensorId: string;
+    let illuminanceMaxSensorId: string;
+    let cleaningSensorId: string;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('tuya/rb-srain01.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Check service creation
+        rainSensorId = 'rain_' + hap.Service.ContactSensor.UUID;
+        rainIntensitySensorId = 'rain_intensity_' + hap.Service.LightSensor.UUID;
+        illuminanceRawSensorId = 'illuminance_raw_' + hap.Service.LightSensor.UUID;
+        illuminanceAvgSensorId = 'illuminance_avg_' + hap.Service.LightSensor.UUID;
+        illuminanceMaxSensorId = 'illuminance_max_' + hap.Service.LightSensor.UUID;
+        cleaningSensorId = 'cleaning_' + hap.Service.ContactSensor.UUID;
+
+        newHarness
+          .getOrAddHandler(hap.Service.ContactSensor, 'rain', rainSensorId)
+          .addExpectedCharacteristic('rain', hap.Characteristic.ContactSensorState);
+        newHarness
+          .getOrAddHandler(hap.Service.LightSensor, 'rain_intensity', rainIntensitySensorId)
+          .addExpectedCharacteristic('rain_intensity', hap.Characteristic.CurrentAmbientLightLevel);
+        newHarness
+          .getOrAddHandler(hap.Service.LightSensor, 'illuminance_raw', illuminanceRawSensorId)
+          .addExpectedCharacteristic('illuminance_raw', hap.Characteristic.CurrentAmbientLightLevel);
+        newHarness
+          .getOrAddHandler(hap.Service.LightSensor, 'illuminance_avg', illuminanceAvgSensorId)
+          .addExpectedCharacteristic('illuminance_average_20min', hap.Characteristic.CurrentAmbientLightLevel);
+        newHarness
+          .getOrAddHandler(hap.Service.LightSensor, 'illuminance_max', illuminanceMaxSensorId)
+          .addExpectedCharacteristic('illuminance_maximum_today', hap.Characteristic.CurrentAmbientLightLevel);
+        newHarness
+          .getOrAddHandler(hap.Service.ContactSensor, 'cleaning', cleaningSensorId)
+          .addExpectedCharacteristic('cleaning_reminder', hap.Characteristic.ContactSensorState);
+
+        newHarness.prepareCreationMocks();
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
+        newHarness.checkExpectedGetableKeys([]);
+        harness = newHarness;
+      }
+      harness?.clearMocks();
+    });
+
+    afterEach(() => {
+      vi.resetAllMocks();
+    });
+
+    test('Update rain', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"rain":false}',
+        rainSensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED
+      );
+      harness.clearMocks();
+      harness.checkSingleUpdateState(
+        '{"rain":true}',
+        rainSensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_DETECTED
+      );
+    });
+
+    test('Update rain intensity', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"rain_intensity":100}', rainIntensitySensorId, hap.Characteristic.CurrentAmbientLightLevel, 100);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"rain_intensity":500}', rainIntensitySensorId, hap.Characteristic.CurrentAmbientLightLevel, 500);
+    });
+
+    test('Update illuminance raw', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"illuminance_raw":1000}', illuminanceRawSensorId, hap.Characteristic.CurrentAmbientLightLevel, 1000);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"illuminance_raw":5000}', illuminanceRawSensorId, hap.Characteristic.CurrentAmbientLightLevel, 5000);
+    });
+
+    test('Update illuminance average', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"illuminance_average_20min":2000}',
+        illuminanceAvgSensorId,
+        hap.Characteristic.CurrentAmbientLightLevel,
+        2000
+      );
+      harness.clearMocks();
+      harness.checkSingleUpdateState(
+        '{"illuminance_average_20min":3500}',
+        illuminanceAvgSensorId,
+        hap.Characteristic.CurrentAmbientLightLevel,
+        3500
+      );
+    });
+
+    test('Update illuminance maximum', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"illuminance_maximum_today":8000}',
+        illuminanceMaxSensorId,
+        hap.Characteristic.CurrentAmbientLightLevel,
+        8000
+      );
+      harness.clearMocks();
+      harness.checkSingleUpdateState(
+        '{"illuminance_maximum_today":10000}',
+        illuminanceMaxSensorId,
+        hap.Characteristic.CurrentAmbientLightLevel,
+        10000
+      );
+    });
+
+    test('Update cleaning reminder', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"cleaning_reminder":false}',
+        cleaningSensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED
+      );
+      harness.clearMocks();
+      harness.checkSingleUpdateState(
+        '{"cleaning_reminder":true}',
+        cleaningSensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_DETECTED
+      );
+    });
+  });
 });

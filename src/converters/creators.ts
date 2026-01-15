@@ -11,6 +11,7 @@ import { StatelessProgrammableSwitchCreator } from './action';
 import { ThermostatCreator } from './climate';
 import { AirQualitySensorCreator } from './air_quality';
 import { AirPurifierCreator } from './air_purifier';
+import { ElectricalSensorCreator } from './electrical';
 
 export interface ServiceCreatorManager {
   createHomeKitEntitiesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
@@ -33,6 +34,7 @@ export class BasicServiceCreatorManager
     BasicSensorCreator,
     AirQualitySensorCreator,
     AirPurifierCreator,
+    ElectricalSensorCreator,
     StatelessProgrammableSwitchCreator,
     ThermostatCreator,
     BatteryCreator,

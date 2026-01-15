@@ -1,0 +1,88 @@
+[
+  {
+    "ieee_address": "0x00178d0009876543",
+    "friendly_name": "test_light",
+    "type": "Router",
+    "network_address": 1234,
+    "supported": true,
+    "disabled": false,
+    "definition": {
+      "vendor": "Philips",
+      "model": "8718696449691",
+      "description": "Hue White Single bulb B22",
+      "exposes": [
+        {
+          "type": "light",
+          "features": [
+            {
+              "name": "state",
+              "label": "State",
+              "access": 7,
+              "type": "binary",
+              "property": "state",
+              "description": "On/off state of this light",
+              "value_on": "ON",
+              "value_off": "OFF",
+              "value_toggle": "TOGGLE"
+            },
+            {
+              "name": "brightness",
+              "label": "Brightness",
+              "access": 7,
+              "type": "numeric",
+              "property": "brightness",
+              "description": "Brightness of this light",
+              "value_max": 254,
+              "value_min": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "ieee_address": "0x00158d0001234567",
+    "friendly_name": "test_sensor",
+    "type": "EndDevice",
+    "network_address": 5678,
+    "supported": true,
+    "disabled": false,
+    "definition": {
+      "vendor": "Aqara",
+      "model": "WSDCGQ12LM",
+      "description": "Temperature and humidity sensor",
+      "exposes": [
+        {
+          "name": "temperature",
+          "label": "Temperature",
+          "access": 1,
+          "type": "numeric",
+          "property": "temperature",
+          "description": "Measured temperature value",
+          "unit": "\u00b0C"
+        },
+        {
+          "name": "humidity",
+          "label": "Humidity",
+          "access": 1,
+          "type": "numeric",
+          "property": "humidity",
+          "description": "Measured relative humidity",
+          "unit": "%"
+        },
+        {
+          "name": "battery",
+          "label": "Battery",
+          "access": 1,
+          "type": "numeric",
+          "property": "battery",
+          "description": "Remaining battery in %, can take up to 24 hours before reported",
+          "category": "diagnostic",
+          "unit": "%",
+          "value_max": 100,
+          "value_min": 0
+        }
+      ]
+    }
+  }
+]

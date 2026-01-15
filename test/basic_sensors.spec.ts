@@ -1,8 +1,7 @@
-import { resetAllWhenMocks, verifyAllWhenMocksCalled } from 'jest-when';
+import { vi } from 'vitest';
 import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
-import * as hapNodeJs from 'hap-nodejs';
-import 'jest-chain';
+import * as hapNodeJs from '@homebridge/hap-nodejs';
 import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 import { Characteristic, CharacteristicValue, WithUUID } from 'homebridge';
 
@@ -52,8 +51,7 @@ describe('Basic Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Update device temperature', (): void => {
@@ -128,8 +126,7 @@ describe('Basic Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status updates', (): void => {
@@ -212,8 +209,7 @@ describe('Basic Sensors', () => {
       });
 
       afterEach(() => {
-        verifyAllWhenMocksCalled();
-        resetAllWhenMocks();
+        vi.resetAllMocks();
       });
 
       test('Update occupancy', (): void => {
@@ -279,8 +275,7 @@ describe('Basic Sensors', () => {
       });
 
       afterEach(() => {
-        verifyAllWhenMocksCalled();
-        resetAllWhenMocks();
+        vi.resetAllMocks();
       });
 
       test('Update motion', (): void => {
@@ -320,8 +315,7 @@ describe('Basic Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Update contact', (): void => {
@@ -375,8 +369,7 @@ describe('Basic Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Update state', (): void => {
@@ -449,8 +442,7 @@ describe('Basic Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
     test('Update battery and tamper', (): void => {
       expect(harness).toBeDefined();
@@ -580,8 +572,7 @@ describe('Basic Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Update vibration', (): void => {
@@ -624,8 +615,7 @@ describe('Basic Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Update presence', (): void => {
@@ -680,8 +670,7 @@ describe('Basic Sensors', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Update moving', (): void => {

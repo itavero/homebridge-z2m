@@ -24,6 +24,8 @@ export interface BasicAccessory {
   getConverterConfiguration(tag: string): unknown | undefined;
 
   configureController(controller: Controller): void;
+
+  removeController(controller: Controller): void;
 }
 
 export interface ServiceHandler {

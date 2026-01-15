@@ -1,8 +1,7 @@
-import { resetAllWhenMocks, verifyAllWhenMocksCalled } from 'jest-when';
+import { vi } from 'vitest';
 import { ExposesEntry } from '../src/z2mModels';
 import { setHap, hap } from '../src/hap';
-import * as hapNodeJs from 'hap-nodejs';
-import 'jest-chain';
+import * as hapNodeJs from '@homebridge/hap-nodejs';
 import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 
 describe('Switch', () => {
@@ -20,7 +19,7 @@ describe('Switch', () => {
         // Only test service creation for first test case and reuse harness afterwards
         if (deviceExposes.length === 0 && harness === undefined) {
           // Load exposes from JSON
-          deviceExposes = loadExposesFromFile('ikea/e1603_e1702_e1708.json');
+          deviceExposes = loadExposesFromFile('ikea/e160x_e170x_e190x.json');
           expect(deviceExposes.length).toBeGreaterThan(0);
           const newHarness = new ServiceHandlersTestHarness();
 
@@ -38,8 +37,7 @@ describe('Switch', () => {
       });
 
       afterEach(() => {
-        verifyAllWhenMocksCalled();
-        resetAllWhenMocks();
+        vi.resetAllMocks();
       });
 
       describe('Status update is handled:', () => {
@@ -81,7 +79,7 @@ describe('Switch', () => {
         // Only test service creation for first test case and reuse harness afterwards
         if (deviceExposes.length === 0 && harness === undefined) {
           // Load exposes from JSON
-          deviceExposes = loadExposesFromFile('ikea/e1603_e1702_e1708.json');
+          deviceExposes = loadExposesFromFile('ikea/e160x_e170x_e190x.json');
           const newHarness = new ServiceHandlersTestHarness();
 
           // Check service creation
@@ -100,8 +98,7 @@ describe('Switch', () => {
       });
 
       afterEach(() => {
-        verifyAllWhenMocksCalled();
-        resetAllWhenMocks();
+        vi.resetAllMocks();
       });
 
       test('Status update is handled: On', () => {
@@ -160,8 +157,7 @@ describe('Switch', () => {
     });
 
     afterEach(() => {
-      verifyAllWhenMocksCalled();
-      resetAllWhenMocks();
+      vi.resetAllMocks();
     });
 
     test('Status update is handled: On (L1)', () => {

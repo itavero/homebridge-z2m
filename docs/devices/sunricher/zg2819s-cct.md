@@ -40,6 +40,16 @@ This is the information provided by Zigbee2MQTT for this device:
     "value_min": 0
   },
   {
+    "name": "voltage",
+    "label": "Voltage",
+    "access": 1,
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Voltage of the battery in millivolts",
+    "category": "diagnostic",
+    "unit": "mV"
+  },
+  {
     "name": "action",
     "label": "Action",
     "access": 1,
@@ -48,21 +58,20 @@ This is the information provided by Zigbee2MQTT for this device:
     "description": "Triggered action (e.g. a button click)",
     "category": "diagnostic",
     "values": [
-      "color_move",
-      "color_temperature_move",
-      "hue_move",
-      "brightness_step_up",
-      "brightness_step_down",
-      "recall_*",
       "on",
       "off",
-      "toggle",
-      "brightness_stop",
+      "brightness_step_up",
+      "brightness_step_down",
       "brightness_move_up",
       "brightness_move_down",
+      "brightness_stop",
+      "recall_*",
+      "hue_move",
+      "hue_stop",
+      "color_move",
+      "color_temperature_move",
       "color_loop_set",
-      "enhanced_move_to_hue_and_saturation",
-      "hue_stop"
+      "enhanced_move_to_hue_and_saturation"
     ]
   }
 ]

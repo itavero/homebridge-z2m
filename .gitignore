@@ -140,3 +140,12 @@ reports/
 _*.json
 **/_*.ts
 .DS_Store
+
+# Claude, Copilot and other agents
+*.local.md
+*.local.json
+.claude/local/
+.copilot/config.json
+
+# Smoke test isolated Homebridge installation
+.smoketest/

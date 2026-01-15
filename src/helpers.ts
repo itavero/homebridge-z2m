@@ -12,6 +12,28 @@ export function errorToString(e: unknown): string {
 }
 
 /**
+ * Parse bridge/state payload from Zigbee2MQTT and return online status.
+ * Supports both z2m 2.0+ JSON format ({"state":"online"}) and legacy plain string format ("online").
+ * @param payload The raw payload string from MQTT
+ * @returns true if Zigbee2MQTT is online, false otherwise
+ */
+export function parseBridgeOnlineState(payload: string): boolean {
+  let state: string;
+  try {
+    const parsed = JSON.parse(payload);
+    if (parsed && typeof parsed === 'object' && typeof parsed.state === 'string') {
+      state = parsed.state;
+    } else {
+      state = payload;
+    }
+  } catch {
+    // Not valid JSON, treat as plain string format (legacy z2m versions)
+    state = payload;
+  }
+  return state !== 'offline';
+}
+
+/**
  * Added because of the following warning from HAP-NodeJS:
  * "The accessory '<SOME NAME HERE>' has an invalid 'Name' characteristic ('<SOME NAME HERE>'). Please use only alphanumeric, space, and
  * apostrophe characters. Ensure it starts and ends with an alphabetic or numeric character, and avoid emojis. This may prevent the

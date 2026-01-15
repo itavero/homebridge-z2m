@@ -7,6 +7,23 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Changed
+
+- Updated MQTT topic handling for Zigbee2MQTT 2.0 compatibility:
+  - The `bridge/state` topic now supports both JSON format (`{"state":"online"}`) and plain strings for backwards compatibility
+  - The deprecated `bridge/config` topic is no longer handled (use `bridge/info` instead)
+
+- Adaptive Lighting is now **enabled by default** for lights with a Color Temperature characteristic.
+  Set `adaptive_lighting` to `false` in the converter configuration to disable it.
+  (see [#1146](https://github.com/itavero/homebridge-z2m/pull/1146))
+- Reset the cached color temperature for Adaptive Lighting when the light is turned on or when brightness is changed via HomeKit, ensuring the next Adaptive Lighting update is sent to the light.
+
+### Added
+
+- New `min_delta` option for Adaptive Lighting configuration, allowing you to set a minimum difference in color temperature (in mired) before sending an update to reduce MQTT traffic. Defaults to `1`.
+- New `enabled` option for Adaptive Lighting configuration, allowing explicit enable/disable control within an object configuration.
+- Expose electrical measurement properties (`power`, `voltage`, `current`, `energy`, `produced_energy`) using Eve-compatible custom characteristics, visible in the Eve app and other HomeKit apps that support custom characteristics. (see [#505](https://github.com/itavero/homebridge-z2m/issues/505))
+
 ## [1.11.0-beta.10] - 2025-01-25
 
 ### Added

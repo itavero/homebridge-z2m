@@ -21,6 +21,8 @@ these devices
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Light Sensor](../../sensors.md)
+  * Current Ambient Light Level
 * [Window Covering](../../cover.md)
   * Current Position
   * Hold Position

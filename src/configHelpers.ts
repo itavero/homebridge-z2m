@@ -7,7 +7,7 @@ import { BasicLogger } from './logger';
  * @returns True if availability is configured
  */
 export function isAvailabilityEnabledGlobally(config: Record<string, any>): boolean {
-  const availabilityEnabled = config.availability || config.advanced?.availability_timeout;
+  const availabilityEnabled = config.availability?.enabled || config.advanced?.availability_timeout;
   if (!availabilityEnabled) {
     return false;
   }
@@ -77,6 +77,7 @@ function getAvailabilityFromDeviceConfigurations(config: Record<string, any>, lo
       }
     }
   }
+
   return result;
 }
 

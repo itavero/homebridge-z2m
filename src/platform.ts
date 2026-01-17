@@ -363,7 +363,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       }
 
       // Check availability configuration
-      this.processAvailabilityConfig(info);
+      this.processAvailabilityConfig(info?.config ?? {});
     }
   }
 

@@ -7,15 +7,19 @@ import { BasicLogger } from './logger';
  * @returns True if availability is configured
  */
 export function isAvailabilityEnabledGlobally(config: Record<string, any>): boolean {
-  const availabilityEnabled = config.availability?.enabled || config.advanced?.availability_timeout;
-  if (!availabilityEnabled) {
-    return false;
+  if (typeof config.availability === 'object') {
+    // In zigbee2mqtt v3+, availability is always an object with 'enabled' property
+    // Default to true if enabled is not explicitly set (for backward compatibility)
+    return config?.availability?.enabled ?? true;
   }
 
-  let passList = config.advanced?.availability_passlist ?? [];
-  passList = passList.concat(config.advanced?.availability_whitelist ?? []);
-  // If a pass list is defined, availability cannot be considered globally enabled.
-  return passList.length === 0;
+  // Check for new availability structure (availability.enabled)
+  if (typeof config.availability === 'boolean') {
+    return config.availability;
+  }
+
+  // Legacy: check for advanced.availability_timeout (deprecated but may still exist in older configs)
+  return !!config.advanced?.availability_timeout;
 }
 
 /**
@@ -29,40 +33,16 @@ export interface BooleanDeviceList {
 /**
  * Check if availability is explicitly enabled or disabled for any devices.
  * Based on utils.isAvailabilityEnabledForEntity from Zigbee2MQTT code base.
+ * Legacy passlist/blocklist/whitelist/blacklist were removed in zigbee2mqtt v2.
  * @param config config part of the object published to bridge/info
  * @param logger BasicLogger
  */
 export function getAvailabilityConfigurationForDevices(config: Record<string, any>, logger?: BasicLogger): BooleanDeviceList {
-  const result = getAvailabilityFromDeviceConfigurations(config, logger);
-
-  // Also check availability_passlist, availability_blocklist, availability_whitelist and availability_blacklist.
-  if ('advanced' in config) {
-    let passList = config.advanced.availability_passlist ?? [];
-    passList = passList.concat(config.advanced.availability_whitelist ?? []);
-    if (passList.length > 0) {
-      // Add all entries from pass list to result.enabled
-      for (const device of passList) {
-        _logAvailabilityConfigForDevice(logger, device, true, 'pass list');
-        result.enabled.push(device);
-      }
-    } else {
-      // Block list only used if pass list is not defined.
-      let blockList = config.advanced.availability_blocklist ?? [];
-      blockList = blockList.concat(config.advanced.availability_blacklist ?? []);
-      for (const device of blockList) {
-        _logAvailabilityConfigForDevice(logger, device, false, 'block list');
-        result.disabled.push(device);
-      }
-    }
-  }
-  return result;
-}
-
-function getAvailabilityFromDeviceConfigurations(config: Record<string, any>, logger: BasicLogger | undefined): BooleanDeviceList {
   const result = {
     enabled: new Array<string>(),
     disabled: new Array<string>(),
   };
+
   if ('devices' in config && typeof config.devices === 'object') {
     for (const device of Object.keys(config.devices)) {
       if (config.devices[device].availability !== undefined) {

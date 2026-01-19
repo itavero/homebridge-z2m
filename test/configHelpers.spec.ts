@@ -34,24 +34,6 @@ describe('Zigbee2MQTT Config Helper functions', () => {
       };
       expect(isAvailabilityEnabledGlobally(config)).toBe(true);
     });
-    test('availability (simple) set to true with empty passlist', () => {
-      const config: object = {
-        availability: true,
-        advanced: {
-          availability_passlist: [],
-        },
-      };
-      expect(isAvailabilityEnabledGlobally(config)).toBe(true);
-    });
-    test('availability (simple) set to true with non-empty passlist', () => {
-      const config: object = {
-        availability: true,
-        advanced: {
-          availability_passlist: ['0x1234'],
-        },
-      };
-      expect(isAvailabilityEnabledGlobally(config)).toBe(false);
-    });
     test('availability (advanced) timeout set for active devices', () => {
       const config: object = {
         availability: {
@@ -81,7 +63,7 @@ describe('Zigbee2MQTT Config Helper functions', () => {
   });
 
   describe('getAvailabilityConfigurationForDevices', () => {
-    test('devices and pass list, block list ignored', () => {
+    test('devices with availability configuration (legacy passlist/blocklist no longer supported)', () => {
       const config = {
         devices: {
           device_a: {
@@ -95,6 +77,7 @@ describe('Zigbee2MQTT Config Helper functions', () => {
           },
         },
         advanced: {
+          // These legacy settings are ignored (removed in zigbee2mqtt v2)
           availability_passlist: ['device_d', 'device_e'],
           availability_whitelist: ['device_f'],
           availability_blocklist: ['device_g', 'device_h'],
@@ -102,33 +85,9 @@ describe('Zigbee2MQTT Config Helper functions', () => {
       };
 
       const result = getAvailabilityConfigurationForDevices(config);
-      const expect_enabled = ['device_a', 'device_d', 'device_e', 'device_f'].sort();
+      // Only device-specific config is used, legacy passlist/blocklist are ignored
+      const expect_enabled = ['device_a'].sort();
       const expect_disabled = ['device_b'].sort();
-      expect(result.enabled.sort()).toEqual(expect_enabled);
-      expect(result.disabled.sort()).toEqual(expect_disabled);
-    });
-    test('devices and block list, empty pass list', () => {
-      const config = {
-        devices: {
-          device_a: {
-            availability: false,
-          },
-          device_b: {
-            availability: true,
-          },
-          device_c: {
-            transition: 4,
-          },
-        },
-        advanced: {
-          availability_blocklist: ['device_d', 'device_e'],
-          availability_blacklist: ['device_f', 'device_g'],
-        },
-      };
-
-      const result = getAvailabilityConfigurationForDevices(config);
-      const expect_enabled = ['device_b'].sort();
-      const expect_disabled = ['device_a', 'device_d', 'device_e', 'device_f', 'device_g'].sort();
       expect(result.enabled.sort()).toEqual(expect_enabled);
       expect(result.disabled.sort()).toEqual(expect_disabled);
     });

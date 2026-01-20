@@ -8,12 +8,10 @@ import { BasicLogger } from './logger';
  */
 export function isAvailabilityEnabledGlobally(config: Record<string, any>): boolean {
   if (typeof config.availability === 'object') {
-    // In zigbee2mqtt v3+, availability is always an object with 'enabled' property
     // Default to true if enabled is not explicitly set (for backward compatibility)
     return config?.availability?.enabled ?? true;
   }
 
-  // Check for new availability structure (availability.enabled)
   if (typeof config.availability === 'boolean') {
     return config.availability;
   }

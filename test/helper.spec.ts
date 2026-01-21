@@ -1,4 +1,4 @@
-import { getAllEndpoints, parseBridgeOnlineState, sanitizeAndFilterExposesEntries } from '../src/helpers';
+import { getAllEndpoints, parseBridgeOnlineState, parseDeviceAvailability, sanitizeAndFilterExposesEntries } from '../src/helpers';
 import { exposesCollectionsAreEqual, normalizeExposes } from '../src/z2mModels';
 import { loadExposesFromFile } from './testHelpers';
 
@@ -34,6 +34,66 @@ describe('Helper functions', () => {
 
     test('returns true for JSON null (assumes online)', () => {
       expect(parseBridgeOnlineState('null')).toBe(true);
+    });
+  });
+
+  describe('parseDeviceAvailability', () => {
+    test('returns true for z2m 2.0+ JSON format with state online', () => {
+      expect(parseDeviceAvailability('{"state":"online"}')).toBe(true);
+    });
+
+    test('returns false for z2m 2.0+ JSON format with state offline', () => {
+      expect(parseDeviceAvailability('{"state":"offline"}')).toBe(false);
+    });
+
+    test('returns true for legacy plain string format online', () => {
+      expect(parseDeviceAvailability('online')).toBe(true);
+    });
+
+    test('returns false for legacy plain string format offline', () => {
+      expect(parseDeviceAvailability('offline')).toBe(false);
+    });
+
+    test('returns false for JSON without state property', () => {
+      expect(parseDeviceAvailability('{"foo":"bar"}')).toBe(false);
+    });
+
+    test('returns false for empty JSON object', () => {
+      expect(parseDeviceAvailability('{}')).toBe(false);
+    });
+
+    test('handles legacy nested availability.state format (online)', () => {
+      expect(parseDeviceAvailability('{"availability":{"state":"online"}}')).toBe(true);
+    });
+
+    test('handles legacy nested availability.state format (offline)', () => {
+      expect(parseDeviceAvailability('{"availability":{"state":"offline"}}')).toBe(false);
+    });
+
+    test('uses precedence: top-level state takes priority over nested', () => {
+      // When top-level state exists, it takes precedence
+      expect(parseDeviceAvailability('{"state":"online","availability":{"state":"offline"}}')).toBe(true);
+      expect(parseDeviceAvailability('{"state":"offline","availability":{"state":"online"}}')).toBe(false);
+    });
+
+    test('falls back to nested availability.state when top-level state is absent', () => {
+      // Only uses nested when top-level is not present
+      expect(parseDeviceAvailability('{"availability":{"state":"online"}}')).toBe(true);
+      expect(parseDeviceAvailability('{"availability":{"state":"offline"}}')).toBe(false);
+    });
+
+    test('handles JSON with additional properties', () => {
+      expect(parseDeviceAvailability('{"state":"online","last_seen":1234567890}')).toBe(true);
+      expect(parseDeviceAvailability('{"state":"offline","last_seen":1234567890}')).toBe(false);
+    });
+
+    test('returns false for empty string', () => {
+      expect(parseDeviceAvailability('')).toBe(false);
+    });
+
+    test('returns false for non-matching plain strings', () => {
+      expect(parseDeviceAvailability('available')).toBe(false);
+      expect(parseDeviceAvailability('true')).toBe(false);
     });
   });
 

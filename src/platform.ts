@@ -23,14 +23,14 @@ import {
   isDeviceListEntryForGroup,
 } from './z2mModels';
 import * as semver from 'semver';
-import { errorToString, getDiffFromArrays, parseBridgeOnlineState, sanitizeAccessoryName } from './helpers';
+import { errorToString, getDiffFromArrays, parseBridgeOnlineState, parseDeviceAvailability, sanitizeAccessoryName } from './helpers';
 import { BasicServiceCreatorManager } from './converters/creators';
 import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from './configHelpers';
 import { BasicLogger } from './logger';
 import { ConfigurableLogger } from './configurableLogger';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
-  private static readonly MIN_Z2M_VERSION = '1.17.0';
+  private static readonly MIN_Z2M_VERSION = '2.0.0';
   private static readonly TOPIC_BRIDGE = 'bridge/';
   private static readonly TOPIC_SUFFIX_AVAILABILITY = '/availability';
 
@@ -363,7 +363,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       }
 
       // Check availability configuration
-      this.processAvailabilityConfig(info);
+      this.processAvailabilityConfig(info?.config ?? {});
     }
   }
 
@@ -414,16 +414,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private async handleDeviceAvailability(topic: string, statePayload: string) {
-    // Check if payload is a JSON object or a plain string
-    let isAvailable = false;
-    if (statePayload.includes('{')) {
-      const json = JSON.parse(statePayload);
-      if (json !== undefined && 'availability' in json && json.availability !== undefined && 'state' in json.availability) {
-        isAvailable = json.availability.state === 'online';
-      }
-    } else {
-      isAvailable = statePayload === 'online';
-    }
+    const isAvailable = parseDeviceAvailability(statePayload);
     const deviceTopic = topic.slice(0, -1 * Zigbee2mqttPlatform.TOPIC_SUFFIX_AVAILABILITY.length);
     const accessory = this.accessories.find((acc) => acc.matchesIdentifier(deviceTopic));
     if (accessory) {

@@ -34,6 +34,43 @@ export function parseBridgeOnlineState(payload: string): boolean {
 }
 
 /**
+ * Parse device availability payload from Zigbee2MQTT and return availability status.
+ * According to Zigbee2MQTT source code (lib/extension/availability.ts), availability payloads are:
+ * - JSON format: {"state":"online"} or {"state":"offline"}
+ * - Legacy plain string format: "online" or "offline"
+ *
+ * Uses precedence logic: checks top-level state first, falls back to nested availability.state only if absent.
+ * @param payload The raw payload string from MQTT
+ * @returns true if device is available (online), false otherwise
+ */
+export function parseDeviceAvailability(payload: string): boolean {
+  // Handle plain string format (legacy)
+  if (!payload.includes('{')) {
+    return payload === 'online';
+  }
+
+  // Handle JSON format
+  try {
+    const json = JSON.parse(payload);
+    if (json !== undefined && typeof json === 'object') {
+      // Check top-level state first (current Zigbee2MQTT format)
+      if ('state' in json && typeof json.state === 'string') {
+        return json.state === 'online';
+      }
+      // Fall back to nested availability.state if top-level state is absent
+      if ('availability' in json && json.availability && typeof json.availability === 'object' && 'state' in json.availability) {
+        return json.availability.state === 'online';
+      }
+    }
+  } catch {
+    // Invalid JSON, treat as unavailable
+    return false;
+  }
+
+  return false;
+}
+
+/**
  * Added because of the following warning from HAP-NodeJS:
  * "The accessory '<SOME NAME HERE>' has an invalid 'Name' characteristic ('<SOME NAME HERE>'). Please use only alphanumeric, space, and
  * apostrophe characters. Ensure it starts and ends with an alphabetic or numeric character, and avoid emojis. This may prevent the

@@ -37,6 +37,76 @@ describe('Helper functions', () => {
     });
   });
 
+  describe('parseDeviceAvailability', () => {
+    const parseDeviceAvailability = (statePayload: string): boolean => {
+      let isAvailable = false;
+      if (statePayload.includes('{')) {
+        const json = JSON.parse(statePayload);
+        if (json !== undefined) {
+          isAvailable = json.state === 'online' || json.availability?.state === 'online';
+        }
+      } else {
+        isAvailable = statePayload === 'online';
+      }
+      return isAvailable;
+    };
+
+    test('returns true for z2m 2.0+ JSON format with state online', () => {
+      expect(parseDeviceAvailability('{"state":"online"}')).toBe(true);
+    });
+
+    test('returns false for z2m 2.0+ JSON format with state offline', () => {
+      expect(parseDeviceAvailability('{"state":"offline"}')).toBe(false);
+    });
+
+    test('returns true for legacy plain string format online', () => {
+      expect(parseDeviceAvailability('online')).toBe(true);
+    });
+
+    test('returns false for legacy plain string format offline', () => {
+      expect(parseDeviceAvailability('offline')).toBe(false);
+    });
+
+    test('returns false for JSON without state property', () => {
+      expect(parseDeviceAvailability('{"foo":"bar"}')).toBe(false);
+    });
+
+    test('returns false for empty JSON object', () => {
+      expect(parseDeviceAvailability('{}')).toBe(false);
+    });
+
+    test('handles legacy nested availability.state format (online)', () => {
+      expect(parseDeviceAvailability('{"availability":{"state":"online"}}')).toBe(true);
+    });
+
+    test('handles legacy nested availability.state format (offline)', () => {
+      expect(parseDeviceAvailability('{"availability":{"state":"offline"}}')).toBe(false);
+    });
+
+    test('prefers top-level state when both formats present', () => {
+      // Top-level state="online" should make device available even if nested is offline
+      expect(parseDeviceAvailability('{"state":"online","availability":{"state":"offline"}}')).toBe(true);
+    });
+
+    test('returns true if either state path is online (OR logic)', () => {
+      expect(parseDeviceAvailability('{"state":"offline","availability":{"state":"online"}}')).toBe(true);
+    });
+
+    test('handles JSON with additional properties', () => {
+      expect(parseDeviceAvailability('{"state":"online","last_seen":1234567890}')).toBe(true);
+      expect(parseDeviceAvailability('{"state":"offline","last_seen":1234567890}')).toBe(false);
+    });
+
+    test('returns false for empty string', () => {
+      expect(parseDeviceAvailability('')).toBe(false);
+    });
+
+    test('returns false for non-matching plain strings', () => {
+      expect(parseDeviceAvailability('available')).toBe(false);
+      expect(parseDeviceAvailability('true')).toBe(false);
+    });
+  });
+
   test('Add missing endpoints to ExposesEntry', () => {
     const exposes = loadExposesFromFile('aqara/znddmk11lm.json');
     const sanitized = sanitizeAndFilterExposesEntries(exposes);

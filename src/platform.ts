@@ -418,8 +418,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     let isAvailable = false;
     if (statePayload.includes('{')) {
       const json = JSON.parse(statePayload);
-      if (json !== undefined && 'availability' in json && json.availability !== undefined && 'state' in json.availability) {
-        isAvailable = json.availability.state === 'online';
+      if (json !== undefined) {
+        // {'state': 'online'} is the new format while {'availability': {'state': 'online'}} is the old one
+        isAvailable = json.state === 'online' || json.availability?.state === 'online';
       }
     } else {
       isAvailable = statePayload === 'online';

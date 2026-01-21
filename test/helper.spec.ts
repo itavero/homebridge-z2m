@@ -1,4 +1,4 @@
-import { getAllEndpoints, parseBridgeOnlineState, sanitizeAndFilterExposesEntries } from '../src/helpers';
+import { getAllEndpoints, parseBridgeOnlineState, parseDeviceAvailability, sanitizeAndFilterExposesEntries } from '../src/helpers';
 import { exposesCollectionsAreEqual, normalizeExposes } from '../src/z2mModels';
 import { loadExposesFromFile } from './testHelpers';
 
@@ -38,19 +38,6 @@ describe('Helper functions', () => {
   });
 
   describe('parseDeviceAvailability', () => {
-    const parseDeviceAvailability = (statePayload: string): boolean => {
-      let isAvailable = false;
-      if (statePayload.includes('{')) {
-        const json = JSON.parse(statePayload);
-        if (json !== undefined) {
-          isAvailable = json.state === 'online' || json.availability?.state === 'online';
-        }
-      } else {
-        isAvailable = statePayload === 'online';
-      }
-      return isAvailable;
-    };
-
     test('returns true for z2m 2.0+ JSON format with state online', () => {
       expect(parseDeviceAvailability('{"state":"online"}')).toBe(true);
     });
@@ -83,13 +70,16 @@ describe('Helper functions', () => {
       expect(parseDeviceAvailability('{"availability":{"state":"offline"}}')).toBe(false);
     });
 
-    test('prefers top-level state when both formats present', () => {
-      // Top-level state="online" should make device available even if nested is offline
+    test('uses precedence: top-level state takes priority over nested', () => {
+      // When top-level state exists, it takes precedence
       expect(parseDeviceAvailability('{"state":"online","availability":{"state":"offline"}}')).toBe(true);
+      expect(parseDeviceAvailability('{"state":"offline","availability":{"state":"online"}}')).toBe(false);
     });
 
-    test('returns true if either state path is online (OR logic)', () => {
-      expect(parseDeviceAvailability('{"state":"offline","availability":{"state":"online"}}')).toBe(true);
+    test('falls back to nested availability.state when top-level state is absent', () => {
+      // Only uses nested when top-level is not present
+      expect(parseDeviceAvailability('{"availability":{"state":"online"}}')).toBe(true);
+      expect(parseDeviceAvailability('{"availability":{"state":"offline"}}')).toBe(false);
     });
 
     test('handles JSON with additional properties', () => {

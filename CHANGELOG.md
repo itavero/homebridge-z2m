@@ -20,6 +20,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Added
 
+- Add support for `soil_moisture` (as Humidity Sensor) and `dry` (as Contact Sensor) exposes for the Aqara SMGQ11LM soil moisture sensor. (see [#1095](https://github.com/itavero/homebridge-z2m/pull/1095))
 - New `min_delta` option for Adaptive Lighting configuration, allowing you to set a minimum difference in color temperature (in mired) before sending an update to reduce MQTT traffic. Defaults to `1`.
 - New `enabled` option for Adaptive Lighting configuration, allowing explicit enable/disable control within an object configuration.
 - Expose electrical measurement properties (`power`, `voltage`, `current`, `energy`, `produced_energy`) using Eve-compatible custom characteristics, visible in the Eve app and other HomeKit apps that support custom characteristics. (see [#505](https://github.com/itavero/homebridge-z2m/issues/505))

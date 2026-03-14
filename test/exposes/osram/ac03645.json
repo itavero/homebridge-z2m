@@ -118,6 +118,15 @@
     "type": "enum",
     "property": "effect",
     "description": "Triggers an effect on the light (e.g. make light blink for a few seconds)",
-    "values": ["blink", "breathe", "okay", "channel_change", "finish_effect", "stop_effect", "colorloop", "stop_colorloop"]
+    "values": [
+      "blink",
+      "breathe",
+      "okay",
+      "channel_change",
+      "finish_effect",
+      "stop_effect",
+      "colorloop",
+      "stop_colorloop"
+    ]
   }
 ]

@@ -57,7 +57,11 @@
     "type": "enum",
     "property": "power_outage_memory",
     "description": "Recover state after power outage",
-    "values": ["on", "off", "restore"]
+    "values": [
+      "on",
+      "off",
+      "restore"
+    ]
   },
   {
     "name": "indicator_mode",
@@ -66,7 +70,12 @@
     "type": "enum",
     "property": "indicator_mode",
     "description": "LED indicator mode",
-    "values": ["off", "off/on", "on/off", "on"]
+    "values": [
+      "off",
+      "off/on",
+      "on/off",
+      "on"
+    ]
   },
   {
     "name": "linkquality",

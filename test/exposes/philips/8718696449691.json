@@ -33,7 +33,12 @@
     "property": "power_on_behavior",
     "description": "Controls the behavior when the device is powered on after power loss",
     "category": "config",
-    "values": ["off", "on", "toggle", "previous"]
+    "values": [
+      "off",
+      "on",
+      "toggle",
+      "previous"
+    ]
   },
   {
     "name": "effect",
@@ -41,6 +46,15 @@
     "access": 2,
     "type": "enum",
     "property": "effect",
-    "values": ["blink", "breathe", "okay", "channel_change", "candle", "finish_effect", "stop_effect", "stop_hue_effect"]
+    "values": [
+      "blink",
+      "breathe",
+      "okay",
+      "channel_change",
+      "candle",
+      "finish_effect",
+      "stop_effect",
+      "stop_hue_effect"
+    ]
   }
 ]

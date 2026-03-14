@@ -365,7 +365,7 @@ function generateExposesJson(basePath: string, device: ExtendedDeviceDefinition)
   const fileName = path.join(directory, `${normalizeName(device.model)}.json`);
 
   try {
-    fs.writeFileSync(fileName, JSON.stringify(device.exposes, null, 2) + '\n');
+    fs.writeFileSync(fileName, JSON.stringify(device.exposes, null, 2));
   } catch (err) {
     console.log(`Problem writing ${fileName}: ${err}`);
   }

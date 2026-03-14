@@ -28,7 +28,10 @@
     "type": "enum",
     "property": "operation_mode",
     "description": "Operation mode, select \"command\" to enable bindings (wake up the device before changing modes!)",
-    "values": ["command", "event"]
+    "values": [
+      "command",
+      "event"
+    ]
   },
   {
     "name": "power_outage_count",

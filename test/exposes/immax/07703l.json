@@ -67,7 +67,11 @@
         "type": "enum",
         "property": "system_mode",
         "description": "Mode of this device",
-        "values": ["off", "heat", "auto"]
+        "values": [
+          "off",
+          "heat",
+          "auto"
+        ]
       },
       {
         "name": "running_state",
@@ -76,7 +80,10 @@
         "type": "enum",
         "property": "running_state",
         "description": "The current running state",
-        "values": ["idle", "heat"]
+        "values": [
+          "idle",
+          "heat"
+        ]
       }
     ]
   }

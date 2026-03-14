@@ -8,7 +8,11 @@
         "access": 3,
         "type": "enum",
         "property": "state",
-        "values": ["OPEN", "CLOSE", "STOP"]
+        "values": [
+          "OPEN",
+          "CLOSE",
+          "STOP"
+        ]
       },
       {
         "name": "position",
@@ -31,7 +35,9 @@
     "property": "identify",
     "description": "Initiate device identification",
     "category": "config",
-    "values": ["identify"]
+    "values": [
+      "identify"
+    ]
   },
   {
     "name": "battery",

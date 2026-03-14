@@ -23,7 +23,12 @@
     "property": "power_on_behavior",
     "description": "Controls the behavior when the device is powered on after power loss",
     "category": "config",
-    "values": ["off", "on", "toggle", "previous"]
+    "values": [
+      "off",
+      "on",
+      "toggle",
+      "previous"
+    ]
   },
   {
     "name": "identify",
@@ -33,6 +38,8 @@
     "property": "identify",
     "description": "Initiate device identification",
     "category": "config",
-    "values": ["identify"]
+    "values": [
+      "identify"
+    ]
   }
 ]

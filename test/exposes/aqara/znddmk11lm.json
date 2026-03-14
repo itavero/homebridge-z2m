@@ -205,9 +205,6 @@
     "type": "enum",
     "property": "dimmer_mode",
     "description": "Switch between rgbw mode or dual color temperature mode",
-    "values": [
-      "rgbw",
-      "dual_ct"
-    ]
+    "values": ["rgbw", "dual_ct"]
   }
 ]

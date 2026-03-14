@@ -48,11 +48,7 @@
     "access": 3,
     "type": "enum",
     "property": "sensitivity",
-    "values": [
-      "low",
-      "medium",
-      "high"
-    ]
+    "values": ["low", "medium", "high"]
   },
   {
     "name": "smoke_density",
@@ -67,9 +63,7 @@
     "access": 2,
     "type": "enum",
     "property": "selftest",
-    "values": [
-      ""
-    ]
+    "values": [""]
   },
   {
     "name": "voltage",

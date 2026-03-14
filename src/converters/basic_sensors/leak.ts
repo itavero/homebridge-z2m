@@ -1,8 +1,8 @@
-import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../z2mModels';
 import { hap } from '../../hap';
-import { BinarySensorHandler } from './binary';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../z2mModels';
+import { BasicAccessory } from '../interfaces';
 import { IdentifierGenerator } from './basic';
+import { BinarySensorHandler } from './binary';
 
 abstract class LeakSensorHandler extends BinarySensorHandler {
   constructor(

@@ -44,11 +44,7 @@
     "property": "power_on_behavior_l1",
     "description": "Controls the behavior when the device is powered on after power loss",
     "category": "config",
-    "values": [
-      "off",
-      "previous",
-      "on"
-    ]
+    "values": ["off", "previous", "on"]
   },
   {
     "name": "power_on_behavior",
@@ -59,11 +55,7 @@
     "property": "power_on_behavior_l2",
     "description": "Controls the behavior when the device is powered on after power loss",
     "category": "config",
-    "values": [
-      "off",
-      "previous",
-      "on"
-    ]
+    "values": ["off", "previous", "on"]
   },
   {
     "name": "power",

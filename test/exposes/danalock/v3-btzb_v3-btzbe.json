@@ -19,11 +19,7 @@
         "type": "enum",
         "property": "lock_state",
         "description": "Actual state of the lock",
-        "values": [
-          "not_fully_locked",
-          "locked",
-          "unlocked"
-        ]
+        "values": ["not_fully_locked", "locked", "unlocked"]
       }
     ]
   },
@@ -61,13 +57,7 @@
         "type": "enum",
         "property": "user_type",
         "description": "Type of user, unrestricted: owner (default), (year|week)_day_schedule: user has ability to open lock based on specific time period, master: user has ability to both program and operate the door lock, non_access: user is recognized by the lock but does not have the ability to open the lock",
-        "values": [
-          "unrestricted",
-          "year_day_schedule",
-          "week_day_schedule",
-          "master",
-          "non_access"
-        ]
+        "values": ["unrestricted", "year_day_schedule", "week_day_schedule", "master", "non_access"]
       },
       {
         "name": "user_enabled",
@@ -122,12 +112,7 @@
     "type": "enum",
     "property": "action_source_name",
     "description": "Source of the triggered action on the lock",
-    "values": [
-      "keypad",
-      "rfid",
-      "manual",
-      "rf"
-    ]
+    "values": ["keypad", "rfid", "manual", "rf"]
   },
   {
     "name": "action_user",

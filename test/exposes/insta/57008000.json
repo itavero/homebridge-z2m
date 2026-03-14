@@ -8,11 +8,7 @@
         "access": 3,
         "type": "enum",
         "property": "state",
-        "values": [
-          "OPEN",
-          "CLOSE",
-          "STOP"
-        ]
+        "values": ["OPEN", "CLOSE", "STOP"]
       },
       {
         "name": "position",

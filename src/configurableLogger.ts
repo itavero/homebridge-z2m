@@ -1,4 +1,4 @@
-import { LogLevel, Logger } from 'homebridge';
+import { Logger, LogLevel } from 'homebridge';
 import { BasicLogger } from './logger';
 
 export class ConfigurableLogger implements BasicLogger {
@@ -26,7 +26,7 @@ export class ConfigurableLogger implements BasicLogger {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: logger message argument type
   log(level: LogLevel, message: string, ...parameters: any[]): void {
     if (this.debugAsInfo && level === LogLevel.DEBUG) {
       level = LogLevel.INFO;

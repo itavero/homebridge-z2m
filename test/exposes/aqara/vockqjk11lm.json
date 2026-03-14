@@ -38,14 +38,7 @@
     "type": "enum",
     "property": "air_quality",
     "description": "Measured air quality",
-    "values": [
-      "excellent",
-      "good",
-      "moderate",
-      "poor",
-      "unhealthy",
-      "unknown"
-    ]
+    "values": ["excellent", "good", "moderate", "poor", "unhealthy", "unknown"]
   },
   {
     "name": "voc",
@@ -82,11 +75,6 @@
     "property": "display_unit",
     "description": "Units to show on the display",
     "category": "config",
-    "values": [
-      "mgm3_celsius",
-      "ppb_celsius",
-      "mgm3_fahrenheit",
-      "ppb_fahrenheit"
-    ]
+    "values": ["mgm3_celsius", "ppb_celsius", "mgm3_fahrenheit", "ppb_fahrenheit"]
   }
 ]

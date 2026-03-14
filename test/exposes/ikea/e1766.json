@@ -7,9 +7,7 @@
     "property": "identify",
     "description": "Initiate device identification. This device is asleep by default.You may need to wake it up first before sending the identify command.",
     "category": "config",
-    "values": [
-      "identify"
-    ]
+    "values": ["identify"]
   },
   {
     "name": "battery",
@@ -31,10 +29,6 @@
     "property": "action",
     "description": "Triggered action (e.g. a button click)",
     "category": "diagnostic",
-    "values": [
-      "open",
-      "close",
-      "stop"
-    ]
+    "values": ["open", "close", "stop"]
   }
 ]

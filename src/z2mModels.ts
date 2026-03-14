@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export declare type MqttValue = string | boolean | number;
 
 const isNullOrUndefined = (x: unknown): x is null | undefined => x === null || x === undefined;
@@ -38,6 +37,7 @@ export enum ExposesKnownTypes {
   CLIMATE = 'climate',
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isExposesEntry = (x: any): x is ExposesEntry => {
   if (isNullOrUndefined(x) || isNullOrUndefined(x.type)) {
     return false;
@@ -298,6 +298,7 @@ export interface DeviceDefinition {
   exposes: ExposesEntry[];
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isDeviceDefinition = (x: any): x is DeviceDefinition =>
   !isNullOrUndefined(x) && x.vendor && x.model && Array.isArray(x.exposes);
 
@@ -314,8 +315,10 @@ export interface DeviceListEntryForGroup extends DeviceListEntry {
   group_id: number;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isDeviceListEntry = (x: any): x is DeviceListEntry =>
   !isNullOrUndefined(x) && x.ieee_address && x.friendly_name && typeof x.supported === 'boolean';
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isDeviceListEntryForGroup = (x: any): x is DeviceListEntryForGroup => {
   return isDeviceListEntry(x) && 'group_id' in x && typeof x['group_id'] === 'number';
 };
@@ -350,6 +353,7 @@ export interface GroupMember {
   endpoint: number;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isGroupMember = (x: any): x is GroupMember => !isNullOrUndefined(x) && x.ieee_address && x.endpoint;
 export interface GroupListEntry {
   friendly_name: string;
@@ -357,4 +361,5 @@ export interface GroupListEntry {
   members: GroupMember[];
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isGroupListEntry = (x: any): x is GroupListEntry => !isNullOrUndefined(x) && x.id && x.friendly_name && x.members;

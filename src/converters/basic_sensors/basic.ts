@@ -1,10 +1,10 @@
-import { BasicAccessory, ServiceHandler } from '../interfaces';
-import { exposesCanBeGet, ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, exposesIsPublished } from '../../z2mModels';
-import { CharacteristicMonitor, MappingCharacteristicMonitor } from '../monitor';
 import { Characteristic, CharacteristicValue, Service } from 'homebridge';
-import { getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
+import { getOrAddCharacteristic } from '../../helpers';
 import { BasicLogger } from '../../logger';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, exposesCanBeGet, exposesIsPublished } from '../../z2mModels';
+import { BasicAccessory, ServiceHandler } from '../interfaces';
+import { CharacteristicMonitor, MappingCharacteristicMonitor } from '../monitor';
 
 export type ServiceConstructor = (serviceName: string, subType: string | undefined) => Service;
 

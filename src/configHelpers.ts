@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BasicLogger } from './logger';
 
 /**
@@ -6,6 +5,7 @@ import { BasicLogger } from './logger';
  * @param config config part of the object published to bridge/info
  * @returns True if availability is configured
  */
+// biome-ignore lint/suspicious/noExplicitAny: config parsing function needs to accept any input
 export function isAvailabilityEnabledGlobally(config: Record<string, any>): boolean {
   const availabilityEnabled = config.availability || config.advanced?.availability_timeout;
   if (!availabilityEnabled) {
@@ -32,6 +32,7 @@ export interface BooleanDeviceList {
  * @param config config part of the object published to bridge/info
  * @param logger BasicLogger
  */
+// biome-ignore lint/suspicious/noExplicitAny: config parsing function needs to accept any input
 export function getAvailabilityConfigurationForDevices(config: Record<string, any>, logger?: BasicLogger): BooleanDeviceList {
   const result = getAvailabilityFromDeviceConfigurations(config, logger);
 
@@ -58,10 +59,11 @@ export function getAvailabilityConfigurationForDevices(config: Record<string, an
   return result;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: config parsing function needs to accept any input
 function getAvailabilityFromDeviceConfigurations(config: Record<string, any>, logger: BasicLogger | undefined): BooleanDeviceList {
   const result = {
-    enabled: new Array<string>(),
-    disabled: new Array<string>(),
+    enabled: [] as string[],
+    disabled: [] as string[],
   };
   if ('devices' in config && typeof config.devices === 'object') {
     for (const device of Object.keys(config.devices)) {

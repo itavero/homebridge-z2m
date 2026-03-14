@@ -1,16 +1,12 @@
-/* eslint-disable sonarjs/no-ignored-exceptions */
-/* eslint-disable sonarjs/slow-regex */
-/* eslint-disable no-console */
-/* eslint-disable max-len */
+import * as hapNodeJs from '@homebridge/hap-nodejs';
+import { Service, WithUUID } from '@homebridge/hap-nodejs';
 import fs from 'fs';
 import path from 'path';
 import { Definition, Expose, prepareDefinition } from 'zigbee-herdsman-converters';
 import { BasicServiceCreatorManager } from '../converters/creators';
-import { DocsAccessory } from './docs_accessory';
-import { ExposesEntry } from '../z2mModels';
-import * as hapNodeJs from '@homebridge/hap-nodejs';
 import { setHap } from '../hap';
-import { Service, WithUUID } from '@homebridge/hap-nodejs';
+import { ExposesEntry } from '../z2mModels';
+import { DocsAccessory } from './docs_accessory';
 import { version_herdsman_converters, version_zigbee2mqtt } from './versions';
 
 // Load all definitions from device files (zigbee-herdsman-converters no longer exports definitions directly)
@@ -22,7 +18,6 @@ function loadAllDefinitions(): Definition[] {
   let allDefs: Definition[] = [];
   for (const file of files) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const mod = require(path.join(devicesDir, file));
       if (mod.definitions && Array.isArray(mod.definitions)) {
         // Use prepareDefinition to process each definition and extract exposes from extensions
@@ -135,7 +130,6 @@ function addServiceMapping(service: WithUUID<new () => Service>, page?: string):
     for (const char of s.optionalCharacteristics) {
       characteristicNameMapping.set(char.UUID, makeClassNameHumanReadable(char.constructor.name));
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {
     // ignore
   }

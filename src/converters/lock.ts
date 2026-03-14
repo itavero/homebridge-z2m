@@ -1,22 +1,22 @@
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
+import { hap } from '../hap';
+import { getOrAddCharacteristic } from '../helpers';
 import {
-  exposesCanBeGet,
-  exposesCanBeSet,
   ExposesEntry,
   ExposesEntryWithBinaryProperty,
   ExposesEntryWithEnumProperty,
   ExposesEntryWithFeatures,
+  ExposesKnownTypes,
+  ExposesPredicate,
+  exposesCanBeGet,
+  exposesCanBeSet,
   exposesHasAllRequiredFeatures,
   exposesHasBinaryProperty,
   exposesHasEnumProperty,
   exposesHasFeatures,
   exposesIsPublished,
-  ExposesKnownTypes,
-  ExposesPredicate,
 } from '../z2mModels';
-import { hap } from '../hap';
-import { getOrAddCharacteristic } from '../helpers';
-import { Characteristic, CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
+import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
 
 export class LockCreator implements ServiceCreator {

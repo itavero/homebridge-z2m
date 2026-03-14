@@ -1,12 +1,11 @@
-import { hap } from '../hap';
-import { exposesHasEnumProperty, exposesIsPublished, exposesCanBeGet, ExposesEntry, ExposesEntryWithEnumProperty } from '../z2mModels';
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
-
-import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
 import { Characteristic, CharacteristicProps, CharacteristicValue } from 'homebridge';
+import { hap } from '../hap';
 import { getOrAddCharacteristic } from '../helpers';
-import { SwitchActionHelper, SwitchActionMapping } from './action_helper';
 import { BasicLogger } from '../logger';
+import { ExposesEntry, ExposesEntryWithEnumProperty, exposesCanBeGet, exposesHasEnumProperty, exposesIsPublished } from '../z2mModels';
+import { SwitchActionHelper, SwitchActionMapping } from './action_helper';
+import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
 
 export class StatelessProgrammableSwitchCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {

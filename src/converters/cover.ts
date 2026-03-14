@@ -1,21 +1,21 @@
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
+import { hap } from '../hap';
+import { getOrAddCharacteristic } from '../helpers';
+import { ExtendedTimer } from '../timer';
 import {
-  exposesCanBeGet,
-  exposesCanBeSet,
   ExposesEntry,
   ExposesEntryWithEnumProperty,
   ExposesEntryWithFeatures,
   ExposesEntryWithNumericRangeProperty,
+  ExposesKnownTypes,
+  exposesCanBeGet,
+  exposesCanBeSet,
   exposesHasEnumProperty,
   exposesHasFeatures,
   exposesHasNumericRangeProperty,
   exposesIsPublished,
-  ExposesKnownTypes,
 } from '../z2mModels';
-import { hap } from '../hap';
-import { getOrAddCharacteristic } from '../helpers';
-import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Service } from 'homebridge';
-import { ExtendedTimer } from '../timer';
+import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import { CharacteristicMonitor, NumericCharacteristicMonitor } from './monitor';
 
 export class CoverCreator implements ServiceCreator {

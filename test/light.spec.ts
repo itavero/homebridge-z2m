@@ -1,7 +1,7 @@
-import { vi } from 'vitest';
-import { ExposesEntry } from '../src/z2mModels';
-import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from '@homebridge/hap-nodejs';
+import { vi } from 'vitest';
+import { hap, setHap } from '../src/hap';
+import { ExposesEntry } from '../src/z2mModels';
 import { loadExposesFromFile, ServiceHandlersTestHarness, testJsonDeviceListEntry } from './testHelpers';
 
 describe('Light', () => {

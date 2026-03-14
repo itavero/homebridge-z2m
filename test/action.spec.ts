@@ -1,9 +1,9 @@
+import * as hapNodeJs from '@homebridge/hap-nodejs';
 import { vi } from 'vitest';
 import { hap, setHap } from '../src/hap';
-import { ExposesEntry } from '../src/z2mModels';
-import * as hapNodeJs from '@homebridge/hap-nodejs';
-import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 import { sanitizeAndFilterExposesEntries } from '../src/helpers';
+import { ExposesEntry } from '../src/z2mModels';
+import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 
 describe('Action', () => {
   beforeAll(() => {

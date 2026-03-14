@@ -1,10 +1,10 @@
 import { Characteristic } from 'homebridge';
-import { BasicSensorHandler } from './basic';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
 import { hap } from '../../hap';
-import { getOrAddCharacteristic, copyExposesRangeToCharacteristic } from '../../helpers';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
 import { BasicAccessory } from '../interfaces';
 import { BinaryConditionCharacteristicMonitor, PassthroughCharacteristicMonitor } from '../monitor';
+import { BasicSensorHandler } from './basic';
 
 export class CarbonDioxideSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'co2';

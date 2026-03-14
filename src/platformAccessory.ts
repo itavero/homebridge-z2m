@@ -1,22 +1,22 @@
 import { Controller, HAPStatus, PlatformAccessory, Service } from 'homebridge';
-import { Zigbee2mqttPlatform } from './platform';
-import { ExtendedTimer } from './timer';
-import { hap } from './hap';
+import { QoS } from 'mqtt-packet';
+import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
 import { BasicAccessory, ServiceHandler } from './converters/interfaces';
+import { EXP_AVAILABILITY } from './experimental';
+import { hap } from './hap';
+import { sanitizeAccessoryName, sanitizeAndFilterExposesEntries } from './helpers';
 import { BasicLogger } from './logger';
+import { Zigbee2mqttPlatform } from './platform';
+import { ExtendedTimer } from './timer';
 import {
-  deviceListEntriesAreEqual,
   DeviceListEntry,
+  deviceListEntriesAreEqual,
   ExposesEntry,
   isDeviceDefinition,
   isDeviceListEntry,
   isDeviceListEntryForGroup,
 } from './z2mModels';
-import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
-import { QoS } from 'mqtt-packet';
-import { sanitizeAccessoryName, sanitizeAndFilterExposesEntries } from './helpers';
-import { EXP_AVAILABILITY } from './experimental';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;

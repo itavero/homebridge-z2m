@@ -1,15 +1,15 @@
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
+import { hap } from '../hap';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic, groupByEndpoint } from '../helpers';
 import {
-  exposesCanBeGet,
   ExposesEntry,
   ExposesEntryWithProperty,
+  exposesCanBeGet,
   exposesHasNumericProperty,
   exposesHasProperty,
   exposesIsPublished,
 } from '../z2mModels';
-import { hap } from '../hap';
-import { copyExposesRangeToCharacteristic, getOrAddCharacteristic, groupByEndpoint } from '../helpers';
-import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
+import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 
 export class AirQualitySensorCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
@@ -185,7 +185,10 @@ class ParticulateMatter2Dot5Property extends PassthroughAirQualityProperty {
 
 class AirQualitySensorHandler implements ServiceHandler {
   public static readonly propertyFactories: WithExposesValidator<
-    new (expose: ExposesEntryWithProperty, service: Service) => AirQualityProperty
+    new (
+      expose: ExposesEntryWithProperty,
+      service: Service
+    ) => AirQualityProperty
   >[] = [VolatileOrganicCompoundsProperty, ParticulateMatter10Property, ParticulateMatter2Dot5Property];
 
   private readonly properties: AirQualityProperty[] = [];
@@ -196,6 +199,7 @@ class AirQualitySensorHandler implements ServiceHandler {
   constructor(
     endpoint: string | undefined,
     exposes: ExposesEntryWithProperty[],
+    // biome-ignore lint/correctness/noUnusedPrivateClassMembers: stored for potential future use
     private readonly accessory: BasicAccessory
   ) {
     this.identifier = AirQualitySensorHandler.generateIdentifier(endpoint);

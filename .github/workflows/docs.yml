@@ -37,7 +37,8 @@ jobs:
             echo "// GENERATED FILE: DO NOT EDIT MANUALLY!"
             echo "const version_zigbee2mqtt = '$Z2M_VERSION';"
             echo "const version_herdsman_converters = '$HERDSMAN_VERSION';"
-            echo "export { version_zigbee2mqtt, version_herdsman_converters };"
+            echo ""
+            echo "export { version_herdsman_converters, version_zigbee2mqtt };"
           } > ${{ env.versions_file }}
           git diff --exit-code -s ${{ env.versions_file }} || echo "updated=1" >> $GITHUB_OUTPUT
 

@@ -9,6 +9,8 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Changed
 
+- Drop support for Node.js v18. Now requires Node.js v20.18.0+, v22.10.0+ or v24.0.0+.
+- Drop support for Homebridge v1.6.x and v1.7.x. Now requires Homebridge v1.8.0+ or v2.0.0-beta.0+.
 - Updated MQTT topic handling for Zigbee2MQTT 2.0 compatibility:
   - The `bridge/state` topic now supports both JSON format (`{"state":"online"}`) and plain strings for backwards compatibility
   - The deprecated `bridge/config` topic is no longer handled (use `bridge/info` instead)

@@ -110,7 +110,13 @@ class ServiceInfo {
   ) {}
 }
 const hiddenCharacteristics = new Set<string>([hapNodeJs.Characteristic.Name.UUID]);
-const characteristicNameMapping = new Map<string, string>([['E863F10F-079E-48FF-8F27-9C2605A29F52', 'Air Pressure']]);
+const characteristicNameMapping = new Map<string, string>([
+  ['E863F10F-079E-48FF-8F27-9C2605A29F52', 'Air Pressure'],
+  ['E863F10D-079E-48FF-8F27-9C2605A29F52', 'Consumption'],
+  ['E863F10A-079E-48FF-8F27-9C2605A29F52', 'Voltage'],
+  ['E863F126-079E-48FF-8F27-9C2605A29F52', 'Current'],
+  ['E863F10C-079E-48FF-8F27-9C2605A29F52', 'Total Consumption'],
+]);
 
 function makeClassNameHumanReadable(name: string): string {
   // Replace common abbreviations first
@@ -159,6 +165,7 @@ const serviceNameMapping = new Map<string, ServiceInfo>([
   ['E863F00A-079E-48FF-8F27-9C2605A29F52', new ServiceInfo('Air Pressure Sensor', sensorsDocs)],
   addServiceMapping(hapNodeJs.Service.AirQualitySensor, 'air_quality.md'),
   addServiceMapping(hapNodeJs.Service.CarbonDioxideSensor, sensorsDocs),
+  ['00000001-0000-1777-8000-775D67EC4377', new ServiceInfo('Electrical Sensor', 'electrical.md')],
 ]);
 
 // Controllers
@@ -207,7 +214,8 @@ function serviceInfoToMarkdown(info: Map<string, string[]>): string {
   for (const [serviceId, characteristics] of info) {
     const service = serviceNameMapping.get(serviceId);
     if (service === undefined) {
-      throw new Error(`No service name mapping for service with UUID: ${serviceId}`);
+      console.log(`[WARNING] No service name mapping for service with UUID: ${serviceId} — add it to serviceNameMapping in docgen.ts`);
+      continue;
     }
     let markdown = '* ';
     if (service.page) {

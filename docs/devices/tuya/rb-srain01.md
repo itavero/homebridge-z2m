@@ -33,7 +33,8 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 1,
     "type": "numeric",
     "property": "illuminance_raw",
-    "description": "Raw measured illuminance"
+    "description": "Raw measured illuminance",
+    "unit": "mV"
   },
   {
     "name": "illuminance_average_20min",

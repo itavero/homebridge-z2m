@@ -46,7 +46,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 3,
     "type": "binary",
     "property": "alarm_state",
-    "description": "Alarm was triggered.",
+    "description": "Alarm state",
     "value_on": true,
     "value_off": false
   },
@@ -56,7 +56,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 3,
     "type": "binary",
     "property": "setup_mode",
-    "description": "Set mode status",
+    "description": "Exit Setup Mode",
     "value_on": true,
     "value_off": false
   },
@@ -66,7 +66,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 3,
     "type": "binary",
     "property": "alarm_siren",
-    "description": "Activate the siren when the alarm is triggered.",
+    "description": "Alarm siren",
     "value_on": true,
     "value_off": false
   },
@@ -76,7 +76,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 3,
     "type": "numeric",
     "property": "alarm_siren_duration",
-    "description": "Duration of the alarm siren.",
+    "description": "Alarm siren duration",
     "value_max": 180,
     "value_min": 5,
     "value_step": 1
@@ -95,7 +95,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 3,
     "type": "numeric",
     "property": "vibration_limit",
-    "description": "Limit at which a vibration is reported.",
+    "description": "Vibration limit",
     "value_max": 100,
     "value_min": 0,
     "value_step": 1
@@ -106,7 +106,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 3,
     "type": "binary",
     "property": "vibration_siren",
-    "description": "Activate the siren when vibrating.",
+    "description": "Vibration siren",
     "value_on": true,
     "value_off": false
   },
@@ -116,7 +116,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 3,
     "type": "numeric",
     "property": "vibration_siren_duration",
-    "description": "Duration of the vibrating siren.",
+    "description": "Vibration siren duration",
     "value_max": 180,
     "value_min": 5,
     "value_step": 1
@@ -127,7 +127,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 3,
     "type": "binary",
     "property": "close_signal",
-    "description": "Enable sound when closing the window.",
+    "description": "Close signal",
     "value_on": true,
     "value_off": false
   },
@@ -137,7 +137,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 3,
     "type": "numeric",
     "property": "transmission_power",
-    "description": "Transmission power 11-19. High value > battery consumption.",
+    "description": "Transmission power",
     "value_max": 19,
     "value_min": 11,
     "value_step": 1
@@ -148,7 +148,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 1,
     "type": "binary",
     "property": "magnetic_status",
-    "description": "Magnetic status.",
+    "description": "Magnetic status",
     "value_on": true,
     "value_off": false
   },

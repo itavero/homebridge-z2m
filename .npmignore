@@ -15,8 +15,7 @@ CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 SMOKE_TEST_PLAN.md
 
-# TypeScript declaration files and source maps (not needed for a Homebridge plugin)
-#dist/**/*.d.ts
+# Map files
 dist/**/*.d.ts.map
 dist/**/*.js.map
 

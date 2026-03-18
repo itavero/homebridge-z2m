@@ -3,7 +3,7 @@ import { hap } from '../hap';
 import { groupByEndpoint } from '../helpers';
 import { BasicLogger } from '../logger';
 import { ExposesEntry, ExposesEntryWithProperty, ExposesKnownTypes, exposesHasProperty, exposesIsPublished } from '../z2mModels';
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { BasicAccessory, HistoryService, ServiceCreator, ServiceHandler } from './interfaces';
 import { CharacteristicMonitor, PassthroughCharacteristicMonitor } from './monitor';
 
 // Custom Service UUID (from homebridge-3em-energy-meter, proven in Eve app)
@@ -140,6 +140,7 @@ export class ElectricalSensorHandler implements ServiceHandler {
   private readonly voltageExpose?: ExposesEntryWithProperty;
   private readonly currentExpose?: ExposesEntryWithProperty;
   private readonly energyExpose?: ExposesEntryWithProperty;
+  private historyService?: HistoryService;
 
   constructor(accessory: BasicAccessory, electricalExposes: ElectricalExposes, endpoint: string | undefined) {
     this.log = accessory.log;
@@ -175,6 +176,11 @@ export class ElectricalSensorHandler implements ServiceHandler {
       this.energyExpose = electricalExposes.energy;
       getOrAddCustomCharacteristic(this.service, CHARACTERISTIC_KWH_NAME, createKilowattHourCharacteristic);
       this.monitors.push(new PassthroughCharacteristicMonitor(electricalExposes.energy.property, this.service, CHARACTERISTIC_KWH_NAME));
+    }
+
+    // Set up history for power measurement if power is available
+    if (this.powerExpose !== undefined) {
+      this.historyService = accessory.getOrAddHistoryService('energy');
     }
   }
 
@@ -214,6 +220,16 @@ export class ElectricalSensorHandler implements ServiceHandler {
 
   updateState(state: Record<string, unknown>): void {
     this.monitors.forEach((m) => m.callback(state, this.log));
+    if (this.historyService !== undefined && this.powerExpose !== undefined) {
+      const powerValue = state[this.powerExpose.property];
+      if (typeof powerValue === 'number') {
+        try {
+          this.historyService.addEntry({ time: Math.round(Date.now() / 1000), power: powerValue });
+        } catch (e) {
+          this.log.debug(`Failed to add history entry: ${e}`);
+        }
+      }
+    }
   }
 
   static generateIdentifier(endpoint: string | undefined): string {

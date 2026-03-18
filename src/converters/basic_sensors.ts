@@ -63,7 +63,15 @@ export class BasicSensorCreator implements ServiceCreator {
     CarbonDioxideSensorHandler,
   ];
 
-  private static configs: WithConfigurableConverter<unknown>[] = [OccupancySensorHandler];
+  private static configs: WithConfigurableConverter<unknown>[] = [
+    OccupancySensorHandler,
+    TemperatureSensorHandler,
+    HumiditySensorHandler,
+    AirPressureSensorHandler,
+    ContactSensorHandler,
+    MovingSensorHandler,
+    PresenceSensorHandler,
+  ];
 
   constructor(converterConfigRegistry: ConverterConfigurationRegistry) {
     for (const config of BasicSensorCreator.configs) {

@@ -1,14 +1,19 @@
 import * as hapNodeJs from '@homebridge/hap-nodejs';
-import { Logger } from 'homebridge';
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Logger, Service } from 'homebridge';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { mock, mockClear } from 'vitest-mock-extended';
-import { HistoryServiceCreator, HistoryServiceHandler } from '../src/converters/history';
-import { BasicAccessory, HistoryService, ServiceHandler } from '../src/converters/interfaces';
+import { AirPressureSensorHandler } from '../src/converters/basic_sensors/air_pressure';
+import { ContactSensorHandler } from '../src/converters/basic_sensors/contact';
+import { HumiditySensorHandler } from '../src/converters/basic_sensors/humidity';
+import { MovingSensorHandler } from '../src/converters/basic_sensors/moving';
+import { OccupancySensorHandler } from '../src/converters/basic_sensors/occupancy';
+import { PresenceSensorHandler } from '../src/converters/basic_sensors/presence';
+import { TemperatureSensorHandler } from '../src/converters/basic_sensors/temperature';
+import { BasicAccessory, HistoryService } from '../src/converters/interfaces';
 import { setHap } from '../src/hap';
-import { ExposesEntry } from '../src/z2mModels';
-import { loadExposesFromFile } from './testHelpers';
+import { ExposesEntryWithProperty, ExposesKnownTypes } from '../src/z2mModels';
 
-describe('History Service', () => {
+describe('Sensor history integration', () => {
   beforeAll(() => {
     setHap(hapNodeJs);
   });
@@ -17,280 +22,198 @@ describe('History Service', () => {
     vi.resetAllMocks();
   });
 
-  const createMockAccessory = (historyServiceResult: HistoryService | undefined = undefined) => {
+  function createMockHistoryService(): HistoryService & { addEntry: ReturnType<(typeof mock<HistoryService>)['addEntry']> } {
+    return mock<HistoryService>();
+  }
+
+  function createMockAccessory(historyService?: HistoryService): BasicAccessory & ReturnType<typeof mock<BasicAccessory>> {
     const accessoryMock = mock<BasicAccessory>();
     accessoryMock.log = mock<Logger>();
     accessoryMock.displayName = 'Test Device';
+    // Return the real HAP service object so characteristic setup works correctly
+    accessoryMock.getOrAddService.mockImplementation((service: Service) => service);
     accessoryMock.isServiceHandlerIdKnown.mockReturnValue(false);
-    accessoryMock.addFakeGatoHistoryService.mockReturnValue(historyServiceResult);
+    accessoryMock.getConverterConfiguration.mockReturnValue(undefined);
+    accessoryMock.getDefaultServiceDisplayName.mockReturnValue('Test Device');
+    accessoryMock.getOrAddHistoryService.mockReturnValue(historyService);
     return accessoryMock;
-  };
+  }
 
-  const createMockHistoryService = () => mock<HistoryService>();
+  function makeNumericExpose(name: string): ExposesEntryWithProperty {
+    return { type: ExposesKnownTypes.NUMERIC, name, property: name, access: 1 } as ExposesEntryWithProperty;
+  }
 
-  describe('HistoryServiceHandler', () => {
-    it('does not call addEntry when no relevant properties are in state', () => {
-      const accessoryMock = createMockAccessory();
+  function makeBinaryExpose(name: string): ExposesEntryWithProperty {
+    return {
+      type: ExposesKnownTypes.BINARY,
+      name,
+      property: name,
+      value_on: true,
+      value_off: false,
+      access: 1,
+    } as ExposesEntryWithProperty;
+  }
+
+  describe('TemperatureSensorHandler', () => {
+    it('requests a weather history service during construction', () => {
       const historyService = createMockHistoryService();
-      const properties = [{ stateKey: 'temperature', entryKey: 'temp' }];
-      const handler = new HistoryServiceHandler(accessoryMock, historyService, properties);
+      const accessoryMock = createMockAccessory(historyService);
+      new TemperatureSensorHandler(makeNumericExpose('temperature'), [], accessoryMock);
+      expect(accessoryMock.getOrAddHistoryService).toHaveBeenCalledWith('weather');
+    });
+
+    it('adds a history entry with the correct key on updateState', () => {
+      const historyService = createMockHistoryService();
+      const accessoryMock = createMockAccessory(historyService);
+      const handler = new TemperatureSensorHandler(makeNumericExpose('temperature'), [], accessoryMock);
+
+      handler.updateState({ temperature: 22.5 });
+
+      expect(historyService.addEntry).toHaveBeenCalledTimes(1);
+      const entry = historyService.addEntry.mock.calls[0][0];
+      expect(entry.temp).toBe(22.5);
+      expect(entry.time).toBeTypeOf('number');
+    });
+
+    it('does not add a history entry when temperature is absent from state', () => {
+      const historyService = createMockHistoryService();
+      const accessoryMock = createMockAccessory(historyService);
+      const handler = new TemperatureSensorHandler(makeNumericExpose('temperature'), [], accessoryMock);
 
       handler.updateState({ linkquality: 100 });
 
       expect(historyService.addEntry).not.toHaveBeenCalled();
     });
 
-    it('calls addEntry with temperature when temperature state is received', () => {
-      const accessoryMock = createMockAccessory();
+    it('skips history setup when getOrAddHistoryService returns undefined', () => {
+      const accessoryMock = createMockAccessory(undefined);
+      const handler = new TemperatureSensorHandler(makeNumericExpose('temperature'), [], accessoryMock);
+
+      // Should not throw even without a history service
+      handler.updateState({ temperature: 22.5 });
+    });
+
+    it('skips history when converter config sets history=false', () => {
       const historyService = createMockHistoryService();
-      const properties = [{ stateKey: 'temperature', entryKey: 'temp' }];
-      const handler = new HistoryServiceHandler(accessoryMock, historyService, properties);
+      const accessoryMock = createMockAccessory(historyService);
+      accessoryMock.getConverterConfiguration.mockImplementation((tag: string) => {
+        if (tag === 'temperature') {
+          return { history: false };
+        }
+        return undefined;
+      });
+      const handler = new TemperatureSensorHandler(makeNumericExpose('temperature'), [], accessoryMock);
 
       handler.updateState({ temperature: 22.5 });
 
-      expect(historyService.addEntry).toHaveBeenCalledTimes(1);
-      const call = historyService.addEntry.mock.calls[0][0];
-      expect(call.temp).toBe(22.5);
-      expect(call.time).toBeTypeOf('number');
-      expect(call.time).toBeGreaterThan(0);
+      expect(accessoryMock.getOrAddHistoryService).not.toHaveBeenCalled();
+      expect(historyService.addEntry).not.toHaveBeenCalled();
     });
+  });
 
-    it('calls addEntry with humidity when humidity state is received', () => {
-      const accessoryMock = createMockAccessory();
+  describe('HumiditySensorHandler', () => {
+    it('requests a weather history service and uses the humidity entry key', () => {
       const historyService = createMockHistoryService();
-      const properties = [
-        { stateKey: 'temperature', entryKey: 'temp' },
-        { stateKey: 'humidity', entryKey: 'humidity' },
-      ];
-      const handler = new HistoryServiceHandler(accessoryMock, historyService, properties);
+      const accessoryMock = createMockAccessory(historyService);
+      const handler = new HumiditySensorHandler(makeNumericExpose('humidity'), [], accessoryMock);
+
+      expect(accessoryMock.getOrAddHistoryService).toHaveBeenCalledWith('weather');
 
       handler.updateState({ humidity: 65.0 });
 
       expect(historyService.addEntry).toHaveBeenCalledTimes(1);
-      const call = historyService.addEntry.mock.calls[0][0];
-      expect(call.humidity).toBe(65.0);
-      expect(call.temp).toBeUndefined();
+      expect(historyService.addEntry.mock.calls[0][0].humidity).toBe(65.0);
     });
+  });
 
-    it('calls addEntry with multiple properties when both are in state', () => {
-      const accessoryMock = createMockAccessory();
+  describe('AirPressureSensorHandler', () => {
+    it('requests a weather history service and uses the pressure entry key', () => {
       const historyService = createMockHistoryService();
-      const properties = [
-        { stateKey: 'temperature', entryKey: 'temp' },
-        { stateKey: 'humidity', entryKey: 'humidity' },
-      ];
-      const handler = new HistoryServiceHandler(accessoryMock, historyService, properties);
+      const accessoryMock = createMockAccessory(historyService);
+      const handler = new AirPressureSensorHandler(makeNumericExpose('pressure'), [], accessoryMock);
 
-      handler.updateState({ temperature: 21.0, humidity: 60.0 });
+      expect(accessoryMock.getOrAddHistoryService).toHaveBeenCalledWith('weather');
+
+      handler.updateState({ pressure: 1013 });
 
       expect(historyService.addEntry).toHaveBeenCalledTimes(1);
-      const call = historyService.addEntry.mock.calls[0][0];
-      expect(call.temp).toBe(21.0);
-      expect(call.humidity).toBe(60.0);
+      expect(historyService.addEntry.mock.calls[0][0].pressure).toBe(1013);
     });
+  });
 
-    it('applies transform function to property values', () => {
-      const accessoryMock = createMockAccessory();
+  describe('ContactSensorHandler', () => {
+    it('requests a door history service and applies inverted boolean transform', () => {
       const historyService = createMockHistoryService();
-      const properties = [
-        {
-          stateKey: 'contact',
-          entryKey: 'status',
-          transform: (v: unknown) => (v ? 0 : 1),
-        },
-      ];
-      const handler = new HistoryServiceHandler(accessoryMock, historyService, properties);
+      const accessoryMock = createMockAccessory(historyService);
+      const handler = new ContactSensorHandler(makeBinaryExpose('contact'), [], accessoryMock);
 
-      // contact=true means closed, fakegato status=0 means closed
+      expect(accessoryMock.getOrAddHistoryService).toHaveBeenCalledWith('door');
+
+      // contact=true means closed → fakegato status=0
       handler.updateState({ contact: true });
       expect(historyService.addEntry).toHaveBeenCalledTimes(1);
       expect(historyService.addEntry.mock.calls[0][0].status).toBe(0);
 
       mockClear(historyService);
 
-      // contact=false means open, fakegato status=1 means open
+      // contact=false means open → fakegato status=1
       handler.updateState({ contact: false });
       expect(historyService.addEntry).toHaveBeenCalledTimes(1);
       expect(historyService.addEntry.mock.calls[0][0].status).toBe(1);
     });
+  });
 
-    it('has empty getableKeys and mainCharacteristics', () => {
-      const accessoryMock = createMockAccessory();
+  describe('OccupancySensorHandler', () => {
+    it('requests a motion history service and applies boolean transform', () => {
       const historyService = createMockHistoryService();
-      const handler = new HistoryServiceHandler(accessoryMock, historyService, []);
+      const accessoryMock = createMockAccessory(historyService);
+      const handler = new OccupancySensorHandler(makeBinaryExpose('occupancy'), [], accessoryMock);
 
-      expect(handler.getableKeys).toEqual([]);
-      expect(handler.mainCharacteristics).toEqual([]);
-    });
+      expect(accessoryMock.getOrAddHistoryService).toHaveBeenCalledWith('motion');
 
-    it('has a fixed identifier', () => {
-      const accessoryMock = createMockAccessory();
-      const historyService = createMockHistoryService();
-      const handler = new HistoryServiceHandler(accessoryMock, historyService, []);
+      handler.updateState({ occupancy: true });
+      expect(historyService.addEntry).toHaveBeenCalledTimes(1);
+      expect(historyService.addEntry.mock.calls[0][0].status).toBe(1);
 
-      expect(handler.identifier).toBe('FAKEGATO_HISTORY');
+      mockClear(historyService);
+
+      handler.updateState({ occupancy: false });
+      expect(historyService.addEntry).toHaveBeenCalledTimes(1);
+      expect(historyService.addEntry.mock.calls[0][0].status).toBe(0);
     });
   });
 
-  describe('HistoryServiceCreator', () => {
-    const creator = new HistoryServiceCreator();
-
-    it('does not register a handler when addFakeGatoHistoryService returns undefined', () => {
-      const accessoryMock = createMockAccessory(undefined);
-      const exposes: ExposesEntry[] = [{ type: 'numeric', name: 'temperature', property: 'temperature', access: 1 } as ExposesEntry];
-
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.registerServiceHandler).not.toHaveBeenCalled();
-    });
-
-    it('does not register a handler when no matching exposes are found', () => {
+  describe('MovingSensorHandler', () => {
+    it('requests a motion history service', () => {
       const historyService = createMockHistoryService();
       const accessoryMock = createMockAccessory(historyService);
-      const exposes: ExposesEntry[] = [{ type: 'text', name: 'action', property: 'action', access: 1 } as ExposesEntry];
+      new MovingSensorHandler(makeBinaryExpose('moving'), [], accessoryMock);
 
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).not.toHaveBeenCalled();
-      expect(accessoryMock.registerServiceHandler).not.toHaveBeenCalled();
+      expect(accessoryMock.getOrAddHistoryService).toHaveBeenCalledWith('motion');
     });
+  });
 
-    it('does not register a handler if already registered', () => {
+  describe('PresenceSensorHandler', () => {
+    it('requests a motion history service', () => {
       const historyService = createMockHistoryService();
       const accessoryMock = createMockAccessory(historyService);
-      accessoryMock.isServiceHandlerIdKnown.mockReturnValue(true);
-      const exposes: ExposesEntry[] = [{ type: 'numeric', name: 'temperature', property: 'temperature', access: 1 } as ExposesEntry];
+      new PresenceSensorHandler(makeBinaryExpose('presence'), [], accessoryMock);
 
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).not.toHaveBeenCalled();
-      expect(accessoryMock.registerServiceHandler).not.toHaveBeenCalled();
+      expect(accessoryMock.getOrAddHistoryService).toHaveBeenCalledWith('motion');
     });
+  });
 
-    it('registers a weather history handler for temperature sensor', () => {
+  describe('getOrAddHistoryService sharing mechanism', () => {
+    it('temperature and humidity both call getOrAddHistoryService with the weather type', () => {
       const historyService = createMockHistoryService();
       const accessoryMock = createMockAccessory(historyService);
-      const exposes: ExposesEntry[] = [{ type: 'numeric', name: 'temperature', property: 'temperature', access: 1 } as ExposesEntry];
 
-      creator.createServicesFromExposes(accessoryMock, exposes);
+      new TemperatureSensorHandler(makeNumericExpose('temperature'), [], accessoryMock);
+      new HumiditySensorHandler(makeNumericExpose('humidity'), [], accessoryMock);
 
-      expect(accessoryMock.addFakeGatoHistoryService).toHaveBeenCalledWith('weather');
-      expect(accessoryMock.registerServiceHandler).toHaveBeenCalledTimes(1);
-
-      const registeredHandler = accessoryMock.registerServiceHandler.mock.calls[0][0] as ServiceHandler;
-      expect(registeredHandler.identifier).toBe('FAKEGATO_HISTORY');
-    });
-
-    it('registers a weather history handler for humidity sensor', () => {
-      const historyService = createMockHistoryService();
-      const accessoryMock = createMockAccessory(historyService);
-      const exposes: ExposesEntry[] = [{ type: 'numeric', name: 'humidity', property: 'humidity', access: 1 } as ExposesEntry];
-
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).toHaveBeenCalledWith('weather');
-    });
-
-    it('registers a weather history handler for air pressure sensor', () => {
-      const historyService = createMockHistoryService();
-      const accessoryMock = createMockAccessory(historyService);
-      const exposes: ExposesEntry[] = [{ type: 'numeric', name: 'pressure', property: 'pressure', access: 1 } as ExposesEntry];
-
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).toHaveBeenCalledWith('weather');
-    });
-
-    it('registers an energy history handler for power sensor', () => {
-      const historyService = createMockHistoryService();
-      const accessoryMock = createMockAccessory(historyService);
-      const exposes: ExposesEntry[] = [{ type: 'numeric', name: 'power', property: 'power', access: 1 } as ExposesEntry];
-
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).toHaveBeenCalledWith('energy');
-    });
-
-    it('registers an energy history handler when active_power is present', () => {
-      const historyService = createMockHistoryService();
-      const accessoryMock = createMockAccessory(historyService);
-      const exposes: ExposesEntry[] = [{ type: 'numeric', name: 'active_power', property: 'active_power', access: 1 } as ExposesEntry];
-
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).toHaveBeenCalledWith('energy');
-    });
-
-    it('prefers energy type over weather when both power and temperature are present', () => {
-      const historyService = createMockHistoryService();
-      const accessoryMock = createMockAccessory(historyService);
-      const exposes: ExposesEntry[] = [
-        { type: 'numeric', name: 'power', property: 'power', access: 1 } as ExposesEntry,
-        { type: 'numeric', name: 'temperature', property: 'temperature', access: 1 } as ExposesEntry,
-      ];
-
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).toHaveBeenCalledWith('energy');
-    });
-
-    it('registers a door history handler for contact sensor', () => {
-      const historyService = createMockHistoryService();
-      const accessoryMock = createMockAccessory(historyService);
-      const exposes: ExposesEntry[] = [
-        { type: 'binary', name: 'contact', property: 'contact', value_on: true, value_off: false, access: 1 } as ExposesEntry,
-      ];
-
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).toHaveBeenCalledWith('door');
-    });
-
-    it('registers a motion history handler for occupancy sensor', () => {
-      const historyService = createMockHistoryService();
-      const accessoryMock = createMockAccessory(historyService);
-      const exposes: ExposesEntry[] = [
-        { type: 'binary', name: 'occupancy', property: 'occupancy', value_on: true, value_off: false, access: 1 } as ExposesEntry,
-      ];
-
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).toHaveBeenCalledWith('motion');
-    });
-
-    it('registers a motion history handler for presence sensor', () => {
-      const historyService = createMockHistoryService();
-      const accessoryMock = createMockAccessory(historyService);
-      const exposes: ExposesEntry[] = [
-        { type: 'binary', name: 'presence', property: 'presence', value_on: true, value_off: false, access: 1 } as ExposesEntry,
-      ];
-
-      creator.createServicesFromExposes(accessoryMock, exposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).toHaveBeenCalledWith('motion');
-    });
-
-    it('registers weather handler with all available weather properties using Aqara WSDCGQ12LM device exposes', () => {
-      const historyService = createMockHistoryService();
-      const accessoryMock = createMockAccessory(historyService);
-      const deviceExposes = loadExposesFromFile('aqara/wsdcgq12lm.json');
-      expect(deviceExposes.length).toBeGreaterThan(0);
-
-      creator.createServicesFromExposes(accessoryMock, deviceExposes);
-
-      expect(accessoryMock.addFakeGatoHistoryService).toHaveBeenCalledWith('weather');
-
-      const registeredHandler = accessoryMock.registerServiceHandler.mock.calls[0][0] as HistoryServiceHandler;
-      expect(registeredHandler).toBeDefined();
-      expect(registeredHandler.identifier).toBe('FAKEGATO_HISTORY');
-
-      // Verify handler tracks temp, humidity, and pressure
-      registeredHandler.updateState({ temperature: 20.0, humidity: 55.0, pressure: 1013 });
-      expect(historyService.addEntry).toHaveBeenCalledTimes(1);
-      const entry = historyService.addEntry.mock.calls[0][0];
-      expect(entry.temp).toBe(20.0);
-      expect(entry.humidity).toBe(55.0);
-      expect(entry.pressure).toBe(1013);
+      // Both converters call getOrAddHistoryService('weather') — the accessory caches the result
+      const calls = accessoryMock.getOrAddHistoryService.mock.calls;
+      expect(calls.filter((c) => c[0] === 'weather').length).toBe(2);
     });
   });
 });

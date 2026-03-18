@@ -159,6 +159,84 @@
                     ]
                   }
                 ]
+              },
+              "history": {
+                "title": "Enable sensor history (Eve)",
+                "description": "Override per-device enable_history for the occupancy sensor.",
+                "type": "boolean",
+                "required": false
+              }
+            }
+          },
+          "contact": {
+            "title": "Contact sensor",
+            "type": "object",
+            "properties": {
+              "history": {
+                "title": "Enable sensor history (Eve)",
+                "description": "Override per-device enable_history for the contact sensor.",
+                "type": "boolean",
+                "required": false
+              }
+            }
+          },
+          "moving": {
+            "title": "Moving sensor",
+            "type": "object",
+            "properties": {
+              "history": {
+                "title": "Enable sensor history (Eve)",
+                "description": "Override per-device enable_history for the moving sensor.",
+                "type": "boolean",
+                "required": false
+              }
+            }
+          },
+          "presence": {
+            "title": "Presence sensor",
+            "type": "object",
+            "properties": {
+              "history": {
+                "title": "Enable sensor history (Eve)",
+                "description": "Override per-device enable_history for the presence sensor.",
+                "type": "boolean",
+                "required": false
+              }
+            }
+          },
+          "temperature": {
+            "title": "Temperature sensor",
+            "type": "object",
+            "properties": {
+              "history": {
+                "title": "Enable sensor history (Eve)",
+                "description": "Override per-device enable_history for the temperature sensor.",
+                "type": "boolean",
+                "required": false
+              }
+            }
+          },
+          "humidity": {
+            "title": "Humidity sensor",
+            "type": "object",
+            "properties": {
+              "history": {
+                "title": "Enable sensor history (Eve)",
+                "description": "Override per-device enable_history for the humidity sensor.",
+                "type": "boolean",
+                "required": false
+              }
+            }
+          },
+          "pressure": {
+            "title": "Air pressure sensor",
+            "type": "object",
+            "properties": {
+              "history": {
+                "title": "Enable sensor history (Eve)",
+                "description": "Override per-device enable_history for the air pressure sensor.",
+                "type": "boolean",
+                "required": false
               }
             }
           },

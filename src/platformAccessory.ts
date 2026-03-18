@@ -23,6 +23,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly serviceCreatorManager: ServiceCreatorManager;
   private readonly serviceHandlers = new Map<string, ServiceHandler>();
   private readonly serviceIds = new Set<string>();
+  private readonly historyServices = new Map<string, HistoryService>();
 
   private pendingPublishData: Record<string, unknown>;
   private publishIsScheduled: boolean;
@@ -500,9 +501,14 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     return sanitizeAccessoryName(name);
   }
 
-  addFakeGatoHistoryService(type: FakeGatoHistoryType): HistoryService | undefined {
+  getOrAddHistoryService(type: FakeGatoHistoryType): HistoryService | undefined {
     if (this.additionalConfig.enable_history !== true) {
       return undefined;
+    }
+    // Return cached service if already created for this type
+    const cached = this.historyServices.get(type);
+    if (cached !== undefined) {
+      return cached;
     }
     try {
       // biome-ignore lint/style/noCommonJs: fakegato-history is a CommonJS module loaded dynamically
@@ -521,6 +527,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       this.accessory.addService(historyService as unknown as Service);
       this.serviceIds.add(Zigbee2mqttAccessory.getUniqueIdForService(historyService as unknown as Service));
 
+      this.historyServices.set(type, historyService);
       return historyService;
     } catch (e) {
       this.log.warn(`Failed to create fakegato-history service (type: ${type}): ${e}`);

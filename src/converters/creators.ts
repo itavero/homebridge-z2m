@@ -7,7 +7,6 @@ import { BatteryCreator } from './battery';
 import { ThermostatCreator } from './climate';
 import { CoverCreator } from './cover';
 import { ElectricalSensorCreator } from './electrical';
-import { HistoryServiceCreator } from './history';
 import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator } from './interfaces';
 import { LightCreator } from './light';
 import { LockCreator } from './lock';
@@ -37,7 +36,6 @@ export class BasicServiceCreatorManager
     StatelessProgrammableSwitchCreator,
     ThermostatCreator,
     BatteryCreator,
-    HistoryServiceCreator,
   ];
 
   private static instance: BasicServiceCreatorManager;

@@ -1,10 +1,16 @@
 import { hap } from '../../hap';
+import { BasicLogger } from '../../logger';
 import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../z2mModels';
 import { BasicAccessory } from '../interfaces';
-import { BinarySensorHandler } from './binary';
+import { BinarySensorHandler, isBinarySensorConfig } from './binary';
 
 export class PresenceSensorHandler extends BinarySensorHandler {
   public static readonly exposesName: string = 'presence';
+  public static readonly converterConfigTag: string = 'presence';
+
+  public static isValidConverterConfiguration(config: unknown, _tag: string, _logger: BasicLogger | undefined): boolean {
+    return isBinarySensorConfig(config);
+  }
 
   constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(
@@ -18,6 +24,7 @@ export class PresenceSensorHandler extends BinarySensorHandler {
       hap.Characteristic.OccupancyDetected.OCCUPANCY_DETECTED,
       hap.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED
     );
+    this.trySetupHistory(accessory, 'motion', 'status', PresenceSensorHandler.converterConfigTag, (v) => (v ? 1 : 0));
   }
 
   static generateIdentifier(endpoint: string | undefined) {

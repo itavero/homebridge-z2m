@@ -33,7 +33,7 @@ export interface BasicAccessory {
 
   removeController(controller: Controller): void;
 
-  addFakeGatoHistoryService(type: FakeGatoHistoryType): HistoryService | undefined;
+  getOrAddHistoryService(type: FakeGatoHistoryType): HistoryService | undefined;
 }
 
 export interface ServiceHandler {

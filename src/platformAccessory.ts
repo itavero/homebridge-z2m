@@ -506,8 +506,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     }
     try {
       // biome-ignore lint/style/noCommonJs: fakegato-history is a CommonJS module loaded dynamically
-      // biome-ignore lint/suspicious/noExplicitAny: dynamic require for optional dependency
-      const fakeGatoInit = require('fakegato-history') as (api: any) => any;
+      const fakeGatoInit = require('fakegato-history') as typeof import('fakegato-history');
       const FakeGato = fakeGatoInit(this.platform.api);
       const adapter = { log: this.log, displayName: this.displayName };
       const historyService = new FakeGato(type, adapter, { size: 4032 }) as HistoryService & Service;

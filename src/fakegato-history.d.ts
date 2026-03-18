@@ -19,11 +19,9 @@ declare module 'fakegato-history' {
     readonly displayName: string;
   }
 
-  type FakeGatoHistoryServiceType = 'weather' | 'energy' | 'room' | 'room2' | 'door' | 'motion' | 'switch' | 'thermo' | 'aqua' | 'custom';
-
   interface FakeGatoHistoryServiceConstructor {
     new (
-      accessoryType: FakeGatoHistoryServiceType,
+      accessoryType: string,
       accessory: { log: object; displayName: string },
       options?: FakeGatoHistoryServiceOptions | number
     ): FakeGatoHistoryService;

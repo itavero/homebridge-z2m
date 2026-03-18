@@ -1,6 +1,25 @@
 # Ignore source code
 src
 
+# Development configuration files
+.editorconfig
+.nvmrc
+biome.json
+vitest.config.ts
+
+# Development and CI scripts
+scripts/
+
+# Documentation files not needed in the package
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+SMOKE_TEST_PLAN.md
+
+# TypeScript declaration files and source maps (not needed for a Homebridge plugin)
+dist/**/*.d.ts
+dist/**/*.d.ts.map
+dist/**/*.js.map
+
 # ------------- Defaults ------------- #
 
 # gitHub actions

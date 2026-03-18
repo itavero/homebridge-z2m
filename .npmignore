@@ -16,7 +16,7 @@ CONTRIBUTING.md
 SMOKE_TEST_PLAN.md
 
 # TypeScript declaration files and source maps (not needed for a Homebridge plugin)
-dist/**/*.d.ts
+#dist/**/*.d.ts
 dist/**/*.d.ts.map
 dist/**/*.js.map
 

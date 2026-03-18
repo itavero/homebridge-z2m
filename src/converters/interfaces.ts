@@ -2,6 +2,12 @@ import { Characteristic, Controller, Service } from 'homebridge';
 import { BasicLogger } from '../logger';
 import { ExposesEntry } from '../z2mModels';
 
+export type FakeGatoHistoryType = 'weather' | 'energy' | 'room' | 'room2' | 'door' | 'motion' | 'switch' | 'thermo' | 'aqua' | 'custom';
+
+export interface HistoryService {
+  addEntry(entry: { time: number } & Record<string, number | boolean>): void;
+}
+
 export interface BasicAccessory {
   log: BasicLogger;
 
@@ -26,6 +32,8 @@ export interface BasicAccessory {
   configureController(controller: Controller): void;
 
   removeController(controller: Controller): void;
+
+  addFakeGatoHistoryService(type: FakeGatoHistoryType): HistoryService | undefined;
 }
 
 export interface ServiceHandler {

@@ -122,6 +122,7 @@ export interface BaseDeviceConfiguration extends Record<string, unknown> {
   experimental?: string[];
   ignore_availability?: boolean;
   ignore_z2m_online?: boolean;
+  enable_history?: boolean;
 }
 
 export interface DeviceConfiguration extends BaseDeviceConfiguration {
@@ -154,7 +155,7 @@ export const hasOptionalBooleans = (object: any, ...properties: string[]): boole
 // biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration => {
   // Optional boolean properties
-  if (!hasOptionalBooleans(x, 'exclude', 'ignore_availability', 'ignore_z2m_online')) {
+  if (!hasOptionalBooleans(x, 'exclude', 'ignore_availability', 'ignore_z2m_online', 'enable_history')) {
     return false;
   }
 

@@ -110,38 +110,6 @@ web_modules/
 .env
 .env.test
 
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# Next.js build output
-.next
-
-# Nuxt.js build / generate output
-.nuxt
-dist
-
-# Gatsby files
-.cache/
-# Comment in the public line in if your project uses Gatsby and not Next.js
-# https://nextjs.org/blog/next-9-1#public-directory-support
-# public
-
-# vuepress build output
-.vuepress/dist
-
-# Serverless directories
-.serverless/
-
-# FuseBox cache
-.fusebox/
-
-# DynamoDB Local files
-.dynamodb/
-
-# TernJS port file
-.tern-port
-
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
@@ -155,9 +123,14 @@ dist
 # All "hidden" folders
 .*/
 
-# Temporary JSON files and helper scripts
+# Temporary files and helper scripts
 *.sh
 _*.json
+**/_*.ts
+reports/
+.*/
+*.local.md
+*.local.json
 
 # Documentation and tests do not have to be in the package
 docs/

@@ -2,7 +2,7 @@ import { Controller, HAPStatus, PlatformAccessory, Service } from 'homebridge';
 import { QoS } from 'mqtt-packet';
 import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
-import { BasicAccessory, ServiceHandler } from './converters/interfaces';
+import { BasicAccessory, FakeGatoHistoryType, HistoryService, ServiceHandler } from './converters/interfaces';
 import { EXP_AVAILABILITY } from './experimental';
 import { hap } from './hap';
 import { sanitizeAccessoryName, sanitizeAndFilterExposesEntries } from './helpers';
@@ -498,6 +498,35 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       name += ` ${subType}`;
     }
     return sanitizeAccessoryName(name);
+  }
+
+  addFakeGatoHistoryService(type: FakeGatoHistoryType): HistoryService | undefined {
+    if (this.additionalConfig.enable_history !== true) {
+      return undefined;
+    }
+    try {
+      // biome-ignore lint/style/noCommonJs: fakegato-history is a CommonJS module loaded dynamically
+      const fakeGatoInit = require('fakegato-history') as typeof import('fakegato-history');
+      const FakeGato = fakeGatoInit(this.platform.api);
+      const adapter = { log: this.log, displayName: this.displayName };
+      const historyService = new FakeGato(type, adapter, { size: 4032 }) as HistoryService & Service;
+
+      // Remove old history service if it already exists (e.g., from a previous session)
+      const existingService = this.accessory.services.find((s) => s.UUID === (historyService as unknown as Service).UUID);
+      if (existingService !== undefined) {
+        this.accessory.removeService(existingService);
+      }
+
+      // Add the new history service and register its UUID to prevent clean-up
+      this.accessory.addService(historyService as unknown as Service);
+      this.serviceIds.add(Zigbee2mqttAccessory.getUniqueIdForService(historyService as unknown as Service));
+
+      return historyService;
+    } catch (e) {
+      this.log.warn(`Failed to create fakegato-history service (type: ${type}): ${e}`);
+      this.log.warn('Make sure the fakegato-history package is installed.');
+      return undefined;
+    }
   }
 
   configureController(controller: Controller) {

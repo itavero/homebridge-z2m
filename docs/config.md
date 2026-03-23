@@ -104,6 +104,7 @@ Currently the following options are available:
 * `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard.
 * `exposes`: An array of exposes information, using the [structures defined by Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/usage/exposes.html).
 * `converters`: An object to optionally provide additional configuration for specific converters. More information can be found in the documentation of the [converters](converters.md), if applicable.
+* `enable_history`: If set to `true`, enables historical sensor data logging via [fakegato-history](https://github.com/simont77/fakegato-history) for this device. Sensor history becomes visible in the [Elgato Eve app](https://www.evehome.com/en/eve-app). See [Sensor History (Elgato Eve)](#history) for details.
 
 ### Defaults
 Within the `defaults` property, you can also configure the device specific options mentioned above (except for the `id` and `included_keys`).
@@ -161,3 +162,80 @@ In the latest (or next) release the following features can be enabled:
 | Flag | Global | Device | Description |
 | ---- | ------ | ------ | ----------- |
 | `AVAILABILITY` | ✅ | ✅ | Enable Availability feature. Without this flag, the logic will still be executed, except for changing the status of characteristics. (see [#56](https://github.com/itavero/homebridge-z2m/issues/56) / [#593](https://github.com/itavero/homebridge-z2m/issues/593)) |
+
+## Sensor History (Elgato Eve) {#history}
+
+Homebridge-z2m can record sensor history that is visible in the [Elgato Eve app](https://www.evehome.com/en/eve-app) using the [fakegato-history](https://github.com/simont77/fakegato-history) library.
+
+> **Note:** The `fakegato-history` package is bundled with homebridge-z2m as a direct dependency, so no separate installation is required.
+
+History recording is **opt-in** and **disabled by default**. Enable it per device or globally:
+
+```json
+{
+  "platform": "zigbee2mqtt",
+  "defaults": {
+    "enable_history": true
+  },
+  "devices": [
+    { "id": "0x1234567890abcdef", "enable_history": false }
+  ]
+}
+```
+
+### Supported sensor types
+
+| Sensor | Elgato Eve history type | Details |
+|--------|-------------------------|---------|
+| Temperature (`temperature`) | Weather | Records temperature in °C |
+| Humidity (`humidity`) | Weather | Records relative humidity in % |
+| Air Pressure (`pressure`) | Weather | Records pressure in mbar |
+| Contact (`contact`) | Door | Closed = 0, Open = 1 |
+| Occupancy (`occupancy`) | Motion | Detected = 1, Not detected = 0 |
+| Moving (`moving`) | Motion | Moving = 1, Still = 0 |
+| Presence (`presence`) | Motion | Present = 1, Not present = 0 |
+| Power (`power`, `active_power`, `load`) | Energy | Records power in Watts |
+
+Temperature, humidity, and pressure are stored in the same weather history service. If a device exposes all three, they all appear in the same weather history graph in Eve.
+
+### Per-service opt-out
+
+If you want to enable history for most sensors on a device but disable it for one specific sensor, use the `converters` configuration:
+
+```json
+{
+  "id": "0xabc123",
+  "enable_history": true,
+  "converters": {
+    "humidity": { "history": false }
+  }
+}
+```
+
+Supported per-service tags: `temperature`, `humidity`, `pressure`, `contact`, `occupancy`, `moving`, `presence`.
+
+### History persistence options
+
+By default, history is stored in memory and is lost when Homebridge restarts. To persist history data across restarts, configure `history_options` at the root level:
+
+```json
+{
+  "platform": "zigbee2mqtt",
+  "history_options": {
+    "storage": "fs",
+    "path": "/var/lib/homebridge/history/"
+  }
+}
+```
+
+Available options:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `size` | 4032 | Number of history samples to keep in memory |
+| `storage` | *(none)* | Storage backend: `"fs"` (filesystem) or `"googleDrive"`. Omit to disable persistence |
+| `path` | Homebridge storage dir | *(fs only)* Directory where history files are saved |
+| `folder` | `"fakegato"` | *(googleDrive only)* Google Drive folder name |
+| `keyPath` | Homebridge storage dir | *(googleDrive only)* Path to Google credentials directory |
+| `disableTimer` | `false` | Disable fakegato's internal 10-minute averaging timer |
+| `disableRepeatLastData` | `false` | Disable repeating the last entry every 10 minutes to avoid gaps |

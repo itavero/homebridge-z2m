@@ -1,6 +1,6 @@
 import { Controller, HAPStatus, PlatformAccessory, Service } from 'homebridge';
 import { QoS } from 'mqtt-packet';
-import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
+import { BaseDeviceConfiguration, HistoryOptions, isDeviceConfiguration } from './configModels';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
 import { BasicAccessory, FakeGatoHistoryType, HistoryService, ServiceHandler } from './converters/interfaces';
 import { EXP_AVAILABILITY } from './experimental';
@@ -515,7 +515,10 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       const fakeGatoInit = require('fakegato-history') as typeof import('fakegato-history');
       const FakeGato = fakeGatoInit(this.platform.api);
       const adapter = { log: this.log, displayName: this.displayName };
-      const historyService = new FakeGato(type, adapter, { size: 4032 }) as HistoryService & Service;
+
+      // Merge default size with user-provided history_options
+      const historyOptions: HistoryOptions = Object.assign({ size: 4032 }, this.platform.config?.history_options ?? {});
+      const historyService = new FakeGato(type, adapter, historyOptions) as HistoryService & Service;
 
       // Remove old history service if it already exists (e.g., from a previous session)
       const existingService = this.accessory.services.find((s) => s.UUID === (historyService as unknown as Service).UUID);

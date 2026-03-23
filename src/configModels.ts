@@ -3,6 +3,77 @@ import { ConverterConfigValidatorCollection } from './converters/creators';
 import { BasicLogger } from './logger';
 import { ExposesEntry, isExposesEntry } from './z2mModels';
 
+/** Persistence and behaviour options for the fakegato-history service. */
+export interface HistoryOptions extends Record<string, unknown> {
+  /** Number of history samples to store in memory (default: 4032). */
+  size?: number;
+  /**
+   * Storage backend for persisting history data across restarts.
+   * - `'fs'`: Save to local filesystem (recommended for most users).
+   * - `'googleDrive'`: Save to Google Drive.
+   * Omit to disable persistence (history is in-memory only).
+   */
+  storage?: 'fs' | 'googleDrive';
+  /**
+   * (Only for `storage: 'fs'`) Directory where history files are saved.
+   * Defaults to the Homebridge storage directory (`-U` option) if omitted.
+   */
+  path?: string;
+  /**
+   * (Only for `storage: 'googleDrive'`) Google Drive folder name.
+   * Defaults to `'fakegato'` if omitted.
+   */
+  folder?: string;
+  /**
+   * (Only for `storage: 'googleDrive'`) Path to the directory containing
+   * `client_secret.json` and `drive-nodejs-quickstart.json`.
+   * Defaults to the Homebridge storage directory (`-U` option) if omitted.
+   */
+  keyPath?: string;
+  /**
+   * Disable the internal 10-minute timer that averages and commits entries.
+   * Only use this if you want to manage the timer yourself.
+   */
+  disableTimer?: boolean;
+  /**
+   * By default, fakegato repeats the last entry every 10 minutes to avoid
+   * gaps. Set to `true` to disable this behaviour.
+   */
+  disableRepeatLastData?: boolean;
+}
+
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
+export const isHistoryOptions = (x: any): x is HistoryOptions => {
+  if (x !== null && x !== undefined && typeof x !== 'object') {
+    return false;
+  }
+  if (x === null || x === undefined) {
+    return true;
+  }
+  if (x.size !== undefined && (typeof x.size !== 'number' || !Number.isInteger(x.size) || x.size < 1)) {
+    return false;
+  }
+  if (x.storage !== undefined && x.storage !== 'fs' && x.storage !== 'googleDrive') {
+    return false;
+  }
+  if (x.path !== undefined && typeof x.path !== 'string') {
+    return false;
+  }
+  if (x.folder !== undefined && typeof x.folder !== 'string') {
+    return false;
+  }
+  if (x.keyPath !== undefined && typeof x.keyPath !== 'string') {
+    return false;
+  }
+  if (x.disableTimer !== undefined && typeof x.disableTimer !== 'boolean') {
+    return false;
+  }
+  if (x.disableRepeatLastData !== undefined && typeof x.disableRepeatLastData !== 'boolean') {
+    return false;
+  }
+  return true;
+};
+
 export interface PluginConfiguration extends PlatformConfig {
   mqtt: MqttConfiguration;
   log?: LogConfiguration;
@@ -10,6 +81,7 @@ export interface PluginConfiguration extends PlatformConfig {
   experimental?: string[];
   devices?: DeviceConfiguration[];
   exclude_grouped_devices?: boolean;
+  history_options?: HistoryOptions;
 }
 
 function hasValidConverterConfigurations(
@@ -72,6 +144,11 @@ export const isPluginConfiguration = (
 
   if (x.exclude_grouped_devices !== undefined && typeof x.exclude_grouped_devices !== 'boolean') {
     logger?.error('Incorrect configuration: exclude_grouped_devices must be a boolean, if defined.');
+    return false;
+  }
+
+  if (x.history_options !== undefined && !isHistoryOptions(x.history_options)) {
+    logger?.error('Incorrect configuration: history_options is invalid: ' + JSON.stringify(x.history_options));
     return false;
   }
 

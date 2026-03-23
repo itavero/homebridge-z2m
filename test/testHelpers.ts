@@ -15,7 +15,7 @@ import { vi } from 'vitest';
 import { MockProxy, mock, mockClear } from 'vitest-mock-extended';
 import { when } from 'vitest-when';
 import { BasicServiceCreatorManager } from '../src/converters/creators';
-import { BasicAccessory, ServiceHandler } from '../src/converters/interfaces';
+import { BasicAccessory, FakeGatoHistoryType, HistoryService, ServiceHandler } from '../src/converters/interfaces';
 import { DeviceDefinition, DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry, isExposesEntry } from '../src/z2mModels';
 
 export type HomebridgeCharacteristicSetCallback = (
@@ -316,6 +316,9 @@ export class ServiceHandlersTestHarness {
   public numberOfExpectedControllers = 0;
   public numberOfExpectedControllerRemovals = 0;
 
+  private historyServiceMock: (MockProxy<HistoryService> & HistoryService) | undefined;
+  private historyEnabled = false;
+
   constructor() {
     this.accessoryMock = mock<BasicAccessory>();
     this.accessoryMock.log = mock<Logger>();
@@ -355,6 +358,24 @@ export class ServiceHandlersTestHarness {
         testHandler.serviceHandler = serviceHandler;
       }
     });
+
+    this.accessoryMock.getOrAddHistoryService.mockImplementation((_historyType: FakeGatoHistoryType): HistoryService | undefined => {
+      if (!this.historyEnabled) {
+        return undefined;
+      }
+      if (this.historyServiceMock === undefined) {
+        this.historyServiceMock = mock<HistoryService>();
+      }
+      return this.historyServiceMock;
+    });
+  }
+
+  enableHistory(): void {
+    this.historyEnabled = true;
+  }
+
+  getHistoryServiceMock(): (MockProxy<HistoryService> & HistoryService) | undefined {
+    return this.historyServiceMock;
   }
 
   addExperimentalFeatureFlags(feature: string): void {
@@ -605,8 +626,19 @@ export class ServiceHandlersTestHarness {
     expect(this.accessoryMock.queueKeyForGetAction).not.toHaveBeenCalled();
   }
 
+  /** Calls updateState on all registered handlers without asserting on characteristic updates. */
+  callUpdateState(json: string): void {
+    const state = JSON.parse(json);
+    for (const handler of this.handlers.values()) {
+      handler?.serviceHandler?.updateState(state);
+    }
+  }
+
   clearMocks(): void {
     mockClear(this.accessoryMock);
     this.handlers.forEach((h) => h.clearMocks());
+    if (this.historyServiceMock !== undefined) {
+      mockClear(this.historyServiceMock);
+    }
   }
 }

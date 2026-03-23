@@ -29,3 +29,9 @@ For devices that support bidirectional energy measurement (such as solar inverte
 ## Multi-Endpoint Devices
 
 For devices with multiple endpoints (e.g., multi-gang power monitoring switches), a separate electrical sensor service will be created for each endpoint.
+
+## History support
+
+When `enable_history: true` is set for a device (see [Sensor History](config.md#history)), power measurements (`power`, `active_power`, `load`) will be automatically logged as energy history entries in the [Elgato Eve app](https://www.evehome.com/en/eve-app).
+
+Energy history records power usage in Watts, averaged over 10-minute intervals by fakegato.

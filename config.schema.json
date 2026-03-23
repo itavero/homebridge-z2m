@@ -430,6 +430,68 @@
         "default": false,
         "required": false
       },
+      "history_options": {
+        "title": "History options (fakegato-history)",
+        "description": "Global persistence and behaviour options for the fakegato-history service. Only relevant when enable_history is true for at least one device.",
+        "type": "object",
+        "required": false,
+        "properties": {
+          "size": {
+            "title": "History size",
+            "description": "Number of history samples to keep in memory. Defaults to 4032.",
+            "type": "integer",
+            "minimum": 1,
+            "default": 4032,
+            "required": false
+          },
+          "storage": {
+            "title": "Persistence storage",
+            "description": "Storage backend for persisting history across restarts. Omit to use in-memory only (history is lost on restart).",
+            "type": "string",
+            "required": false,
+            "oneOf": [
+              {
+                "title": "Filesystem",
+                "enum": ["fs"]
+              },
+              {
+                "title": "Google Drive",
+                "enum": ["googleDrive"]
+              }
+            ]
+          },
+          "path": {
+            "title": "Filesystem path",
+            "description": "(storage: fs only) Directory where history files are saved. Defaults to the Homebridge storage directory.",
+            "type": "string",
+            "required": false
+          },
+          "folder": {
+            "title": "Google Drive folder",
+            "description": "(storage: googleDrive only) Google Drive folder name. Defaults to 'fakegato'.",
+            "type": "string",
+            "required": false
+          },
+          "keyPath": {
+            "title": "Google credentials path",
+            "description": "(storage: googleDrive only) Path to the directory with client_secret.json. Defaults to the Homebridge storage directory.",
+            "type": "string",
+            "required": false
+          },
+          "disableTimer": {
+            "title": "Disable internal timer",
+            "description": "Disable the 10-minute internal timer that averages and commits entries. Use only if you want to manage the timer yourself.",
+            "type": "boolean",
+            "required": false
+          },
+          "disableRepeatLastData": {
+            "title": "Disable repeat last data",
+            "description": "Disable repeating the last entry every 10 minutes to avoid gaps in the history.",
+            "type": "boolean",
+            "required": false
+          }
+        }
+      },
       "devices": {
         "title": "Devices",
         "type": "array",

@@ -77,6 +77,7 @@
   ],
   "dependencies": {
     "color-convert": "^2.0.1",
+    "fakegato-history": "^0.6.7",
     "mqtt": "^5.3.4",
     "semver": "^7.7.4"
   },

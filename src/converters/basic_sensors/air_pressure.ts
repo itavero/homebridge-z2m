@@ -1,17 +1,23 @@
 import { Characteristic, Service } from 'homebridge';
 import { hap } from '../../hap';
+import { BasicLogger } from '../../logger';
 import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
 import { BasicAccessory } from '../interfaces';
 import { PassthroughCharacteristicMonitor } from '../monitor';
-import { BasicSensorHandler } from './basic';
+import { BasicSensorHandler, isHistoryConfig } from './basic';
 
 export class AirPressureSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'pressure';
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
+  public static readonly converterConfigTag: string = 'pressure';
 
   private static readonly ServiceUUID: string = 'E863F00A-079E-48FF-8F27-9C2605A29F52';
   private static readonly CharacteristicUUID: string = 'E863F10F-079E-48FF-8F27-9C2605A29F52';
   private static readonly CharacteristicName: string = 'Air Pressure';
+
+  public static isValidConverterConfiguration(config: unknown, _tag: string, _logger: BasicLogger | undefined): boolean {
+    return isHistoryConfig(config);
+  }
 
   static AirPressureSensor(displayName: string, subtype?: string | undefined): Service {
     const service = new hap.Service(displayName, AirPressureSensorHandler.ServiceUUID, subtype);
@@ -42,6 +48,7 @@ export class AirPressureSensorHandler extends BasicSensorHandler {
     accessory.log.debug(`Configuring AirPressureSensor for ${this.serviceName}`);
 
     this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, AirPressureSensorHandler.CharacteristicName));
+    this.trySetupHistory(accessory, 'weather', 'pressure', AirPressureSensorHandler.converterConfigTag);
   }
 
   get mainCharacteristics(): (Characteristic | undefined)[] {

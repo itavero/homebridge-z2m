@@ -486,4 +486,74 @@ describe('Electrical Sensors', () => {
       harness.checkSingleUpdateState('{"active_power":150}', ELECTRICAL_SERVICE_UUID, CHARACTERISTIC_WATT, 150);
     });
   });
+
+  describe('History service integration', () => {
+    describe('Power measurement adds energy history entry', () => {
+      let harness: ServiceHandlersTestHarness;
+
+      beforeEach(() => {
+        if (harness === undefined) {
+          const newHarness = new ServiceHandlersTestHarness();
+          newHarness.enableHistory();
+
+          const exposes: ExposesEntry[] = [
+            {
+              name: 'power',
+              access: 1,
+              type: 'numeric',
+              property: 'power',
+              unit: 'W',
+            },
+          ];
+
+          newHarness.getOrAddHandler(ELECTRICAL_SERVICE_UUID);
+          newHarness.prepareCreationMocks();
+          newHarness.callCreators(exposes);
+          harness = newHarness;
+        }
+        harness?.clearMocks();
+      });
+
+      afterEach(() => {
+        vi.resetAllMocks();
+      });
+
+      test('Power update adds history entry with power key', () => {
+        harness.callUpdateState('{"power":75.5}');
+        const historyMock = harness.getHistoryServiceMock();
+        expect(historyMock).toBeDefined();
+        expect(historyMock?.addEntry).toHaveBeenCalledTimes(1);
+        const entry = historyMock?.addEntry.mock.calls[0][0];
+        expect(entry?.power).toBe(75.5);
+      });
+
+      test('Non-power state update does not add history entry', () => {
+        harness.callUpdateState('{"voltage":230}');
+        const historyMock = harness.getHistoryServiceMock();
+        // History service was created but no entry should be added for a non-power update
+        expect(historyMock?.addEntry).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('No history service when history is disabled', () => {
+      test('getOrAddHistoryService returns undefined', () => {
+        const h = new ServiceHandlersTestHarness();
+        // NOT calling enableHistory()
+        const exposes: ExposesEntry[] = [
+          {
+            name: 'power',
+            access: 1,
+            type: 'numeric',
+            property: 'power',
+            unit: 'W',
+          },
+        ];
+        h.getOrAddHandler(ELECTRICAL_SERVICE_UUID);
+        h.prepareCreationMocks();
+        h.callCreators(exposes);
+        h.callUpdateState('{"power":100}');
+        expect(h.getHistoryServiceMock()).toBeUndefined();
+      });
+    });
+  });
 });

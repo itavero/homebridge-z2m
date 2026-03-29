@@ -3,12 +3,20 @@ import { hap } from '../../hap';
 import { getOrAddCharacteristic } from '../../helpers';
 import { BasicLogger } from '../../logger';
 import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, exposesCanBeGet, exposesIsPublished } from '../../z2mModels';
-import { BasicAccessory, ServiceHandler } from '../interfaces';
+import { BasicAccessory, FakeGatoHistoryType, HistoryService, ServiceHandler } from '../interfaces';
 import { CharacteristicMonitor, MappingCharacteristicMonitor } from '../monitor';
 
 export type ServiceConstructor = (serviceName: string, subType: string | undefined) => Service;
 
 export type IdentifierGenerator = (endpoint: string | undefined, accessory: BasicAccessory) => string;
+
+export interface HistoryConfig {
+  history?: boolean;
+}
+
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
+export const isHistoryConfig = (x: any): x is HistoryConfig =>
+  x !== null && typeof x === 'object' && (x.history === undefined || typeof x.history === 'boolean');
 
 export abstract class BasicSensorHandler implements ServiceHandler {
   protected log: BasicLogger;
@@ -18,6 +26,10 @@ export abstract class BasicSensorHandler implements ServiceHandler {
   protected service: Service;
   protected serviceName: string;
   identifier = '';
+
+  private historyService?: HistoryService;
+  private historyEntryKey?: string;
+  private historyTransform?: (value: unknown) => number | boolean;
 
   constructor(
     accessory: BasicAccessory,
@@ -63,6 +75,33 @@ export abstract class BasicSensorHandler implements ServiceHandler {
     return keys;
   }
 
+  /**
+   * Registers this sensor as a contributor to a fakegato history service.
+   * Multiple sensors on the same accessory sharing the same history type will share
+   * the same service instance (e.g. temperature + humidity both contribute to 'weather').
+   *
+   * History can be disabled per-service via:
+   *   `converters: { <configTag>: { history: false } }`
+   */
+  protected trySetupHistory(
+    accessory: BasicAccessory,
+    type: FakeGatoHistoryType,
+    entryKey: string,
+    configTag: string,
+    transform?: (value: unknown) => number | boolean
+  ): void {
+    // Check per-service opt-out via converter config
+    const converterConfig = accessory.getConverterConfiguration(configTag);
+    if (converterConfig !== undefined && isHistoryConfig(converterConfig) && converterConfig.history === false) {
+      return;
+    }
+    this.historyService = accessory.getOrAddHistoryService(type);
+    if (this.historyService !== undefined) {
+      this.historyEntryKey = entryKey;
+      this.historyTransform = transform;
+    }
+  }
+
   protected createOptionalGenericCharacteristics(exposes: ExposesEntryWithBinaryProperty[], service: Service) {
     this.tryCreateTamper(exposes, service);
     this.tryCreateLowBattery(exposes, service);
@@ -96,5 +135,18 @@ export abstract class BasicSensorHandler implements ServiceHandler {
 
   updateState(state: Record<string, unknown>): void {
     this.monitors.forEach((m) => m.callback(state, this.log));
+    if (this.historyService !== undefined && this.historyEntryKey !== undefined) {
+      const rawValue = state[this.sensorExpose.property];
+      if (rawValue !== undefined) {
+        const entryValue = this.historyTransform !== undefined ? this.historyTransform(rawValue) : (rawValue as number);
+        const entry: { time: number } & Record<string, number | boolean> = { time: Math.round(Date.now() / 1000) };
+        entry[this.historyEntryKey] = entryValue;
+        try {
+          this.historyService.addEntry(entry);
+        } catch (e) {
+          this.log.debug(`Failed to add history entry: ${e}`);
+        }
+      }
+    }
   }
 }

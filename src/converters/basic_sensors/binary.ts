@@ -17,11 +17,16 @@ export class BinarySensorTypeDefinition {
 
 export interface BinarySensorConfig {
   type?: string;
+  history?: boolean;
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isBinarySensorConfig = (x: any): x is BinarySensorConfig =>
-  x !== undefined && (x.type === undefined || (typeof x.type === 'string' && x.type.length > 0));
+  x !== null &&
+  x !== undefined &&
+  typeof x === 'object' &&
+  (x.type === undefined || (typeof x.type === 'string' && x.type.length > 0)) &&
+  (x.history === undefined || typeof x.history === 'boolean');
 
 export abstract class ConfigurableBinarySensorHandler extends BasicSensorHandler {
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.BINARY;

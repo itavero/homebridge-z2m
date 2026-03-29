@@ -55,6 +55,7 @@ export class OccupancySensorHandler extends ConfigurableBinarySensorHandler {
       OccupancySensorHandler.defaultType,
       OccupancySensorHandler.getTypeDefinitions()
     );
+    this.trySetupHistory(accessory, 'motion', 'status', OccupancySensorHandler.converterConfigTag, (v) => (v ? 1 : 0));
   }
 
   static generateIdentifier(endpoint: string | undefined, accessory: BasicAccessory) {

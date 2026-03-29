@@ -680,4 +680,181 @@ describe('Basic Sensors', () => {
       harness.checkSingleUpdateState('{"moving":true}', movingSensorId, hap.Characteristic.MotionDetected, true);
     });
   });
+
+  describe('History service integration', () => {
+    describe('Temperature sensor sends weather history', () => {
+      let harness: ServiceHandlersTestHarness;
+
+      beforeEach(() => {
+        if (harness === undefined) {
+          const deviceExposes = loadExposesFromFile('aqara/wsdcgq12lm.json');
+          const newHarness = new ServiceHandlersTestHarness();
+          newHarness.enableHistory();
+          const deviceTemperatureServiceId = hap.Service.TemperatureSensor.UUID + '_device_temperature';
+          newHarness
+            .getOrAddHandler(hap.Service.TemperatureSensor, 'device_temperature')
+            .addExpectedCharacteristic('device_temperature', hap.Characteristic.CurrentTemperature);
+          newHarness
+            .getOrAddHandler(hap.Service.TemperatureSensor)
+            .addExpectedCharacteristic('temperature', hap.Characteristic.CurrentTemperature);
+          newHarness
+            .getOrAddHandler(hap.Service.HumiditySensor)
+            .addExpectedCharacteristic('humidity', hap.Characteristic.CurrentRelativeHumidity);
+          newHarness.getOrAddHandler('E863F00A-079E-48FF-8F27-9C2605A29F52');
+          newHarness.prepareCreationMocks();
+          newHarness.callCreators(deviceExposes);
+          newHarness.checkCreationExpectations();
+          harness = newHarness;
+          void deviceTemperatureServiceId;
+        }
+        harness?.clearMocks();
+      });
+
+      afterEach(() => {
+        vi.resetAllMocks();
+      });
+
+      test('Temperature update adds a weather history entry', () => {
+        harness.callUpdateState('{"temperature":21.5}');
+        const historyMock = harness.getHistoryServiceMock();
+        expect(historyMock).toBeDefined();
+        expect(historyMock?.addEntry).toHaveBeenCalledTimes(1);
+        const entry = historyMock?.addEntry.mock.calls[0][0];
+        expect(entry?.temp).toBe(21.5);
+      });
+
+      test('Humidity update adds a weather history entry', () => {
+        harness.callUpdateState('{"humidity":60.0}');
+        const historyMock = harness.getHistoryServiceMock();
+        expect(historyMock).toBeDefined();
+        expect(historyMock?.addEntry).toHaveBeenCalledTimes(1);
+        const entry = historyMock?.addEntry.mock.calls[0][0];
+        expect(entry?.humidity).toBe(60.0);
+      });
+
+      test('Pressure update adds a weather history entry', () => {
+        harness.callUpdateState('{"pressure":1013}');
+        const historyMock = harness.getHistoryServiceMock();
+        expect(historyMock).toBeDefined();
+        expect(historyMock?.addEntry).toHaveBeenCalledTimes(1);
+        const entry = historyMock?.addEntry.mock.calls[0][0];
+        expect(entry?.pressure).toBe(1013);
+      });
+    });
+
+    describe('Contact sensor sends door history', () => {
+      let harness: ServiceHandlersTestHarness;
+
+      beforeEach(() => {
+        if (harness === undefined) {
+          const deviceExposes = loadExposesFromFile('aqara/mccgq11lm.json');
+          const newHarness = new ServiceHandlersTestHarness();
+          newHarness.enableHistory();
+          newHarness.getOrAddHandler(hap.Service.ContactSensor).addExpectedCharacteristic('contact', hap.Characteristic.ContactSensorState);
+          newHarness.prepareCreationMocks();
+          newHarness.callCreators(deviceExposes);
+          newHarness.checkCreationExpectations();
+          harness = newHarness;
+        }
+        harness?.clearMocks();
+      });
+
+      afterEach(() => {
+        vi.resetAllMocks();
+      });
+
+      test('Contact=true (closed) → history status=0', () => {
+        harness.callUpdateState('{"contact":true}');
+        const historyMock = harness.getHistoryServiceMock();
+        expect(historyMock?.addEntry).toHaveBeenCalledTimes(1);
+        expect(historyMock?.addEntry.mock.calls[0][0].status).toBe(0);
+      });
+
+      test('Contact=false (open) → history status=1', () => {
+        harness.callUpdateState('{"contact":false}');
+        const historyMock = harness.getHistoryServiceMock();
+        expect(historyMock?.addEntry).toHaveBeenCalledTimes(1);
+        expect(historyMock?.addEntry.mock.calls[0][0].status).toBe(1);
+      });
+    });
+
+    describe('Occupancy sensor sends motion history', () => {
+      let harness: ServiceHandlersTestHarness;
+
+      beforeEach(() => {
+        if (harness === undefined) {
+          const deviceExposes = loadExposesFromFile('aqara/rtcgq11lm.json');
+          const newHarness = new ServiceHandlersTestHarness();
+          newHarness.enableHistory();
+          newHarness.addConverterConfiguration('occupancy', { type: 'occupancy' });
+          newHarness
+            .getOrAddHandler(hap.Service.OccupancySensor)
+            .addExpectedCharacteristic('occupancy', hap.Characteristic.OccupancyDetected);
+          newHarness
+            .getOrAddHandler(hap.Service.LightSensor)
+            .addExpectedCharacteristic('illuminance', hap.Characteristic.CurrentAmbientLightLevel);
+          newHarness.prepareCreationMocks();
+          newHarness.callCreators(deviceExposes);
+          newHarness.checkCreationExpectations();
+          harness = newHarness;
+        }
+        harness?.clearMocks();
+      });
+
+      afterEach(() => {
+        vi.resetAllMocks();
+      });
+
+      test('Occupancy=true → history status=1', () => {
+        harness.callUpdateState('{"occupancy":true}');
+        const historyMock = harness.getHistoryServiceMock();
+        expect(historyMock?.addEntry).toHaveBeenCalledTimes(1);
+        expect(historyMock?.addEntry.mock.calls[0][0].status).toBe(1);
+      });
+
+      test('Occupancy=false → history status=0', () => {
+        harness.callUpdateState('{"occupancy":false}');
+        const historyMock = harness.getHistoryServiceMock();
+        expect(historyMock?.addEntry).toHaveBeenCalledTimes(1);
+        expect(historyMock?.addEntry.mock.calls[0][0].status).toBe(0);
+      });
+    });
+
+    describe('History disabled by default (no enable_history)', () => {
+      let harness: ServiceHandlersTestHarness;
+
+      beforeEach(() => {
+        if (harness === undefined) {
+          const deviceExposes = loadExposesFromFile('aqara/wsdcgq12lm.json');
+          const newHarness = new ServiceHandlersTestHarness();
+          // NOT calling enableHistory() — history is disabled by default
+          newHarness
+            .getOrAddHandler(hap.Service.TemperatureSensor, 'device_temperature')
+            .addExpectedCharacteristic('device_temperature', hap.Characteristic.CurrentTemperature);
+          newHarness
+            .getOrAddHandler(hap.Service.TemperatureSensor)
+            .addExpectedCharacteristic('temperature', hap.Characteristic.CurrentTemperature);
+          newHarness
+            .getOrAddHandler(hap.Service.HumiditySensor)
+            .addExpectedCharacteristic('humidity', hap.Characteristic.CurrentRelativeHumidity);
+          newHarness.getOrAddHandler('E863F00A-079E-48FF-8F27-9C2605A29F52');
+          newHarness.prepareCreationMocks();
+          newHarness.callCreators(deviceExposes);
+          newHarness.checkCreationExpectations();
+          harness = newHarness;
+        }
+        harness?.clearMocks();
+      });
+
+      afterEach(() => {
+        vi.resetAllMocks();
+      });
+
+      test('No history entries are added when history is not enabled', () => {
+        harness.callUpdateState('{"temperature":21.5,"humidity":60.0,"pressure":1013}');
+        const historyMock = harness.getHistoryServiceMock();
+        expect(historyMock).toBeUndefined();
+      });
+    });
+  });
 });

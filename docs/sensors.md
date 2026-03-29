@@ -35,6 +35,7 @@ The following table shows the possible exposes entries and the services and char
 - `type`: Allows you to use a different HomeKit service:
   - `occupancy` (default): expose as a [Occupancy Sensor](https://developers.homebridge.io/#/service/OccupancySensor) with [Occupancy Detected](https://developers.homebridge.io/#/characteristic/OccupancyDetected) characteristic
   - `motion`: expose as a [Motion Sensor](https://developers.homebridge.io/#/service/MotionSensor) with [Motion Detected](https://developers.homebridge.io/#/characteristic/MotionDetected) characteristic
+- `history`: Set to `false` to disable history recording for this sensor when `enable_history` is `true` for the device.
 
 ```json
 {
@@ -45,3 +46,30 @@ The following table shows the possible exposes entries and the services and char
   }
 }
 ```
+
+### History support
+
+When `enable_history: true` is set for a device (see [Sensor History](config.md#history)), the following sensors will automatically record history entries for the [Elgato Eve app](https://www.evehome.com/en/eve-app):
+
+| Sensor | History type | Notes |
+|--------|--------------|-------|
+| `temperature` | Weather | |
+| `humidity` | Weather | Shares history service with temperature and pressure |
+| `pressure` | Weather | Shares history service with temperature and humidity |
+| `contact` | Door | Closed = 0, Open = 1 |
+| `occupancy` | Motion | |
+| `moving` | Motion | |
+| `presence` | Motion | |
+
+You can disable history for a specific sensor while keeping it enabled for others using the `converters` configuration:
+
+```json
+{
+  "id": "0xabc123",
+  "enable_history": true,
+  "converters": {
+    "humidity": { "history": false }
+  }
+}
+```
+

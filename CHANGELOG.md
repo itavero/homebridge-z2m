@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
-## [Unreleased]
+## [1.11.0] - 2026-03-29
 
 Below you will find a summary of all changes since v1.9.3, including those introduced in intermediate beta releases, as this is the first
 "regular" release since then.
@@ -558,7 +558,8 @@ For `cover` devices the following changes/fixes are in this release:
 - Restore BatteryService and WindowCovering properly on start up.
 - Improve state determination for WindowCovering.
 
-[unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.11...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0...HEAD
+[1.11.0]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.11...v1.11.0
 [1.11.0-beta.11]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.10...v1.11.0-beta.11
 [1.11.0-beta.10]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.9...v1.11.0-beta.10
 [1.11.0-beta.9]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.8...v1.11.0-beta.9

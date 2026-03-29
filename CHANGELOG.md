@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
+## [Unreleased]
+
+Below you will find a summary of all changes since v1.9.3, including those introduced in intermediate beta releases, as this is the first
+"regular" release since then.
+
+### Added
+
+- **Adaptive Lighting**: Support for Adaptive Lighting on lights with a Color Temperature characteristic. (see [#30](https://github.com/itavero/homebridge-z2m/issues/30) / [#488](https://github.com/itavero/homebridge-z2m/pull/488) / [#1146](https://github.com/itavero/homebridge-z2m/pull/1146))
+  - Now **enabled by default**. Set `adaptive_lighting` to `false` in the converter configuration to disable it.
+  - New `min_delta` option to set a minimum color temperature difference (in mired) before sending an update, reducing MQTT traffic.
+  - New `enabled` option for explicit enable/disable control within an object configuration.
+  - Cached color temperature is reset when the light is turned on or brightness changes via HomeKit, ensuring the next update is sent.
+- Expose electrical measurement properties (`power`, `voltage`, `current`, `energy`, `produced_energy`) using Eve-compatible custom characteristics, visible in the Eve app and other HomeKit apps that support custom characteristics. (see [#505](https://github.com/itavero/homebridge-z2m/issues/505))
+- Support for Carbon Dioxide (`co2`) sensors. (see [#609](https://github.com/itavero/homebridge-z2m/issues/609))
+- Expose `moving` as Motion Sensor. (see [#956](https://github.com/itavero/homebridge-z2m/pull/956))
+- Properties/exposes information can now be excluded based on `endpoint`, using the `excluded_endpoints` configuration option. (relates to [#517](https://github.com/itavero/homebridge-z2m/issues/517))
+- Window Covering can now be requested to stop moving. (see [#483](https://github.com/itavero/homebridge-z2m/issues/483))
+- Debug messages can be output as `info` by setting `debug_as_info` to `true` in the plugin configuration.
+- **Experimental**: Availability information from Zigbee2MQTT is now used to determine if a device is reachable, when the `AVAILABILITY` experimental feature flag is enabled. This feature is disabled by default. (see [#36](https://github.com/itavero/homebridge-z2m/issues/36))
+  - New `ignore_z2m_online` device option to not mark devices as offline when Zigbee2MQTT reports itself as offline.
+
+### Changed
+
+- **Breaking**: Drop support for Node.js v18. Now requires Node.js v20.18.0+, v22.10.0+ or v24.0.0+.
+- **Breaking**: Drop support for Homebridge v1.6.x and v1.7.x. Now requires Homebridge v1.8.0+ or v2.0.0-beta.0+.
+- Updated MQTT topic handling for Zigbee2MQTT 2.0 compatibility:
+  - The `bridge/state` topic now supports both JSON format (`{"state":"online"}`) and plain strings for backwards compatibility.
+  - The deprecated `bridge/config` topic is no longer handled (use `bridge/info` instead).
+- Lights: `color_mode` is now always used (no longer behind an experimental flag).
+- Light sensor uses `illuminance` as a fallback if `illuminance_lux` is not available, improving Zigbee2MQTT v2 compatibility. (see [#966](https://github.com/itavero/homebridge-z2m/issues/966))
+- Brightness for lights is no longer requested by default (prevents issues when light is off). Old behavior can be restored using the `request_brightness` option. (see [#882](https://github.com/itavero/homebridge-z2m/issues/882))
+- Window Covering now uses `motor_state` (if provided) to improve the user experience in the Home.app. (see [#852](https://github.com/itavero/homebridge-z2m/issues/852))
+- Process devices not yet supported by Zigbee2MQTT if they provide exposes information.
+- For numeric characteristics, the range is automatically updated if an out-of-range value is received.
+- Exposes information is now filtered before passing it to the service handlers for improved consistency and maintainability.
+- MQTT messages published by this plugin are now logged at `debug` level by default (configurable via `log.mqtt_publish`). (see [#518](https://github.com/itavero/homebridge-z2m/issues/518))
+- `config.schema.json`: `exclude` is now set to `false` when unchecked, allowing per-device overrides of a global `exclude: true` setting. (see [#610](https://github.com/itavero/homebridge-z2m/issues/610))
+
+### Fixed
+
+- Homebridge v2 compatibility: characteristic values are set correctly before limiting ranges; accessory names are sanitized to valid characters.
+- Non-zero brightness levels below 1% are now rounded up to 1%. (see [#673](https://github.com/itavero/homebridge-z2m/issues/673))
+- Processing JSON availability payload no longer results in a TypeError.
+- When combining exposes information of grouped devices, `value_min` and `value_max` are now combined correctly.
+
 ## [1.11.0-beta.11] - 2026-03-15
 
 ### Changed

@@ -16,6 +16,11 @@ This is the documentation website of the Homebridge plugin that integrates [Zigb
 * [Service Handlers](converters.md)
 * [Device support](devices/index.md) (automatically generated)
 
+## For Developers
+
+* [Architecture Documentation](architecture.md) - Detailed internal plugin architecture
+* [Contributing Guide](../CONTRIBUTING.md) - How to contribute to this project
+
 
 # Need help?
 

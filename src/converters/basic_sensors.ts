@@ -23,9 +23,12 @@ import { MovingSensorHandler } from './basic_sensors/moving';
 import { OccupancySensorHandler } from './basic_sensors/occupancy';
 import { PresenceSensorHandler } from './basic_sensors/presence';
 import { SmokeSensorHandler } from './basic_sensors/smoke';
+import { SoilFertilitySensorHandler } from './basic_sensors/soil_fertility';
+import { SoilFertilityWarningSensorHandler } from './basic_sensors/soil_fertility_warning';
 import { SoilMoistureSensorHandler } from './basic_sensors/soil_moisture';
 import { TemperatureSensorHandler } from './basic_sensors/temperature';
 import { VibrationSensorHandler } from './basic_sensors/vibration';
+import { WaterWarningSensorHandler } from './basic_sensors/water_warning';
 import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 
 type ExposeToHandlerFunction = (expose: ExposesEntryWithProperty) => ServiceHandler;
@@ -64,7 +67,10 @@ export class BasicSensorCreator implements ServiceCreator {
     DeviceTemperatureSensorHandler,
     CarbonDioxideSensorHandler,
     SoilMoistureSensorHandler,
+    SoilFertilitySensorHandler,
     DrySensorHandler,
+    WaterWarningSensorHandler,
+    SoilFertilityWarningSensorHandler,
   ];
 
   private static configs: WithConfigurableConverter<unknown>[] = [OccupancySensorHandler];

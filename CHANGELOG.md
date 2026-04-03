@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
+## [Unreleased]
+
+### Added
+
+- Support for `soil_moisture`, `dry`, `soil_fertility`, `water_warning`, and `soil_fertility_warning` sensors (e.g. Aqara SMGQ11LM, Arteco ZS-SF00).
+
 ## [1.11.0] - 2026-03-29
 
 Below you will find a summary of all changes since v1.9.3, including those introduced in intermediate beta releases, as this is the first

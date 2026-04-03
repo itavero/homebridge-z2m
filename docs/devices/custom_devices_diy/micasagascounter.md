@@ -68,6 +68,16 @@ This is the information provided by Zigbee2MQTT for this device:
     "category": "diagnostic",
     "value_on": true,
     "value_off": false
+  },
+  {
+    "name": "gas_counter_set",
+    "label": "Gas counter set",
+    "access": 2,
+    "type": "numeric",
+    "property": "gas_counter_set",
+    "description": "Write absolute gas meter value",
+    "value_max": 281474976710655,
+    "value_min": 0
   }
 ]
 ```

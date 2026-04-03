@@ -21,9 +21,6 @@ the Heiman HS1SA-E
 * [Smoke Sensor](../../sensors.md)
   * Smoke Detected
   * Status Low Battery
-* [Temperature Sensor](../../sensors.md)
-  * Current Temperature
-  * Status Low Battery
 
 
 # Related

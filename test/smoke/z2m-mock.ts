@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
 import Aedes from 'aedes';
-import { createServer, Server } from 'net';
 import { readFileSync } from 'fs';
+import { createServer, Server } from 'net';
 import { join } from 'path';
 
 const FIXTURES_DIR = join(__dirname, 'fixtures');

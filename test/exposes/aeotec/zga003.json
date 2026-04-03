@@ -1,5 +1,27 @@
 [
   {
+    "name": "device_temperature",
+    "label": "Device temperature",
+    "access": 5,
+    "type": "numeric",
+    "property": "device_temperature",
+    "description": "Temperature of the device",
+    "category": "diagnostic",
+    "unit": "°C"
+  },
+  {
+    "name": "identify",
+    "label": "Identify",
+    "access": 2,
+    "type": "enum",
+    "property": "identify",
+    "description": "Initiate device identification",
+    "category": "config",
+    "values": [
+      "identify"
+    ]
+  },
+  {
     "type": "switch",
     "endpoint": "1",
     "features": [
@@ -12,7 +34,8 @@
         "property": "state_1",
         "description": "On/off state of the switch",
         "value_on": "ON",
-        "value_off": "OFF"
+        "value_off": "OFF",
+        "value_toggle": "TOGGLE"
       }
     ]
   },
@@ -29,14 +52,15 @@
         "property": "state_2",
         "description": "On/off state of the switch",
         "value_on": "ON",
-        "value_off": "OFF"
+        "value_off": "OFF",
+        "value_toggle": "TOGGLE"
       }
     ]
   },
   {
     "name": "power",
     "label": "Power",
-    "access": 1,
+    "access": 5,
     "type": "numeric",
     "endpoint": "1",
     "property": "power_1",
@@ -44,19 +68,9 @@
     "unit": "W"
   },
   {
-    "name": "energy",
-    "label": "Energy",
-    "access": 1,
-    "type": "numeric",
-    "endpoint": "1",
-    "property": "energy_1",
-    "description": "Sum of consumed energy",
-    "unit": "kWh"
-  },
-  {
     "name": "power",
     "label": "Power",
-    "access": 1,
+    "access": 5,
     "type": "numeric",
     "endpoint": "2",
     "property": "power_2",
@@ -64,9 +78,59 @@
     "unit": "W"
   },
   {
+    "name": "voltage",
+    "label": "Voltage",
+    "access": 5,
+    "type": "numeric",
+    "endpoint": "1",
+    "property": "voltage_1",
+    "description": "Measured electrical potential value",
+    "unit": "V"
+  },
+  {
+    "name": "voltage",
+    "label": "Voltage",
+    "access": 5,
+    "type": "numeric",
+    "endpoint": "2",
+    "property": "voltage_2",
+    "description": "Measured electrical potential value",
+    "unit": "V"
+  },
+  {
+    "name": "current",
+    "label": "Current",
+    "access": 5,
+    "type": "numeric",
+    "endpoint": "1",
+    "property": "current_1",
+    "description": "Instantaneous measured electrical current",
+    "unit": "A"
+  },
+  {
+    "name": "current",
+    "label": "Current",
+    "access": 5,
+    "type": "numeric",
+    "endpoint": "2",
+    "property": "current_2",
+    "description": "Instantaneous measured electrical current",
+    "unit": "A"
+  },
+  {
     "name": "energy",
     "label": "Energy",
-    "access": 1,
+    "access": 5,
+    "type": "numeric",
+    "endpoint": "1",
+    "property": "energy_1",
+    "description": "Sum of consumed energy",
+    "unit": "kWh"
+  },
+  {
+    "name": "energy",
+    "label": "Energy",
+    "access": 5,
     "type": "numeric",
     "endpoint": "2",
     "property": "energy_2",
@@ -74,14 +138,32 @@
     "unit": "kWh"
   },
   {
-    "name": "linkquality",
-    "label": "Link quality",
+    "name": "action",
+    "label": "Action",
     "access": 1,
-    "type": "numeric",
-    "property": "linkquality",
-    "description": "Link quality (signal strength)",
-    "unit": "lqi",
-    "value_max": 255,
-    "value_min": 0
+    "type": "enum",
+    "property": "action",
+    "description": "Triggered action (e.g. a button click)",
+    "category": "diagnostic",
+    "values": [
+      "on_3",
+      "on_4",
+      "off_3",
+      "off_4",
+      "toggle_3",
+      "toggle_4",
+      "brightness_move_to_level_3",
+      "brightness_move_to_level_4",
+      "brightness_move_up_3",
+      "brightness_move_up_4",
+      "brightness_move_down_3",
+      "brightness_move_down_4",
+      "brightness_step_up_3",
+      "brightness_step_up_4",
+      "brightness_step_down_3",
+      "brightness_step_down_4",
+      "brightness_stop_3",
+      "brightness_stop_4"
+    ]
   }
 ]

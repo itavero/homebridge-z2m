@@ -1,7 +1,0 @@
-# Also see .editorconfig for additional configuration
-trailingComma: es5
-semi: true
-singleQuote: true
-quoteProps: consistent
-bracketSpacing: true
-arrowParens: always

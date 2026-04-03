@@ -1,7 +1,7 @@
 import { Controller, Service } from 'homebridge';
 import { BasicAccessory, ServiceHandler } from '../converters/interfaces';
-import { BasicLogger } from '../logger';
 import { sanitizeAccessoryName } from '../helpers';
+import { BasicLogger } from '../logger';
 
 export class DocsAccessory implements BasicAccessory {
   readonly log: BasicLogger = {
@@ -35,7 +35,6 @@ export class DocsAccessory implements BasicAccessory {
     return {};
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isExperimentalFeatureEnabled(feature: string): boolean {
     return false;
   }
@@ -72,12 +71,10 @@ export class DocsAccessory implements BasicAccessory {
     return service;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   queueDataForSetAction(_data: Record<string, unknown>): void {
     // Do nothing
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   queueKeyForGetAction(key: string | string[]): void {
     // Do nothing
   }
@@ -94,7 +91,6 @@ export class DocsAccessory implements BasicAccessory {
     this.controllers.add(controller.constructor.name);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeController(controller: Controller): void {
     // Do nothing - this is a stub for the interface
   }

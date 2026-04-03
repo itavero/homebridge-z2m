@@ -1,7 +1,8 @@
+import * as fs from 'fs';
 import { API, DynamicPlatformPlugin, Logger, LogLevel, PlatformAccessory, PlatformConfig } from 'homebridge';
-
-import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
-import { Zigbee2mqttAccessory } from './platformAccessory';
+import mqtt from 'mqtt';
+import * as semver from 'semver';
+import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from './configHelpers';
 import {
   BaseDeviceConfiguration,
   DeviceConfiguration,
@@ -9,9 +10,12 @@ import {
   isPluginConfiguration,
   PluginConfiguration,
 } from './configModels';
-
-import mqtt from 'mqtt';
-import * as fs from 'fs';
+import { ConfigurableLogger } from './configurableLogger';
+import { BasicServiceCreatorManager } from './converters/creators';
+import { errorToString, getDiffFromArrays, parseBridgeOnlineState, sanitizeAccessoryName } from './helpers';
+import { BasicLogger } from './logger';
+import { Zigbee2mqttAccessory } from './platformAccessory';
+import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import {
   DeviceListEntry,
   DeviceListEntryForGroup,
@@ -22,12 +26,6 @@ import {
   isDeviceListEntry,
   isDeviceListEntryForGroup,
 } from './z2mModels';
-import * as semver from 'semver';
-import { errorToString, getDiffFromArrays, parseBridgeOnlineState, sanitizeAccessoryName } from './helpers';
-import { BasicServiceCreatorManager } from './converters/creators';
-import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from './configHelpers';
-import { BasicLogger } from './logger';
-import { ConfigurableLogger } from './configurableLogger';
 
 export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private static readonly MIN_Z2M_VERSION = '1.17.0';
@@ -54,8 +52,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private zigbee2MqttHasBeenOffline = false;
   private connectionPreviouslyClosed = false;
   private availabilityIsEnabledGlobally = false;
-  private availabilityEnabledDevices = new Array<string>();
-  private availabilityDisabledDevices = new Array<string>();
+  private availabilityEnabledDevices = [] as string[];
+  private availabilityDisabledDevices = [] as string[];
 
   constructor(
     logger: Logger,
@@ -226,7 +224,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     this.updateServerAvailabilityForAllDevices(false);
   }
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complex state handling logic
   private onMessage(topic: string, payload: Buffer) {
     const fullTopic = topic;
     try {
@@ -488,7 +486,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     this.addAccessory(accessory);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: MQTT message payload type
   private static getIdentifiersFromDevice(device: any): string[] {
     const identifiers: string[] = [];
     if (typeof device === 'string') {
@@ -507,7 +505,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     return identifiers;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: MQTT message payload type
   private getAdditionalConfigForDevice(device: any): BaseDeviceConfiguration {
     if (this.config?.devices !== undefined) {
       const identifiers = Zigbee2mqttPlatform.getIdentifiersFromDevice(device);

@@ -1,8 +1,8 @@
-import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesKnownTypes } from '../../z2mModels';
-import { MappingCharacteristicMonitor } from '../monitor';
 import { Characteristic, CharacteristicValue, WithUUID } from 'homebridge';
 import { getOrAddCharacteristic } from '../../helpers';
+import { ExposesEntryWithBinaryProperty, ExposesKnownTypes } from '../../z2mModels';
+import { BasicAccessory } from '../interfaces';
+import { MappingCharacteristicMonitor } from '../monitor';
 import { BasicSensorHandler, IdentifierGenerator, ServiceConstructor } from './basic';
 
 export class BinarySensorTypeDefinition {
@@ -19,7 +19,7 @@ export interface BinarySensorConfig {
   type?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isBinarySensorConfig = (x: any): x is BinarySensorConfig =>
   x !== undefined && (x.type === undefined || (typeof x.type === 'string' && x.type.length > 0));
 

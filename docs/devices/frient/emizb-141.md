@@ -18,67 +18,10 @@ the Frient EMIZB-141
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Electrical Sensor](../../electrical.md)
+  * Consumption
+  * Total Consumption
 
-
-
-## Exposes
-
-This is the information provided by Zigbee2MQTT for this device:
-
-```json
-[
-  {
-    "name": "power",
-    "label": "Power",
-    "access": 5,
-    "type": "numeric",
-    "property": "power",
-    "description": "Instantaneous measured power",
-    "unit": "W"
-  },
-  {
-    "name": "energy",
-    "label": "Energy",
-    "access": 5,
-    "type": "numeric",
-    "property": "energy",
-    "description": "Sum of consumed energy",
-    "unit": "kWh"
-  },
-  {
-    "name": "battery",
-    "label": "Battery",
-    "access": 5,
-    "type": "numeric",
-    "property": "battery",
-    "description": "Remaining battery in %",
-    "category": "diagnostic",
-    "unit": "%",
-    "value_max": 100,
-    "value_min": 0
-  },
-  {
-    "name": "pulse_configuration",
-    "label": "Pulse configuration",
-    "access": 7,
-    "type": "numeric",
-    "property": "pulse_configuration",
-    "description": "Pulses per kwh. Default 1000 imp/kWh. Range 0 to 65535",
-    "value_max": 65535,
-    "value_min": 0
-  },
-  {
-    "name": "current_summation",
-    "label": "Current summation",
-    "access": 2,
-    "type": "numeric",
-    "property": "current_summation",
-    "description": "Current summation value sent to the display. e.g. 570 = 0,570 kWh",
-    "value_max": 268435455,
-    "value_min": 0
-  }
-]
-```
 
 # Related
 * [Other devices from Frient](../index.md#frient)

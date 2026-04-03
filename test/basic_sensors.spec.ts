@@ -1,9 +1,9 @@
-import { vi } from 'vitest';
-import { ExposesEntry } from '../src/z2mModels';
-import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from '@homebridge/hap-nodejs';
-import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 import { Characteristic, CharacteristicValue, WithUUID } from 'homebridge';
+import { vi } from 'vitest';
+import { hap, setHap } from '../src/hap';
+import { ExposesEntry } from '../src/z2mModels';
+import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 
 describe('Basic Sensors', () => {
   beforeAll(() => {

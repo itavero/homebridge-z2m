@@ -1,5 +1,5 @@
 import { Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
-import { ExposesEntry, exposesHasFeatures, exposesHasNumericRangeProperty } from './z2mModels';
+import { ExposesEntry, ExposesEntryWithFeatures, exposesHasFeatures, exposesHasNumericRangeProperty } from './z2mModels';
 
 export function errorToString(e: unknown): string {
   if (typeof e === 'string') {
@@ -111,6 +111,35 @@ export function setValidValuesOnCharacteristic(characteristic: Characteristic, v
     });
   }
   return characteristic;
+}
+
+export function filterExposesEntriesByEndpoint(
+  entries: ExposesEntry[],
+  targetEndpoint: string | undefined,
+  parentEndpoint?: string
+): ExposesEntry[] {
+  const result: ExposesEntry[] = [];
+  for (const entry of entries) {
+    const effectiveEndpoint = entry.endpoint ?? parentEndpoint;
+    if (exposesHasFeatures(entry)) {
+      if (effectiveEndpoint === targetEndpoint) {
+        // The whole composite belongs to this endpoint; include it as-is.
+        result.push({ ...entry });
+      } else {
+        // Recurse into features to find any that belong to the target endpoint.
+        const filteredFeatures = filterExposesEntriesByEndpoint(entry.features, targetEndpoint, effectiveEndpoint);
+        if (filteredFeatures.length > 0) {
+          const withFilteredFeatures: ExposesEntryWithFeatures = { ...entry, features: filteredFeatures };
+          result.push(withFilteredFeatures);
+        }
+      }
+    } else {
+      if (effectiveEndpoint === targetEndpoint) {
+        result.push({ ...entry });
+      }
+    }
+  }
+  return result;
 }
 
 export function groupByEndpoint<Entry extends ExposesEntry>(entries: Entry[]): Map<string | undefined, Entry[]> {

@@ -5,7 +5,7 @@ import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/
 import { BasicAccessory, ServiceHandler } from './converters/interfaces';
 import { EXP_AVAILABILITY } from './experimental';
 import { hap } from './hap';
-import { sanitizeAccessoryName, sanitizeAndFilterExposesEntries } from './helpers';
+import { filterExposesEntriesByEndpoint, sanitizeAccessoryName, sanitizeAndFilterExposesEntries } from './helpers';
 import { BasicLogger } from './logger';
 import { Zigbee2mqttPlatform } from './platform';
 import { ExtendedTimer } from './timer';
@@ -38,7 +38,11 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   get displayName(): string {
-    return this.accessory.context.device.friendly_name;
+    const name = this.accessory.context.device.friendly_name;
+    if (this.accessory.context.isSplitEndpoint === true && this.accessory.context.splitEndpoint !== undefined) {
+      return `${name} ${this.accessory.context.splitEndpoint}`;
+    }
+    return name;
   }
 
   get deviceTopic(): string {
@@ -59,7 +63,11 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     if (isDeviceListEntryForGroup(this.accessory.context.device) || 'group_id' in this.accessory.context.device) {
       return `GROUP:${this.accessory.context.device.group_id}`;
     }
-    return this.accessory.context.device.ieee_address;
+    const ieee = this.accessory.context.device.ieee_address;
+    if (this.accessory.context.isSplitEndpoint === true && this.accessory.context.splitEndpoint !== undefined) {
+      return `${ieee}_ep_${this.accessory.context.splitEndpoint}`;
+    }
+    return ieee;
   }
 
   constructor(
@@ -398,6 +406,12 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       info.definition.exposes = this.additionalConfig.exposes;
     }
 
+    // Filter exposes by endpoint if this is an endpoint-split accessory
+    if (info?.definition?.exposes !== undefined && this.accessory.context.isSplitEndpoint === true) {
+      const targetEndpoint = this.accessory.context.splitEndpoint as string | undefined;
+      info.definition.exposes = filterExposesEntriesByEndpoint(info.definition.exposes, targetEndpoint);
+    }
+
     // Filter/sanitize exposes information
     if (info?.definition?.exposes !== undefined) {
       info.definition.exposes = sanitizeAndFilterExposesEntries(
@@ -424,7 +438,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         // Update accessory info
         // Note: getOrAddService is used so that the service is known in this.serviceIds and will not get filtered out.
         this.getOrAddService(new hap.Service.AccessoryInformation())
-          .updateCharacteristic(hap.Characteristic.Name, sanitizeAccessoryName(info.friendly_name))
+          .updateCharacteristic(hap.Characteristic.Name, sanitizeAccessoryName(this.displayName))
           .updateCharacteristic(hap.Characteristic.Manufacturer, info.definition.vendor ?? 'Zigbee2MQTT')
           .updateCharacteristic(hap.Characteristic.Model, info.definition.model ?? 'unknown')
           .updateCharacteristic(hap.Characteristic.SerialNumber, this.serialNumber)

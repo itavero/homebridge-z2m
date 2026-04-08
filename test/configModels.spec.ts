@@ -108,6 +108,24 @@ describe('Plugin configuration', () => {
       expect(isPluginConfiguration(configValid, BasicServiceCreatorManager.getInstance())).toBe(true);
     });
 
+    it('with a boolean split_by_endpoint value (if present)', () => {
+      const configInvalid: PlatformConfig = {
+        ...minimalValidConfiguration,
+        defaults: {
+          split_by_endpoint: 'yes',
+        },
+      };
+      expect(isPluginConfiguration(configInvalid, BasicServiceCreatorManager.getInstance())).toBe(false);
+
+      const configValid: PlatformConfig = {
+        ...minimalValidConfiguration,
+        defaults: {
+          split_by_endpoint: true,
+        },
+      };
+      expect(isPluginConfiguration(configValid, BasicServiceCreatorManager.getInstance())).toBe(true);
+    });
+
     it('with excluded_keys as a string array (if present)', () => {
       const configNotAnArray: PlatformConfig = {
         ...minimalValidConfiguration,
@@ -156,6 +174,20 @@ describe('Plugin configuration', () => {
           devices: [{ id: '0x1234', ignore_availability: true }],
         };
         expect(isPluginConfiguration(configDevicesNotAnArray, BasicServiceCreatorManager.getInstance())).toBe(true);
+      });
+      it('device with valid split_by_endpoint boolean', () => {
+        const configValid: PlatformConfig = {
+          ...minimalValidConfiguration,
+          devices: [{ id: '0x1234', split_by_endpoint: true }],
+        };
+        expect(isPluginConfiguration(configValid, BasicServiceCreatorManager.getInstance())).toBe(true);
+      });
+      it('device with invalid split_by_endpoint value (non-boolean)', () => {
+        const configInvalid: PlatformConfig = {
+          ...minimalValidConfiguration,
+          devices: [{ id: '0x1234', split_by_endpoint: 'yes' }],
+        };
+        expect(isPluginConfiguration(configInvalid, BasicServiceCreatorManager.getInstance())).toBe(false);
       });
     });
 

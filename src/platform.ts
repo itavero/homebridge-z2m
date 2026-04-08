@@ -12,7 +12,14 @@ import {
 } from './configModels';
 import { ConfigurableLogger } from './configurableLogger';
 import { BasicServiceCreatorManager } from './converters/creators';
-import { errorToString, getDiffFromArrays, parseBridgeOnlineState, sanitizeAccessoryName } from './helpers';
+import {
+  errorToString,
+  filterExposesEntriesByEndpoint,
+  getAllEndpoints,
+  getDiffFromArrays,
+  parseBridgeOnlineState,
+  sanitizeAccessoryName,
+} from './helpers';
 import { BasicLogger } from './logger';
 import { Zigbee2mqttAccessory } from './platformAccessory';
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
@@ -423,10 +430,12 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       isAvailable = statePayload === 'online';
     }
     const deviceTopic = topic.slice(0, -1 * Zigbee2mqttPlatform.TOPIC_SUFFIX_AVAILABILITY.length);
-    const accessory = this.accessories.find((acc) => acc.matchesIdentifier(deviceTopic));
-    if (accessory) {
+    const matchingAccessories = this.accessories.filter((acc) => acc.matchesIdentifier(deviceTopic));
+    if (matchingAccessories.length > 0) {
       try {
-        accessory.updateAvailability(isAvailable);
+        for (const accessory of matchingAccessories) {
+          accessory.updateAvailability(isAvailable);
+        }
         this.log.debug(`Handled device availability update for ${deviceTopic}: ${statePayload}`);
       } catch (err) {
         this.log.error(`Failed to process availability update with payload: ${statePayload}`);
@@ -443,11 +452,13 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       return;
     }
 
-    const accessory = this.accessories.find((acc) => acc.matchesIdentifier(topic));
-    if (accessory) {
+    const matchingAccessories = this.accessories.filter((acc) => acc.matchesIdentifier(topic));
+    if (matchingAccessories.length > 0) {
       try {
         const state = JSON.parse(statePayload);
-        accessory.updateStates(state);
+        for (const accessory of matchingAccessories) {
+          accessory.updateStates(state);
+        }
         this.log.debug(`Handled device update for ${topic}: ${statePayload}`);
       } catch (err) {
         this.log.error(`Failed to process status update with payload: ${statePayload}`);
@@ -594,6 +605,16 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     if (!isDeviceDefinition(device.definition) || this.isDeviceExcluded(device)) {
       return;
     }
+
+    // Check if this device should be split into separate accessories per endpoint
+    if (!isDeviceListEntryForGroup(device)) {
+      const additionalConfig = this.getAdditionalConfigForDevice(device);
+      if (additionalConfig.split_by_endpoint === true) {
+        this.createOrUpdateEndpointAccessories(device, additionalConfig);
+        return;
+      }
+    }
+
     const uuid_input = isDeviceListEntryForGroup(device) ? `group-${device.group_id}` : device.ieee_address;
     const uuid = this.api.hap.uuid.generate(uuid_input);
     const existingAcc = this.accessories.find((acc) => acc.UUID === uuid);
@@ -610,6 +631,42 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       const acc = new Zigbee2mqttAccessory(this, accessory, this.getAdditionalConfigForDevice(device));
       this.accessories.push(acc);
       acc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(acc));
+    }
+  }
+
+  private createOrUpdateEndpointAccessories(device: DeviceListEntry, additionalConfig: BaseDeviceConfiguration) {
+    if (!isDeviceDefinition(device.definition)) {
+      return;
+    }
+    const endpoints = getAllEndpoints(device.definition.exposes);
+    for (const endpoint of endpoints) {
+      const filteredExposes = filterExposesEntriesByEndpoint(device.definition.exposes, endpoint);
+      if (filteredExposes.length === 0) {
+        continue;
+      }
+
+      // Generate a unique UUID per endpoint
+      const uuid_input = endpoint !== undefined ? `${device.ieee_address}_ep_${endpoint}` : device.ieee_address;
+      const uuid = this.api.hap.uuid.generate(uuid_input);
+      const existingAcc = this.accessories.find((acc) => acc.UUID === uuid);
+
+      if (existingAcc) {
+        existingAcc.updateDeviceInformation(device);
+        existingAcc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(existingAcc));
+      } else {
+        // New entry
+        const displayName = endpoint !== undefined ? `${device.friendly_name} ${endpoint}` : device.friendly_name;
+        const sanitized_name = sanitizeAccessoryName(displayName);
+        this.log.info(`New accessory (endpoint ${endpoint ?? 'default'}): ${displayName} (${sanitized_name})`);
+        const accessory = new this.api.platformAccessory(sanitized_name, uuid);
+        accessory.context.device = device;
+        accessory.context.isSplitEndpoint = true;
+        accessory.context.splitEndpoint = endpoint;
+        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+        const acc = new Zigbee2mqttAccessory(this, accessory, additionalConfig);
+        this.accessories.push(acc);
+        acc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(acc));
+      }
     }
   }
 

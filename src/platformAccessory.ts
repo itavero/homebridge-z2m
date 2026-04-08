@@ -39,7 +39,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
   get displayName(): string {
     const name = this.accessory.context.device.friendly_name;
-    if (this.accessory.context.isSplitEndpoint === true && this.accessory.context.splitEndpoint !== undefined) {
+    if (this.accessory.context.isSplitEndpoint && this.accessory.context.splitEndpoint !== undefined) {
       return `${name} ${this.accessory.context.splitEndpoint}`;
     }
     return name;
@@ -64,7 +64,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
       return `GROUP:${this.accessory.context.device.group_id}`;
     }
     const ieee = this.accessory.context.device.ieee_address;
-    if (this.accessory.context.isSplitEndpoint === true && this.accessory.context.splitEndpoint !== undefined) {
+    if (this.accessory.context.isSplitEndpoint && this.accessory.context.splitEndpoint !== undefined) {
       return `${ieee}_ep_${this.accessory.context.splitEndpoint}`;
     }
     return ieee;
@@ -407,7 +407,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     }
 
     // Filter exposes by endpoint if this is an endpoint-split accessory
-    if (info?.definition?.exposes !== undefined && this.accessory.context.isSplitEndpoint === true) {
+    if (info?.definition?.exposes !== undefined && this.accessory.context.isSplitEndpoint) {
       const targetEndpoint = this.accessory.context.splitEndpoint as string | undefined;
       info.definition.exposes = filterExposesEntriesByEndpoint(info.definition.exposes, targetEndpoint);
     }

@@ -110,6 +110,29 @@ describe('Helper functions', () => {
       for (const endpoint of endpoints) {
         const filtered = filterExposesEntriesByEndpoint(exposes, endpoint);
         expect(filtered.length).toBeGreaterThan(0);
+        // All returned entries should have the matching effective endpoint
+        for (const entry of filtered) {
+          expect(entry.endpoint).toBe(endpoint);
+        }
+      }
+
+      // Endpoint 'l1' should return the light composite entry
+      const l1Entries = filterExposesEntriesByEndpoint(exposes, 'l1');
+      expect(l1Entries).toHaveLength(1);
+      expect(l1Entries[0].type).toBe('light');
+      expect(l1Entries[0].endpoint).toBe('l1');
+
+      // Endpoint 'l2' should return the other light composite entry
+      const l2Entries = filterExposesEntriesByEndpoint(exposes, 'l2');
+      expect(l2Entries).toHaveLength(1);
+      expect(l2Entries[0].type).toBe('light');
+      expect(l2Entries[0].endpoint).toBe('l2');
+
+      // Undefined endpoint should return entries without an explicit endpoint (power, energy, etc.)
+      const undefinedEntries = filterExposesEntriesByEndpoint(exposes, undefined);
+      expect(undefinedEntries.length).toBeGreaterThan(0);
+      for (const entry of undefinedEntries) {
+        expect(entry.endpoint).toBeUndefined();
       }
     });
   });

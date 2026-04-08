@@ -1250,4 +1250,118 @@ describe('Light', () => {
       expect(disableSpy).not.toHaveBeenCalled();
     });
   });
+
+  describe('Adaptive Lighting no flash on turn-on or brightness change', () => {
+    let isActiveSpy: ReturnType<typeof vi.spyOn>;
+
+    beforeEach(() => {
+      isActiveSpy = vi.spyOn(hap.AdaptiveLightingController.prototype, 'isAdaptiveLightingActive');
+    });
+
+    afterEach(() => {
+      isActiveSpy.mockRestore();
+      vi.resetAllMocks();
+    });
+
+    test('does not reset AL temperature cache when turning on, preventing unnecessary AL update', () => {
+      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
+      expect(deviceExposes.length).toBeGreaterThan(0);
+
+      const harness = new ServiceHandlersTestHarness();
+      harness.addConverterConfiguration('light', {
+        adaptive_lighting: { enabled: true, only_when_on: false },
+      });
+      harness.numberOfExpectedControllers = 1;
+
+      const handler = harness
+        .getOrAddHandler(hap.Service.Lightbulb)
+        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
+        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
+
+      harness.prepareCreationMocks();
+      harness.callCreators(deviceExposes);
+      harness.checkCreationExpectations();
+
+      // Mock AL as active
+      isActiveSpy.mockReturnValue(true);
+
+      // Setup getCharacteristic(On) mock so handleAdaptiveLighting can read light state
+      handler.prepareGetCharacteristicMock('state');
+
+      // First AL update: initializes lastAdaptiveLightingTemperature to 300
+      handler.callAndCheckHomeKitSetCallback('color_temp', 300);
+      harness.checkSetDataQueued({ color_temp: 300 });
+      harness.clearMocks();
+
+      // Re-prepare getCharacteristic mock after clearMocks
+      handler.prepareGetCharacteristicMock('state');
+
+      // Turn ON the light — should only queue the ON state, not reset AL temp cache
+      handler.callAndCheckHomeKitSetCallback('state', true);
+      harness.checkSetDataQueued({ state: 'ON' });
+      harness.clearMocks();
+
+      // Re-prepare getCharacteristic mock after clearMocks
+      handler.prepareGetCharacteristicMock('state');
+
+      // Another AL update with same color_temp (300) — delta is 0 (< min_delta of 1)
+      // With the fix, this should be skipped because the cache was NOT reset by handleSetOn
+      handler.callAndCheckHomeKitSetCallback('color_temp', 300);
+      harness.checkNoSetDataQueued();
+    });
+
+    test('does not reset AL temperature cache when changing brightness, preventing unnecessary AL update', () => {
+      const deviceExposes = loadExposesFromFile('innr/rb_249_t.json');
+      expect(deviceExposes.length).toBeGreaterThan(0);
+
+      const harness = new ServiceHandlersTestHarness();
+      harness.addConverterConfiguration('light', {
+        adaptive_lighting: { enabled: true, only_when_on: false },
+      });
+      harness.numberOfExpectedControllers = 1;
+
+      const handler = harness
+        .getOrAddHandler(hap.Service.Lightbulb)
+        .addExpectedCharacteristic('state', hap.Characteristic.On, true)
+        .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
+        .addExpectedCharacteristic('color_temp', hap.Characteristic.ColorTemperature, true);
+
+      harness.prepareCreationMocks();
+      harness.callCreators(deviceExposes);
+      harness.checkCreationExpectations();
+
+      // Mock AL as active
+      isActiveSpy.mockReturnValue(true);
+
+      // Setup getCharacteristic(On) mock so handleAdaptiveLighting can read light state
+      handler.prepareGetCharacteristicMock('state');
+
+      // Prepare brightness characteristic mock for value range
+      const brightnessMock = handler.getCharacteristicMock('brightness');
+      brightnessMock.props.minValue = 0;
+      brightnessMock.props.maxValue = 100;
+
+      // First AL update: initializes lastAdaptiveLightingTemperature to 300
+      handler.callAndCheckHomeKitSetCallback('color_temp', 300);
+      harness.checkSetDataQueued({ color_temp: 300 });
+      harness.clearMocks();
+
+      // Re-prepare getCharacteristic mock after clearMocks
+      handler.prepareGetCharacteristicMock('state');
+
+      // Change brightness — should only queue brightness, not reset AL temp cache
+      handler.callAndCheckHomeKitSetCallback('brightness', 50);
+      harness.checkSetDataQueued({ brightness: 127 });
+      harness.clearMocks();
+
+      // Re-prepare getCharacteristic mock after clearMocks
+      handler.prepareGetCharacteristicMock('state');
+
+      // Another AL update with same color_temp (300) — delta is 0 (< min_delta of 1)
+      // With the fix, this should be skipped because the cache was NOT reset by handleSetBrightness
+      handler.callAndCheckHomeKitSetCallback('color_temp', 300);
+      harness.checkNoSetDataQueued();
+    });
+  });
 });

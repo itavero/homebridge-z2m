@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
+## [Unreleased]
+
+### Added
+
+- New `split_by_endpoint` configuration option (boolean, default: `false`) to expose each endpoint of a multi-endpoint device as a separate HomeKit accessory. This allows placing individual endpoints (e.g. thermostats, gang switches) in different rooms.
+  - Can be set globally via `defaults.split_by_endpoint: true` to apply to all multi-endpoint devices.
+  - Can be set per device via `devices[].split_by_endpoint: true` for individual devices.
+  - Each split accessory gets its own unique identifier (`<ieee_address>:<endpoint>`), display name (`<friendly_name> <endpoint>`), and UUID.
+  - See [#517](https://github.com/itavero/homebridge-z2m/issues/517) for background.
+
 ## [1.11.0] - 2026-03-29
 
 Below you will find a summary of all changes since v1.9.3, including those introduced in intermediate beta releases, as this is the first

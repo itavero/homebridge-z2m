@@ -65,7 +65,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     }
     const ieee = this.accessory.context.device.ieee_address;
     if (this.accessory.context.isSplitEndpoint && this.accessory.context.splitEndpoint !== undefined) {
-      return `${ieee}_ep_${this.accessory.context.splitEndpoint}`;
+      return `${ieee}:${this.accessory.context.splitEndpoint}`;
     }
     return ieee;
   }

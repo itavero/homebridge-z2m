@@ -403,11 +403,6 @@ class LightHandler implements ServiceHandler {
     const data = {};
     data[this.stateExpose.property] = (value as boolean) ? this.stateExpose.value_on : this.stateExpose.value_off;
     this.accessory.queueDataForSetAction(data);
-    // Reset the cached color temperature for Adaptive Lighting when turning on
-    // This ensures the next AL update will be sent to the light
-    if (value === true) {
-      this.resetAdaptiveLightingTemperature();
-    }
     callback(null);
   }
 
@@ -430,9 +425,6 @@ class LightHandler implements ServiceHandler {
         );
       }
       this.accessory.queueDataForSetAction(data);
-      // Reset the cached color temperature for Adaptive Lighting after brightness change
-      // This ensures the next AL update will be sent to the light
-      this.resetAdaptiveLightingTemperature();
       callback(null);
     } else {
       callback(new Error('brightness not supported'));

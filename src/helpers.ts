@@ -40,7 +40,7 @@ export function parseBridgeOnlineState(payload: string): boolean {
  * accessory from being added in the Home App or cause unresponsiveness."
  * @param name
  */
-export function sanitizeAccessoryName(name: string): string {
+export function sanitizeAccessoryName(name: string): string | undefined {
   // Replace characters not permitted by HAP-NodeJS with a space.
   // HAP-NodeJS (checkName.ts) uses: /^[\p{L}\p{N}][\p{L}\p{N}\u2019 '.,-]*[\p{L}\p{N}\u2019]$/u
   // so the allowed set is: Unicode letters/numbers, right single quotation mark (\u2019),
@@ -52,8 +52,8 @@ export function sanitizeAccessoryName(name: string): string {
     .replace(/^[^\p{L}\p{N}]+/u, '') // strip leading chars not allowed at start by HAP
     .replace(/[^\p{L}\p{N}\u2019]+$/u, '') // strip trailing chars not allowed at end by HAP
     .trim();
-  // Fall back to the original name if sanitization produced an empty string
-  return result.length > 0 ? result : name;
+  // Return undefined so callers can choose a sensible alternative (e.g. IEEE address)
+  return result.length > 0 ? result : undefined;
 }
 
 export function getDiffFromArrays<T>(a: T[], b: T[]): T[] {

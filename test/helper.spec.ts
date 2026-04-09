@@ -94,10 +94,9 @@ describe('Helper functions', () => {
       expect(sanitizeAccessoryName('مصباح المطبخ')).toBe('مصباح المطبخ');
     });
 
-    test('falls back to original name when all characters would be stripped', () => {
+    test('returns undefined when all characters would be stripped', () => {
       // A name made purely of characters that would be stripped (e.g. emoji-only)
-      const original = '🏠';
-      expect(sanitizeAccessoryName(original)).toBe(original);
+      expect(sanitizeAccessoryName('🏠')).toBeUndefined();
     });
   });
 

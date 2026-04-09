@@ -49,9 +49,8 @@ export function sanitizeAccessoryName(name: string): string | undefined {
   const sanitized = name.replace(/[^\p{L}\p{N}\u2019 '.,-]+/gu, ' ');
   const result = sanitized
     .replace(/\s{2,}/g, ' ') // collapse multiple spaces into one
-    .replace(/^[^\p{L}\p{N}]+/u, '') // strip leading chars not allowed at start by HAP
-    .replace(/[^\p{L}\p{N}\u2019]+$/u, '') // strip trailing chars not allowed at end by HAP
-    .trim();
+    .replace(/^[\u2019 '.,-]+/u, '') // strip leading chars not allowed at start by HAP
+    .replace(/[ '.,-]+$/u, ''); // strip trailing chars not allowed at end by HAP
   // Return undefined so callers can choose a sensible alternative (e.g. IEEE address)
   return result.length > 0 ? result : undefined;
 }

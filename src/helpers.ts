@@ -41,15 +41,16 @@ export function parseBridgeOnlineState(payload: string): boolean {
  * @param name
  */
 export function sanitizeAccessoryName(name: string): string {
-  // Replace all non-alphanumeric characters with a space (except spaces and apostrophes).
-  // Uses Unicode property escapes (\p{L} for letters, \p{N} for numbers) so that
-  // non-ASCII friendly names (e.g. Cyrillic, Chinese, Arabic) are preserved instead of
-  // being stripped and producing an empty display name.
-  const sanitized = name.replace(/[^\p{L}\p{N}' ]+/gu, ' ');
-  // Make sure there's at most one space in a row, and remove leading/trailing spaces as well as leading apostrophes
+  // Replace characters not permitted by HAP-NodeJS with a space.
+  // HAP-NodeJS (checkName.ts) uses: /^[\p{L}\p{N}][\p{L}\p{N}\u2019 '.,-]*[\p{L}\p{N}\u2019]$/u
+  // so the allowed set is: Unicode letters/numbers, right single quotation mark (\u2019),
+  // space, straight apostrophe, period, comma, and hyphen.
+  // Using Unicode property escapes preserves non-ASCII scripts (Cyrillic, CJK, Arabic, etc.).
+  const sanitized = name.replace(/[^\p{L}\p{N}\u2019 '.,-]+/gu, ' ');
   const result = sanitized
-    .replace(/\s{2,}/g, ' ')
-    .replace(/^[ ']+/, '')
+    .replace(/\s{2,}/g, ' ') // collapse multiple spaces into one
+    .replace(/^[^\p{L}\p{N}]+/u, '') // strip leading chars not allowed at start by HAP
+    .replace(/[^\p{L}\p{N}\u2019]+$/u, '') // strip trailing chars not allowed at end by HAP
     .trim();
   // Fall back to the original name if sanitization produced an empty string
   return result.length > 0 ? result : name;

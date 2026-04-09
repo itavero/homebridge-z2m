@@ -42,8 +42,28 @@ describe('Helper functions', () => {
       expect(sanitizeAccessoryName('Living Room Light')).toBe('Living Room Light');
     });
 
-    test('replaces special ASCII characters with spaces', () => {
-      expect(sanitizeAccessoryName('Kitchen-Light!')).toBe('Kitchen Light');
+    test('replaces disallowed ASCII characters with spaces', () => {
+      expect(sanitizeAccessoryName('Kitchen@Light!')).toBe('Kitchen Light');
+    });
+
+    test('preserves hyphen (allowed by HAP-NodeJS)', () => {
+      expect(sanitizeAccessoryName('Kitchen-Light')).toBe('Kitchen-Light');
+    });
+
+    test('preserves period and comma (allowed by HAP-NodeJS)', () => {
+      expect(sanitizeAccessoryName('Dr. Smith, Jr')).toBe('Dr. Smith, Jr');
+    });
+
+    test('preserves Unicode right single quotation mark U+2019 (allowed by HAP-NodeJS)', () => {
+      expect(sanitizeAccessoryName('Bob\u2019s Light')).toBe('Bob\u2019s Light');
+    });
+
+    test('strips trailing characters not allowed at end by HAP-NodeJS', () => {
+      expect(sanitizeAccessoryName('My Device-')).toBe('My Device');
+    });
+
+    test('strips trailing characters not allowed at end (period)', () => {
+      expect(sanitizeAccessoryName('My Device.')).toBe('My Device');
     });
 
     test('collapses multiple spaces into one', () => {
@@ -62,8 +82,8 @@ describe('Helper functions', () => {
       expect(sanitizeAccessoryName('Кухня')).toBe('Кухня');
     });
 
-    test('preserves Cyrillic characters mixed with special chars', () => {
-      expect(sanitizeAccessoryName('Кухня-Світло')).toBe('Кухня Світло');
+    test('preserves Cyrillic characters mixed with hyphen', () => {
+      expect(sanitizeAccessoryName('Кухня-Світло')).toBe('Кухня-Світло');
     });
 
     test('preserves Chinese characters', () => {

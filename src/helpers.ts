@@ -41,13 +41,18 @@ export function parseBridgeOnlineState(payload: string): boolean {
  * @param name
  */
 export function sanitizeAccessoryName(name: string): string {
-  // Replace all non-alphanumeric characters with a space (except spaces of course)
-  const sanitized = name.replace(/[^a-zA-Z0-9' ]+/g, ' ');
+  // Replace all non-alphanumeric characters with a space (except spaces and apostrophes).
+  // Uses Unicode property escapes (\p{L} for letters, \p{N} for numbers) so that
+  // non-ASCII friendly names (e.g. Cyrillic, Chinese, Arabic) are preserved instead of
+  // being stripped and producing an empty display name.
+  const sanitized = name.replace(/[^\p{L}\p{N}' ]+/gu, ' ');
   // Make sure there's at most one space in a row, and remove leading/trailing spaces as well as leading apostrophes
-  return sanitized
+  const result = sanitized
     .replace(/\s{2,}/g, ' ')
     .replace(/^[ ']+/, '')
     .trim();
+  // Fall back to the original name if sanitization produced an empty string
+  return result.length > 0 ? result : name;
 }
 
 export function getDiffFromArrays<T>(a: T[], b: T[]): T[] {

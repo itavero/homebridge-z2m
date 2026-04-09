@@ -1,4 +1,4 @@
-import { getAllEndpoints, parseBridgeOnlineState, sanitizeAndFilterExposesEntries } from '../src/helpers';
+import { getAllEndpoints, parseBridgeOnlineState, sanitizeAccessoryName, sanitizeAndFilterExposesEntries } from '../src/helpers';
 import { exposesCollectionsAreEqual, normalizeExposes } from '../src/z2mModels';
 import { loadExposesFromFile } from './testHelpers';
 
@@ -34,6 +34,50 @@ describe('Helper functions', () => {
 
     test('returns true for JSON null (assumes online)', () => {
       expect(parseBridgeOnlineState('null')).toBe(true);
+    });
+  });
+
+  describe('sanitizeAccessoryName', () => {
+    test('leaves a simple ASCII name unchanged', () => {
+      expect(sanitizeAccessoryName('Living Room Light')).toBe('Living Room Light');
+    });
+
+    test('replaces special ASCII characters with spaces', () => {
+      expect(sanitizeAccessoryName('Kitchen-Light!')).toBe('Kitchen Light');
+    });
+
+    test('collapses multiple spaces into one', () => {
+      expect(sanitizeAccessoryName('My  Device')).toBe('My Device');
+    });
+
+    test('removes leading special characters', () => {
+      expect(sanitizeAccessoryName('---My Device')).toBe('My Device');
+    });
+
+    test('removes trailing spaces', () => {
+      expect(sanitizeAccessoryName('My Device   ')).toBe('My Device');
+    });
+
+    test('preserves Cyrillic characters (e.g. Ukrainian device names)', () => {
+      expect(sanitizeAccessoryName('Кухня')).toBe('Кухня');
+    });
+
+    test('preserves Cyrillic characters mixed with special chars', () => {
+      expect(sanitizeAccessoryName('Кухня-Світло')).toBe('Кухня Світло');
+    });
+
+    test('preserves Chinese characters', () => {
+      expect(sanitizeAccessoryName('厨房灯')).toBe('厨房灯');
+    });
+
+    test('preserves Arabic characters', () => {
+      expect(sanitizeAccessoryName('مصباح المطبخ')).toBe('مصباح المطبخ');
+    });
+
+    test('falls back to original name when all characters would be stripped', () => {
+      // A name made purely of characters that would be stripped (e.g. emoji-only)
+      const original = '🏠';
+      expect(sanitizeAccessoryName(original)).toBe(original);
     });
   });
 

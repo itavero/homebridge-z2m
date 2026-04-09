@@ -44,7 +44,7 @@ export class DocsAccessory implements BasicAccessory {
     if (subType !== undefined) {
       name += ` ${subType}`;
     }
-    return sanitizeAccessoryName(name);
+    return sanitizeAccessoryName(name) ?? name;
   }
 
   getServicesAndCharacteristics(): Map<string, string[]> {

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
+## [Unreleased]
+
+### Fixed
+
+- Accessory names containing non-ASCII characters (Cyrillic, CJK, Arabic, etc.) are no longer stripped to an empty string by the name sanitizer. The allowed character set now matches HAP-NodeJS exactly, preserving hyphens, periods, commas and the Unicode right single quotation mark in addition to letters and numbers. (see [#1201](https://github.com/itavero/homebridge-z2m/pull/1201))
+
 ## [1.11.1] - 2026-04-08
 
 ### Fixed

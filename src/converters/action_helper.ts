@@ -143,9 +143,7 @@ export class SwitchActionHelper {
   }
 
   public static getInstance(): SwitchActionHelper {
-    if (SwitchActionHelper.instance === undefined) {
-      SwitchActionHelper.instance = new SwitchActionHelper();
-    }
+    SwitchActionHelper.instance ??= new SwitchActionHelper();
     return SwitchActionHelper.instance;
   }
 

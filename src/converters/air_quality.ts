@@ -244,7 +244,7 @@ class AirQualitySensorHandler implements ServiceHandler {
   }
 
   static getWorstAirQuality(a: number, b: number): number {
-    return a > b ? a : b;
+    return Math.max(a, b);
   }
 
   static generateIdentifier(endpoint: string | undefined) {

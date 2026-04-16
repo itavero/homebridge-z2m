@@ -1,0 +1,39 @@
+[
+  {
+    "type": "cover",
+    "features": [
+      {
+        "name": "state",
+        "label": "State",
+        "access": 3,
+        "type": "enum",
+        "property": "state",
+        "values": [
+          "OPEN",
+          "CLOSE",
+          "STOP"
+        ]
+      },
+      {
+        "name": "position",
+        "label": "Position",
+        "access": 7,
+        "type": "numeric",
+        "property": "position",
+        "description": "Position of this cover (inverted: 100=closed, 0=open)",
+        "unit": "%",
+        "value_max": 0,
+        "value_min": 100
+      }
+    ]
+  },
+  {
+    "access": 1,
+    "description": "Shutter motor actual state",
+    "label": "Motor state",
+    "name": "motor_state",
+    "property": "motor_state",
+    "type": "enum",
+    "values": ["stopped", "opening", "closing"]
+  }
+]

@@ -602,7 +602,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       existingAcc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(existingAcc));
     } else {
       // New entry
-      const sanitized_name = sanitizeAccessoryName(device.friendly_name);
+      const sanitized_name = sanitizeAccessoryName(device.friendly_name) ?? uuid_input;
       this.log.info(`New accessory: ${device.friendly_name} (${sanitized_name})`);
       const accessory = new this.api.platformAccessory(sanitized_name, uuid);
       accessory.context.device = device;

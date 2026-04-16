@@ -11,6 +11,18 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Support for `soil_moisture`, `dry`, `soil_fertility`, `water_warning`, and `soil_fertility_warning` sensors (e.g. Aqara SMGQ11LM, Arteco ZS-SF00).
 
+## [1.11.2] - 2026-04-09
+
+### Fixed
+
+- Accessory names containing non-ASCII characters (Cyrillic, CJK, Arabic, etc.) are no longer stripped to an empty string by the name sanitizer. The allowed character set now matches HAP-NodeJS exactly, preserving hyphens, periods, commas and the Unicode right single quotation mark in addition to letters and numbers. (see [#1201](https://github.com/itavero/homebridge-z2m/pull/1201))
+
+## [1.11.1] - 2026-04-08
+
+### Fixed
+
+- Adaptive Lighting: Fix light flashing when turned on via a HomeKit automation. (see [#1195](https://github.com/itavero/homebridge-z2m/issues/1195))
+
 ## [1.11.0] - 2026-03-29
 
 Below you will find a summary of all changes since v1.9.3, including those introduced in intermediate beta releases, as this is the first
@@ -565,7 +577,9 @@ For `cover` devices the following changes/fixes are in this release:
 - Restore BatteryService and WindowCovering properly on start up.
 - Improve state determination for WindowCovering.
 
-[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0...HEAD
+[Unreleased]: https://github.com/itavero/homebridge-z2m/compare/v1.11.2...HEAD
+[1.11.2]: https://github.com/itavero/homebridge-z2m/compare/v1.11.1...v1.11.2
+[1.11.1]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0...v1.11.1
 [1.11.0]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.11...v1.11.0
 [1.11.0-beta.11]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.10...v1.11.0-beta.11
 [1.11.0-beta.10]: https://github.com/itavero/homebridge-z2m/compare/v1.11.0-beta.9...v1.11.0-beta.10

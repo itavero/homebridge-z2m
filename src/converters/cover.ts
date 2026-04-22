@@ -275,14 +275,13 @@ class CoverHandler implements ServiceHandler {
   }
 
   private scaleNumber(value: number, input_min: number, input_max: number, output_min: number, output_max: number): number {
-    if (input_min === input_max) {
+    if (value <= input_min) {
       return output_min;
     }
-    // Clamp value to actual range, supporting inverted ranges (input_min > input_max)
-    const actualMin = Math.min(input_min, input_max);
-    const actualMax = Math.max(input_min, input_max);
-    const clampedValue = Math.max(actualMin, Math.min(actualMax, value));
-    const percentage = (clampedValue - input_min) / (input_max - input_min);
+    if (value >= input_max) {
+      return output_max;
+    }
+    const percentage = (value - input_min) / (input_max - input_min);
     return output_min + percentage * (output_max - output_min);
   }
 
@@ -349,24 +348,16 @@ class CoverHandler implements ServiceHandler {
     this.accessory.queueDataForSetAction(data);
 
     if (this.motorStateExpose === undefined) {
-      // Assume position state based on new target (compare in HomeKit coordinates to handle inverted covers)
-      const homeKitCurrentPosition = this.scaleNumber(
-        this.positionCurrent,
-        this.positionExpose.value_min,
-        this.positionExpose.value_max,
-        this.current_min,
-        this.current_max
-      );
-      if ((value as number) > homeKitCurrentPosition) {
+      // Assume position state based on new target
+      if (target > this.positionCurrent) {
         this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.INCREASING);
-      } else if ((value as number) < homeKitCurrentPosition) {
+      } else if (target < this.positionCurrent) {
         this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.DECREASING);
       } else {
         this.service.updateCharacteristic(hap.Characteristic.PositionState, hap.Characteristic.PositionState.STOPPED);
       }
     } else {
-      // Use the HomeKit value (not the Z2M-scaled target) as TargetPosition
-      this.service.updateCharacteristic(hap.Characteristic.TargetPosition, value as number);
+      this.service.updateCharacteristic(hap.Characteristic.TargetPosition, target);
       this.setTargetPositionHandled = true;
     }
     // Store last sent position for future reference

@@ -15,9 +15,8 @@ The following HomeKit Services and Characteristics are exposed by
 the Tuya TYZS1L
 
 * [Lightbulb](../../light.md)
-  * Hue
+  * Brightness
   * On
-  * Saturation
 
 
 # Related

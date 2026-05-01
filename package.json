@@ -95,7 +95,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0",
-    "vitest-mock-extended": "^3.1.0",
+    "vitest-mock-extended": "^4.0.0",
     "vitest-sonar-reporter": "^3.0.0",
     "vitest-when": "^0.10.0"
   }

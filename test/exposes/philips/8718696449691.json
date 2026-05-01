@@ -43,7 +43,7 @@
   {
     "name": "effect",
     "label": "Effect",
-    "access": 2,
+    "access": 3,
     "type": "enum",
     "property": "effect",
     "values": [
@@ -52,9 +52,37 @@
       "okay",
       "channel_change",
       "candle",
+      "sunset",
+      "sparkle",
+      "opal",
+      "glisten",
+      "underwater",
+      "cosmos",
+      "sunbeam",
+      "enchant",
+      "none",
       "finish_effect",
       "stop_effect",
       "stop_hue_effect"
     ]
+  },
+  {
+    "name": "effect_speed",
+    "label": "Effect speed",
+    "access": 3,
+    "type": "numeric",
+    "property": "effect_speed",
+    "description": "Animation speed for the active effect (0=slowest, 1=fastest)",
+    "value_max": 1,
+    "value_min": 0,
+    "value_step": 0.01
+  },
+  {
+    "name": "effect_color",
+    "label": "Effect color",
+    "access": 2,
+    "type": "text",
+    "property": "effect_color",
+    "description": "Set the base color of the active effect without stopping it (hex e.g. #FF4400, or JSON {\"x\":0.6,\"y\":0.3})"
   }
 ]

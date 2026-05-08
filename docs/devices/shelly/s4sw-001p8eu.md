@@ -19,6 +19,9 @@ the Shelly S4SW-001P8EU
   * Current
   * Total Consumption
   * Voltage
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 * [Switch](../../switch.md)
   * On
 

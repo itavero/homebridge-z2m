@@ -6,7 +6,7 @@ import { BasicAccessory } from '../interfaces';
 import { PassthroughCharacteristicMonitor } from '../monitor';
 import { BasicSensorHandler } from './basic';
 
-export abstract class LightSensorHandler extends BasicSensorHandler {
+export abstract class NumericLightSensorHandler extends BasicSensorHandler {
   public readonly mainCharacteristics: Characteristic[] = [];
 
   protected constructor(

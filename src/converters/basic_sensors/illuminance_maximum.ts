@@ -1,9 +1,9 @@
 import { hap } from '../../hap';
 import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
 import { BasicAccessory } from '../interfaces';
-import { LightSensorHandler } from './light_sensor';
+import { NumericLightSensorHandler } from './numeric_light_sensor';
 
-export class IlluminanceMaximumSensorHandler extends LightSensorHandler {
+export class IlluminanceMaximumSensorHandler extends NumericLightSensorHandler {
   public static readonly exposesName: string = 'illuminance_maximum_today';
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
 

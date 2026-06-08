@@ -1,9 +1,9 @@
 import { hap } from '../../hap';
 import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
 import { BasicAccessory } from '../interfaces';
-import { LightSensorHandler } from './light_sensor';
+import { NumericLightSensorHandler } from './numeric_light_sensor';
 
-export class RainIntensitySensorHandler extends LightSensorHandler {
+export class RainIntensitySensorHandler extends NumericLightSensorHandler {
   public static readonly exposesName: string = 'rain_intensity';
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
 

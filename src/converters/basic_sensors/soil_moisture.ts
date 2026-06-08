@@ -1,10 +1,10 @@
-import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
-import { PassthroughCharacteristicMonitor } from '../monitor';
-import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
-import { hap } from '../../hap';
-import { BasicSensorHandler } from './basic';
 import { Characteristic } from 'homebridge';
+import { hap } from '../../hap';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
+import { BasicAccessory } from '../interfaces';
+import { PassthroughCharacteristicMonitor } from '../monitor';
+import { BasicSensorHandler } from './basic';
 
 export class SoilMoistureSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'soil_moisture';
@@ -21,8 +21,6 @@ export class SoilMoistureSensorHandler extends BasicSensorHandler {
       (n, t) => new hap.Service.HumiditySensor(n, t),
       'soil'
     );
-    accessory.log.debug(`Configuring SoilMoistureSensor for ${this.serviceName}`);
-
     const characteristic = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentRelativeHumidity);
     copyExposesRangeToCharacteristic(expose, characteristic);
     this.mainCharacteristics.push(characteristic);

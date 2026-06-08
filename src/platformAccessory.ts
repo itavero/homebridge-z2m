@@ -1,22 +1,22 @@
 import { Controller, HAPStatus, PlatformAccessory, Service } from 'homebridge';
-import { Zigbee2mqttPlatform } from './platform';
-import { ExtendedTimer } from './timer';
-import { hap } from './hap';
+import { QoS } from 'mqtt-packet';
+import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
 import { BasicServiceCreatorManager, ServiceCreatorManager } from './converters/creators';
 import { BasicAccessory, ServiceHandler } from './converters/interfaces';
+import { EXP_AVAILABILITY } from './experimental';
+import { hap } from './hap';
+import { sanitizeAccessoryName, sanitizeAndFilterExposesEntries } from './helpers';
 import { BasicLogger } from './logger';
+import { Zigbee2mqttPlatform } from './platform';
+import { ExtendedTimer } from './timer';
 import {
-  deviceListEntriesAreEqual,
   DeviceListEntry,
+  deviceListEntriesAreEqual,
   ExposesEntry,
   isDeviceDefinition,
   isDeviceListEntry,
   isDeviceListEntryForGroup,
 } from './z2mModels';
-import { BaseDeviceConfiguration, isDeviceConfiguration } from './configModels';
-import { QoS } from 'mqtt-packet';
-import { sanitizeAccessoryName, sanitizeAndFilterExposesEntries } from './helpers';
-import { EXP_AVAILABILITY } from './experimental';
 
 export class Zigbee2mqttAccessory implements BasicAccessory {
   private readonly updateTimer: ExtendedTimer;
@@ -424,7 +424,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         // Update accessory info
         // Note: getOrAddService is used so that the service is known in this.serviceIds and will not get filtered out.
         this.getOrAddService(new hap.Service.AccessoryInformation())
-          .updateCharacteristic(hap.Characteristic.Name, sanitizeAccessoryName(info.friendly_name))
+          .updateCharacteristic(hap.Characteristic.Name, sanitizeAccessoryName(info.friendly_name) ?? this.ieeeAddress)
           .updateCharacteristic(hap.Characteristic.Manufacturer, info.definition.vendor ?? 'Zigbee2MQTT')
           .updateCharacteristic(hap.Characteristic.Model, info.definition.model ?? 'unknown')
           .updateCharacteristic(hap.Characteristic.SerialNumber, this.serialNumber)
@@ -497,7 +497,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     if (subType !== undefined) {
       name += ` ${subType}`;
     }
-    return sanitizeAccessoryName(name);
+    return sanitizeAccessoryName(name) ?? this.ieeeAddress;
   }
 
   configureController(controller: Controller) {

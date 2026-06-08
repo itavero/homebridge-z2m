@@ -1,8 +1,8 @@
-import { ExposesEntry } from '../src/z2mModels';
-import { setHap, hap } from '../src/hap';
 import * as hapNodeJs from '@homebridge/hap-nodejs';
-import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 import { vi } from 'vitest';
+import { hap, setHap } from '../src/hap';
+import { ExposesEntry } from '../src/z2mModels';
+import { loadExposesFromFile, ServiceHandlersTestHarness } from './testHelpers';
 
 describe('Cover', () => {
   beforeEach(() => {

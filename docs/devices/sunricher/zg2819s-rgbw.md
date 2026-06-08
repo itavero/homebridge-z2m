@@ -21,62 +21,10 @@ these devices
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 
-
-
-## Exposes
-
-This is the information provided by Zigbee2MQTT for this device:
-
-```json
-[
-  {
-    "name": "battery",
-    "label": "Battery",
-    "access": 1,
-    "type": "numeric",
-    "property": "battery",
-    "description": "Remaining battery in %, can take up to 24 hours before reported",
-    "category": "diagnostic",
-    "unit": "%",
-    "value_max": 100,
-    "value_min": 0
-  },
-  {
-    "name": "voltage",
-    "label": "Voltage",
-    "access": 1,
-    "type": "numeric",
-    "property": "voltage",
-    "description": "Voltage of the battery in millivolts",
-    "category": "diagnostic",
-    "unit": "mV"
-  },
-  {
-    "name": "action",
-    "label": "Action",
-    "access": 1,
-    "type": "enum",
-    "property": "action",
-    "description": "Triggered action (e.g. a button click)",
-    "category": "diagnostic",
-    "values": [
-      "on",
-      "off",
-      "brightness_step_up",
-      "brightness_step_down",
-      "brightness_move_up",
-      "brightness_move_down",
-      "brightness_stop",
-      "recall_*",
-      "hue_move",
-      "hue_stop",
-      "color_move",
-      "color_temperature_move"
-    ]
-  }
-]
-```
 
 # Related
 * [Other devices from Sunricher](../index.md#sunricher)

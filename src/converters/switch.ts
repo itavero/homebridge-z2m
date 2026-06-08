@@ -1,26 +1,26 @@
-import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
+import { hap } from '../hap';
+import { getOrAddCharacteristic } from '../helpers';
 import {
-  exposesCanBeGet,
-  exposesCanBeSet,
   ExposesEntry,
   ExposesEntryWithBinaryProperty,
   ExposesEntryWithFeatures,
+  ExposesKnownTypes,
+  ExposesPredicate,
+  exposesCanBeGet,
+  exposesCanBeSet,
   exposesHasAllRequiredFeatures,
   exposesHasBinaryProperty,
   exposesHasFeatures,
   exposesIsPublished,
-  ExposesKnownTypes,
-  ExposesPredicate,
 } from '../z2mModels';
-import { hap } from '../hap';
-import { getOrAddCharacteristic } from '../helpers';
-import { Characteristic, CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
+import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 import { CharacteristicMonitor, MappingCharacteristicMonitor } from './monitor';
 
 interface SwitchConfig {
   type?: string;
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isSwitchConfig = (x: any): x is SwitchConfig =>
   x !== undefined &&
   (x.type === undefined ||

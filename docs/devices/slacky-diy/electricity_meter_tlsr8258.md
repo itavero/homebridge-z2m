@@ -18,6 +18,11 @@ the Slacky-DIY Electricity Meter TLSR8258
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Electrical Sensor](../../electrical.md)
+  * Consumption
+  * Current
+  * Total Consumption
+  * Voltage
 * [Temperature Sensor](../../sensors.md)
   * Current Temperature
   * Status Low Battery

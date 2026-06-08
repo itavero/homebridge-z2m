@@ -85,7 +85,7 @@ export interface LogConfiguration extends Record<string, unknown> {
 
 const allowedLogLevels = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isLogConfiguration = (x: any): x is LogConfiguration =>
   !(x.mqtt_publish !== undefined && typeof x.mqtt_publish !== 'string' && !allowedLogLevels.includes(x.mqtt_publish)) &&
   !(x.debug_as_info !== undefined && typeof x.debug_as_info !== 'boolean');
@@ -104,7 +104,7 @@ export interface MqttConfiguration extends Record<string, unknown> {
   version?: 3 | 4 | 5;
   disable_qos?: boolean;
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isMqttConfiguration = (x: any): x is MqttConfiguration =>
   x.base_topic !== undefined &&
   typeof x.base_topic === 'string' &&
@@ -130,7 +130,7 @@ export interface DeviceConfiguration extends BaseDeviceConfiguration {
   exposes?: ExposesEntry[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const hasOptionalStringArrays = (object: any, ...properties: string[]): boolean => {
   // Check if properties exist and are string arrays
   for (const property of properties) {
@@ -141,7 +141,7 @@ export const hasOptionalStringArrays = (object: any, ...properties: string[]): b
   return true;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const hasOptionalBooleans = (object: any, ...properties: string[]): boolean => {
   for (const property of properties) {
     if (property in object && object[property] !== undefined && typeof object[property] !== 'boolean') {
@@ -151,7 +151,7 @@ export const hasOptionalBooleans = (object: any, ...properties: string[]): boole
   return true;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration => {
   // Optional boolean properties
   if (!hasOptionalBooleans(x, 'exclude', 'ignore_availability', 'ignore_z2m_online')) {
@@ -182,7 +182,7 @@ export const isBaseDeviceConfiguration = (x: any): x is BaseDeviceConfiguration 
   return true;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isDeviceConfiguration = (x: any): x is DeviceConfiguration => {
   // Required id property
   if (x.id === undefined || typeof x.id !== 'string' || x.id.length < 1) {
@@ -215,7 +215,7 @@ export interface PropertyValueConfiguration extends Record<string, unknown> {
   exclude?: string[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isPropertyValueConfiguration = (x: any): x is PropertyValueConfiguration => {
   // Required 'property' property
   if (x.property === undefined || typeof x.property !== 'string' || x.property.length < 1) {
@@ -231,7 +231,7 @@ export const isPropertyValueConfiguration = (x: any): x is PropertyValueConfigur
   return x.exclude === undefined || isStringArray(x.exclude);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 const isStringArray = (x: any): x is string[] => {
   if (!Array.isArray(x)) {
     return false;

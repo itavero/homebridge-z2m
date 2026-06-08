@@ -33,6 +33,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 1,
     "type": "enum",
     "property": "opening_state",
+    "description": "Opening state",
     "values": [
       "open",
       "closed",
@@ -45,6 +46,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 3,
     "type": "binary",
     "property": "alarm",
+    "description": "Alarm state",
     "value_on": true,
     "value_off": false
   },

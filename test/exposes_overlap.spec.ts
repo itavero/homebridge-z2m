@@ -1,4 +1,4 @@
-import { exposesCollectionsAreEqual, ExposesEntryWithEnumProperty, ExposesEntryWithFeatures, exposesGetOverlap } from '../src/z2mModels';
+import { ExposesEntryWithEnumProperty, ExposesEntryWithFeatures, exposesCollectionsAreEqual, exposesGetOverlap } from '../src/z2mModels';
 
 describe('exposesGetOverlap', () => {
   const lightA = `[

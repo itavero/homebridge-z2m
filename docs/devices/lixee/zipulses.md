@@ -18,6 +18,9 @@ the LiXee ZiPulses
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Electrical Sensor](../../electrical.md)
+  * Total Consumption
+  * Voltage
 * [Temperature Sensor](../../sensors.md)
   * Current Temperature
 

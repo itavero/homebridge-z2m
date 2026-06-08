@@ -1,24 +1,25 @@
-import { BasicAccessory, ServiceCreator, ServiceHandler, ConverterConfigurationRegistry } from './interfaces';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Controller, Service } from 'homebridge';
+import { convertHueSatToXy, convertMiredColorTemperatureToHueSat, convertXyToHueSat } from '../colorhelper';
+import { hap } from '../hap';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
 import {
-  exposesCanBeGet,
-  exposesCanBeSet,
   ExposesEntry,
   ExposesEntryWithBinaryProperty,
   ExposesEntryWithFeatures,
   ExposesEntryWithNumericRangeProperty,
   ExposesEntryWithProperty,
+  ExposesKnownTypes,
+  ExposesPredicate,
+  exposesCanBeGet,
+  exposesCanBeSet,
   exposesHasAllRequiredFeatures,
   exposesHasBinaryProperty,
   exposesHasFeatures,
   exposesHasNumericRangeProperty,
   exposesHasProperty,
   exposesIsPublished,
-  ExposesKnownTypes,
-  ExposesPredicate,
 } from '../z2mModels';
-import { hap } from '../hap';
-import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../helpers';
-import { Characteristic, CharacteristicSetCallback, CharacteristicValue, Controller, Service } from 'homebridge';
+import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 import {
   CharacteristicMonitor,
   MappingCharacteristicMonitor,
@@ -26,7 +27,6 @@ import {
   NumericCharacteristicMonitor,
   PassthroughCharacteristicMonitor,
 } from './monitor';
-import { convertHueSatToXy, convertMiredColorTemperatureToHueSat, convertXyToHueSat } from '../colorhelper';
 
 interface AdaptiveLightingConfig {
   enabled?: boolean;
@@ -403,11 +403,6 @@ class LightHandler implements ServiceHandler {
     const data = {};
     data[this.stateExpose.property] = (value as boolean) ? this.stateExpose.value_on : this.stateExpose.value_off;
     this.accessory.queueDataForSetAction(data);
-    // Reset the cached color temperature for Adaptive Lighting when turning on
-    // This ensures the next AL update will be sent to the light
-    if (value === true) {
-      this.resetAdaptiveLightingTemperature();
-    }
     callback(null);
   }
 
@@ -430,9 +425,6 @@ class LightHandler implements ServiceHandler {
         );
       }
       this.accessory.queueDataForSetAction(data);
-      // Reset the cached color temperature for Adaptive Lighting after brightness change
-      // This ensures the next AL update will be sent to the light
-      this.resetAdaptiveLightingTemperature();
       callback(null);
     } else {
       callback(new Error('brightness not supported'));
@@ -590,6 +582,7 @@ class LightHandler implements ServiceHandler {
     return true;
   }
 
+  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: utility method for future use
   private updateHueAndSaturationBasedOnColorTemperature(value: number): void {
     if (this.colorHueCharacteristic !== undefined && this.colorSaturationCharacteristic !== undefined) {
       const color = hap.ColorUtils.colorTemperatureToHueAndSaturation(value, true);

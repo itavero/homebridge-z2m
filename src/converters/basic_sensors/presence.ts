@@ -1,6 +1,6 @@
-import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../z2mModels';
 import { hap } from '../../hap';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../z2mModels';
+import { BasicAccessory } from '../interfaces';
 import { BinarySensorHandler } from './binary';
 
 export class PresenceSensorHandler extends BinarySensorHandler {

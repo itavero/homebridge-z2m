@@ -1,10 +1,10 @@
-import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
-import { PassthroughCharacteristicMonitor } from '../monitor';
-import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
-import { hap } from '../../hap';
-import { BasicSensorHandler } from './basic';
 import { Characteristic } from 'homebridge';
+import { hap } from '../../hap';
+import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
+import { BasicAccessory } from '../interfaces';
+import { PassthroughCharacteristicMonitor } from '../monitor';
+import { BasicSensorHandler } from './basic';
 
 export class TemperatureSensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'temperature';

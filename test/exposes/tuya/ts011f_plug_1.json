@@ -10,8 +10,63 @@
         "property": "state",
         "description": "On/off state of the switch",
         "value_on": "ON",
-        "value_off": "OFF"
+        "value_off": "OFF",
+        "value_toggle": "TOGGLE"
       }
+    ]
+  },
+  {
+    "name": "countdown",
+    "label": "Countdown",
+    "access": 3,
+    "type": "numeric",
+    "property": "countdown",
+    "description": "Countdown to turn device off after a certain time",
+    "unit": "s",
+    "value_max": 43200,
+    "value_min": 0,
+    "value_step": 1
+  },
+  {
+    "name": "power_outage_memory",
+    "label": "Power outage memory",
+    "access": 7,
+    "type": "enum",
+    "property": "power_outage_memory",
+    "description": "Recover state after power outage",
+    "category": "config",
+    "values": [
+      "on",
+      "off",
+      "restore"
+    ]
+  },
+  {
+    "name": "switch_type_button",
+    "label": "Switch type button",
+    "access": 7,
+    "type": "enum",
+    "property": "switch_type_button",
+    "description": "Determines when the button actuates",
+    "category": "config",
+    "values": [
+      "release",
+      "press"
+    ]
+  },
+  {
+    "name": "indicator_mode",
+    "label": "Indicator mode",
+    "access": 7,
+    "type": "enum",
+    "property": "indicator_mode",
+    "description": "LED indicator mode",
+    "category": "config",
+    "values": [
+      "off",
+      "off/on",
+      "on/off",
+      "on"
     ]
   },
   {
@@ -51,41 +106,25 @@
     "unit": "kWh"
   },
   {
-    "name": "power_outage_memory",
-    "label": "Power outage memory",
-    "access": 7,
-    "type": "enum",
-    "property": "power_outage_memory",
-    "description": "Recover state after power outage",
-    "values": [
-      "on",
-      "off",
-      "restore"
-    ]
+    "name": "child_lock",
+    "label": "Child lock",
+    "access": 3,
+    "type": "binary",
+    "property": "child_lock",
+    "description": "Enables/disables physical input on the device",
+    "value_on": "LOCK",
+    "value_off": "UNLOCK"
   },
   {
-    "name": "indicator_mode",
-    "label": "Indicator mode",
-    "access": 7,
+    "name": "identify",
+    "label": "Identify",
+    "access": 2,
     "type": "enum",
-    "property": "indicator_mode",
-    "description": "LED indicator mode",
+    "property": "identify",
+    "description": "Initiate device identification",
+    "category": "config",
     "values": [
-      "off",
-      "off/on",
-      "on/off",
-      "on"
+      "identify"
     ]
-  },
-  {
-    "name": "linkquality",
-    "label": "Link quality",
-    "access": 1,
-    "type": "numeric",
-    "property": "linkquality",
-    "description": "Link quality (signal strength)",
-    "unit": "lqi",
-    "value_max": 255,
-    "value_min": 0
   }
 ]

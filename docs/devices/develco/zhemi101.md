@@ -18,94 +18,10 @@ the Develco ZHEMI101
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Electrical Sensor](../../electrical.md)
+  * Consumption
+  * Total Consumption
 
-
-
-## Exposes
-
-This is the information provided by Zigbee2MQTT for this device:
-
-```json
-[
-  {
-    "name": "power",
-    "label": "Power",
-    "access": 1,
-    "type": "numeric",
-    "property": "power",
-    "description": "Instantaneous measured power",
-    "unit": "W"
-  },
-  {
-    "name": "energy",
-    "label": "Energy",
-    "access": 1,
-    "type": "numeric",
-    "property": "energy",
-    "description": "Sum of consumed energy",
-    "unit": "kWh"
-  },
-  {
-    "name": "battery_low",
-    "label": "Battery low",
-    "access": 1,
-    "type": "binary",
-    "property": "battery_low",
-    "description": "Indicates if the battery of this device is almost empty",
-    "category": "diagnostic",
-    "value_on": true,
-    "value_off": false
-  },
-  {
-    "name": "pulse_configuration",
-    "label": "Pulse configuration",
-    "access": 7,
-    "type": "numeric",
-    "property": "pulse_configuration",
-    "description": "Pulses per kwh. Default 1000 imp/kWh. Range 0 to 65535",
-    "value_max": 65535,
-    "value_min": 0
-  },
-  {
-    "name": "interface_mode",
-    "label": "Interface mode",
-    "access": 7,
-    "type": "enum",
-    "property": "interface_mode",
-    "description": "Operating mode/probe",
-    "values": [
-      "electricity",
-      "gas",
-      "water",
-      "kamstrup-kmp",
-      "linky",
-      "IEC62056-21",
-      "DSMR-2.3",
-      "DSMR-4.0"
-    ]
-  },
-  {
-    "name": "current_summation",
-    "label": "Current summation",
-    "access": 2,
-    "type": "numeric",
-    "property": "current_summation",
-    "description": "Current summation value sent to the display. e.g. 570 = 0,570 kWh",
-    "value_max": 268435455,
-    "value_min": 0
-  },
-  {
-    "name": "check_meter",
-    "label": "Check meter",
-    "access": 1,
-    "type": "binary",
-    "property": "check_meter",
-    "description": "Is true if communication problem with meter is experienced",
-    "value_on": true,
-    "value_off": false
-  }
-]
-```
 
 # Related
 * [Other devices from Develco](../index.md#develco)

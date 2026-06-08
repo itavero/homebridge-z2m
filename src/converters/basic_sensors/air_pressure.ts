@@ -1,8 +1,8 @@
-import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
-import { PassthroughCharacteristicMonitor } from '../monitor';
 import { Characteristic, Service } from 'homebridge';
 import { hap } from '../../hap';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
+import { BasicAccessory } from '../interfaces';
+import { PassthroughCharacteristicMonitor } from '../monitor';
 import { BasicSensorHandler } from './basic';
 
 export class AirPressureSensorHandler extends BasicSensorHandler {

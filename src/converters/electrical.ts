@@ -1,10 +1,10 @@
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
-import { ExposesEntry, ExposesEntryWithProperty, exposesHasProperty, exposesIsPublished, ExposesKnownTypes } from '../z2mModels';
-import { groupByEndpoint } from '../helpers';
-import { CharacteristicMonitor, PassthroughCharacteristicMonitor } from './monitor';
 import { Characteristic, Service } from 'homebridge';
 import { hap } from '../hap';
+import { groupByEndpoint } from '../helpers';
 import { BasicLogger } from '../logger';
+import { ExposesEntry, ExposesEntryWithProperty, ExposesKnownTypes, exposesHasProperty, exposesIsPublished } from '../z2mModels';
+import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { CharacteristicMonitor, PassthroughCharacteristicMonitor } from './monitor';
 
 // Custom Service UUID (from homebridge-3em-energy-meter, proven in Eve app)
 const ELECTRICAL_SERVICE_UUID = '00000001-0000-1777-8000-775D67EC4377';

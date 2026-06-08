@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
-import Aedes from 'aedes';
-import { createServer, Server } from 'net';
+import { Aedes } from 'aedes';
 import { readFileSync } from 'fs';
+import { createServer, Server } from 'net';
 import { join } from 'path';
 
 const FIXTURES_DIR = join(__dirname, 'fixtures');
@@ -31,7 +30,7 @@ export class Z2mMockBroker {
    * @returns The actual port the broker is listening on
    */
   async start(port = 0): Promise<number> {
-    this.aedes = new Aedes();
+    this.aedes = await Aedes.createBroker();
     this.server = createServer(this.aedes.handle);
 
     return new Promise((resolve, reject) => {

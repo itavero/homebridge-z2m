@@ -1,28 +1,28 @@
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
-import {
-  exposesCanBeGet,
-  exposesCanBeSet,
-  ExposesEntry,
-  ExposesEntryWithEnumProperty,
-  ExposesEntryWithFeatures,
-  ExposesEntryWithProperty,
-  exposesHasAllRequiredFeatures,
-  exposesHasEnumProperty,
-  exposesHasFeatures,
-  exposesHasProperty,
-  exposesIsPublished,
-  ExposesKnownTypes,
-  ExposesPredicate,
-} from '../z2mModels';
+import { Characteristic, CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
 import { hap } from '../hap';
-import { CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor } from './monitor';
 import {
   allowSingleValueForCharacteristic,
   copyExposesRangeToCharacteristic,
   getOrAddCharacteristic,
   setValidValuesOnCharacteristic,
 } from '../helpers';
-import { Characteristic, CharacteristicSetCallback, CharacteristicValue } from 'homebridge';
+import {
+  ExposesEntry,
+  ExposesEntryWithEnumProperty,
+  ExposesEntryWithFeatures,
+  ExposesEntryWithProperty,
+  ExposesKnownTypes,
+  ExposesPredicate,
+  exposesCanBeGet,
+  exposesCanBeSet,
+  exposesHasAllRequiredFeatures,
+  exposesHasEnumProperty,
+  exposesHasFeatures,
+  exposesHasProperty,
+  exposesIsPublished,
+} from '../z2mModels';
+import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { CharacteristicMonitor, MappingCharacteristicMonitor, PassthroughCharacteristicMonitor } from './monitor';
 
 export class ThermostatCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {

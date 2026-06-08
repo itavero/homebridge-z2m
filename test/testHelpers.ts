@@ -1,3 +1,4 @@
+import fs from 'fs';
 import {
   Characteristic,
   CharacteristicEventTypes,
@@ -9,19 +10,19 @@ import {
   SessionIdentifier,
   WithUUID,
 } from 'homebridge';
-import { BasicAccessory, ServiceHandler } from '../src/converters/interfaces';
-import { DeviceDefinition, DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry, isExposesEntry } from '../src/z2mModels';
-import { mock, mockClear, MockProxy } from 'vitest-mock-extended';
+import path from 'path';
+import { vi } from 'vitest';
+import { MockProxy, mock, mockClear } from 'vitest-mock-extended';
 import { when } from 'vitest-when';
 import { BasicServiceCreatorManager } from '../src/converters/creators';
-import { vi } from 'vitest';
-import fs from 'fs';
-import path from 'path';
+import { BasicAccessory, ServiceHandler } from '../src/converters/interfaces';
+import { DeviceDefinition, DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry, isExposesEntry } from '../src/z2mModels';
 
 export type HomebridgeCharacteristicSetCallback = (
   value: CharacteristicValue,
   cb: CharacteristicSetCallback,
-  context?: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: callback type definition
+  context?: any,
   connectionID?: SessionIdentifier
 ) => void;
 

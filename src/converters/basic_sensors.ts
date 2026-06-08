@@ -1,38 +1,38 @@
-import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
+import { groupByEndpoint } from '../helpers';
+import { BasicLogger } from '../logger';
 import {
   ExposesEntry,
   ExposesEntryWithBinaryProperty,
   ExposesEntryWithProperty,
+  ExposesKnownTypes,
   exposesHasBinaryProperty,
   exposesHasProperty,
   exposesIsPublished,
-  ExposesKnownTypes,
 } from '../z2mModels';
-import { groupByEndpoint } from '../helpers';
-import { HumiditySensorHandler } from './basic_sensors/humidity';
 import { AirPressureSensorHandler } from './basic_sensors/air_pressure';
-import { LightSensorHandler } from './basic_sensors/light';
-import { TemperatureSensorHandler } from './basic_sensors/temperature';
-import { ContactSensorHandler } from './basic_sensors/contact';
-import { WaterLeakSensorHandler, GasLeakSensorHandler } from './basic_sensors/leak';
-import { CarbonMonoxideSensorHandler } from './basic_sensors/carbon_monoxide';
-import { SmokeSensorHandler } from './basic_sensors/smoke';
-import { VibrationSensorHandler } from './basic_sensors/vibration';
-import { MovingSensorHandler } from './basic_sensors/moving';
-import { PresenceSensorHandler } from './basic_sensors/presence';
-import { OccupancySensorHandler } from './basic_sensors/occupancy';
 import { IdentifierGenerator } from './basic_sensors/basic';
-import { DeviceTemperatureSensorHandler } from './basic_sensors/device_temperature';
 import { CarbonDioxideSensorHandler } from './basic_sensors/carbon_dioxide';
-import { SoilMoistureSensorHandler } from './basic_sensors/soil_moisture';
+import { CarbonMonoxideSensorHandler } from './basic_sensors/carbon_monoxide';
+import { CleaningReminderSensorHandler } from './basic_sensors/cleaning_reminder';
+import { ContactSensorHandler } from './basic_sensors/contact';
+import { DeviceTemperatureSensorHandler } from './basic_sensors/device_temperature';
 import { DrySensorHandler } from './basic_sensors/dry';
-import { RainSensorHandler } from './basic_sensors/rain';
-import { RainIntensitySensorHandler } from './basic_sensors/rain_intensity';
-import { IlluminanceRawSensorHandler } from './basic_sensors/illuminance_raw';
+import { HumiditySensorHandler } from './basic_sensors/humidity';
 import { IlluminanceAverageSensorHandler } from './basic_sensors/illuminance_average';
 import { IlluminanceMaximumSensorHandler } from './basic_sensors/illuminance_maximum';
-import { CleaningReminderSensorHandler } from './basic_sensors/cleaning_reminder';
-import { BasicLogger } from '../logger';
+import { IlluminanceRawSensorHandler } from './basic_sensors/illuminance_raw';
+import { GasLeakSensorHandler, WaterLeakSensorHandler } from './basic_sensors/leak';
+import { LightSensorHandler } from './basic_sensors/light';
+import { MovingSensorHandler } from './basic_sensors/moving';
+import { OccupancySensorHandler } from './basic_sensors/occupancy';
+import { PresenceSensorHandler } from './basic_sensors/presence';
+import { RainSensorHandler } from './basic_sensors/rain';
+import { RainIntensitySensorHandler } from './basic_sensors/rain_intensity';
+import { SmokeSensorHandler } from './basic_sensors/smoke';
+import { SoilMoistureSensorHandler } from './basic_sensors/soil_moisture';
+import { TemperatureSensorHandler } from './basic_sensors/temperature';
+import { VibrationSensorHandler } from './basic_sensors/vibration';
+import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 
 type ExposeToHandlerFunction = (expose: ExposesEntryWithProperty) => ServiceHandler;
 

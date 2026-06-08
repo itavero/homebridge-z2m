@@ -1,8 +1,8 @@
-import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../z2mModels';
 import { hap } from '../../hap';
-import { ConfigurableBinarySensorHandler, isBinarySensorConfig, BinarySensorTypeDefinition } from './binary';
 import { BasicLogger } from '../../logger';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty } from '../../z2mModels';
+import { BasicAccessory } from '../interfaces';
+import { BinarySensorTypeDefinition, ConfigurableBinarySensorHandler, isBinarySensorConfig } from './binary';
 
 export class OccupancySensorHandler extends ConfigurableBinarySensorHandler {
   public static readonly exposesName: string = 'occupancy';

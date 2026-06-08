@@ -21,6 +21,8 @@ the Third Reality 3RWS18BZ
 * [Leak Sensor](../../sensors.md)
   * Leak Detected
   * Status Low Battery
+* [Switch](../../switch.md)
+  * On
 
 
 # Related

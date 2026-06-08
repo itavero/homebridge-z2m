@@ -19,8 +19,11 @@ these devices
 
 * [Lightbulb](../../light.md)
   * Brightness
+  * Color Temperature
   * On
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Tuya](../index.md#tuya)

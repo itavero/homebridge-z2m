@@ -18,6 +18,9 @@ the Brun Holding Fire Fence
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Electrical Sensor](../../electrical.md)
+  * Consumption
+  * Total Consumption
 * [Switch](../../switch.md)
   * On
 * [Temperature Sensor](../../sensors.md)

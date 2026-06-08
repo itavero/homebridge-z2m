@@ -1,12 +1,11 @@
+import * as hapNodeJs from '@homebridge/hap-nodejs';
 import { PlatformConfig } from 'homebridge';
 import { isPluginConfiguration } from '../src/configModels';
 import { BasicServiceCreatorManager } from '../src/converters/creators';
-import * as hapNodeJs from '@homebridge/hap-nodejs';
 import { setHap } from '../src/hap';
 
-/* eslint-disable-next-line @typescript-eslint/no-extraneous-class */
+// biome-ignore lint/complexity/noStaticOnlyClass: logger helper class with static methods
 class ConsoleLogger {
-  /* eslint-disable no-console */
   static error(message: string) {
     console.error(message);
   }

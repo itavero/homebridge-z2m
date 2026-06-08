@@ -1,6 +1,6 @@
 import { Characteristic, Controller, Service } from 'homebridge';
-import { ExposesEntry } from '../z2mModels';
 import { BasicLogger } from '../logger';
+import { ExposesEntry } from '../z2mModels';
 
 export interface BasicAccessory {
   log: BasicLogger;

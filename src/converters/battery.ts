@@ -1,18 +1,18 @@
-import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
+import { CharacteristicValue } from 'homebridge';
+import { hap } from '../hap';
+import { getOrAddCharacteristic, groupByEndpoint } from '../helpers';
 import {
-  exposesCanBeGet,
   ExposesEntry,
   ExposesEntryWithBinaryProperty,
   ExposesEntryWithNumericRangeProperty,
   ExposesEntryWithProperty,
+  exposesCanBeGet,
   exposesHasBinaryProperty,
   exposesHasNumericRangeProperty,
   exposesHasProperty,
   exposesIsPublished,
 } from '../z2mModels';
-import { hap } from '../hap';
-import { getOrAddCharacteristic, groupByEndpoint } from '../helpers';
-import { CharacteristicValue } from 'homebridge';
+import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import {
   BinaryConditionCharacteristicMonitor,
   CharacteristicMonitor,

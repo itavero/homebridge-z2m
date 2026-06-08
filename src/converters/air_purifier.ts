@@ -29,9 +29,9 @@ export class AirPurifierCreator implements ServiceCreator {
       )
       .forEach((e) => {
         try {
-          const fanSpeedExpose = exposes.find((x) => x.name === 'fan_speed' && exposesHasNumericRangeProperty(x)) as
-            | ExposesEntryWithNumericRangeProperty
-            | undefined;
+          const fanSpeedExpose = exposes.find(
+            (x) => x.name === 'fan_speed' && exposesHasNumericRangeProperty(x) && x.endpoint === e.endpoint
+          ) as ExposesEntryWithNumericRangeProperty | undefined;
           const handler = new AirPurifierHandler(e as ExposesEntryWithFeatures, accessory, fanSpeedExpose);
           accessory.registerServiceHandler(handler);
         } catch (error) {

@@ -17,5 +17,5 @@ When switching Target Air Purifier State from Auto to Manual, the last known num
 
 ## Remarks
 
-* Exposes not mapped to HomeKit: `pm25`, `air_quality`, `led_enable`, `child_lock`, `filter_age`, `device_age`, `identify`.
+* Exposes not mapped to HomeKit: `air_quality`, `led_enable`, `child_lock`, `filter_age`, `identify`.
 * The `replace_filter` binary expose is created as a separate [Contact Sensor](https://developers.homebridge.io/#/service/ContactSensor) service, making it visible as a sensor trigger in HomeKit automations.

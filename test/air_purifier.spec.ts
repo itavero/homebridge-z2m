@@ -72,6 +72,16 @@ describe('Air Purifier', () => {
       );
     });
 
+    test('Status update: fan_mode "off" → TargetAirPurifierState=MANUAL', () => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"fan_mode":"off"}',
+        hap.Service.AirPurifier,
+        hap.Characteristic.TargetAirPurifierState,
+        hap.Characteristic.TargetAirPurifierState.MANUAL
+      );
+    });
+
     test('Status update: fan_mode "1" → TargetAirPurifierState=MANUAL + RotationSpeed=11', () => {
       expect(harness).toBeDefined();
       const expected = new Map();

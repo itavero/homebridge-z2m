@@ -9,7 +9,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Added
 
-- Add support for `fan` composite expose as AirPurifier service (Active, TargetAirPurifierState, RotationSpeed) and `replace_filter` expose as ContactSensor, enabling HomeKit support for devices like the IKEA STARKVIND E2007 air purifier.
+- Add support for `fan` composite expose as AirPurifier service (Active, CurrentAirPurifierState, TargetAirPurifierState, RotationSpeed) and `replace_filter` expose as ContactSensor, enabling HomeKit support for devices like the IKEA STARKVIND E2007 air purifier.
 
 ## [1.11.2] - 2026-04-09
 

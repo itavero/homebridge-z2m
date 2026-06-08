@@ -1,37 +1,14 @@
-import { BasicAccessory } from '../interfaces';
-import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
-import { PassthroughCharacteristicMonitor } from '../monitor';
-import { copyExposesRangeToCharacteristic, getOrAddCharacteristic } from '../../helpers';
 import { hap } from '../../hap';
-import { BasicSensorHandler } from './basic';
-import { Characteristic } from 'homebridge';
+import { ExposesEntryWithBinaryProperty, ExposesEntryWithProperty, ExposesKnownTypes } from '../../z2mModels';
+import { BasicAccessory } from '../interfaces';
+import { LightSensorHandler } from './light_sensor';
 
-export class IlluminanceMaximumSensorHandler extends BasicSensorHandler {
+export class IlluminanceMaximumSensorHandler extends LightSensorHandler {
   public static readonly exposesName: string = 'illuminance_maximum_today';
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
 
-  public readonly mainCharacteristics: Characteristic[] = [];
-
   constructor(expose: ExposesEntryWithProperty, allExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
-    super(
-      accessory,
-      expose,
-      allExposes,
-      IlluminanceMaximumSensorHandler.generateIdentifier,
-      (n, t) => new hap.Service.LightSensor(n, t),
-      'illuminance_max'
-    );
-    accessory.log.debug(`Configuring IlluminanceMaximumSensor for ${this.serviceName}`);
-
-    const characteristic = getOrAddCharacteristic(this.service, hap.Characteristic.CurrentAmbientLightLevel);
-    if (!copyExposesRangeToCharacteristic(expose, characteristic)) {
-      characteristic.setProps({
-        minValue: 0,
-      });
-    }
-    this.mainCharacteristics.push(characteristic);
-
-    this.monitors.push(new PassthroughCharacteristicMonitor(expose.property, this.service, hap.Characteristic.CurrentAmbientLightLevel));
+    super(expose, allExposes, accessory, IlluminanceMaximumSensorHandler.generateIdentifier, 'illuminance_max');
   }
 
   static generateIdentifier(endpoint: string | undefined) {

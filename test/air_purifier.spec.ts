@@ -158,5 +158,25 @@ describe('Air Purifier', () => {
       expect(harness).toBeDefined();
       harness.checkHomeKitUpdate(hap.Service.AirPurifier, 'fan_mode_speed', 50, { fan_mode: '5' });
     });
+
+    test('Status update: fan_speed 9 → RotationSpeed=100', () => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"fan_speed":9}', hap.Service.AirPurifier, hap.Characteristic.RotationSpeed, 100);
+    });
+
+    test('Status update: fan_speed 1 → RotationSpeed=11', () => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"fan_speed":1}', hap.Service.AirPurifier, hap.Characteristic.RotationSpeed, 11);
+    });
+
+    test('Status update: fan_speed 5 → RotationSpeed=56', () => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"fan_speed":5}', hap.Service.AirPurifier, hap.Characteristic.RotationSpeed, 56);
+    });
+
+    test('Status update: fan_speed 0 → RotationSpeed=0', () => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"fan_speed":0}', hap.Service.AirPurifier, hap.Characteristic.RotationSpeed, 0);
+    });
   });
 });

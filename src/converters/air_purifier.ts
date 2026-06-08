@@ -6,11 +6,13 @@ import {
   ExposesEntryWithBinaryProperty,
   ExposesEntryWithEnumProperty,
   ExposesEntryWithFeatures,
+  ExposesEntryWithNumericRangeProperty,
   ExposesKnownTypes,
   exposesCanBeGet,
   exposesHasBinaryProperty,
   exposesHasEnumProperty,
   exposesHasFeatures,
+  exposesHasNumericRangeProperty,
 } from '../z2mModels';
 import { BasicAccessory, ServiceCreator, ServiceHandler } from './interfaces';
 import { CharacteristicMonitor, MappingCharacteristicMonitor, NumericTransformCharacteristicMonitor } from './monitor';
@@ -27,7 +29,10 @@ export class AirPurifierCreator implements ServiceCreator {
       )
       .forEach((e) => {
         try {
-          const handler = new AirPurifierHandler(e as ExposesEntryWithFeatures, accessory);
+          const fanSpeedExpose = exposes.find((x) => x.name === 'fan_speed' && exposesHasNumericRangeProperty(x)) as
+            | ExposesEntryWithNumericRangeProperty
+            | undefined;
+          const handler = new AirPurifierHandler(e as ExposesEntryWithFeatures, accessory, fanSpeedExpose);
           accessory.registerServiceHandler(handler);
         } catch (error) {
           accessory.log.warn(
@@ -57,13 +62,16 @@ class AirPurifierHandler implements ServiceHandler {
   private monitors: CharacteristicMonitor[] = [];
   private stateExpose: ExposesEntryWithBinaryProperty;
   private modeExpose?: ExposesEntryWithEnumProperty;
+  private fanSpeedExpose?: ExposesEntryWithNumericRangeProperty;
   private numericModes: string[] = [];
   private lastManualMode = '';
 
   constructor(
     expose: ExposesEntryWithFeatures,
-    private readonly accessory: BasicAccessory
+    private readonly accessory: BasicAccessory,
+    fanSpeedExpose?: ExposesEntryWithNumericRangeProperty
   ) {
+    this.fanSpeedExpose = fanSpeedExpose;
     const endpoint = expose.endpoint;
     this.identifier = AirPurifierHandler.generateIdentifier(endpoint);
 
@@ -135,14 +143,23 @@ class AirPurifierHandler implements ServiceHandler {
           'set',
           this.handleSetRotationSpeed.bind(this)
         );
-        rotationChar.setProps({ minValue: 0, maxValue: 100, minStep: Math.floor(100 / numLevels) });
-        // Monitor fan_mode for numeric values → rotation speed percentage
+        rotationChar.setProps({ minValue: 0, maxValue: 100, minStep: 1 });
+        // Monitor fan_mode (SET echo) for numeric values → rotation speed percentage
         this.monitors.push(
           new NumericTransformCharacteristicMonitor(this.modeExpose.property, service, hap.Characteristic.RotationSpeed, (value) => {
             const idx = this.numericModes.indexOf(value as string);
             return idx >= 0 ? Math.round(((idx + 1) * 100) / numLevels) : undefined;
           })
         );
+        // Monitor fan_speed (published) → rotation speed percentage; covers auto mode
+        if (this.fanSpeedExpose !== undefined) {
+          const speedMax = this.fanSpeedExpose.value_max;
+          this.monitors.push(
+            new NumericTransformCharacteristicMonitor(this.fanSpeedExpose.property, service, hap.Characteristic.RotationSpeed, (value) =>
+              Math.round(((value as number) * 100) / speedMax)
+            )
+          );
+        }
       }
     }
   }
@@ -154,6 +171,9 @@ class AirPurifierHandler implements ServiceHandler {
     }
     if (this.modeExpose !== undefined && exposesCanBeGet(this.modeExpose)) {
       keys.push(this.modeExpose.property);
+    }
+    if (this.fanSpeedExpose !== undefined && exposesCanBeGet(this.fanSpeedExpose)) {
+      keys.push(this.fanSpeedExpose.property);
     }
     return keys;
   }

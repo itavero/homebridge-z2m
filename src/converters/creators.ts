@@ -9,6 +9,7 @@ import { ThermostatCreator } from './climate';
 import { CoverCreator } from './cover';
 import { ElectricalSensorCreator } from './electrical';
 import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator } from './interfaces';
+import { IrBlasterCreator } from './ir_blaster';
 import { LightCreator } from './light';
 import { LockCreator } from './lock';
 import { SwitchCreator } from './switch';
@@ -37,6 +38,7 @@ export class BasicServiceCreatorManager
     StatelessProgrammableSwitchCreator,
     ThermostatCreator,
     AirPurifierCreator,
+    IrBlasterCreator,
     BatteryCreator,
   ];
 

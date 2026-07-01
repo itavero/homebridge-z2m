@@ -1,0 +1,22 @@
+[
+  {
+    "type": "binary",
+    "name": "learn_ir_code",
+    "property": "learn_ir_code",
+    "access": 3,
+    "value_on": "ON",
+    "value_off": "OFF"
+  },
+  {
+    "type": "text",
+    "name": "learned_ir_code",
+    "property": "learned_ir_code",
+    "access": 1
+  },
+  {
+    "type": "text",
+    "name": "ir_code_to_send",
+    "property": "ir_code_to_send",
+    "access": 2
+  }
+]

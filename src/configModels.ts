@@ -3,12 +3,23 @@ import { ConverterConfigValidatorCollection } from './converters/creators';
 import { BasicLogger } from './logger';
 import { ExposesEntry, isExposesEntry } from './z2mModels';
 
+export interface IrBlasterCommandConfig {
+  name: string;
+  value: string;
+}
+
+export interface IrBlasterDeviceConfig {
+  id: string;
+  commands?: IrBlasterCommandConfig[];
+}
+
 export interface PluginConfiguration extends PlatformConfig {
   mqtt: MqttConfiguration;
   log?: LogConfiguration;
   defaults?: BaseDeviceConfiguration;
   experimental?: string[];
   devices?: DeviceConfiguration[];
+  ir_blasters?: IrBlasterDeviceConfig[];
   exclude_grouped_devices?: boolean;
 }
 
@@ -31,10 +42,58 @@ function hasValidDeviceConfigurations(
       return false;
     }
     for (const element of devices) {
+      if (element === null || typeof element !== 'object') {
+        logger?.warn('Incorrect configuration: Device entry is not an object, skipping: ' + JSON.stringify(element));
+        continue;
+      }
+      if (element.id === undefined || typeof element.id !== 'string' || element.id.length < 1) {
+        logger?.warn(
+          'Incorrect configuration: Device entry is missing required "id" field — skipping this entry. ' +
+            'Set "id" to the Zigbee IEEE address or friendly name (e.g. "0x1234567890abcdef" or "My Light"). ' +
+            'Entry: ' +
+            JSON.stringify(element)
+        );
+        continue;
+      }
       if (!isDeviceConfiguration(element) || !hasValidConverterConfigurations(element, converterConfigValidator, logger)) {
         logger?.error('Incorrect configuration: Entry for device is not correct: ' + JSON.stringify(element));
         return false;
       }
+    }
+  }
+  return true;
+}
+
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
+const isIrBlasterCommandConfig = (x: any): x is IrBlasterCommandConfig =>
+  x !== null &&
+  typeof x === 'object' &&
+  typeof x.name === 'string' &&
+  x.name.length > 0 &&
+  typeof x.value === 'string' &&
+  x.value.length > 0;
+
+// biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
+const isIrBlasterDeviceConfig = (x: any): x is IrBlasterDeviceConfig =>
+  x !== null &&
+  typeof x === 'object' &&
+  typeof x.id === 'string' &&
+  x.id.length > 0 &&
+  (x.commands === undefined || (Array.isArray(x.commands) && x.commands.every(isIrBlasterCommandConfig)));
+
+function hasValidIrBlastersConfiguration(ir_blasters: unknown, logger: BasicLogger | undefined): boolean {
+  if (!Array.isArray(ir_blasters)) {
+    logger?.error('Incorrect configuration: ir_blasters must be an array');
+    return false;
+  }
+  for (const entry of ir_blasters) {
+    if (!isIrBlasterDeviceConfig(entry)) {
+      logger?.error(
+        'Incorrect configuration: ir_blasters entry is invalid. Each entry needs "id" (string) and optional "commands" array with {name, value} items. ' +
+          'Entry: ' +
+          JSON.stringify(entry)
+      );
+      return false;
     }
   }
   return true;
@@ -75,7 +134,15 @@ export const isPluginConfiguration = (
     return false;
   }
 
-  return hasValidDeviceConfigurations(x.devices, converterConfigValidator, logger);
+  if (!hasValidDeviceConfigurations(x.devices, converterConfigValidator, logger)) {
+    return false;
+  }
+
+  if (x.ir_blasters !== undefined && !hasValidIrBlastersConfiguration(x.ir_blasters, logger)) {
+    return false;
+  }
+
+  return true;
 };
 
 export interface LogConfiguration extends Record<string, unknown> {

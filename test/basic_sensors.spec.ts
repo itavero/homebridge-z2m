@@ -680,4 +680,245 @@ describe('Basic Sensors', () => {
       harness.checkSingleUpdateState('{"moving":true}', movingSensorId, hap.Characteristic.MotionDetected, true);
     });
   });
+
+  describe('Aqara soil moisture sensor', () => {
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+    let soilMoistureSensorId: string;
+    let drySensorId: string;
+    let lightSensorId: string;
+    let deviceTemperatureServiceId: string;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('aqara/smgq11lm.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Check service creation
+        soilMoistureSensorId = 'soil_' + hap.Service.HumiditySensor.UUID;
+        drySensorId = 'dry_' + hap.Service.ContactSensor.UUID;
+        lightSensorId = hap.Service.LightSensor.UUID;
+        deviceTemperatureServiceId = hap.Service.TemperatureSensor.UUID + '_device_temperature';
+
+        newHarness
+          .getOrAddHandler(hap.Service.HumiditySensor, 'soil', soilMoistureSensorId)
+          .addExpectedCharacteristic('soil_moisture', hap.Characteristic.CurrentRelativeHumidity);
+        newHarness
+          .getOrAddHandler(hap.Service.ContactSensor, 'dry', drySensorId)
+          .addExpectedCharacteristic('dry', hap.Characteristic.ContactSensorState);
+        newHarness
+          .getOrAddHandler(hap.Service.LightSensor)
+          .addExpectedCharacteristic('illuminance', hap.Characteristic.CurrentAmbientLightLevel);
+        newHarness
+          .getOrAddHandler(hap.Service.TemperatureSensor, 'device_temperature')
+          .addExpectedCharacteristic('device_temperature', hap.Characteristic.CurrentTemperature);
+
+        newHarness.prepareCreationMocks();
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
+        newHarness.checkExpectedGetableKeys([]);
+        harness = newHarness;
+      }
+      harness?.clearMocks();
+    });
+
+    afterEach(() => {
+      vi.resetAllMocks();
+    });
+
+    test('Update soil moisture', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"soil_moisture":45}', soilMoistureSensorId, hap.Characteristic.CurrentRelativeHumidity, 45);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"soil_moisture":78}', soilMoistureSensorId, hap.Characteristic.CurrentRelativeHumidity, 78);
+    });
+
+    test('Update dry state - not dry (contact detected)', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"dry":false}',
+        drySensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_DETECTED
+      );
+    });
+
+    test('Update dry state - dry (contact not detected)', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"dry":true}',
+        drySensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED
+      );
+    });
+
+    test('Update illuminance', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"illuminance":1200}', lightSensorId, hap.Characteristic.CurrentAmbientLightLevel, 1200);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"illuminance":50}', lightSensorId, hap.Characteristic.CurrentAmbientLightLevel, 50);
+    });
+
+    test('Update device temperature', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"device_temperature":12.5}',
+        deviceTemperatureServiceId,
+        hap.Characteristic.CurrentTemperature,
+        12.5
+      );
+      harness.clearMocks();
+      harness.checkSingleUpdateState(
+        '{"device_temperature":32.1}',
+        deviceTemperatureServiceId,
+        hap.Characteristic.CurrentTemperature,
+        32.1
+      );
+    });
+  });
+
+  describe('Arteco ZS-SF00 soil fertility sensor', () => {
+    // Shared "state"
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
+    let soilMoistureSensorId: string;
+    let soilFertilitySensorId: string;
+    let temperatureSensorId: string;
+    let humiditySensorId: string;
+    let lightSensorId: string;
+    let waterWarningSensorId: string;
+    let soilFertilityWarningSensorId: string;
+
+    beforeEach(() => {
+      // Only test service creation for first test case and reuse harness afterwards
+      if (deviceExposes.length === 0 && harness === undefined) {
+        // Load exposes from JSON
+        deviceExposes = loadExposesFromFile('arteco/zs-sf00.json');
+        expect(deviceExposes.length).toBeGreaterThan(0);
+        const newHarness = new ServiceHandlersTestHarness();
+
+        // Check service creation
+        soilMoistureSensorId = 'soil_' + hap.Service.HumiditySensor.UUID;
+        soilFertilitySensorId = 'soil_fertility_' + hap.Service.LightSensor.UUID;
+        temperatureSensorId = hap.Service.TemperatureSensor.UUID;
+        humiditySensorId = hap.Service.HumiditySensor.UUID;
+        lightSensorId = hap.Service.LightSensor.UUID;
+        waterWarningSensorId = 'water_warning_' + hap.Service.ContactSensor.UUID;
+        soilFertilityWarningSensorId = 'soil_fertility_warning_' + hap.Service.ContactSensor.UUID;
+
+        newHarness
+          .getOrAddHandler(hap.Service.HumiditySensor, 'soil', soilMoistureSensorId)
+          .addExpectedCharacteristic('soil_moisture', hap.Characteristic.CurrentRelativeHumidity);
+        newHarness
+          .getOrAddHandler(hap.Service.LightSensor, 'soil_fertility', soilFertilitySensorId)
+          .addExpectedCharacteristic('soil_fertility', hap.Characteristic.CurrentAmbientLightLevel);
+        newHarness
+          .getOrAddHandler(hap.Service.TemperatureSensor)
+          .addExpectedCharacteristic('temperature', hap.Characteristic.CurrentTemperature);
+        newHarness
+          .getOrAddHandler(hap.Service.HumiditySensor)
+          .addExpectedCharacteristic('humidity', hap.Characteristic.CurrentRelativeHumidity);
+        newHarness
+          .getOrAddHandler(hap.Service.LightSensor)
+          .addExpectedCharacteristic('illuminance', hap.Characteristic.CurrentAmbientLightLevel);
+        newHarness
+          .getOrAddHandler(hap.Service.ContactSensor, 'water_warning', waterWarningSensorId)
+          .addExpectedCharacteristic('water_warning', hap.Characteristic.ContactSensorState);
+        newHarness
+          .getOrAddHandler(hap.Service.ContactSensor, 'soil_fertility_warning', soilFertilityWarningSensorId)
+          .addExpectedCharacteristic('soil_fertility_warning', hap.Characteristic.ContactSensorState);
+
+        newHarness.prepareCreationMocks();
+
+        newHarness.callCreators(deviceExposes);
+
+        newHarness.checkCreationExpectations();
+        newHarness.checkHasMainCharacteristics();
+        newHarness.checkExpectedGetableKeys([]);
+        harness = newHarness;
+      }
+      harness?.clearMocks();
+    });
+
+    afterEach(() => {
+      vi.resetAllMocks();
+    });
+
+    test('Update soil moisture', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"soil_moisture":45}', soilMoistureSensorId, hap.Characteristic.CurrentRelativeHumidity, 45);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"soil_moisture":78}', soilMoistureSensorId, hap.Characteristic.CurrentRelativeHumidity, 78);
+    });
+
+    test('Update soil fertility', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"soil_fertility":1200}', soilFertilitySensorId, hap.Characteristic.CurrentAmbientLightLevel, 1200);
+      harness.clearMocks();
+      harness.checkSingleUpdateState('{"soil_fertility":3500}', soilFertilitySensorId, hap.Characteristic.CurrentAmbientLightLevel, 3500);
+    });
+
+    test('Update temperature', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"temperature":22.5}', temperatureSensorId, hap.Characteristic.CurrentTemperature, 22.5);
+    });
+
+    test('Update humidity', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"humidity":65}', humiditySensorId, hap.Characteristic.CurrentRelativeHumidity, 65);
+    });
+
+    test('Update illuminance', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState('{"illuminance":800}', lightSensorId, hap.Characteristic.CurrentAmbientLightLevel, 800);
+    });
+
+    test('Update water warning - none', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"water_warning":"none"}',
+        waterWarningSensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_DETECTED
+      );
+    });
+
+    test('Update water warning - alarm', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"water_warning":"alarm"}',
+        waterWarningSensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED
+      );
+    });
+
+    test('Update soil fertility warning - none', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"soil_fertility_warning":"none"}',
+        soilFertilityWarningSensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_DETECTED
+      );
+    });
+
+    test('Update soil fertility warning - alarm', (): void => {
+      expect(harness).toBeDefined();
+      harness.checkSingleUpdateState(
+        '{"soil_fertility_warning":"alarm"}',
+        soilFertilityWarningSensorId,
+        hap.Characteristic.ContactSensorState,
+        hap.Characteristic.ContactSensorState.CONTACT_NOT_DETECTED
+      );
+    });
+  });
 });

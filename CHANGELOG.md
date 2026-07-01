@@ -11,6 +11,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 - Add support for IR blasters via `ir_code_to_send` text expose. Configure named IR commands in the `ir_blaster` converter config; each command maps to a HomeKit Switch (e.g. Tuya ZS06).
 - Add support for `fan` composite expose as AirPurifier service (Active, TargetAirPurifierState, RotationSpeed) and `replace_filter` expose as ContactSensor, enabling HomeKit support for devices like the IKEA STARKVIND E2007 air purifier.
+- Support for `soil_moisture`, `dry`, `soil_fertility`, `water_warning`, and `soil_fertility_warning` sensors (e.g. Aqara SMGQ11LM, Arteco ZS-SF00).
 
 ## [1.11.2] - 2026-04-09
 
@@ -86,6 +87,7 @@ Below you will find a summary of all changes since v1.9.3, including those intro
 
 ### Added
 
+- Add support for `soil_moisture` (as Humidity Sensor) and `dry` (as Contact Sensor) exposes for the Aqara SMGQ11LM soil moisture sensor. (see [#1095](https://github.com/itavero/homebridge-z2m/pull/1095))
 - New `min_delta` option for Adaptive Lighting configuration, allowing you to set a minimum difference in color temperature (in mired) before sending an update to reduce MQTT traffic. Defaults to `1`.
 - New `enabled` option for Adaptive Lighting configuration, allowing explicit enable/disable control within an object configuration.
 - Expose electrical measurement properties (`power`, `voltage`, `current`, `energy`, `produced_energy`) using Eve-compatible custom characteristics, visible in the Eve app and other HomeKit apps that support custom characteristics. (see [#505](https://github.com/itavero/homebridge-z2m/issues/505))

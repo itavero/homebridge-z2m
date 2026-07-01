@@ -13,15 +13,21 @@ import { AirPressureSensorHandler } from './basic_sensors/air_pressure';
 import { IdentifierGenerator } from './basic_sensors/basic';
 import { CarbonDioxideSensorHandler } from './basic_sensors/carbon_dioxide';
 import { CarbonMonoxideSensorHandler } from './basic_sensors/carbon_monoxide';
+import { CleaningReminderSensorHandler } from './basic_sensors/cleaning_reminder';
 import { ContactSensorHandler } from './basic_sensors/contact';
 import { DeviceTemperatureSensorHandler } from './basic_sensors/device_temperature';
 import { DrySensorHandler } from './basic_sensors/dry';
 import { HumiditySensorHandler } from './basic_sensors/humidity';
+import { IlluminanceAverageSensorHandler } from './basic_sensors/illuminance_average';
+import { IlluminanceMaximumSensorHandler } from './basic_sensors/illuminance_maximum';
+import { IlluminanceRawSensorHandler } from './basic_sensors/illuminance_raw';
 import { GasLeakSensorHandler, WaterLeakSensorHandler } from './basic_sensors/leak';
 import { LightSensorHandler } from './basic_sensors/light';
 import { MovingSensorHandler } from './basic_sensors/moving';
 import { OccupancySensorHandler } from './basic_sensors/occupancy';
 import { PresenceSensorHandler } from './basic_sensors/presence';
+import { RainSensorHandler } from './basic_sensors/rain';
+import { RainIntensitySensorHandler } from './basic_sensors/rain_intensity';
 import { ReplaceFilterSensorHandler } from './basic_sensors/replace_filter';
 import { SmokeSensorHandler } from './basic_sensors/smoke';
 import { SoilFertilitySensorHandler } from './basic_sensors/soil_fertility';
@@ -73,6 +79,12 @@ export class BasicSensorCreator implements ServiceCreator {
     DrySensorHandler,
     WaterWarningSensorHandler,
     SoilFertilityWarningSensorHandler,
+    RainSensorHandler,
+    RainIntensitySensorHandler,
+    IlluminanceRawSensorHandler,
+    IlluminanceAverageSensorHandler,
+    IlluminanceMaximumSensorHandler,
+    CleaningReminderSensorHandler,
   ];
 
   private static configs: WithConfigurableConverter<unknown>[] = [OccupancySensorHandler];

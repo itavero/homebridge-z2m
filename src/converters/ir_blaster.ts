@@ -114,9 +114,11 @@ class IrBlasterHandler implements ServiceHandler {
       const data: Record<string, unknown> = {};
       data[this.property] = this.command.value;
       this.accessory.queueDataForSetAction(data);
-      // Reset to OFF immediately — IR commands are stateless
-      this.onCharacteristic.updateValue(false);
+      callback(null);
+      // Reset to OFF shortly after ack — IR commands are stateless, avoid flipping state before HomeKit confirms the set
+      setTimeout(() => this.onCharacteristic.updateValue(false), 500);
+    } else {
+      callback(null);
     }
-    callback(null);
   }
 }

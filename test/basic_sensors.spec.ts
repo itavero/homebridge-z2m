@@ -581,6 +581,30 @@ describe('Basic Sensors', () => {
       harness.clearMocks();
       harness.checkSingleUpdateState('{"vibration":true}', vibrationSensorId, hap.Characteristic.MotionDetected, true);
     });
+
+    test('Create and update vibration from alarm_1 fallback expose', (): void => {
+      const fallbackExposes = loadExposesFromFile('heiman/hs1vs-n.json').map((entry) =>
+        entry.name === 'vibration' ? { ...entry, name: 'alarm_1', property: 'alarm_1' } : entry
+      );
+      const fallbackHarness = new ServiceHandlersTestHarness();
+
+      fallbackHarness
+        .getOrAddHandler(hap.Service.MotionSensor, 'vibration', vibrationSensorId)
+        .addExpectedCharacteristic('alarm_1', hap.Characteristic.MotionDetected)
+        .addExpectedCharacteristic('battery_low', hap.Characteristic.StatusLowBattery)
+        .addExpectedCharacteristic('tamper', hap.Characteristic.StatusTampered);
+      fallbackHarness.prepareCreationMocks();
+
+      fallbackHarness.callCreators(fallbackExposes);
+
+      fallbackHarness.checkCreationExpectations();
+      fallbackHarness.checkHasMainCharacteristics();
+      fallbackHarness.checkExpectedGetableKeys([]);
+      fallbackHarness.clearMocks();
+      fallbackHarness.checkSingleUpdateState('{"alarm_1":true}', vibrationSensorId, hap.Characteristic.MotionDetected, true);
+      fallbackHarness.clearMocks();
+      fallbackHarness.checkSingleUpdateState('{"alarm_1":false}', vibrationSensorId, hap.Characteristic.MotionDetected, false);
+    });
   });
 
   describe('SmartThings STSS-PRES-001', () => {

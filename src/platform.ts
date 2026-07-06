@@ -507,17 +507,34 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   // biome-ignore lint/suspicious/noExplicitAny: MQTT message payload type
   private getAdditionalConfigForDevice(device: any): BaseDeviceConfiguration {
-    if (this.config?.devices !== undefined) {
-      const identifiers = Zigbee2mqttPlatform.getIdentifiersFromDevice(device);
+    const identifiers = Zigbee2mqttPlatform.getIdentifiersFromDevice(device);
+    let result: BaseDeviceConfiguration | undefined;
 
+    if (this.config?.devices !== undefined) {
       for (const devConfig of this.config.devices) {
+        if (!devConfig.id) {
+          continue;
+        }
         if (identifiers.includes(devConfig.id.toLocaleLowerCase())) {
-          return this.mergeDeviceConfig(devConfig);
+          result = this.mergeDeviceConfig(devConfig);
+          break;
         }
       }
     }
 
-    return this.baseDeviceConfig;
+    if (this.config?.ir_blasters !== undefined) {
+      const irEntry = this.config.ir_blasters.find((e) => e.id && identifiers.includes(e.id.toLocaleLowerCase()));
+      if (irEntry?.commands !== undefined && irEntry.commands.length > 0) {
+        const base = result ?? { ...this.baseDeviceConfig };
+        base.converters = {
+          ...(base.converters ?? {}),
+          ir_blaster: { commands: irEntry.commands },
+        };
+        result = base;
+      }
+    }
+
+    return result ?? this.baseDeviceConfig;
   }
 
   private mergeDeviceConfig(devConfig: DeviceConfiguration): BaseDeviceConfiguration {

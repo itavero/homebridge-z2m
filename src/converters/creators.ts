@@ -1,6 +1,7 @@
 import { BasicLogger } from '../logger';
 import { ExposesEntry } from '../z2mModels';
 import { StatelessProgrammableSwitchCreator } from './action';
+import { AirPurifierCreator } from './air_purifier';
 import { AirQualitySensorCreator } from './air_quality';
 import { BasicSensorCreator } from './basic_sensors';
 import { BatteryCreator } from './battery';
@@ -35,6 +36,7 @@ export class BasicServiceCreatorManager
     ElectricalSensorCreator,
     StatelessProgrammableSwitchCreator,
     ThermostatCreator,
+    AirPurifierCreator,
     BatteryCreator,
   ];
 

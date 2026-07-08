@@ -1,0 +1,104 @@
+[
+  {
+    "type": "fan",
+    "name": "fan",
+    "label": "Fan",
+    "features": [
+      {
+        "name": "state",
+        "label": "State",
+        "access": 7,
+        "type": "binary",
+        "property": "fan_state",
+        "description": "On/off state of the fan",
+        "value_on": "ON",
+        "value_off": "OFF"
+      },
+      {
+        "name": "mode",
+        "label": "Mode",
+        "access": 2,
+        "type": "enum",
+        "property": "fan_mode",
+        "description": "Operating mode",
+        "values": ["off", "auto", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+      }
+    ]
+  },
+  {
+    "name": "fan_speed",
+    "label": "Fan speed",
+    "access": 1,
+    "type": "numeric",
+    "property": "fan_speed",
+    "description": "Current fan speed (read-only)",
+    "value_min": 0,
+    "value_max": 9
+  },
+  {
+    "name": "pm25",
+    "label": "PM2.5",
+    "access": 1,
+    "type": "numeric",
+    "property": "pm25",
+    "description": "Particulate matter 2.5 density",
+    "unit": "µg/m³"
+  },
+  {
+    "name": "air_quality",
+    "label": "Air quality",
+    "access": 1,
+    "type": "enum",
+    "property": "air_quality",
+    "description": "Air quality index",
+    "values": ["excellent", "good", "moderate", "poor", "unhealthy", "hazardous", "out_of_range", "unknown"]
+  },
+  {
+    "name": "replace_filter",
+    "label": "Replace filter",
+    "access": 1,
+    "type": "binary",
+    "property": "replace_filter",
+    "description": "Indicates whether the filter needs to be replaced",
+    "value_on": true,
+    "value_off": false
+  },
+  {
+    "name": "filter_age",
+    "label": "Filter age",
+    "access": 1,
+    "type": "numeric",
+    "property": "filter_age",
+    "description": "Age of the filter in minutes",
+    "unit": "min"
+  },
+  {
+    "name": "child_lock",
+    "label": "Child lock",
+    "access": 7,
+    "type": "binary",
+    "property": "child_lock",
+    "description": "Activate/deactivate child lock",
+    "value_on": "LOCK",
+    "value_off": "UNLOCK"
+  },
+  {
+    "name": "led_enable",
+    "label": "LED enable",
+    "access": 7,
+    "type": "binary",
+    "property": "led_enable",
+    "description": "Turn on/off the LED",
+    "value_on": true,
+    "value_off": false
+  },
+  {
+    "name": "identify",
+    "label": "Identify",
+    "access": 2,
+    "type": "enum",
+    "property": "identify",
+    "description": "Trigger identification",
+    "values": ["identify"]
+  }
+]

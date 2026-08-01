@@ -82,7 +82,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.8",
-    "@release-it/keep-a-changelog": "^7.0.1",
+    "@release-it/keep-a-changelog": "^8.0.0",
     "@types/color-convert": "^2.0.4",
     "@types/node": "^24.12.0",
     "@types/semver": "^7.7.1",

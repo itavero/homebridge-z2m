@@ -2,6 +2,7 @@
   "pluginAlias": "zigbee2mqtt",
   "pluginType": "platform",
   "singular": true,
+  "fixArrays": true,
   "headerDisplay": "Please use the same MQTT configuration as you have used for your Zigbee2MQTT installation. Device configurations are optional.",
   "footerDisplay": "For more information about the [configuration options](https://z2m.dev/config.html), please refer to the [plugin website](https://z2m.dev/).",
   "schema": {
@@ -153,6 +154,31 @@
                     ]
                   }
                 ]
+              }
+            }
+          },
+          "ir_blaster": {
+            "title": "IR Blaster",
+            "type": "object",
+            "properties": {
+              "commands": {
+                "title": "IR Commands",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "title": "Name",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "value": {
+                      "title": "IR Code",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
               }
             }
           },
@@ -337,6 +363,51 @@
           }
         }
       },
+      "ir_blasters": {
+        "title": "IR Blasters",
+        "type": "array",
+        "description": "Configure IR blaster devices. Each entry maps one device to a set of named IR commands, each exposed as a HomeKit switch.",
+        "required": false,
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "title": "Device ID (IEEE address or friendly name)",
+              "description": "Enter the Zigbee2MQTT IEEE address (e.g. 0x70d07efffef1bc8c) or friendly name of this IR blaster.",
+              "type": "string",
+              "required": true,
+              "minLength": 3,
+              "placeholder": "0x70d07efffef1bc8c"
+            },
+            "commands": {
+              "title": "IR Commands",
+              "description": "Each command becomes a HomeKit switch. Activate the switch to send the IR code.",
+              "type": "array",
+              "required": false,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "title": "Command name",
+                    "description": "Label shown in HomeKit (e.g. AC On).",
+                    "type": "string",
+                    "required": true,
+                    "minLength": 1,
+                    "placeholder": "AC On"
+                  },
+                  "value": {
+                    "title": "IR code",
+                    "description": "Base64-encoded IR code captured by the learn feature.",
+                    "type": "string",
+                    "required": true,
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "exclude_grouped_devices": {
         "title": "Exclude devices that are part of a group",
         "type": "boolean",
@@ -349,9 +420,11 @@
         "required": false,
         "items": {
           "type": "object",
+          "required": ["id"],
           "properties": {
             "id": {
               "title": "Zigbee Identifier / Friendly name",
+              "description": "IEEE address (e.g. 0x1234567890abcdef) or friendly name of the device in Zigbee2MQTT.",
               "type": "string",
               "required": true,
               "minLength": 3,

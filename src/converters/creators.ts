@@ -1,6 +1,7 @@
 import { BasicLogger } from '../logger';
 import { ExposesEntry } from '../z2mModels';
 import { StatelessProgrammableSwitchCreator } from './action';
+import { AirPurifierCreator } from './air_purifier';
 import { AirQualitySensorCreator } from './air_quality';
 import { BasicSensorCreator } from './basic_sensors';
 import { BatteryCreator } from './battery';
@@ -8,6 +9,7 @@ import { ThermostatCreator } from './climate';
 import { CoverCreator } from './cover';
 import { ElectricalSensorCreator } from './electrical';
 import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator } from './interfaces';
+import { IrBlasterCreator } from './ir_blaster';
 import { LightCreator } from './light';
 import { LockCreator } from './lock';
 import { SwitchCreator } from './switch';
@@ -35,6 +37,8 @@ export class BasicServiceCreatorManager
     ElectricalSensorCreator,
     StatelessProgrammableSwitchCreator,
     ThermostatCreator,
+    AirPurifierCreator,
+    IrBlasterCreator,
     BatteryCreator,
   ];
 

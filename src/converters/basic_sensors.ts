@@ -13,17 +13,29 @@ import { AirPressureSensorHandler } from './basic_sensors/air_pressure';
 import { IdentifierGenerator } from './basic_sensors/basic';
 import { CarbonDioxideSensorHandler } from './basic_sensors/carbon_dioxide';
 import { CarbonMonoxideSensorHandler } from './basic_sensors/carbon_monoxide';
+import { CleaningReminderSensorHandler } from './basic_sensors/cleaning_reminder';
 import { ContactSensorHandler } from './basic_sensors/contact';
 import { DeviceTemperatureSensorHandler } from './basic_sensors/device_temperature';
+import { DrySensorHandler } from './basic_sensors/dry';
 import { HumiditySensorHandler } from './basic_sensors/humidity';
+import { IlluminanceAverageSensorHandler } from './basic_sensors/illuminance_average';
+import { IlluminanceMaximumSensorHandler } from './basic_sensors/illuminance_maximum';
+import { IlluminanceRawSensorHandler } from './basic_sensors/illuminance_raw';
 import { GasLeakSensorHandler, WaterLeakSensorHandler } from './basic_sensors/leak';
 import { LightSensorHandler } from './basic_sensors/light';
 import { MovingSensorHandler } from './basic_sensors/moving';
 import { OccupancySensorHandler } from './basic_sensors/occupancy';
 import { PresenceSensorHandler } from './basic_sensors/presence';
+import { RainSensorHandler } from './basic_sensors/rain';
+import { RainIntensitySensorHandler } from './basic_sensors/rain_intensity';
+import { ReplaceFilterSensorHandler } from './basic_sensors/replace_filter';
 import { SmokeSensorHandler } from './basic_sensors/smoke';
+import { SoilFertilitySensorHandler } from './basic_sensors/soil_fertility';
+import { SoilFertilityWarningSensorHandler } from './basic_sensors/soil_fertility_warning';
+import { SoilMoistureSensorHandler } from './basic_sensors/soil_moisture';
 import { TemperatureSensorHandler } from './basic_sensors/temperature';
 import { VibrationSensorHandler } from './basic_sensors/vibration';
+import { WaterWarningSensorHandler } from './basic_sensors/water_warning';
 import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator, ServiceHandler } from './interfaces';
 
 type ExposeToHandlerFunction = (expose: ExposesEntryWithProperty) => ServiceHandler;
@@ -61,6 +73,18 @@ export class BasicSensorCreator implements ServiceCreator {
     GasLeakSensorHandler,
     DeviceTemperatureSensorHandler,
     CarbonDioxideSensorHandler,
+    ReplaceFilterSensorHandler,
+    SoilMoistureSensorHandler,
+    SoilFertilitySensorHandler,
+    DrySensorHandler,
+    WaterWarningSensorHandler,
+    SoilFertilityWarningSensorHandler,
+    RainSensorHandler,
+    RainIntensitySensorHandler,
+    IlluminanceRawSensorHandler,
+    IlluminanceAverageSensorHandler,
+    IlluminanceMaximumSensorHandler,
+    CleaningReminderSensorHandler,
   ];
 
   private static configs: WithConfigurableConverter<unknown>[] = [OccupancySensorHandler];

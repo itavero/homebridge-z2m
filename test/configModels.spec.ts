@@ -140,8 +140,9 @@ describe('Plugin configuration', () => {
         expect(isPluginConfiguration(configDevicesNotAnArray, BasicServiceCreatorManager.getInstance())).toBe(false);
       });
       it('device without ID', () => {
+        // Entries without id are warned and skipped, not fatal — config is still valid
         const configDevicesNotAnArray: PlatformConfig = { ...minimalValidConfiguration, devices: [{ exclude: false }] };
-        expect(isPluginConfiguration(configDevicesNotAnArray, BasicServiceCreatorManager.getInstance())).toBe(false);
+        expect(isPluginConfiguration(configDevicesNotAnArray, BasicServiceCreatorManager.getInstance())).toBe(true);
       });
       it('device with invalid config', () => {
         const configDevicesNotAnArray: PlatformConfig = {

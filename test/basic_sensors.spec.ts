@@ -10,6 +10,32 @@ describe('Basic Sensors', () => {
     setHap(hapNodeJs);
   });
 
+  test('Tuya soil moisture sensor', (): void => {
+    const deviceExposes: ExposesEntry[] = [
+      {
+        type: 'numeric',
+        name: 'soil_moisture',
+        property: 'soil_moisture',
+        access: 1,
+        unit: '%',
+        value_min: 0,
+        value_max: 100,
+      },
+    ];
+    const harness = new ServiceHandlersTestHarness();
+
+    harness
+      .getOrAddHandler(hap.Service.HumiditySensor)
+      .addExpectedCharacteristic('soil_moisture', hap.Characteristic.CurrentRelativeHumidity);
+    harness.prepareCreationMocks();
+    harness.callCreators(deviceExposes);
+    harness.checkCreationExpectations();
+    harness.checkHasMainCharacteristics();
+
+    harness.clearMocks();
+    harness.checkSingleUpdateState('{"soil_moisture":42}', hap.Service.HumiditySensor, hap.Characteristic.CurrentRelativeHumidity, 42);
+  });
+
   describe('Aqara T1 temperature, humidity and pressure sensor', () => {
     // Shared "state"
     const airPressureServiceId = 'E863F00A-079E-48FF-8F27-9C2605A29F52';

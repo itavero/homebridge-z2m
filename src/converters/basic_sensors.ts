@@ -21,6 +21,7 @@ import { LightSensorHandler } from './basic_sensors/light';
 import { MovingSensorHandler } from './basic_sensors/moving';
 import { OccupancySensorHandler } from './basic_sensors/occupancy';
 import { PresenceSensorHandler } from './basic_sensors/presence';
+import { ReplaceFilterSensorHandler } from './basic_sensors/replace_filter';
 import { SmokeSensorHandler } from './basic_sensors/smoke';
 import { TemperatureSensorHandler } from './basic_sensors/temperature';
 import { VibrationSensorHandler } from './basic_sensors/vibration';
@@ -61,6 +62,7 @@ export class BasicSensorCreator implements ServiceCreator {
     GasLeakSensorHandler,
     DeviceTemperatureSensorHandler,
     CarbonDioxideSensorHandler,
+    ReplaceFilterSensorHandler,
   ];
 
   private static configs: WithConfigurableConverter<unknown>[] = [OccupancySensorHandler];

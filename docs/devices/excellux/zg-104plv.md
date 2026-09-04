@@ -22,6 +22,8 @@ the Excellux ZG-104PLV
   * Current Ambient Light Level
 * [Motion Sensor](../../sensors.md)
   * Motion Detected
+* [Occupancy Sensor](../../sensors.md)
+  * Occupancy Detected
 
 
 # Related

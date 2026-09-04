@@ -15,6 +15,9 @@
     "type": "binary",
     "property": "contact",
     "description": "Indicates if the contact is closed (= true) or open (= false)",
+    "homeassistant": {
+      "name": null
+    },
     "value_on": false,
     "value_off": true
   },

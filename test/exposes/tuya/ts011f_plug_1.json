@@ -21,7 +21,7 @@
     "access": 3,
     "type": "numeric",
     "property": "countdown",
-    "description": "Countdown to turn device off after a certain time",
+    "description": "Toggle the device after a set duration (one time action)",
     "unit": "s",
     "value_max": 43200,
     "value_min": 0,

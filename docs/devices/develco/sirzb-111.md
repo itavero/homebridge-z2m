@@ -177,17 +177,6 @@ This is the information provided by Zigbee2MQTT for this device:
     ]
   },
   {
-    "name": "max_duration",
-    "label": "Max duration",
-    "access": 7,
-    "type": "numeric",
-    "property": "max_duration",
-    "description": "Max duration of the siren",
-    "unit": "s",
-    "value_max": 900,
-    "value_min": 0
-  },
-  {
     "name": "alarm",
     "label": "Alarm",
     "access": 2,
@@ -196,6 +185,18 @@ This is the information provided by Zigbee2MQTT for this device:
     "description": "Manual start of the siren",
     "value_on": "START",
     "value_off": "OFF"
+  },
+  {
+    "name": "max_duration",
+    "label": "Max duration",
+    "access": 7,
+    "type": "numeric",
+    "property": "max_duration",
+    "description": "Maximum time that the alarm will be active",
+    "unit": "s",
+    "value_max": 65534,
+    "value_min": 0,
+    "value_step": 1
   },
   {
     "name": "battery",

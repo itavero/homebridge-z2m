@@ -113,6 +113,7 @@ jobs:
 
       - name: Add comment to PR if analysis is skipped
         if: env.run-analysis != 'true'
+        continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -161,6 +162,7 @@ jobs:
 
       - name: Add comment to PR if job fails
         if: ${{ failure() && env.run-analysis == 'true' }}
+        continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -172,6 +174,7 @@ jobs:
 
       - name: Add comment to PR if job succeeds
         if: ${{ success() && env.run-analysis == 'true' }}
+        continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -57,10 +57,11 @@ jobs:
           path: |
             coverage/lcov.info
             coverage/clover.xml
+            reports/tests.xml
             reports/junit.xml
 
       - name: SonarCloud (on push)
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v8
         if: github.event_name == 'push' && matrix.node-version == '24.x'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -126,7 +127,7 @@ jobs:
 
       - name: Download reports
         if: ${{ steps.analysis-flags.outputs.run-sonar == 'true' || steps.analysis-flags.outputs.run-codecov == 'true' }}
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: reports-24.x
 
@@ -151,7 +152,7 @@ jobs:
       - name: Add comment to PR if analysis is skipped (both)
         if: ${{ steps.analysis-flags.outputs.run-sonar != 'true' && steps.analysis-flags.outputs.run-codecov != 'true' }}
         continue-on-error: true
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: analyze
@@ -163,7 +164,7 @@ jobs:
       - name: Add comment to PR if SonarCloud publish is skipped
         if: ${{ steps.analysis-flags.outputs.run-sonar != 'true' && steps.analysis-flags.outputs.run-codecov == 'true' }}
         continue-on-error: true
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: analyze
@@ -175,7 +176,7 @@ jobs:
       - name: Add comment to PR if Codecov publish is skipped
         if: ${{ steps.analysis-flags.outputs.run-codecov != 'true' && steps.analysis-flags.outputs.run-sonar == 'true' }}
         continue-on-error: true
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: analyze
@@ -186,7 +187,7 @@ jobs:
 
       - name: SonarCloud
         if: ${{ steps.analysis-flags.outputs.run-sonar == 'true' }}
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -221,7 +222,7 @@ jobs:
       - name: Add comment to PR if job fails
         if: ${{ failure() && (steps.analysis-flags.outputs.run-sonar == 'true' || steps.analysis-flags.outputs.run-codecov == 'true') }}
         continue-on-error: true
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: analyze
@@ -233,7 +234,7 @@ jobs:
       - name: Add comment to PR if job succeeds (SonarCloud + Codecov)
         if: ${{ success() && steps.analysis-flags.outputs.run-sonar == 'true' && steps.analysis-flags.outputs.run-codecov == 'true' }}
         continue-on-error: true
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: analyze
@@ -245,7 +246,7 @@ jobs:
       - name: Add comment to PR if job succeeds (SonarCloud only)
         if: ${{ success() && steps.analysis-flags.outputs.run-sonar == 'true' && steps.analysis-flags.outputs.run-codecov != 'true' }}
         continue-on-error: true
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: analyze
@@ -257,7 +258,7 @@ jobs:
       - name: Add comment to PR if job succeeds (Codecov only)
         if: ${{ success() && steps.analysis-flags.outputs.run-sonar != 'true' && steps.analysis-flags.outputs.run-codecov == 'true' }}
         continue-on-error: true
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: analyze

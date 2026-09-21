@@ -19,6 +19,9 @@ jobs:
   build:
     name: Verify
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
 
     strategy:
       matrix:

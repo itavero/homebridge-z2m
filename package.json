@@ -101,14 +101,15 @@
   },
   "overrides": {
     "mqtt": {
-      "ip-address": "^10.7.2",
-      "ws": "^8.21.3"
+      "ip-address": "10.7.2",
+      "ws": "8.21.3"
     },
     "nodemon": {
-      "brace-expansion": "^5.0.12"
+      "brace-expansion": "5.0.12"
     },
     "release-it": {
-      "undici": "^7.29.0"
+      "undici": "7.29.1"
     }
-  }
+  },
+  "overridesNote": "Temporary security pins for mqtt, nodemon, and release-it; see CONTRIBUTING.md for rationale and removal guidance."
 }

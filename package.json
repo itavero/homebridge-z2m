@@ -110,6 +110,5 @@
     "release-it": {
       "undici": "7.29.1"
     }
-  },
-  "overridesNote": "Temporary security pins for mqtt, nodemon, and release-it; see CONTRIBUTING.md for rationale and removal guidance."
+  }
 }

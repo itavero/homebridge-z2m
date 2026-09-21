@@ -132,6 +132,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
+            -Dsonar.pullrequest.provider=github
+            -Dsonar.pullrequest.github.repository=${{ github.repository }}
+            -Dsonar.pullrequest.github.token.secured=${{ secrets.GITHUB_TOKEN }}
             -Dsonar.pullrequest.key=${{ github.event.number }}
             -Dsonar.pullrequest.branch=${{ github.head_ref }}
             -Dsonar.pullrequest.base=${{ github.base_ref }}
@@ -170,8 +173,8 @@ jobs:
           message: |
             :x: Failed to run [SonarCloud and/or code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) step.
 
-      - name: Add comment to PR if job succeeds
-        if: ${{ success() && (env.run-sonar == 'true' || env.run-codecov == 'true') }}
+      - name: Add comment to PR if job succeeds (SonarCloud + Codecov)
+        if: ${{ success() && env.run-sonar == 'true' && env.run-codecov == 'true' }}
         continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -181,3 +184,27 @@ jobs:
           recreate: true
           message: |
             :ok: Published [SonarCloud and code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) data.
+
+      - name: Add comment to PR if job succeeds (SonarCloud only)
+        if: ${{ success() && env.run-sonar == 'true' && env.run-codecov != 'true' }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :ok: Published [SonarCloud](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) data. Codecov publish was skipped (missing token).
+
+      - name: Add comment to PR if job succeeds (Codecov only)
+        if: ${{ success() && env.run-sonar != 'true' && env.run-codecov == 'true' }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :ok: Published [code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) data. SonarCloud publish was skipped (missing token).

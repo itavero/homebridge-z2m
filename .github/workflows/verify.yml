@@ -12,6 +12,9 @@ on:
   pull_request:
     types: [opened, assigned, synchronize, reopened]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Verify
@@ -44,22 +47,13 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: Export PR info
-        if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
-        run: |
-          echo number=${{ github.event.number }} > pr_data.txt
-          echo head_ref=${{ github.head_ref }} >> pr_data.txt
-          echo head_sha=${{ github.sha }} >> pr_data.txt
-          echo base_ref=${{ github.base_ref }} >> pr_data.txt
-
-      - name: Archive reports and info (for PR)
+      - name: Archive reports (for PR analysis)
         if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
         uses: actions/upload-artifact@v4
         with:
           name: reports
           retention-days: 7
           path: |
-            pr_data.txt
             coverage/lcov.info
             coverage/clover.xml
             reports/tests.xml
@@ -89,3 +83,100 @@ jobs:
           flags: tests
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  analyze-pr:
+    name: Analyze PR
+    needs: build
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: refs/pull/${{ github.event.number }}/merge
+
+      - name: Download reports
+        uses: actions/download-artifact@v5
+        with:
+          name: reports
+
+      - name: Mark analysis as skipped (missing secrets)
+        if: ${{ secrets.SONAR_TOKEN == '' || secrets.CODECOV_TOKEN == '' }}
+        run: |
+          echo "### Analyze PR skipped" >> $GITHUB_STEP_SUMMARY
+          echo "SonarCloud/Codecov publishing was skipped because required secrets are unavailable for this run." >> $GITHUB_STEP_SUMMARY
+
+      - name: Add comment to PR if analysis is skipped
+        if: ${{ secrets.SONAR_TOKEN == '' || secrets.CODECOV_TOKEN == '' }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :warning: Skipped publishing SonarCloud/code coverage because required secrets are unavailable for this run.
+
+      - name: SonarCloud
+        if: ${{ secrets.SONAR_TOKEN != '' && secrets.CODECOV_TOKEN != '' }}
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.pullrequest.provider=github
+            -Dsonar.pullrequest.github.repository=${{ github.repository }}
+            -Dsonar.pullrequest.github.token.secured=${{ secrets.GITHUB_TOKEN }}
+            -Dsonar.pullrequest.key=${{ github.event.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
+
+      - name: Publish Coverage to Codecov
+        if: ${{ secrets.SONAR_TOKEN != '' && secrets.CODECOV_TOKEN != '' }}
+        uses: codecov/codecov-action@v4
+        with:
+          override_pr: ${{ github.event.number }}
+          override_commit: ${{ github.event.pull_request.head.sha }}
+          files: ./coverage/clover.xml
+          flags: tests
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Publish Test Results to Codecov
+        if: ${{ secrets.SONAR_TOKEN != '' && secrets.CODECOV_TOKEN != '' }}
+        uses: codecov/test-results-action@v1
+        with:
+          override_pr: ${{ github.event.number }}
+          override_commit: ${{ github.event.pull_request.head.sha }}
+          files: ./reports/junit.xml
+          flags: tests
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Add comment to PR if job fails
+        if: ${{ failure() && secrets.SONAR_TOKEN != '' && secrets.CODECOV_TOKEN != '' }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :x: Failed to run [SonarCloud and/or code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) step.
+
+      - name: Add comment to PR if job succeeds
+        if: ${{ success() && secrets.SONAR_TOKEN != '' && secrets.CODECOV_TOKEN != '' }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :ok: Published [SonarCloud and code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) data.

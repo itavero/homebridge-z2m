@@ -15,12 +15,13 @@ on:
 permissions:
   contents: read
 
+env:
+  node-version-analysis: 24.x
+
 jobs:
   build:
     name: Verify
     runs-on: ubuntu-latest
-    env:
-      node-version-analysis: 24.x
 
     strategy:
       matrix:
@@ -48,10 +49,10 @@ jobs:
         run: npm run test
 
       - name: Archive reports (for PR analysis)
-        if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
-          name: reports
+          name: reports-${{ matrix.node-version }}
           retention-days: 7
           path: |
             coverage/lcov.info
@@ -105,7 +106,7 @@ jobs:
         if: env.run-analysis == 'true'
         uses: actions/download-artifact@v5
         with:
-          name: reports
+          name: reports-${{ env.node-version-analysis }}
 
       - name: Mark analysis as skipped (missing secrets)
         if: env.run-analysis != 'true'

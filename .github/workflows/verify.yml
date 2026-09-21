@@ -87,7 +87,8 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     env:
-      run-analysis: ${{ secrets.SONAR_TOKEN != '' && secrets.CODECOV_TOKEN != '' }}
+      run-sonar: ${{ secrets.SONAR_TOKEN != '' }}
+      run-codecov: ${{ secrets.CODECOV_TOKEN != '' }}
     permissions:
       actions: read
       contents: read
@@ -100,19 +101,19 @@ jobs:
           ref: refs/pull/${{ github.event.number }}/merge
 
       - name: Download reports
-        if: env.run-analysis == 'true'
+        if: env.run-sonar == 'true' || env.run-codecov == 'true'
         uses: actions/download-artifact@v5
         with:
           name: reports-24.x
 
       - name: Mark analysis as skipped (missing secrets)
-        if: env.run-analysis != 'true'
+        if: env.run-sonar != 'true' && env.run-codecov != 'true'
         run: |
           echo "### Analyze PR skipped" >> $GITHUB_STEP_SUMMARY
           echo "SonarCloud/Codecov publishing was skipped because required secrets are unavailable for this run." >> $GITHUB_STEP_SUMMARY
 
       - name: Add comment to PR if analysis is skipped
-        if: env.run-analysis != 'true'
+        if: env.run-sonar != 'true' && env.run-codecov != 'true'
         continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -124,22 +125,19 @@ jobs:
             :warning: Skipped publishing SonarCloud/code coverage because required secrets are unavailable for this run.
 
       - name: SonarCloud
-        if: env.run-analysis == 'true'
+        if: env.run-sonar == 'true'
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.pullrequest.provider=github
-            -Dsonar.pullrequest.github.repository=${{ github.repository }}
-            -Dsonar.pullrequest.github.token.secured=${{ secrets.GITHUB_TOKEN }}
             -Dsonar.pullrequest.key=${{ github.event.number }}
             -Dsonar.pullrequest.branch=${{ github.head_ref }}
             -Dsonar.pullrequest.base=${{ github.base_ref }}
 
       - name: Publish Coverage to Codecov
-        if: env.run-analysis == 'true'
+        if: env.run-codecov == 'true'
         uses: codecov/codecov-action@v4
         with:
           override_pr: ${{ github.event.number }}
@@ -150,7 +148,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Publish Test Results to Codecov
-        if: env.run-analysis == 'true'
+        if: env.run-codecov == 'true'
         uses: codecov/test-results-action@v1
         with:
           override_pr: ${{ github.event.number }}
@@ -161,7 +159,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Add comment to PR if job fails
-        if: ${{ failure() && env.run-analysis == 'true' }}
+        if: ${{ failure() && (env.run-sonar == 'true' || env.run-codecov == 'true') }}
         continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -173,7 +171,7 @@ jobs:
             :x: Failed to run [SonarCloud and/or code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) step.
 
       - name: Add comment to PR if job succeeds
-        if: ${{ success() && env.run-analysis == 'true' }}
+        if: ${{ success() && (env.run-sonar == 'true' || env.run-codecov == 'true') }}
         continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:

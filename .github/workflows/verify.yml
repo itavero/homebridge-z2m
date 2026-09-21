@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         # the Node.js versions to build on
-        node-version: [22.x, 24.x]
+        node-version: [20.x, 22.x, 24.x]
 
     steps:
       - name: Checkout
@@ -102,6 +102,7 @@ jobs:
           ref: refs/pull/${{ github.event.number }}/merge
 
       - name: Download reports
+        if: env.run-analysis == 'true'
         uses: actions/download-artifact@v5
         with:
           name: reports

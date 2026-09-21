@@ -38,3 +38,9 @@ Unfortunately, at this point in time, there is no documentation on how this plug
 ### Pull Requests
 
 Some automation is put in place to perform some automated checks on a pull request. If you change code, please try to add automated tests to verify the behavior (see the `test` folder).
+
+### Dependency maintenance
+
+Development and release tooling in this repository targets the Node.js versions declared in `package.json` (`^22 || ^24 || ^26`).
+
+The `overrides` block in `package.json` currently pins `brace-expansion`, `ip-address`, and `ws` to patched releases because current upstream `nodemon` and `mqtt` dependency ranges still resolve vulnerable versions during `npm install`. Those overrides can be removed once the direct dependencies start pulling in fixed versions on their own.

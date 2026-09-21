@@ -12,17 +12,21 @@ on:
   pull_request:
     types: [opened, assigned, synchronize, reopened]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Verify
     runs-on: ubuntu-latest
-    env:
-      node-version-analysis: 24.x
+    permissions:
+      actions: write
+      contents: read
 
     strategy:
       matrix:
         # the Node.js versions to build on
-        node-version: [20.x, 22.x, 24.x]
+        node-version: [22.x, 24.x, 26.x]
 
     steps:
       - name: Checkout
@@ -44,37 +48,28 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: Export PR info
-        if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
-        run: |
-          echo number=${{ github.event.number }} > pr_data.txt
-          echo head_ref=${{ github.head_ref }} >> pr_data.txt
-          echo head_sha=${{ github.sha }} >> pr_data.txt
-          echo base_ref=${{ github.base_ref }} >> pr_data.txt
-
-      - name: Archive reports and info (for PR)
-        if: github.event_name == 'pull_request' && matrix.node-version == env.node-version-analysis
+      - name: Archive reports (for PR analysis)
+        if: github.event_name == 'pull_request' && matrix.node-version == '24.x'
         uses: actions/upload-artifact@v4
         with:
-          name: reports
+          name: reports-24.x
           retention-days: 7
           path: |
-            pr_data.txt
             coverage/lcov.info
             coverage/clover.xml
             reports/tests.xml
             reports/junit.xml
 
       - name: SonarCloud (on push)
-        uses: sonarsource/sonarcloud-github-action@v2
-        if: github.event_name == 'push' && matrix.node-version == env.node-version-analysis
+        uses: SonarSource/sonarqube-scan-action@v8
+        if: github.event_name == 'push' && matrix.node-version == '24.x'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Code Coverage (on push)
         uses: codecov/codecov-action@v4
-        if: github.event_name == 'push' && matrix.node-version == env.node-version-analysis
+        if: github.event_name == 'push' && matrix.node-version == '24.x'
         with:
           files: ./coverage/clover.xml
           flags: tests
@@ -83,9 +78,191 @@ jobs:
 
       - name: Codecov Test Results (on push)
         uses: codecov/test-results-action@v1
-        if: github.event_name == 'push' && matrix.node-version == env.node-version-analysis
+        if: github.event_name == 'push' && matrix.node-version == '24.x'
         with:
           files: ./reports/junit.xml
           flags: tests
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  analyze-pr:
+    name: Analyze PR
+    needs: build
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: refs/pull/${{ github.event.number }}/merge
+
+      - name: Determine analysis availability
+        id: analysis-flags
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: |
+          if [ -n "${SONAR_TOKEN}" ]; then
+            echo "run-sonar=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run-sonar=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [ -n "${CODECOV_TOKEN}" ]; then
+            echo "run-codecov=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run-codecov=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Add analysis plan to job summary
+        run: |
+          echo "### Analyze PR status" >> "$GITHUB_STEP_SUMMARY"
+          echo "- SonarCloud publish enabled: ${{ steps.analysis-flags.outputs.run-sonar }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Codecov publish enabled: ${{ steps.analysis-flags.outputs.run-codecov }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Download reports
+        if: ${{ steps.analysis-flags.outputs.run-sonar == 'true' || steps.analysis-flags.outputs.run-codecov == 'true' }}
+        uses: actions/download-artifact@v7
+        with:
+          name: reports-24.x
+
+      - name: Mark analysis as skipped (both tokens missing)
+        if: ${{ steps.analysis-flags.outputs.run-sonar != 'true' && steps.analysis-flags.outputs.run-codecov != 'true' }}
+        run: |
+          echo "### Analyze PR skipped" >> $GITHUB_STEP_SUMMARY
+          echo "SonarCloud/Codecov publishing was skipped because required secrets are unavailable for this run." >> $GITHUB_STEP_SUMMARY
+
+      - name: Mark SonarCloud publish as skipped (missing token)
+        if: ${{ steps.analysis-flags.outputs.run-sonar != 'true' && steps.analysis-flags.outputs.run-codecov == 'true' }}
+        run: |
+          echo "### SonarCloud publish skipped" >> $GITHUB_STEP_SUMMARY
+          echo "SONAR_TOKEN is unavailable for this run." >> $GITHUB_STEP_SUMMARY
+
+      - name: Mark Codecov publish as skipped (missing token)
+        if: ${{ steps.analysis-flags.outputs.run-codecov != 'true' && steps.analysis-flags.outputs.run-sonar == 'true' }}
+        run: |
+          echo "### Codecov publish skipped" >> $GITHUB_STEP_SUMMARY
+          echo "CODECOV_TOKEN is unavailable for this run." >> $GITHUB_STEP_SUMMARY
+
+      - name: Add comment to PR if analysis is skipped (both)
+        if: ${{ steps.analysis-flags.outputs.run-sonar != 'true' && steps.analysis-flags.outputs.run-codecov != 'true' }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :warning: Skipped publishing SonarCloud/code coverage because required secrets are unavailable for this run.
+
+      - name: Add comment to PR if SonarCloud publish is skipped
+        if: ${{ steps.analysis-flags.outputs.run-sonar != 'true' && steps.analysis-flags.outputs.run-codecov == 'true' }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :warning: Skipped publishing SonarCloud data because SONAR_TOKEN is unavailable for this run.
+
+      - name: Add comment to PR if Codecov publish is skipped
+        if: ${{ steps.analysis-flags.outputs.run-codecov != 'true' && steps.analysis-flags.outputs.run-sonar == 'true' }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :warning: Skipped publishing code coverage because CODECOV_TOKEN is unavailable for this run.
+
+      - name: SonarCloud
+        if: ${{ steps.analysis-flags.outputs.run-sonar == 'true' }}
+        uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.pullrequest.key=${{ github.event.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
+
+      - name: Publish Coverage to Codecov
+        if: ${{ steps.analysis-flags.outputs.run-codecov == 'true' }}
+        uses: codecov/codecov-action@v4
+        with:
+          override_pr: ${{ github.event.number }}
+          override_commit: ${{ github.event.pull_request.head.sha }}
+          files: ./coverage/clover.xml
+          flags: tests
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Publish Test Results to Codecov
+        if: ${{ steps.analysis-flags.outputs.run-codecov == 'true' }}
+        uses: codecov/test-results-action@v1
+        with:
+          override_pr: ${{ github.event.number }}
+          override_commit: ${{ github.event.pull_request.head.sha }}
+          files: ./reports/junit.xml
+          flags: tests
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Add comment to PR if job fails
+        if: ${{ failure() && (steps.analysis-flags.outputs.run-sonar == 'true' || steps.analysis-flags.outputs.run-codecov == 'true') }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :x: Failed to run [SonarCloud and/or code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) step.
+
+      - name: Add comment to PR if job succeeds (SonarCloud + Codecov)
+        if: ${{ success() && steps.analysis-flags.outputs.run-sonar == 'true' && steps.analysis-flags.outputs.run-codecov == 'true' }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :ok: Published [SonarCloud and code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) data.
+
+      - name: Add comment to PR if job succeeds (SonarCloud only)
+        if: ${{ success() && steps.analysis-flags.outputs.run-sonar == 'true' && steps.analysis-flags.outputs.run-codecov != 'true' }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :ok: Published [SonarCloud](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) data. Codecov publish was skipped (missing token).
+
+      - name: Add comment to PR if job succeeds (Codecov only)
+        if: ${{ success() && steps.analysis-flags.outputs.run-sonar != 'true' && steps.analysis-flags.outputs.run-codecov == 'true' }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :ok: Published [code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) data. SonarCloud publish was skipped (missing token).

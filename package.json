@@ -104,5 +104,11 @@
     "ip-address": "^10.7.2",
     "undici": "^7.29.0",
     "ws": "^8.21.3"
+  },
+  "x-security-overrides": {
+    "brace-expansion": "Temporary override until nodemon resolves a patched brace-expansion transitively.",
+    "ip-address": "Temporary override until mqtt resolves a patched socks/ip-address transitively.",
+    "undici": "Temporary override until release-it resolves a patched undici transitively.",
+    "ws": "Temporary override until mqtt resolves a patched ws transitively."
   }
 }

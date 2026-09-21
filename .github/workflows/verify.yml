@@ -17,12 +17,12 @@ jobs:
     name: Verify
     runs-on: ubuntu-latest
     env:
-      node-version-analysis: 26.x
+      node-version-analysis: 24.x
 
     strategy:
       matrix:
         # the Node.js versions to build on
-        node-version: [22.x, 24.x, 26.x]
+        node-version: [22.x, 24.x]
 
     steps:
       - name: Checkout

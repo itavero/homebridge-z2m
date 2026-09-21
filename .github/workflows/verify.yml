@@ -60,7 +60,7 @@ jobs:
             reports/junit.xml
 
       - name: SonarCloud (on push)
-        uses: sonarsource/sonarcloud-github-action@v2
+        uses: SonarSource/sonarqube-scan-action@v6
         if: github.event_name == 'push' && matrix.node-version == '24.x'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -186,7 +186,7 @@ jobs:
 
       - name: SonarCloud
         if: ${{ steps.analysis-flags.outputs.run-sonar == 'true' }}
-        uses: SonarSource/sonarcloud-github-action@v2
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

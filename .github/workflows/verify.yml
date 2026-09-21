@@ -86,9 +86,6 @@ jobs:
     needs: build
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    env:
-      run-sonar: ${{ secrets.SONAR_TOKEN != '' }}
-      run-codecov: ${{ secrets.CODECOV_TOKEN != '' }}
     permissions:
       actions: read
       contents: read
@@ -101,19 +98,31 @@ jobs:
           ref: refs/pull/${{ github.event.number }}/merge
 
       - name: Download reports
-        if: env.run-sonar == 'true' || env.run-codecov == 'true'
+        if: ${{ secrets.SONAR_TOKEN != '' || secrets.CODECOV_TOKEN != '' }}
         uses: actions/download-artifact@v5
         with:
           name: reports-24.x
 
-      - name: Mark analysis as skipped (missing secrets)
-        if: env.run-sonar != 'true' && env.run-codecov != 'true'
+      - name: Mark analysis as skipped (both tokens missing)
+        if: ${{ secrets.SONAR_TOKEN == '' && secrets.CODECOV_TOKEN == '' }}
         run: |
           echo "### Analyze PR skipped" >> $GITHUB_STEP_SUMMARY
           echo "SonarCloud/Codecov publishing was skipped because required secrets are unavailable for this run." >> $GITHUB_STEP_SUMMARY
 
-      - name: Add comment to PR if analysis is skipped
-        if: env.run-sonar != 'true' && env.run-codecov != 'true'
+      - name: Mark SonarCloud publish as skipped (missing token)
+        if: ${{ secrets.SONAR_TOKEN == '' && secrets.CODECOV_TOKEN != '' }}
+        run: |
+          echo "### SonarCloud publish skipped" >> $GITHUB_STEP_SUMMARY
+          echo "SONAR_TOKEN is unavailable for this run." >> $GITHUB_STEP_SUMMARY
+
+      - name: Mark Codecov publish as skipped (missing token)
+        if: ${{ secrets.CODECOV_TOKEN == '' && secrets.SONAR_TOKEN != '' }}
+        run: |
+          echo "### Codecov publish skipped" >> $GITHUB_STEP_SUMMARY
+          echo "CODECOV_TOKEN is unavailable for this run." >> $GITHUB_STEP_SUMMARY
+
+      - name: Add comment to PR if analysis is skipped (both)
+        if: ${{ secrets.SONAR_TOKEN == '' && secrets.CODECOV_TOKEN == '' }}
         continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -124,8 +133,32 @@ jobs:
           message: |
             :warning: Skipped publishing SonarCloud/code coverage because required secrets are unavailable for this run.
 
+      - name: Add comment to PR if SonarCloud publish is skipped
+        if: ${{ secrets.SONAR_TOKEN == '' && secrets.CODECOV_TOKEN != '' }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :warning: Skipped publishing SonarCloud data because SONAR_TOKEN is unavailable for this run.
+
+      - name: Add comment to PR if Codecov publish is skipped
+        if: ${{ secrets.CODECOV_TOKEN == '' && secrets.SONAR_TOKEN != '' }}
+        continue-on-error: true
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: analyze
+          number: ${{ github.event.number }}
+          recreate: true
+          message: |
+            :warning: Skipped publishing code coverage because CODECOV_TOKEN is unavailable for this run.
+
       - name: SonarCloud
-        if: env.run-sonar == 'true'
+        if: ${{ secrets.SONAR_TOKEN != '' }}
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -140,7 +173,7 @@ jobs:
             -Dsonar.pullrequest.base=${{ github.base_ref }}
 
       - name: Publish Coverage to Codecov
-        if: env.run-codecov == 'true'
+        if: ${{ secrets.CODECOV_TOKEN != '' }}
         uses: codecov/codecov-action@v4
         with:
           override_pr: ${{ github.event.number }}
@@ -151,7 +184,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Publish Test Results to Codecov
-        if: env.run-codecov == 'true'
+        if: ${{ secrets.CODECOV_TOKEN != '' }}
         uses: codecov/test-results-action@v1
         with:
           override_pr: ${{ github.event.number }}
@@ -162,7 +195,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Add comment to PR if job fails
-        if: ${{ failure() && (env.run-sonar == 'true' || env.run-codecov == 'true') }}
+        if: ${{ failure() && (secrets.SONAR_TOKEN != '' || secrets.CODECOV_TOKEN != '') }}
         continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -174,7 +207,7 @@ jobs:
             :x: Failed to run [SonarCloud and/or code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) step.
 
       - name: Add comment to PR if job succeeds (SonarCloud + Codecov)
-        if: ${{ success() && env.run-sonar == 'true' && env.run-codecov == 'true' }}
+        if: ${{ success() && secrets.SONAR_TOKEN != '' && secrets.CODECOV_TOKEN != '' }}
         continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -186,7 +219,7 @@ jobs:
             :ok: Published [SonarCloud and code coverage](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) data.
 
       - name: Add comment to PR if job succeeds (SonarCloud only)
-        if: ${{ success() && env.run-sonar == 'true' && env.run-codecov != 'true' }}
+        if: ${{ success() && secrets.SONAR_TOKEN != '' && secrets.CODECOV_TOKEN == '' }}
         continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -198,7 +231,7 @@ jobs:
             :ok: Published [SonarCloud](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) data. Codecov publish was skipped (missing token).
 
       - name: Add comment to PR if job succeeds (Codecov only)
-        if: ${{ success() && env.run-sonar != 'true' && env.run-codecov == 'true' }}
+        if: ${{ success() && secrets.SONAR_TOKEN == '' && secrets.CODECOV_TOKEN != '' }}
         continue-on-error: true
         uses: marocchino/sticky-pull-request-comment@v2
         with:

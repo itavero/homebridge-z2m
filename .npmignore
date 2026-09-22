@@ -32,9 +32,6 @@ tsconfig.json
 # vscode
 .vscode
 
-# nodemon
-nodemon.json
-
 # Logs
 logs
 *.log

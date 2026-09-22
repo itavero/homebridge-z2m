@@ -41,6 +41,6 @@ Some automation is put in place to perform some automated checks on a pull reque
 
 ### Dependency maintenance
 
-Runtime support for the plugin follows the Node.js versions declared in `package.json` (`^22 || ^24 || ^26`). Some development tools can require newer patch releases within those supported majors, so using the latest available Node.js 22.x/24.x/26.x release is recommended when contributing.
+Runtime support for the plugin follows the Node.js and Homebridge versions declared in `package.json`. The development toolchain currently requires recent patch releases within the supported Node.js majors, so using the latest available Node.js 22.x/24.x/26.x release is recommended when contributing.
 
-The `overrides` block in `package.json` currently pins `brace-expansion`, `ip-address`, `undici`, and `ws` to patched releases because current upstream `nodemon`, `release-it`, and `mqtt` dependency ranges still resolve vulnerable versions during `npm install`. Those overrides can be removed once the direct dependencies start pulling in fixed versions on their own.
+The `overrides` block in `package.json` currently pins `ip-address` and `ws` to patched releases because the current `mqtt` dependency range still resolves vulnerable transitive versions during `npm install`. Those overrides can be removed once `mqtt` starts pulling in fixed versions on its own.

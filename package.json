@@ -86,7 +86,7 @@
     "@types/color-convert": "^2.0.4",
     "@types/node": "^26.2.0",
     "@types/semver": "^7.7.1",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.1",
     "aedes": "^1.0.2",
     "homebridge": "^2.4.0",
     "release-it": "^21.1.0",

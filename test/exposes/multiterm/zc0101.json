@@ -1,0 +1,54 @@
+[
+  {
+    "label": "Fan Control",
+    "type": "fan",
+    "features": [
+      {
+        "name": "state",
+        "label": "State",
+        "access": 7,
+        "type": "binary",
+        "property": "fan_state",
+        "description": "On/off state of this fan",
+        "value_on": "ON",
+        "value_off": "OFF"
+      },
+      {
+        "name": "mode",
+        "label": "Mode",
+        "access": 7,
+        "type": "enum",
+        "property": "fan_mode",
+        "description": "Mode of this fan",
+        "values": ["off", "low", "medium", "high", "on"]
+      }
+    ]
+  },
+  {
+    "name": "silent_mode",
+    "label": "Silent mode",
+    "access": 7,
+    "type": "enum",
+    "property": "silent_mode",
+    "category": "config",
+    "values": ["inactive", "active"]
+  },
+  {
+    "name": "heating_cooling",
+    "label": "Heating/Cooling",
+    "access": 7,
+    "type": "enum",
+    "property": "heating_cooling",
+    "category": "config",
+    "values": ["heating", "cooling"]
+  },
+  {
+    "name": "electric_valve",
+    "label": "Electric Valve",
+    "access": 7,
+    "type": "enum",
+    "property": "electric_valve",
+    "category": "config",
+    "values": ["off", "on"]
+  }
+]

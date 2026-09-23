@@ -42,4 +42,4 @@ The test **passes** if:
 
 ## CI Integration
 
-The smoke test runs on every PR via `.github/workflows/smoke-test.yml` on Node 22.12.0 and 24.x.
+The smoke test runs on every PR via `.github/workflows/smoke-test.yml` on Node 24.x.

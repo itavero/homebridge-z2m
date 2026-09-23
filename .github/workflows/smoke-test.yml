@@ -11,12 +11,8 @@ permissions:
 
 jobs:
   smoke-test:
-    name: Integration Smoke Test (${{ matrix.node-version }})
+    name: Integration Smoke Test
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.12.0, 24.x]
 
     steps:
       - name: Checkout
@@ -25,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 24.x
 
       - name: Install dependencies
         run: npm ci

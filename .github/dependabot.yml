@@ -12,3 +12,13 @@ updates:
       - itavero
     schedule:
       interval: "monthly"
+    groups:
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "vitest-*"
+      release-it:
+        patterns:
+          - "release-it"
+          - "@release-it/*"

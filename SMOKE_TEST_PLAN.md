@@ -42,4 +42,4 @@ The test **passes** if:
 
 ## CI Integration
 
-The smoke test runs on every PR via `.github/workflows/smoke-test.yml` with Node 22.x (Homebridge 1.8.5 requirement).
+The smoke test runs on every PR via `.github/workflows/smoke-test.yml` with Node 24.x.

@@ -53,7 +53,7 @@ jobs:
         if: ${{ steps.version.outputs.updated == 1 || inputs.forced }}
         run: |
           echo "updated=0" >> $GITHUB_OUTPUT
-          node_modules/.bin/ts-node src/docgen/docgen.ts
+          node_modules/.bin/tsx src/docgen/docgen.ts
           git diff --exit-code -s docs ||echo "updated=1" >> $GITHUB_OUTPUT
 
       - uses: actions/create-github-app-token@v3

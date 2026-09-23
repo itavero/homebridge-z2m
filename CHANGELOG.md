@@ -10,7 +10,6 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 ### Fixed
 
 - Config validation now skips malformed entries in `devices` without an `id` and logs a warning instead of marking the full plugin configuration invalid. (fixes [#1099](https://github.com/itavero/homebridge-z2m/issues/1099))
-
 ## [1.11.2] - 2026-04-09
 
 ### Fixed

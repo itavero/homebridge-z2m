@@ -3,6 +3,9 @@
     "target": "ES2022",
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "types": [
+      "node"
+    ],
     "lib": [
       "DOM",
       "ES2022"

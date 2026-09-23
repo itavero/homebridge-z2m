@@ -38,3 +38,9 @@ Unfortunately, at this point in time, there is no documentation on how this plug
 ### Pull Requests
 
 Some automation is put in place to perform some automated checks on a pull request. If you change code, please try to add automated tests to verify the behavior (see the `test` folder).
+
+### Dependency maintenance
+
+Runtime support for the plugin follows the Node.js and Homebridge versions declared in `package.json`. The development toolchain currently requires recent patch releases within the supported Node.js majors, so using Node.js 22.22.2+ or the latest available Node.js 24.x/26.x release is recommended when contributing.
+
+The `overrides` block in `package.json` currently pins `ip-address` and `ws` to patched releases because the current `mqtt` dependency range still resolves vulnerable transitive versions during `npm install`. Those overrides can be removed once `mqtt` starts pulling in fixed versions on its own.

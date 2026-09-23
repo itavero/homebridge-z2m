@@ -92,7 +92,7 @@
     "release-it": "^21.1.0",
     "rimraf": "^6.1.3",
     "ts-node": "^10.9.2",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vitest": "^5.0.1",
     "vitest-mock-extended": "^5.1.1",
     "vitest-sonar-reporter": "^3.0.0",

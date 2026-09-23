@@ -31,6 +31,19 @@ function hasValidDeviceConfigurations(
       return false;
     }
     for (const element of devices) {
+      if (element === null || typeof element !== 'object') {
+        logger?.warn('Incorrect configuration: Device entry is not an object, skipping: ' + JSON.stringify(element));
+        continue;
+      }
+      if (element.id === undefined || typeof element.id !== 'string' || element.id.length < 1) {
+        logger?.warn(
+          'Incorrect configuration: Device entry is missing required "id" field — skipping this entry. ' +
+            'Set "id" to the Zigbee IEEE address or friendly name (e.g. "0x1234567890abcdef" or "My Light"). ' +
+            'Entry: ' +
+            JSON.stringify(element)
+        );
+        continue;
+      }
       if (!isDeviceConfiguration(element) || !hasValidConverterConfigurations(element, converterConfigValidator, logger)) {
         logger?.error('Incorrect configuration: Entry for device is not correct: ' + JSON.stringify(element));
         return false;

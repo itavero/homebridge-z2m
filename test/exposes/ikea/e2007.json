@@ -1,0 +1,48 @@
+[
+  {
+    "type": "fan",
+    "name": "fan",
+    "label": "Fan",
+    "features": [
+      {
+        "name": "state",
+        "label": "State",
+        "access": 7,
+        "type": "binary",
+        "property": "fan_state",
+        "description": "On/off state of the fan",
+        "value_on": "ON",
+        "value_off": "OFF"
+      },
+      {
+        "name": "mode",
+        "label": "Mode",
+        "access": 2,
+        "type": "enum",
+        "property": "fan_mode",
+        "description": "Operating mode",
+        "values": ["off", "auto", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+      }
+    ]
+  },
+  {
+    "name": "fan_speed",
+    "label": "Fan speed",
+    "access": 1,
+    "type": "numeric",
+    "property": "fan_speed",
+    "description": "Current fan speed (read-only)",
+    "value_min": 0,
+    "value_max": 9
+  },
+  {
+    "name": "replace_filter",
+    "label": "Replace filter",
+    "access": 1,
+    "type": "binary",
+    "property": "replace_filter",
+    "description": "Indicates whether the filter needs to be replaced",
+    "value_on": true,
+    "value_off": false
+  }
+]

@@ -76,6 +76,21 @@ export class PassthroughCharacteristicMonitor extends BaseCharacteristicMonitor 
   }
 }
 
+export class NumericTransformCharacteristicMonitor extends BaseCharacteristicMonitor {
+  constructor(
+    key: string,
+    service: Service,
+    characteristic: string | WithUUID<new () => Characteristic>,
+    private readonly transformer: MqttToHomeKitValueTransformer
+  ) {
+    super(key, service, characteristic);
+  }
+
+  transformValueFromMqtt(value: unknown): CharacteristicValue | undefined {
+    return this.transformer(value);
+  }
+}
+
 export class MappingCharacteristicMonitor extends BaseCharacteristicMonitor {
   constructor(
     key: string,

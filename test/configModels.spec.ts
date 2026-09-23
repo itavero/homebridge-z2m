@@ -1,5 +1,6 @@
 import * as hapNodeJs from '@homebridge/hap-nodejs';
 import { PlatformConfig } from 'homebridge';
+import { vi } from 'vitest';
 import { isPluginConfiguration } from '../src/configModels';
 import { BasicServiceCreatorManager } from '../src/converters/creators';
 import { setHap } from '../src/hap';
@@ -141,7 +142,14 @@ describe('Plugin configuration', () => {
       });
       it('device without ID', () => {
         const configDevicesNotAnArray: PlatformConfig = { ...minimalValidConfiguration, devices: [{ exclude: false }] };
-        expect(isPluginConfiguration(configDevicesNotAnArray, BasicServiceCreatorManager.getInstance())).toBe(false);
+        expect(isPluginConfiguration(configDevicesNotAnArray, BasicServiceCreatorManager.getInstance())).toBe(true);
+      });
+      it('device without ID logs warning and keeps config valid', () => {
+        const logger = { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() };
+        const configDevicesWithoutId: PlatformConfig = { ...minimalValidConfiguration, devices: [{ exclude: false }] };
+        expect(isPluginConfiguration(configDevicesWithoutId, BasicServiceCreatorManager.getInstance(), logger)).toBe(true);
+        expect(logger.warn).toHaveBeenCalledTimes(1);
+        expect(logger.error).not.toHaveBeenCalled();
       });
       it('device with invalid config', () => {
         const configDevicesNotAnArray: PlatformConfig = {

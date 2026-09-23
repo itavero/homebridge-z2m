@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
+## [Unreleased]
+
+### Fixed
+
+- Config validation now skips malformed entries in `devices` without an `id` and logs a warning instead of marking the full plugin configuration invalid. (fixes [#1099](https://github.com/itavero/homebridge-z2m/issues/1099))
+
 ## [1.11.2] - 2026-04-09
 
 ### Fixed

@@ -84,6 +84,32 @@
     "unit": "kWh"
   },
   {
+    "name": "identify",
+    "label": "Identify",
+    "access": 2,
+    "type": "enum",
+    "endpoint": "l1",
+    "property": "identify_l1",
+    "description": "Initiate device identification",
+    "category": "config",
+    "values": [
+      "identify"
+    ]
+  },
+  {
+    "name": "identify",
+    "label": "Identify",
+    "access": 2,
+    "type": "enum",
+    "endpoint": "l2",
+    "property": "identify_l2",
+    "description": "Initiate device identification",
+    "category": "config",
+    "values": [
+      "identify"
+    ]
+  },
+  {
     "name": "action",
     "label": "Action",
     "access": 1,

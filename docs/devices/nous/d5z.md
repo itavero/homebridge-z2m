@@ -15,8 +15,10 @@ The following HomeKit Services and Characteristics are exposed by
 the Nous D5Z
 
 * [Electrical Sensor](../../electrical.md)
+  * Consumption
   * Current
   * Total Consumption
+  * Voltage
 * [Switch](../../switch.md)
   * On
 * [Temperature Sensor](../../sensors.md)

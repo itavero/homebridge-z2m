@@ -40,18 +40,6 @@ This is the information provided by Zigbee2MQTT for this device:
     "value_min": 0
   },
   {
-    "name": "max_duration",
-    "label": "Max duration",
-    "access": 7,
-    "type": "numeric",
-    "property": "max_duration",
-    "description": "Max duration of Siren",
-    "category": "config",
-    "unit": "s",
-    "value_max": 1800,
-    "value_min": 0
-  },
-  {
     "name": "warning",
     "label": "Warning",
     "access": 2,
@@ -116,6 +104,18 @@ This is the information provided by Zigbee2MQTT for this device:
         ]
       }
     ]
+  },
+  {
+    "name": "max_duration",
+    "label": "Max duration",
+    "access": 7,
+    "type": "numeric",
+    "property": "max_duration",
+    "description": "Maximum time that the alarm will be active",
+    "unit": "s",
+    "value_max": 65534,
+    "value_min": 0,
+    "value_step": 1
   }
 ]
 ```

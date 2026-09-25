@@ -19,11 +19,9 @@ the SOMA SmartShades3
   * Charging State
   * Status Low Battery
 * [Window Covering](../../cover.md)
-  * Current Horizontal Tilt Angle
   * Current Position
   * Hold Position
   * Position State
-  * Target Horizontal Tilt Angle
   * Target Position
 
 

@@ -85,6 +85,9 @@
     "endpoint": "1",
     "property": "voltage_1",
     "description": "Measured electrical potential value",
+    "homeassistant": {
+      "entityCategory": "diagnostic"
+    },
     "unit": "V"
   },
   {
@@ -95,6 +98,9 @@
     "endpoint": "2",
     "property": "voltage_2",
     "description": "Measured electrical potential value",
+    "homeassistant": {
+      "entityCategory": "diagnostic"
+    },
     "unit": "V"
   },
   {

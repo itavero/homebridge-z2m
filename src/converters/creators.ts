@@ -1,16 +1,17 @@
-import { BasicLogger } from '../logger';
 import { ExposesEntry } from '../z2mModels';
-import { StatelessProgrammableSwitchCreator } from './action';
-import { AirQualitySensorCreator } from './air_quality';
+import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator } from './interfaces';
+import { BasicLogger } from '../logger';
 import { BasicSensorCreator } from './basic_sensors';
 import { BatteryCreator } from './battery';
-import { ThermostatCreator } from './climate';
 import { CoverCreator } from './cover';
-import { ElectricalSensorCreator } from './electrical';
-import { BasicAccessory, ConverterConfigurationRegistry, ServiceCreator } from './interfaces';
 import { LightCreator } from './light';
 import { LockCreator } from './lock';
 import { SwitchCreator } from './switch';
+import { StatelessProgrammableSwitchCreator } from './action';
+import { ThermostatCreator } from './climate';
+import { AirQualitySensorCreator } from './air_quality';
+import { AirPurifierCreator } from './air_purifier';
+import { ElectricalSensorCreator } from './electrical';
 
 export interface ServiceCreatorManager {
   createHomeKitEntitiesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void;
@@ -32,6 +33,7 @@ export class BasicServiceCreatorManager
     LockCreator,
     BasicSensorCreator,
     AirQualitySensorCreator,
+    AirPurifierCreator,
     ElectricalSensorCreator,
     StatelessProgrammableSwitchCreator,
     ThermostatCreator,

@@ -33,8 +33,18 @@ This is the information provided by Zigbee2MQTT for this device:
     "access": 1,
     "type": "binary",
     "property": "battery_low",
-    "description": "Indicates if the battery of this device is almost empty",
+    "description": "Empty battery indicator",
     "category": "diagnostic",
+    "value_on": true,
+    "value_off": false
+  },
+  {
+    "name": "alarm",
+    "label": "Alarm",
+    "access": 1,
+    "type": "binary",
+    "property": "alarm",
+    "description": "Indicates whether the alarm is triggered",
     "value_on": true,
     "value_off": false
   },
@@ -45,6 +55,7 @@ This is the information provided by Zigbee2MQTT for this device:
     "type": "binary",
     "property": "tamper",
     "description": "Indicates whether the device is tampered",
+    "category": "diagnostic",
     "value_on": true,
     "value_off": false
   },
@@ -132,6 +143,17 @@ This is the information provided by Zigbee2MQTT for this device:
     ]
   },
   {
+    "name": "max_duration",
+    "label": "Max duration",
+    "access": 7,
+    "type": "numeric",
+    "property": "max_duration",
+    "description": "Max duration in seconds of the alarm",
+    "unit": "s",
+    "value_max": 600,
+    "value_min": 0
+  },
+  {
     "name": "squawk",
     "label": "Squawk",
     "access": 2,
@@ -175,27 +197,6 @@ This is the information provided by Zigbee2MQTT for this device:
         "value_off": false
       }
     ]
-  },
-  {
-    "name": "max_duration",
-    "label": "Max duration",
-    "access": 7,
-    "type": "numeric",
-    "property": "max_duration",
-    "description": "Duration of Siren",
-    "unit": "s",
-    "value_max": 600,
-    "value_min": 0
-  },
-  {
-    "name": "alarm",
-    "label": "Alarm",
-    "access": 2,
-    "type": "binary",
-    "property": "alarm",
-    "description": "Manual start of siren",
-    "value_on": "START",
-    "value_off": "OFF"
   }
 ]
 ```

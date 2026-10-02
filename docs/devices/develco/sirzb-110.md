@@ -18,6 +18,9 @@ the Develco SIRZB-110
   * Battery Level
   * Charging State
   * Status Low Battery
+* [Smoke Sensor](../../sensors.md)
+  * Smoke Detected
+  * Status Low Battery
 * [Temperature Sensor](../../sensors.md)
   * Current Temperature
   * Status Low Battery

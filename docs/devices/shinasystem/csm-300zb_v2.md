@@ -125,11 +125,11 @@ This is the information provided by Zigbee2MQTT for this device:
     "value_off": "disable"
   },
   {
-    "name": "transaction",
-    "label": "Transaction",
+    "name": "transaction_interval",
+    "label": "Transaction interval",
     "access": 2,
     "type": "enum",
-    "property": "transaction",
+    "property": "transaction_interval",
     "description": "Transaction interval, default : 400ms",
     "values": [
       "0ms",

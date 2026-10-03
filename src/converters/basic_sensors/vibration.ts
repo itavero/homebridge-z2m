@@ -5,6 +5,7 @@ import { BinarySensorHandler } from './binary';
 
 export class VibrationSensorHandler extends BinarySensorHandler {
   public static readonly exposesName: string = 'vibration';
+  public static readonly fallbackExposesNames: string[] = ['alarm_1'];
 
   constructor(expose: ExposesEntryWithProperty, otherExposes: ExposesEntryWithBinaryProperty[], accessory: BasicAccessory) {
     super(

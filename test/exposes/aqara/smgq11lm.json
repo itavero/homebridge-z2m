@@ -1,0 +1,64 @@
+[
+  {
+    "name": "battery",
+    "label": "Battery",
+    "access": 1,
+    "type": "numeric",
+    "property": "battery",
+    "description": "Remaining battery in %, can take up to 24 hours before reported",
+    "category": "diagnostic",
+    "unit": "%",
+    "value_max": 100,
+    "value_min": 0
+  },
+  {
+    "name": "soil_moisture",
+    "label": "Soil moisture",
+    "access": 1,
+    "type": "numeric",
+    "property": "soil_moisture",
+    "description": "Measured soil moisture value",
+    "unit": "%",
+    "value_min": 0,
+    "value_max": 100
+  },
+  {
+    "name": "dry",
+    "label": "Dry",
+    "access": 1,
+    "type": "binary",
+    "property": "dry",
+    "description": "Indicates if the soil is dry",
+    "value_on": true,
+    "value_off": false
+  },
+  {
+    "name": "illuminance",
+    "label": "Illuminance",
+    "access": 1,
+    "type": "numeric",
+    "property": "illuminance",
+    "description": "Measured illuminance",
+    "unit": "lx"
+  },
+  {
+    "name": "device_temperature",
+    "label": "Device temperature",
+    "access": 1,
+    "type": "numeric",
+    "property": "device_temperature",
+    "description": "Temperature of the device",
+    "category": "diagnostic",
+    "unit": "°C"
+  },
+  {
+    "name": "voltage",
+    "label": "Voltage",
+    "access": 1,
+    "type": "numeric",
+    "property": "voltage",
+    "description": "Voltage of the battery in millivolts",
+    "category": "diagnostic",
+    "unit": "mV"
+  }
+]

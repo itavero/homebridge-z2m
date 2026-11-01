@@ -15,10 +15,14 @@ The following HomeKit Services and Characteristics are exposed by
 the Gledopto GL-SPI-206P
 
 * [Lightbulb](../../light.md)
+  * Brightness
+  * Color Temperature
   * Hue
   * On
   * Saturation
 
+## Other features
+* [Adaptive Lighting](../../light.md)
 
 # Related
 * [Other devices from Gledopto](../index.md#gledopto)

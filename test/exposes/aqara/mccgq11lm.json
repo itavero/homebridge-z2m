@@ -18,6 +18,9 @@
     "type": "binary",
     "property": "contact",
     "description": "Indicates if the contact is closed (= true) or open (= false)",
+    "homeassistant": {
+      "name": null
+    },
     "value_on": false,
     "value_off": true
   },
@@ -58,5 +61,17 @@
     "property": "trigger_count",
     "description": "Indicates how many times the sensor was triggered (since last scheduled report)",
     "category": "diagnostic"
+  },
+  {
+    "name": "identify",
+    "label": "Identify",
+    "access": 2,
+    "type": "enum",
+    "property": "identify",
+    "description": "Initiate device identification. This device is asleep by default.You may need to wake it up first before sending the identify command.",
+    "category": "config",
+    "values": [
+      "identify"
+    ]
   }
 ]

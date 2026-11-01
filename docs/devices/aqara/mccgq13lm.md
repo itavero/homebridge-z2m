@@ -21,6 +21,9 @@ the Aqara MCCGQ13LM
 * [Contact Sensor](../../sensors.md)
   * Contact Sensor State
   * Status Tampered
+* [Stateless Programmable Switch](../../action.md)
+  * Programmable Switch Event
+  * Service Label Index
 
 
 # Related

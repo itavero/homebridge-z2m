@@ -38,7 +38,7 @@ This is the information provided by Zigbee2MQTT for this device:
       "alarm_sound",
       "alarm_light",
       "alarm_sound_light",
-      "normal"
+      "no_alarm"
     ]
   },
   {

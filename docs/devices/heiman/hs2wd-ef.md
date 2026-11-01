@@ -30,10 +30,10 @@ This is the information provided by Zigbee2MQTT for this device:
   {
     "name": "battery",
     "label": "Battery",
-    "access": 1,
+    "access": 5,
     "type": "numeric",
     "property": "battery",
-    "description": "Remaining battery in %, can take up to 24 hours before reported",
+    "description": "Remaining battery in %",
     "category": "diagnostic",
     "unit": "%",
     "value_max": 100,

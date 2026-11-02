@@ -8,6 +8,7 @@ import { BasicSensorHandler } from './basic';
 
 export class HumiditySensorHandler extends BasicSensorHandler {
   public static readonly exposesName: string = 'humidity';
+  public static readonly fallbackExposesNames: string[] = ['soil_moisture'];
   public static readonly exposesType: ExposesKnownTypes = ExposesKnownTypes.NUMERIC;
 
   public readonly mainCharacteristics: Characteristic[] = [];

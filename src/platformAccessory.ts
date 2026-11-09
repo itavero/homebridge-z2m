@@ -8,6 +8,7 @@ import { hap } from './hap';
 import { sanitizeAccessoryName, sanitizeAndFilterExposesEntries } from './helpers';
 import { BasicLogger } from './logger';
 import { Zigbee2mqttPlatform } from './platform';
+import { AIR_QUALITY_ACCESSORY_ROLE } from './purifierAccessorySplit';
 import { ExtendedTimer } from './timer';
 import {
   DeviceListEntry,
@@ -38,13 +39,21 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   get displayName(): string {
-    return this.accessory.context.device.friendly_name;
+    const sourceName = this.accessory.context.device.friendly_name;
+    return this.accessoryRole === AIR_QUALITY_ACCESSORY_ROLE ? `${sourceName} Air Quality` : sourceName;
+  }
+
+  get accessoryRole(): string | undefined {
+    return this.accessory.context.z2mAccessoryRole;
   }
 
   get deviceTopic(): string {
     if (isDeviceListEntryForGroup(this.accessory.context.device) || 'group_id' in this.accessory.context.device) {
       return this.accessory.context.device.friendly_name;
     }
+    // A derived HomeKit accessory still represents the same physical Zigbee device.
+    // Keep its HomeKit identity separate, but always publish and subscribe on the
+    // real Zigbee2MQTT device topic.
     return this.accessory.context.device.ieee_address;
   }
 
@@ -59,7 +68,8 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     if (isDeviceListEntryForGroup(this.accessory.context.device) || 'group_id' in this.accessory.context.device) {
       return `GROUP:${this.accessory.context.device.group_id}`;
     }
-    return this.accessory.context.device.ieee_address;
+    const ieeeAddress = this.accessory.context.device.ieee_address;
+    return this.accessoryRole === undefined ? ieeeAddress : `${ieeeAddress}-${this.accessoryRole}`;
   }
 
   constructor(
@@ -424,7 +434,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
         // Update accessory info
         // Note: getOrAddService is used so that the service is known in this.serviceIds and will not get filtered out.
         this.getOrAddService(new hap.Service.AccessoryInformation())
-          .updateCharacteristic(hap.Characteristic.Name, sanitizeAccessoryName(info.friendly_name) ?? this.ieeeAddress)
+          .updateCharacteristic(hap.Characteristic.Name, sanitizeAccessoryName(this.displayName) ?? this.ieeeAddress)
           .updateCharacteristic(hap.Characteristic.Manufacturer, info.definition.vendor ?? 'Zigbee2MQTT')
           .updateCharacteristic(hap.Characteristic.Model, info.definition.model ?? 'unknown')
           .updateCharacteristic(hap.Characteristic.SerialNumber, this.serialNumber)
@@ -481,7 +491,7 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
 
     // Filter out all properties that have a null/undefined value
     for (const key in state) {
-      if (state[key] === null || state[key] === undefined) {
+      if (state[key] === undefined || (state[key] === null && key !== 'pm25')) {
         delete state[key];
       }
     }

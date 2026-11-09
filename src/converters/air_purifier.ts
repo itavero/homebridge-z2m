@@ -21,6 +21,10 @@ import { CharacteristicMonitor, MappingCharacteristicMonitor, NumericTransformCh
 
 export class AirPurifierCreator implements ServiceCreator {
   createServicesFromExposes(accessory: BasicAccessory, exposes: ExposesEntry[]): void {
+    const hasPurifierSignal = exposes.some((entry) => ['pm25', 'air_quality', 'replace_filter'].includes(entry.name ?? ''));
+    if (!hasPurifierSignal) {
+      return;
+    }
     exposes
       .filter(
         (e) =>
@@ -35,7 +39,13 @@ export class AirPurifierCreator implements ServiceCreator {
   private createService(expose: ExposesEntryWithFeatures, accessory: BasicAccessory, exposes: ExposesEntry[]): void {
     try {
       const fanSpeedExpose = exposes.find(
-        (x) => x.endpoint === expose.endpoint && x.name === 'fan_speed' && exposesHasNumericRangeProperty(x)
+        (x) =>
+          x.endpoint === expose.endpoint &&
+          x.name === 'fan_speed' &&
+          exposesHasNumericRangeProperty(x) &&
+          exposesIsPublished(x) &&
+          Number.isFinite(x.value_max) &&
+          x.value_max > 0
       ) as ExposesEntryWithNumericRangeProperty | undefined;
 
       const handler = new AirPurifierHandler(expose, accessory, fanSpeedExpose);
@@ -67,19 +77,22 @@ class AirPurifierHandler implements ServiceHandler {
     if (!exposesHasFeatures(expose)) {
       return false;
     }
-    return expose.features.some((f) => f.name === AirPurifierHandler.NAME_STATE && exposesHasBinaryProperty(f) && exposesIsPublished(f));
+    return expose.features.some(
+      (f) => f.name === AirPurifierHandler.NAME_STATE && exposesHasBinaryProperty(f) && exposesIsPublished(f) && exposesCanBeSet(f)
+    );
   }
 
   constructor(
     expose: ExposesEntryWithFeatures,
     private readonly accessory: BasicAccessory,
-    fanSpeedExpose: ExposesEntryWithNumericRangeProperty | undefined
+    private readonly fanSpeedExpose: ExposesEntryWithNumericRangeProperty | undefined
   ) {
     const endpoint = expose.endpoint;
     this.identifier = AirPurifierHandler.generateIdentifier(endpoint);
 
     const serviceName = accessory.getDefaultServiceDisplayName(endpoint);
     this.service = accessory.getOrAddService(new hap.Service.AirPurifier(serviceName, endpoint));
+    this.service.setPrimaryService(true);
     accessory.log.debug(`Configuring AirPurifier for ${serviceName}`);
 
     const stateFeature = expose.features.find(
@@ -177,15 +190,18 @@ class AirPurifierHandler implements ServiceHandler {
         })
       );
 
-      if (fanSpeedExpose !== undefined) {
+      if (this.fanSpeedExpose !== undefined) {
         this.monitors.push(
           new NumericTransformCharacteristicMonitor(this.stateExpose.property, this.service, hap.Characteristic.RotationSpeed, (value) =>
             value === this.stateExpose.value_off ? 0 : undefined
           )
         );
         this.monitors.push(
-          new NumericTransformCharacteristicMonitor(fanSpeedExpose.property, this.service, hap.Characteristic.RotationSpeed, (value) =>
-            typeof value === 'number' ? Math.round((value * 100) / fanSpeedExpose.value_max) : undefined
+          new NumericTransformCharacteristicMonitor(
+            this.fanSpeedExpose.property,
+            this.service,
+            hap.Characteristic.RotationSpeed,
+            (value) => (typeof value === 'number' ? Math.round((value * 100) / this.fanSpeedExpose!.value_max) : undefined)
           )
         );
       }
@@ -200,6 +216,9 @@ class AirPurifierHandler implements ServiceHandler {
     }
     if (this.modeExpose !== undefined && exposesCanBeGet(this.modeExpose)) {
       keys.push(this.modeExpose.property);
+    }
+    if (this.fanSpeedExpose !== undefined && exposesCanBeGet(this.fanSpeedExpose)) {
+      keys.push(this.fanSpeedExpose.property);
     }
     return keys;
   }

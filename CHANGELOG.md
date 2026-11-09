@@ -9,7 +9,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Added
 
-- Add support for `fan` composite expose as AirPurifier service and map `replace_filter` to FilterMaintenance (`FilterChangeIndication`), enabling HomeKit support for devices like the IKEA STARKVIND E2007 air purifier. (see [#1012](https://github.com/itavero/homebridge-z2m/pull/1012) / [#1226](https://github.com/itavero/homebridge-z2m/pull/1226))
+- Add HomeKit support for IKEA STARKVIND air purifiers, including native filter maintenance and a separate PM2.5 air-quality accessory. (see [#1012](https://github.com/itavero/homebridge-z2m/pull/1012) / [#1226](https://github.com/itavero/homebridge-z2m/pull/1226))
 
 ### Fixed
 

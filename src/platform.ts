@@ -15,6 +15,7 @@ import { BasicServiceCreatorManager } from './converters/creators';
 import { errorToString, getDiffFromArrays, parseBridgeOnlineState, sanitizeAccessoryName } from './helpers';
 import { BasicLogger } from './logger';
 import { Zigbee2mqttAccessory } from './platformAccessory';
+import { AIR_QUALITY_ACCESSORY_ROLE, deviceForAccessoryRole, shouldSplitStarkvindAirQuality } from './purifierAccessorySplit';
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import {
   DeviceListEntry,
@@ -395,8 +396,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     } else {
       // Only update changed devices
       for (const identifier of changedDevices) {
-        const accessory = this.accessories.find((acc) => acc.matchesIdentifier(identifier));
-        accessory?.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(accessory));
+        const accessories = this.accessories.filter((acc) => acc.matchesIdentifier(identifier));
+        accessories.forEach((accessory) => accessory.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(accessory)));
       }
     }
   }
@@ -423,10 +424,10 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       isAvailable = statePayload === 'online';
     }
     const deviceTopic = topic.slice(0, -1 * Zigbee2mqttPlatform.TOPIC_SUFFIX_AVAILABILITY.length);
-    const accessory = this.accessories.find((acc) => acc.matchesIdentifier(deviceTopic));
-    if (accessory) {
+    const accessories = this.accessories.filter((acc) => acc.matchesIdentifier(deviceTopic));
+    if (accessories.length > 0) {
       try {
-        accessory.updateAvailability(isAvailable);
+        accessories.forEach((accessory) => accessory.updateAvailability(isAvailable));
         this.log.debug(`Handled device availability update for ${deviceTopic}: ${statePayload}`);
       } catch (err) {
         this.log.error(`Failed to process availability update with payload: ${statePayload}`);
@@ -443,11 +444,11 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       return;
     }
 
-    const accessory = this.accessories.find((acc) => acc.matchesIdentifier(topic));
-    if (accessory) {
+    const accessories = this.accessories.filter((acc) => acc.matchesIdentifier(topic));
+    if (accessories.length > 0) {
       try {
         const state = JSON.parse(statePayload);
-        accessory.updateStates(state);
+        accessories.forEach((accessory) => accessory.updateStates({ ...state }));
         this.log.debug(`Handled device update for ${topic}: ${statePayload}`);
       } catch (err) {
         this.log.error(`Failed to process status update with payload: ${statePayload}`);
@@ -464,7 +465,15 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     for (let i = this.accessories.length - 1; i >= 0; --i) {
       const foundIndex = this.lastReceivedDevices.findIndex((d) => d.ieee_address === this.accessories[i].ieeeAddress);
       const foundGroupIndex = this.lastReceivedGroups.findIndex((g) => g.id === this.accessories[i].groupId);
-      if ((foundIndex < 0 && foundGroupIndex < 0) || this.isDeviceExcluded(this.accessories[i].accessory.context.device)) {
+      const sourceDevice = foundIndex >= 0 ? this.lastReceivedDevices[foundIndex] : undefined;
+      const roleStillApplies =
+        this.accessories[i].accessoryRole !== AIR_QUALITY_ACCESSORY_ROLE ||
+        (sourceDevice !== undefined && shouldSplitStarkvindAirQuality(sourceDevice));
+      if (
+        (foundIndex < 0 && foundGroupIndex < 0) ||
+        this.isDeviceExcluded(this.accessories[i].accessory.context.device) ||
+        !roleStillApplies
+      ) {
         // Not found or excluded; remove it.
         this.log.debug(`Removing accessory ${this.accessories[i].displayName} (${this.accessories[i].ieeeAddress})`);
         staleAccessories.push(this.accessories[i].accessory);
@@ -594,20 +603,31 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     if (!isDeviceDefinition(device.definition) || this.isDeviceExcluded(device)) {
       return;
     }
-    const uuid_input = isDeviceListEntryForGroup(device) ? `group-${device.group_id}` : device.ieee_address;
+    this.createOrUpdateAccessoryForRole(device);
+    if (shouldSplitStarkvindAirQuality(device)) {
+      this.createOrUpdateAccessoryForRole(device, AIR_QUALITY_ACCESSORY_ROLE);
+    }
+  }
+
+  private createOrUpdateAccessoryForRole(device: DeviceListEntry, role?: string) {
+    const roleDevice = deviceForAccessoryRole(device, role);
+    const baseUuidInput = isDeviceListEntryForGroup(device) ? `group-${device.group_id}` : device.ieee_address;
+    const uuid_input = role === undefined ? baseUuidInput : `${baseUuidInput}-${role}`;
     const uuid = this.api.hap.uuid.generate(uuid_input);
     const existingAcc = this.accessories.find((acc) => acc.UUID === uuid);
     if (existingAcc) {
-      existingAcc.updateDeviceInformation(device);
+      existingAcc.updateDeviceInformation(roleDevice);
       existingAcc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(existingAcc));
     } else {
       // New entry
-      const sanitized_name = sanitizeAccessoryName(device.friendly_name) ?? uuid_input;
-      this.log.info(`New accessory: ${device.friendly_name} (${sanitized_name})`);
+      const displayName = role === AIR_QUALITY_ACCESSORY_ROLE ? `${device.friendly_name} Air Quality` : device.friendly_name;
+      const sanitized_name = sanitizeAccessoryName(displayName) ?? uuid_input;
+      this.log.info(`New accessory: ${displayName} (${sanitized_name})`);
       const accessory = new this.api.platformAccessory(sanitized_name, uuid);
-      accessory.context.device = device;
+      accessory.context.device = roleDevice;
+      accessory.context.z2mAccessoryRole = role;
       this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-      const acc = new Zigbee2mqttAccessory(this, accessory, this.getAdditionalConfigForDevice(device));
+      const acc = new Zigbee2mqttAccessory(this, accessory, this.getAdditionalConfigForDevice(roleDevice));
       this.accessories.push(acc);
       acc.setAvailabilityEnabled(this.isAvailabilityEnabledForAddress(acc));
     }

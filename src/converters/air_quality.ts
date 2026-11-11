@@ -158,6 +158,18 @@ class ParticulateMatter2Dot5Property extends PassthroughAirQualityProperty {
     super(expose, service, hap.Characteristic.PM2_5Density);
   }
 
+  updateState(state: Record<string, unknown>): void {
+    if (!(this.expose.property in state)) {
+      return;
+    }
+    const value = state[this.expose.property];
+    if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+      this.latestAirQuality = hap.Characteristic.AirQuality.UNKNOWN;
+      return;
+    }
+    super.updateState(state);
+  }
+
   convertToAirQuality(sensorValue: CharacteristicValue): number | undefined {
     if (typeof sensorValue !== 'number') {
       return undefined;

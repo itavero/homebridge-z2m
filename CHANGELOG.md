@@ -7,6 +7,10 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ## [Unreleased]
 
+### Added
+
+- Add HomeKit support for IKEA STARKVIND air purifiers, including native filter maintenance and a separate PM2.5 air-quality accessory. (see [#1012](https://github.com/itavero/homebridge-z2m/pull/1012) / [#1226](https://github.com/itavero/homebridge-z2m/pull/1226))
+
 ### Fixed
 
 - Config validation now skips malformed entries in `devices` without an `id` and logs a warning instead of marking the full plugin configuration invalid. (fixes [#1099](https://github.com/itavero/homebridge-z2m/issues/1099))

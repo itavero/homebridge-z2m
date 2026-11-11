@@ -116,4 +116,53 @@ describe('Air Quality Sensor', () => {
       );
     });
   });
+
+  describe('IKEA STARKVIND PM2.5', () => {
+    let harness: ServiceHandlersTestHarness;
+
+    beforeEach(() => {
+      harness = new ServiceHandlersTestHarness();
+      harness
+        .getOrAddHandler(hap.Service.AirQualitySensor)
+        .addExpectedCharacteristic('pm25', hap.Characteristic.PM2_5Density)
+        .addExpectedCharacteristic('aq', hap.Characteristic.AirQuality);
+      harness.prepareCreationMocks();
+      harness.callCreators([
+        {
+          name: 'pm25',
+          label: 'PM2.5',
+          access: 1,
+          type: 'numeric',
+          property: 'pm25',
+          unit: 'µg/m³',
+        },
+      ]);
+      harness.checkCreationExpectations();
+    });
+
+    afterEach(() => {
+      vi.resetAllMocks();
+    });
+
+    test('valid reading updates PM2.5 and air quality', () => {
+      harness.checkUpdateState(
+        '{"pm25": 24}',
+        hap.Service.AirQualitySensor,
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
+          [hap.Characteristic.PM2_5Density, 24],
+          [hap.Characteristic.AirQuality, hap.Characteristic.AirQuality.GOOD],
+        ])
+      );
+    });
+
+    test.each(['null', '-1'])('unavailable reading %s reports unknown without a HAP error', (value) => {
+      harness.checkUpdateState(
+        `{"pm25": ${value}}`,
+        hap.Service.AirQualitySensor,
+        new Map<WithUUID<new () => Characteristic> | string, CharacteristicValue>([
+          [hap.Characteristic.AirQuality, hap.Characteristic.AirQuality.UNKNOWN],
+        ])
+      );
+    });
+  });
 });

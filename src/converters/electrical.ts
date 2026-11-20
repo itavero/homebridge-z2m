@@ -161,10 +161,10 @@ export class ElectricalSensorHandler implements ServiceHandler {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const FakeGatoHistoryService = require('fakegato-history')(homebridge);
         this.historyService = new FakeGatoHistoryService('energy', platformAccessory, { storage: 'fs', log: this.log });
-        accessory.log.debug(`Configured Eve history service for ${this.serviceName}`);
+        accessory.log.warn(`Configured Eve history service for ${this.serviceName}`);
       }
     } catch (error) {
-      accessory.log.debug(`Eve history service not available for ${this.serviceName}: ${error}`);
+      accessory.log.warn(`Eve history service not available for ${this.serviceName}: ${error}`);
     }
 
     accessory.log.debug(`Configuring ElectricalSensor for ${this.serviceName}`);

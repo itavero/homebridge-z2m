@@ -341,9 +341,6 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       if (updateDevices || updateGroups) {
         this.removeStaleDevices();
       }
-      if (updateDevices) {
-        this.syncMatterOutlets();
-      }
     } catch (err) {
       this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
       this.log.error(errorToString(err));
@@ -512,6 +509,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     this.log.debug('Received devices...');
     this.didReceiveDevices = true;
     devices.forEach((d) => this.createOrUpdateAccessory(d));
+    this.syncMatterOutlets(devices);
   }
 
   configureAccessory(accessory: PlatformAccessory) {
@@ -552,12 +550,12 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     return { ...decision, device: { device, exposes } };
   }
 
-  private syncMatterOutlets(): void {
+  private syncMatterOutlets(devices: DeviceListEntry[]): void {
     if (this.matterOutlets === undefined) {
       return;
     }
     const outlets: MatterOutletDevice[] = [];
-    for (const device of this.lastReceivedDevices) {
+    for (const device of devices) {
       const decision = this.getMatterOutletDecision(device);
       if (decision.publish && decision.device !== undefined) {
         outlets.push(decision.device);

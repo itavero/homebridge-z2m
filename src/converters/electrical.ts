@@ -1,3 +1,4 @@
+import FakeGatoHistoryModule from 'fakegato-history';
 import { Characteristic, Service } from 'homebridge';
 import { hap } from '../hap';
 import { groupByEndpoint } from '../helpers';
@@ -129,6 +130,10 @@ function getOrAddCustomCharacteristic(service: Service, name: string, factory: (
   return service.addCharacteristic(factory());
 }
 
+interface EveHistoryService {
+  addEntry(entry: { time: number; power?: number }): void;
+}
+
 export class ElectricalSensorHandler implements ServiceHandler {
   protected log: BasicLogger;
   protected monitors: CharacteristicMonitor[] = [];
@@ -142,7 +147,7 @@ export class ElectricalSensorHandler implements ServiceHandler {
   private readonly energyExpose?: ExposesEntryWithProperty;
 
   // Eve history service (optional). Exposes consumption history to the Eve app.
-  protected historyService: any;
+  protected historyService?: EveHistoryService;
 
   constructor(accessory: BasicAccessory, electricalExposes: ElectricalExposes, endpoint: string | undefined) {
     this.log = accessory.log;
@@ -158,13 +163,23 @@ export class ElectricalSensorHandler implements ServiceHandler {
         const platform = (accessory as unknown as { platform?: { api?: { user?: { storagePath?: () => string } } } }).platform;
         const storagePath = platform?.api?.user?.storagePath?.() ?? process.cwd();
         const homebridge = { hap, user: { storagePath: () => storagePath } };
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const FakeGatoHistoryService = require('fakegato-history')(homebridge);
-        this.historyService = new FakeGatoHistoryService('energy', platformAccessory, { storage: 'fs', log: this.log });
-        accessory.log.warn(`Configured Eve history service for ${this.serviceName}`);
+        type FakeGatoHistoryFactory = (
+          homebridge: unknown
+        ) => new (
+          type: string,
+          accessory: unknown,
+          options?: { storage?: string; log?: BasicLogger; filename?: string }
+        ) => EveHistoryService;
+        const FakeGatoHistoryService = (FakeGatoHistoryModule as unknown as FakeGatoHistoryFactory)(homebridge);
+        this.historyService = new FakeGatoHistoryService('energy', platformAccessory, {
+          storage: 'fs',
+          log: this.log,
+          filename: endpoint !== undefined ? `${platformAccessory.displayName ?? 'accessory'}_${endpoint}_persist.json` : undefined,
+        });
+        accessory.log.debug(`Configured Eve history service for ${this.serviceName}`);
       }
     } catch (error) {
-      accessory.log.warn(`Eve history service not available for ${this.serviceName}: ${error}`);
+      accessory.log.debug(`Eve history service not available for ${this.serviceName}: ${error}`);
     }
 
     accessory.log.debug(`Configuring ElectricalSensor for ${this.serviceName}`);
@@ -238,19 +253,13 @@ export class ElectricalSensorHandler implements ServiceHandler {
     try {
       if (this.historyService !== undefined) {
         const power = this.powerExpose !== undefined ? state[this.powerExpose.property] : undefined;
-        const energy = this.energyExpose !== undefined ? state[this.energyExpose.property] : undefined;
         const entry: Record<string, unknown> = { time: Math.round(Date.now() / 1000) };
         if (typeof power === 'number') {
           entry.power = power;
-        }
-        if (typeof energy === 'number') {
-          entry.energy = energy;
-        }
-        if (entry.power !== undefined || entry.energy !== undefined) {
-          this.historyService.addEntry(entry);
-          this.log.warn(`Fed Eve history entry for ${this.serviceName}: ${JSON.stringify(entry)}`);
+          this.historyService.addEntry(entry as { time: number; power?: number });
+          this.log.debug(`Fed Eve history entry for ${this.serviceName}: ${JSON.stringify(entry)}`);
         } else {
-          this.log.warn(`No Eve history entry for ${this.serviceName}; state=${JSON.stringify(state)}`);
+          this.log.debug(`No power reading for ${this.serviceName}; skipping Eve history sample.`);
         }
       }
     } catch (error) {

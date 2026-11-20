@@ -9,7 +9,7 @@ Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.o
 
 ### Added
 
-- **Matter outlets with energy measurement**: when Matter is enabled on the (child) bridge, devices with an on/off `state` and `power` and/or `energy` can be published as Matter On/Off Outlets with the `ElectricalPowerMeasurement` and `ElectricalEnergyMeasurement` clusters, so Apple Home (iOS 27+) shows their consumption in the Energy view. Opt-in per device (`devices[].matter`) or for all eligible devices (`matter.outlets: "auto"`). Devices published via Matter are no longer exposed via HAP, unless `keep_hap` is set. Energy updates are limited to one per minute. Requires Homebridge 2.2 or newer.
+- **Matter outlets with energy measurement**: when Matter is enabled on the (child) bridge, devices with an on/off `state` and `power` and/or `energy` can be published as Matter On/Off Outlets with the `ElectricalPowerMeasurement` and `ElectricalEnergyMeasurement` clusters, so Apple Home shows their wattage on the tile (iOS 27+) and lists them individually in the Energy view (iOS 27.3+). Opt-in per device (`devices[].matter`) or for all eligible devices (`matter.outlets: "auto"`). Devices published via Matter are no longer exposed via HAP, unless `keep_hap` is set. Energy updates are limited to one per minute. Requires Homebridge 2.5 or newer.
 
 ### Fixed
 

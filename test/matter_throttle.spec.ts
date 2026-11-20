@@ -77,4 +77,12 @@ describe('ThrottledReporter', () => {
     vi.advanceTimersByTime(INTERVAL * 2);
     expect(sent).toStrictEqual([1]);
   });
+
+  it('sends the same value again after invalidate', () => {
+    reporter.submit(1);
+    reporter.invalidate();
+    vi.advanceTimersByTime(INTERVAL);
+    reporter.submit(1);
+    expect(sent).toStrictEqual([1, 1]);
+  });
 });

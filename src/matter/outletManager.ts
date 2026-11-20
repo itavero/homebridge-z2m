@@ -25,6 +25,8 @@ const CLUSTER_ENERGY = 'electricalEnergyMeasurement';
 export interface MatterOutletHost {
   isConnected(): boolean;
   publishMessage(topic: string, payload: string, options: Record<string, unknown>): Promise<void>;
+  /** Called when devices could not be registered via Matter, so they can be exposed via HAP instead. */
+  onMatterRegistrationFailed(devices: DeviceListEntry[]): void;
 }
 
 export interface MatterOutletDevice {
@@ -162,6 +164,7 @@ export class MatterOutletManager {
         record.energyReporter.dispose();
         this.outlets.delete(record.uuid);
       }
+      this.host.onMatterRegistrationFailed(toRegister.map((r) => r.device));
       return;
     }
 
@@ -219,7 +222,7 @@ export class MatterOutletManager {
       latestState: {},
       lastPower: {},
       energyReporter: new ThrottledReporter<number>(this.energyReportIntervalMs, (energy) =>
-        this.update(record, CLUSTER_ENERGY, { cumulativeEnergyImported: { energy } })
+        this.update(record, CLUSTER_ENERGY, { cumulativeEnergyImported: { energy } }, () => record.energyReporter.invalidate())
       ),
     };
     record.accessory.handlers = {
@@ -281,7 +284,9 @@ export class MatterOutletManager {
     const onOff = onOffFromState(outlet.exposes, state);
     if (onOff !== undefined && onOff !== outlet.lastOnOff) {
       outlet.lastOnOff = onOff;
-      this.update(outlet, CLUSTER_ON_OFF, { onOff });
+      this.update(outlet, CLUSTER_ON_OFF, { onOff }, () => {
+        outlet.lastOnOff = undefined;
+      });
     }
 
     const power = powerMeasurementFromState(outlet.exposes, state);
@@ -293,7 +298,11 @@ export class MatterOutletManager {
     }
     if (Object.keys(changed).length > 0) {
       outlet.lastPower = { ...outlet.lastPower, ...changed };
-      this.update(outlet, CLUSTER_POWER, changed);
+      this.update(outlet, CLUSTER_POWER, changed, () => {
+        for (const key of Object.keys(changed)) {
+          delete outlet.lastPower[key];
+        }
+      });
     }
 
     const energy = energyFromState(outlet.exposes, state);
@@ -302,10 +311,15 @@ export class MatterOutletManager {
     }
   }
 
-  private update(outlet: OutletRecord, cluster: string, attributes: Record<string, unknown>): void {
+  /**
+   * Send attributes to the Matter endpoint.
+   * @param onFailure called when the update is rejected, to forget the cached values so they are sent again next time.
+   */
+  private update(outlet: OutletRecord, cluster: string, attributes: Record<string, unknown>, onFailure: () => void): void {
     this.log.debug(`Matter update for ${outlet.device.friendly_name}: ${cluster} ${JSON.stringify(attributes)}`);
-    this.matter
-      .updateAccessoryState(outlet.uuid, cluster, attributes)
-      .catch((err) => this.log.warn(`Failed to update ${cluster} of Matter outlet ${outlet.device.friendly_name}: ${errorToString(err)}`));
+    this.matter.updateAccessoryState(outlet.uuid, cluster, attributes).catch((err) => {
+      onFailure();
+      this.log.warn(`Failed to update ${cluster} of Matter outlet ${outlet.device.friendly_name}: ${errorToString(err)}`);
+    });
   }
 }

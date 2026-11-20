@@ -14,7 +14,13 @@ import { ConfigurableLogger } from './configurableLogger';
 import { BasicServiceCreatorManager } from './converters/creators';
 import { errorToString, getDiffFromArrays, parseBridgeOnlineState, sanitizeAccessoryName } from './helpers';
 import { BasicLogger } from './logger';
-import { decideMatterOutlet, getMatterOutletExposesForDevice, MatterOutletDecision } from './matter/outlet';
+import {
+  decideMatterOutlet,
+  getMatterOutletExposesForDevice,
+  isMatterSupportedByHomebridge,
+  MATTER_MIN_HOMEBRIDGE_VERSION,
+  MatterOutletDecision,
+} from './matter/outlet';
 import { MatterOutletDevice, MatterOutletManager } from './matter/outletManager';
 import { Zigbee2mqttAccessory } from './platformAccessory';
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
@@ -40,6 +46,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private baseDeviceConfig: BaseDeviceConfiguration;
   private readonly matterOutlets?: MatterOutletManager;
   private readonly matterIneligibleWarned = new Set<string>();
+  // IEEE addresses of devices that failed to register via Matter; they are exposed via HAP until the next restart.
+  private readonly matterRegistrationFailed = new Set<string>();
 
   // this is used to track restored cached accessories
   private readonly accessories: Zigbee2mqttAccessory[] = [];
@@ -118,6 +126,15 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   private initializeMatter(config: PluginConfiguration): MatterOutletManager | undefined {
     const matterRequested = config.matter !== undefined || (config.devices ?? []).some((d) => d.matter?.outlet === true);
+    if (!isMatterSupportedByHomebridge(this.api.serverVersion)) {
+      if (matterRequested) {
+        this.log.warn(
+          `Matter is configured for this plugin, but it requires Homebridge ${MATTER_MIN_HOMEBRIDGE_VERSION} or newer ` +
+            `(running ${this.api.serverVersion}). Devices will only be exposed via HAP.`
+        );
+      }
+      return undefined;
+    }
     if (!this.api.isMatterEnabled?.() || this.api.matter === undefined) {
       if (matterRequested) {
         this.log.warn(
@@ -332,15 +349,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
         this.handleDeviceUpdate(topic, payload.toString());
       }
 
-      if (updateDevices) {
-        this.handleReceivedDevices(this.lastReceivedDevices);
-      }
-      if (updateGroups) {
-        this.createGroupAccessories(this.lastReceivedGroups);
-      }
-      if (updateDevices || updateGroups) {
-        this.removeStaleDevices();
-      }
+      this.processDeviceAndGroupLists(updateDevices, updateGroups);
     } catch (err) {
       this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
       this.log.error(errorToString(err));
@@ -505,6 +514,22 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
   }
 
+  private processDeviceAndGroupLists(updateDevices: boolean, updateGroups: boolean): void {
+    if (updateDevices) {
+      this.handleReceivedDevices(this.lastReceivedDevices);
+    }
+    if (updateGroups) {
+      this.createGroupAccessories(this.lastReceivedGroups);
+      if (!updateDevices && this.didReceiveDevices) {
+        // Group membership is used by exclude_grouped_devices, so it can change which devices are published via Matter.
+        this.syncMatterOutlets(this.lastReceivedDevices);
+      }
+    }
+    if (updateDevices || updateGroups) {
+      this.removeStaleDevices();
+    }
+  }
+
   private handleReceivedDevices(devices: DeviceListEntry[]) {
     this.log.debug('Received devices...');
     this.didReceiveDevices = true;
@@ -520,12 +545,26 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     this.matterOutlets?.configureCachedAccessory(accessory);
   }
 
+  onMatterRegistrationFailed(devices: DeviceListEntry[]): void {
+    for (const device of devices) {
+      this.matterRegistrationFailed.add(device.ieee_address);
+      this.log.warn(`Exposing ${device.friendly_name} via HAP instead, as it could not be registered via Matter.`);
+    }
+    // Recreate the HAP accessories that were left out because these devices were going to be published via Matter.
+    this.handleReceivedDevices(this.lastReceivedDevices);
+  }
+
   /**
    * Determine if (and how) a device is published via Matter.
    * Always returns publish=false if Matter is not enabled, the device is excluded, or it is not a metering outlet.
    */
   private getMatterOutletDecision(device: DeviceListEntry | string): MatterOutletDecision & { device?: MatterOutletDevice } {
-    if (this.matterOutlets === undefined || typeof device === 'string' || this.isDeviceExcludedByConfig(device)) {
+    if (
+      this.matterOutlets === undefined ||
+      typeof device === 'string' ||
+      this.matterRegistrationFailed.has(device.ieee_address) ||
+      this.isDeviceExcludedByConfig(device)
+    ) {
       return { publish: false, keepHap: true };
     }
     const exposes = getMatterOutletExposesForDevice(device);

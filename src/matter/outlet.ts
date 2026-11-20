@@ -1,3 +1,4 @@
+import * as semver from 'semver';
 import { CURRENT_NAMES, ENERGY_CONSUMED_NAMES, POWER_NAMES, VOLTAGE_NAMES } from '../converters/electrical';
 import { sanitizeAccessoryName } from '../helpers';
 import {
@@ -17,6 +18,27 @@ import {
 
 /** Matter limits displayName, serialNumber, manufacturer and model to 32 characters. */
 export const MATTER_STRING_MAX_LENGTH = 32;
+
+/**
+ * Oldest Homebridge version that is known to create the Matter endpoint before `registerPlatformAccessories` resolves,
+ * so state updates sent right after registration are not lost.
+ */
+export const MATTER_MIN_HOMEBRIDGE_VERSION = '2.5.0';
+
+export function isMatterSupportedByHomebridge(serverVersion: string | undefined): boolean {
+  const version = semver.coerce(serverVersion);
+  return version !== null && semver.gte(version, MATTER_MIN_HOMEBRIDGE_VERSION);
+}
+
+/** Multiplier to convert an energy value in the given unit to mWh (Zigbee2MQTT reports energy in kWh by default). */
+const ENERGY_UNIT_TO_MILLIWATT_HOURS: Record<string, number> = {
+  kWh: 1_000_000,
+  Wh: 1_000,
+};
+
+export function getEnergyFactor(energy: ExposesEntryWithProperty): number | undefined {
+  return energy.unit === undefined ? ENERGY_UNIT_TO_MILLIWATT_HOURS.kWh : ENERGY_UNIT_TO_MILLIWATT_HOURS[energy.unit];
+}
 
 export const MATTER_OUTLETS_AUTO = 'auto';
 export const MATTER_OUTLETS_CONFIGURED = 'configured';
@@ -104,7 +126,9 @@ export function findMatterOutletExposes(exposes: ExposesEntry[]): MatterOutletEx
     return undefined;
   }
   const power = findMeasurement(exposes, POWER_NAMES);
-  const energy = findMeasurement(exposes, ENERGY_CONSUMED_NAMES);
+  const energyCandidate = findMeasurement(exposes, ENERGY_CONSUMED_NAMES);
+  // Ignore energy reported in a unit that can not be converted to mWh.
+  const energy = energyCandidate !== undefined && getEnergyFactor(energyCandidate) !== undefined ? energyCandidate : undefined;
   if (power === undefined && energy === undefined) {
     return undefined;
   }
@@ -173,10 +197,10 @@ export function toMilliUnits(value: unknown): number | null {
   return n === undefined ? null : Math.round(n * 1000);
 }
 
-/** kWh → mWh. Returns null if the value is not a valid (non-negative) number. */
-export function kilowattHoursToMilliwattHours(value: unknown): number | null {
+/** Energy (kWh by default) → mWh. Returns null if the value is not a valid (non-negative) number. */
+export function toMilliwattHours(value: unknown, factor: number = ENERGY_UNIT_TO_MILLIWATT_HOURS.kWh): number | null {
   const n = toFiniteNumber(value);
-  return n === undefined || n < 0 ? null : Math.round(n * 1_000_000);
+  return n === undefined || n < 0 ? null : Math.round(n * factor);
 }
 
 export interface PowerMeasurementState extends Record<string, unknown> {
@@ -220,7 +244,11 @@ export function energyFromState(exposes: MatterOutletExposes, state: Record<stri
   if (exposes.energy === undefined || !(exposes.energy.property in state)) {
     return undefined;
   }
-  return kilowattHoursToMilliwattHours(state[exposes.energy.property]) ?? undefined;
+  const factor = getEnergyFactor(exposes.energy);
+  if (factor === undefined) {
+    return undefined;
+  }
+  return toMilliwattHours(state[exposes.energy.property], factor) ?? undefined;
 }
 
 /** Extract the on/off state from a Zigbee2MQTT state message, if present. */

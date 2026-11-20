@@ -345,7 +345,7 @@
       },
       "matter": {
         "title": "Matter",
-        "description": "Publish devices with an on/off state and power/energy measurements as Matter outlets, so Apple Home (iOS 27+) can show their consumption in the Energy view. Requires Matter to be enabled on the (child) bridge running this plugin (Homebridge 2.2 or newer).",
+        "description": "Publish devices with an on/off state and power/energy measurements as Matter outlets, so Apple Home shows their wattage on the tile (iOS 27+) and lists them individually in the Energy view (iOS 27.3+). Requires Matter to be enabled on the (child) bridge running this plugin (Homebridge 2.5 or newer).",
         "type": "object",
         "required": false,
         "properties": {

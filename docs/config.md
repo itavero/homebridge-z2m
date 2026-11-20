@@ -111,7 +111,8 @@ Currently the following options are available:
 * `converters`: An object to optionally provide additional configuration for specific converters. More information can be found in the documentation of the [converters](converters.md), if applicable.
 
 ### Defaults
-Within the `defaults` property, you can also configure the device specific options mentioned above (except for the `id` and `included_keys`).
+Within the `defaults` property, you can also configure the device specific options mentioned above (except for the `id`, `included_keys` and `matter`).
+For Matter, use the platform level [`matter`](#matter) options (`outlets` and `keep_hap`) instead.
 If a device does not specify a value for any of the options (properties) mentioned above, the value from the `defaults` property will be used (if any).
 
 The following defaults are set within the plugin itself:
@@ -147,7 +148,7 @@ For example, to exclude all devices, except a few you want to specifically inclu
 
 ## Matter {#matter}
 When Matter is enabled on the bridge running this plugin, devices with an on/off state and power and/or energy measurements can be published as Matter outlets,
-so Apple Home (iOS 27 or later) shows their consumption in its Energy view. Use the `matter` object to enable this for all eligible devices (`"outlets": "auto"`)
+so Apple Home shows their wattage (iOS 27 or later) and lists them in its Energy view (iOS 27.3 or later). Use the `matter` object to enable this for all eligible devices (`"outlets": "auto"`)
 and to keep them exposed via HAP as well (`keep_hap`). Please refer to the [Matter documentation](matter.md) for more information.
 
 ## Support for groups

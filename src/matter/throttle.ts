@@ -39,6 +39,11 @@ export class ThrottledReporter<T> {
     }
   }
 
+  /** Forget the last sent value (e.g. because sending it failed), so the same value is sent again next time. */
+  invalidate(): void {
+    this.lastSentValue = undefined;
+  }
+
   dispose(): void {
     this.clearPending();
   }

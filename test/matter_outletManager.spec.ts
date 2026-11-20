@@ -32,7 +32,11 @@ describe('MatterOutletManager', () => {
   const uuid = `uuid:${PLUGIN_NAME}-matter-outlet-${plug.ieee_address}`;
 
   let matter: ReturnType<typeof createMatterApi>;
-  let host: MatterOutletHost & { publishMessage: ReturnType<typeof vi.fn>; isConnected: ReturnType<typeof vi.fn> };
+  let host: MatterOutletHost & {
+    publishMessage: ReturnType<typeof vi.fn>;
+    isConnected: ReturnType<typeof vi.fn>;
+    onMatterRegistrationFailed: ReturnType<typeof vi.fn>;
+  };
   let manager: MatterOutletManager;
 
   const registeredAccessory = (): MatterAccessory => matter.registerPlatformAccessories.mock.calls[0][2][0];
@@ -42,7 +46,11 @@ describe('MatterOutletManager', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     matter = createMatterApi();
-    host = { isConnected: vi.fn().mockReturnValue(true), publishMessage: vi.fn().mockResolvedValue(undefined) };
+    host = {
+      isConnected: vi.fn().mockReturnValue(true),
+      publishMessage: vi.fn().mockResolvedValue(undefined),
+      onMatterRegistrationFailed: vi.fn(),
+    };
     manager = new MatterOutletManager(host, matter as unknown as MatterAPI, logger, 60_000);
   });
 
@@ -189,6 +197,26 @@ describe('MatterOutletManager', () => {
     expect(logger.error).toHaveBeenCalled();
     expect(manager.registeredCount).toBe(0);
     expect(manager.handlesDevice('washing_machine')).toBe(false);
+    expect(host.onMatterRegistrationFailed).toHaveBeenCalledWith([plug]);
+  });
+
+  it('sends a value again when the previous update of the same value failed', async () => {
+    await manager.syncDevices([{ device: plug, exposes }]);
+    logger.warn.mockClear();
+    matter.updateAccessoryState.mockRejectedValueOnce(new Error('endpoint not ready'));
+    matter.updateAccessoryState.mockRejectedValueOnce(new Error('endpoint not ready'));
+    manager.handleStateUpdate('washing_machine', { state: 'ON', power: 60 });
+    await vi.waitFor(() => expect(logger.warn).toHaveBeenCalledTimes(2));
+
+    manager.handleStateUpdate('washing_machine', { state: 'ON', power: 60 });
+    expect(updatesFor('onOff')).toStrictEqual([
+      [uuid, { onOff: true }],
+      [uuid, { onOff: true }],
+    ]);
+    expect(updatesFor('electricalPowerMeasurement')).toStrictEqual([
+      [uuid, { activePower: 60_000 }],
+      [uuid, { activePower: 60_000 }],
+    ]);
   });
 
   it('uses the new friendly name after a rename', async () => {

@@ -7,11 +7,12 @@ import {
   initialPowerMeasurementState,
   isMatterDeviceConfiguration,
   isMatterPlatformConfiguration,
-  kilowattHoursToMilliwattHours,
+  isMatterSupportedByHomebridge,
   MATTER_STRING_MAX_LENGTH,
   onOffFromState,
   powerMeasurementFromState,
   toMilliUnits,
+  toMilliwattHours,
   truncateForMatter,
 } from '../src/matter/outlet';
 import { DeviceListEntry, ExposesEntry } from '../src/z2mModels';
@@ -59,16 +60,20 @@ describe('Matter outlet', () => {
     });
 
     it('converts kWh to mWh', () => {
-      expect(kilowattHoursToMilliwattHours(1)).toBe(1_000_000);
-      expect(kilowattHoursToMilliwattHours(12.34)).toBe(12_340_000);
-      expect(kilowattHoursToMilliwattHours(0.001)).toBe(1000);
-      expect(kilowattHoursToMilliwattHours(0)).toBe(0);
+      expect(toMilliwattHours(1)).toBe(1_000_000);
+      expect(toMilliwattHours(12.34)).toBe(12_340_000);
+      expect(toMilliwattHours(0.001)).toBe(1000);
+      expect(toMilliwattHours(0)).toBe(0);
+    });
+
+    it('converts Wh to mWh with the Wh factor', () => {
+      expect(toMilliwattHours(1000, 1_000)).toBe(1_000_000);
     });
 
     it('rejects negative or invalid energy readings', () => {
-      expect(kilowattHoursToMilliwattHours(-1)).toBeNull();
-      expect(kilowattHoursToMilliwattHours(undefined)).toBeNull();
-      expect(kilowattHoursToMilliwattHours('n/a')).toBeNull();
+      expect(toMilliwattHours(-1)).toBeNull();
+      expect(toMilliwattHours(undefined)).toBeNull();
+      expect(toMilliwattHours('n/a')).toBeNull();
     });
   });
 
@@ -207,6 +212,21 @@ describe('Matter outlet', () => {
       expect(onOffFromState(exposes, { state: 'TOGGLE' })).toBeUndefined();
     });
 
+    it('converts energy based on the unit of the expose', () => {
+      const withUnit = (unit: string | undefined) =>
+        findMatterOutletExposes([stateSwitch, { ...numeric('consumed_energy', 'Wh'), unit } as ExposesEntry]);
+      expect(energyFromState(withUnit('Wh')!, { consumed_energy: 1000 })).toBe(1_000_000);
+      expect(energyFromState(withUnit('kWh')!, { consumed_energy: 1 })).toBe(1_000_000);
+      expect(energyFromState(withUnit(undefined)!, { consumed_energy: 1 })).toBe(1_000_000);
+    });
+
+    it('ignores energy in an unsupported unit', () => {
+      expect(findMatterOutletExposes([stateSwitch, numeric('energy', 'MWh')])).toBeUndefined();
+      const exposes = findMatterOutletExposes([stateSwitch, numeric('power', 'W'), numeric('energy', 'MWh')])!;
+      expect(exposes.energy).toBeUndefined();
+      expect(energyFromState(exposes, { energy: 1 })).toBeUndefined();
+    });
+
     it('reports null for invalid power readings and skips invalid energy readings', () => {
       expect(powerMeasurementFromState(exposes, { power: null })).toStrictEqual({ activePower: null });
       expect(energyFromState(exposes, { energy: null })).toBeUndefined();
@@ -230,6 +250,17 @@ describe('Matter outlet', () => {
     it('falls back when empty', () => {
       expect(truncateForMatter('  ', 'Zigbee2MQTT')).toBe('Zigbee2MQTT');
       expect(getMatterDisplayName(device('___'))).toBe('0xa4c138d2b1e5f6a7');
+    });
+  });
+
+  describe('Homebridge version', () => {
+    it('requires Homebridge 2.5.0 or newer', () => {
+      expect(isMatterSupportedByHomebridge('2.5.0')).toBe(true);
+      expect(isMatterSupportedByHomebridge('2.6.1-beta.3')).toBe(true);
+      expect(isMatterSupportedByHomebridge('2.4.0')).toBe(false);
+      expect(isMatterSupportedByHomebridge('2.2.1')).toBe(false);
+      expect(isMatterSupportedByHomebridge(undefined)).toBe(false);
+      expect(isMatterSupportedByHomebridge('unknown')).toBe(false);
     });
   });
 });

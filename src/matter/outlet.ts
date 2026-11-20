@@ -31,13 +31,12 @@ export interface MatterPlatformConfiguration extends Record<string, unknown> {
   keep_hap?: boolean;
 }
 
-export interface MatterDeviceOptions extends Record<string, unknown> {
+export interface MatterDeviceConfiguration extends Record<string, unknown> {
+  /** Publish (`true`) or do not publish (`false`) this device as a Matter outlet. When omitted, the platform option `outlets` decides. */
   outlet?: boolean;
+  /** Overrides the platform option `keep_hap` for this device. */
   keep_hap?: boolean;
 }
-
-/** `true` is a shorthand for `{ outlet: true }`, `false` for `{ outlet: false }`. */
-export type MatterDeviceConfiguration = boolean | MatterDeviceOptions;
 
 // biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isMatterPlatformConfiguration = (x: any): x is MatterPlatformConfiguration =>
@@ -49,12 +48,11 @@ export const isMatterPlatformConfiguration = (x: any): x is MatterPlatformConfig
 
 // biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
 export const isMatterDeviceConfiguration = (x: any): x is MatterDeviceConfiguration =>
-  typeof x === 'boolean' ||
-  (x !== null &&
-    typeof x === 'object' &&
-    !Array.isArray(x) &&
-    (x.outlet === undefined || typeof x.outlet === 'boolean') &&
-    (x.keep_hap === undefined || typeof x.keep_hap === 'boolean'));
+  x !== null &&
+  typeof x === 'object' &&
+  !Array.isArray(x) &&
+  (x.outlet === undefined || typeof x.outlet === 'boolean') &&
+  (x.keep_hap === undefined || typeof x.keep_hap === 'boolean');
 
 export interface MatterOutletExposes {
   state: ExposesEntryWithBinaryProperty;
@@ -143,9 +141,8 @@ export function decideMatterOutlet(
   platformConfig: MatterPlatformConfiguration | undefined,
   deviceConfig: MatterDeviceConfiguration | undefined
 ): MatterOutletDecision {
-  const deviceOptions: MatterDeviceOptions = typeof deviceConfig === 'boolean' ? { outlet: deviceConfig } : (deviceConfig ?? {});
-  const publish = deviceOptions.outlet ?? platformConfig?.outlets === MATTER_OUTLETS_AUTO;
-  const keepHap = deviceOptions.keep_hap ?? platformConfig?.keep_hap ?? false;
+  const publish = deviceConfig?.outlet ?? platformConfig?.outlets === MATTER_OUTLETS_AUTO;
+  const keepHap = deviceConfig?.keep_hap ?? platformConfig?.keep_hap ?? false;
   return { publish, keepHap };
 }
 

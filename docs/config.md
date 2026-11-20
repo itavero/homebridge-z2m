@@ -107,7 +107,7 @@ Currently the following options are available:
 * `excluded_endpoints`: an array of endpoints that should be ignored/excluded for this device. To ignore properties without an endpoint, add `''` (empty string) to the array.
 * `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard.
 * `exposes`: An array of exposes information, using the [structures defined by Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/usage/exposes.html).
-* `matter`: Publish this device as a Matter outlet with power/energy measurements (`true`, `false` or `{ "outlet": true, "keep_hap": false }`). See [Matter outlets](matter.md).
+* `matter`: Publish this device as a Matter outlet with power/energy measurements (`{ "outlet": true, "keep_hap": false }`). See [Matter outlets](matter.md).
 * `converters`: An object to optionally provide additional configuration for specific converters. More information can be found in the documentation of the [converters](converters.md), if applicable.
 
 ### Defaults

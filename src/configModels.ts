@@ -223,7 +223,7 @@ export const isDeviceConfiguration = (x: any): x is DeviceConfiguration => {
     return false;
   }
 
-  // Optional matter which must be a boolean or an object with optional booleans
+  // Optional matter which must be an object with optional booleans
   if (x.matter !== undefined && !isMatterDeviceConfiguration(x.matter)) {
     return false;
   }

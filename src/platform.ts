@@ -117,7 +117,7 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   }
 
   private initializeMatter(config: PluginConfiguration): MatterOutletManager | undefined {
-    const matterRequested = config.matter !== undefined || (config.devices ?? []).some((d) => d.matter !== undefined && d.matter !== false);
+    const matterRequested = config.matter !== undefined || (config.devices ?? []).some((d) => d.matter?.outlet === true);
     if (!this.api.isMatterEnabled?.() || this.api.matter === undefined) {
       if (matterRequested) {
         this.log.warn(

@@ -24,7 +24,7 @@ Matter is opt-in. Either enable it for all eligible devices on the platform leve
       "keep_hap": false
    },
    "devices": [
-      { "id": "water_heater", "matter": false }
+      { "id": "water_heater", "matter": { "outlet": false } }
    ]
 }
 ```
@@ -36,7 +36,7 @@ Or only for specific devices:
    "platform": "zigbee2mqtt",
    "mqtt": { "base_topic": "zigbee2mqtt", "server": "mqtt://localhost:1883" },
    "devices": [
-      { "id": "washing_machine", "matter": true },
+      { "id": "washing_machine", "matter": { "outlet": true } },
       { "id": "0xa4c138d2b1e5f6a7", "matter": { "outlet": true, "keep_hap": true } }
    ]
 }
@@ -51,7 +51,6 @@ Or only for specific devices:
 
 ### Device options (`devices[].matter`)
 
-* `true` / `false`: shorthand for `{ "outlet": true }` / `{ "outlet": false }`.
 * `outlet`: publish (`true`) or do not publish (`false`) this device as a Matter outlet. When omitted, the platform option `outlets` decides.
 * `keep_hap`: overrides the platform option `keep_hap` for this device.
 

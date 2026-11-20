@@ -95,7 +95,7 @@ describe('Plugin configuration', () => {
       ...minimalValidConfiguration,
       matter: { outlets: 'auto', keep_hap: false },
       devices: [
-        { id: 'plug_1', matter: true },
+        { id: 'plug_1', matter: { outlet: true } },
         { id: 'plug_2', matter: { outlet: false } },
         { id: 'plug_3', matter: { keep_hap: true } },
       ],

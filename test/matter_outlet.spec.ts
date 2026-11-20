@@ -148,7 +148,6 @@ describe('Matter outlet', () => {
     });
 
     it('publishes devices that enable it in their configuration', () => {
-      expect(decideMatterOutlet(undefined, true)).toStrictEqual({ publish: true, keepHap: false });
       expect(decideMatterOutlet(undefined, { outlet: true })).toStrictEqual({ publish: true, keepHap: false });
     });
 
@@ -157,7 +156,6 @@ describe('Matter outlet', () => {
     });
 
     it('lets a device opt out of auto', () => {
-      expect(decideMatterOutlet({ outlets: 'auto' }, false).publish).toBe(false);
       expect(decideMatterOutlet({ outlets: 'auto' }, { outlet: false }).publish).toBe(false);
     });
 
@@ -179,8 +177,8 @@ describe('Matter outlet', () => {
     });
 
     it('validates the device configuration', () => {
-      expect(isMatterDeviceConfiguration(true)).toBe(true);
-      expect(isMatterDeviceConfiguration(false)).toBe(true);
+      expect(isMatterDeviceConfiguration({})).toBe(true);
+      expect(isMatterDeviceConfiguration(true)).toBe(false);
       expect(isMatterDeviceConfiguration({ outlet: true, keep_hap: true })).toBe(true);
       expect(isMatterDeviceConfiguration({ outlet: 'yes' })).toBe(false);
       expect(isMatterDeviceConfiguration('true')).toBe(false);

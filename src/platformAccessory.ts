@@ -356,6 +356,10 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     return this.accessory.addService(service);
   }
 
+  getPlatformAccessory(): PlatformAccessory {
+    return this.accessory;
+  }
+
   queueDataForSetAction(data: Record<string, unknown>): void {
     this.pendingPublishData = { ...this.pendingPublishData, ...data };
     this.log.debug(`Pending data: ${JSON.stringify(this.pendingPublishData)}`);

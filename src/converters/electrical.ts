@@ -141,12 +141,31 @@ export class ElectricalSensorHandler implements ServiceHandler {
   private readonly currentExpose?: ExposesEntryWithProperty;
   private readonly energyExpose?: ExposesEntryWithProperty;
 
+  // Eve history service (optional). Exposes consumption history to the Eve app.
+  protected historyService: any;
+
   constructor(accessory: BasicAccessory, electricalExposes: ElectricalExposes, endpoint: string | undefined) {
     this.log = accessory.log;
     this.serviceName = accessory.getDefaultServiceDisplayName(endpoint);
     this.identifier = ElectricalSensorHandler.generateIdentifier(endpoint);
 
     this.service = accessory.getOrAddService(createElectricalSensorService(this.serviceName, endpoint));
+
+    // Setup Eve history service (best effort; requires a real Homebridge accessory)
+    try {
+      const platformAccessory = accessory.getPlatformAccessory?.();
+      if (platformAccessory !== undefined) {
+        const platform = (accessory as unknown as { platform?: { api?: { user?: { storagePath?: () => string } } } }).platform;
+        const storagePath = platform?.api?.user?.storagePath?.() ?? process.cwd();
+        const homebridge = { hap, user: { storagePath: () => storagePath } };
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const FakeGatoHistoryService = require('fakegato-history')(homebridge);
+        this.historyService = new FakeGatoHistoryService('energy', platformAccessory, { storage: 'fs', log: this.log });
+        accessory.log.debug(`Configured Eve history service for ${this.serviceName}`);
+      }
+    } catch (error) {
+      accessory.log.debug(`Eve history service not available for ${this.serviceName}: ${error}`);
+    }
 
     accessory.log.debug(`Configuring ElectricalSensor for ${this.serviceName}`);
 
@@ -214,6 +233,26 @@ export class ElectricalSensorHandler implements ServiceHandler {
 
   updateState(state: Record<string, unknown>): void {
     this.monitors.forEach((m) => m.callback(state, this.log));
+
+    // Feed Eve history service (best effort)
+    try {
+      if (this.historyService !== undefined) {
+        const power = this.powerExpose !== undefined ? state[this.powerExpose.property] : undefined;
+        const energy = this.energyExpose !== undefined ? state[this.energyExpose.property] : undefined;
+        const entry: Record<string, unknown> = { time: Math.round(Date.now() / 1000) };
+        if (typeof power === 'number') {
+          entry.power = power;
+        }
+        if (typeof energy === 'number') {
+          entry.energy = energy;
+        }
+        if (entry.power !== undefined || entry.energy !== undefined) {
+          this.historyService.addEntry(entry);
+        }
+      }
+    } catch (error) {
+      this.log.debug(`Eve history update failed for ${this.serviceName}: ${error}`);
+    }
   }
 
   static generateIdentifier(endpoint: string | undefined): string {

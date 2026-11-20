@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { API, DynamicPlatformPlugin, Logger, LogLevel, PlatformAccessory, PlatformConfig } from 'homebridge';
+import { API, DynamicPlatformPlugin, Logger, LogLevel, MatterAccessory, PlatformAccessory, PlatformConfig } from 'homebridge';
 import mqtt from 'mqtt';
 import * as semver from 'semver';
 import { getAvailabilityConfigurationForDevices, isAvailabilityEnabledGlobally } from './configHelpers';
@@ -14,6 +14,8 @@ import { ConfigurableLogger } from './configurableLogger';
 import { BasicServiceCreatorManager } from './converters/creators';
 import { errorToString, getDiffFromArrays, parseBridgeOnlineState, sanitizeAccessoryName } from './helpers';
 import { BasicLogger } from './logger';
+import { decideMatterOutlet, getMatterOutletExposesForDevice, MatterOutletDecision } from './matter/outlet';
+import { MatterOutletDevice, MatterOutletManager } from './matter/outletManager';
 import { Zigbee2mqttAccessory } from './platformAccessory';
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import {
@@ -36,6 +38,8 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   public readonly log: ConfigurableLogger;
   private readonly mqttClient?: mqtt.MqttClient;
   private baseDeviceConfig: BaseDeviceConfiguration;
+  private readonly matterOutlets?: MatterOutletManager;
+  private readonly matterIneligibleWarned = new Set<string>();
 
   // this is used to track restored cached accessories
   private readonly accessories: Zigbee2mqttAccessory[] = [];
@@ -106,8 +110,29 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       }
       this.log.debug(`Default device config: ${JSON.stringify(this.baseDeviceConfig)}`);
 
+      this.matterOutlets = this.initializeMatter(this.config);
+
       this.mqttClient = this.initializeMqttClient(this.config);
     }
+  }
+
+  private initializeMatter(config: PluginConfiguration): MatterOutletManager | undefined {
+    const matterRequested = config.matter !== undefined || (config.devices ?? []).some((d) => d.matter !== undefined && d.matter !== false);
+    if (!this.api.isMatterEnabled?.() || this.api.matter === undefined) {
+      if (matterRequested) {
+        this.log.warn(
+          'Matter is configured for this plugin, but Matter is not enabled on this (child) bridge. ' +
+            'Devices will only be exposed via HAP. Enable Matter in the bridge settings to publish them via Matter.'
+        );
+      }
+      return undefined;
+    }
+    const manager = new MatterOutletManager(this, this.api.matter, this.log);
+    this.api.on('shutdown', () => manager.dispose());
+    if (matterRequested) {
+      this.log.info('Matter is enabled; eligible devices will be published as Matter outlets.');
+    }
+    return manager;
   }
 
   private initializeMqttClient(config: PluginConfiguration): mqtt.MqttClient {
@@ -316,6 +341,9 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
       if (updateDevices || updateGroups) {
         this.removeStaleDevices();
       }
+      if (updateDevices) {
+        this.syncMatterOutlets();
+      }
     } catch (err) {
       this.log.error(`Failed to process MQTT message on '${fullTopic}'. (Maybe check the MQTT version?)`);
       this.log.error(errorToString(err));
@@ -444,10 +472,14 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     }
 
     const accessory = this.accessories.find((acc) => acc.matchesIdentifier(topic));
-    if (accessory) {
+    const isMatterOutlet = this.matterOutlets?.handlesDevice(topic) ?? false;
+    if (accessory || isMatterOutlet) {
       try {
         const state = JSON.parse(statePayload);
-        accessory.updateStates(state);
+        accessory?.updateStates(state);
+        if (isMatterOutlet) {
+          this.matterOutlets?.handleStateUpdate(topic, state);
+        }
         this.log.debug(`Handled device update for ${topic}: ${statePayload}`);
       } catch (err) {
         this.log.error(`Failed to process status update with payload: ${statePayload}`);
@@ -484,6 +516,54 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
 
   configureAccessory(accessory: PlatformAccessory) {
     this.addAccessory(accessory);
+  }
+
+  configureMatterAccessory(accessory: MatterAccessory) {
+    this.matterOutlets?.configureCachedAccessory(accessory);
+  }
+
+  /**
+   * Determine if (and how) a device is published via Matter.
+   * Always returns publish=false if Matter is not enabled, the device is excluded, or it is not a metering outlet.
+   */
+  private getMatterOutletDecision(device: DeviceListEntry | string): MatterOutletDecision & { device?: MatterOutletDevice } {
+    if (this.matterOutlets === undefined || typeof device === 'string' || this.isDeviceExcludedByConfig(device)) {
+      return { publish: false, keepHap: true };
+    }
+    const exposes = getMatterOutletExposesForDevice(device);
+    const additionalConfig = this.getAdditionalConfigForDevice(device);
+    const decision = decideMatterOutlet(this.config?.matter, isDeviceConfiguration(additionalConfig) ? additionalConfig.matter : undefined);
+    if (!decision.publish) {
+      return decision;
+    }
+    if (exposes === undefined) {
+      if (
+        isDeviceConfiguration(additionalConfig) &&
+        additionalConfig.matter !== undefined &&
+        !this.matterIneligibleWarned.has(device.ieee_address)
+      ) {
+        this.matterIneligibleWarned.add(device.ieee_address);
+        this.log.warn(
+          `Device ${device.friendly_name} has Matter enabled, but it does not expose an on/off state and power or energy measurements.`
+        );
+      }
+      return { publish: false, keepHap: true };
+    }
+    return { ...decision, device: { device, exposes } };
+  }
+
+  private syncMatterOutlets(): void {
+    if (this.matterOutlets === undefined) {
+      return;
+    }
+    const outlets: MatterOutletDevice[] = [];
+    for (const device of this.lastReceivedDevices) {
+      const decision = this.getMatterOutletDecision(device);
+      if (decision.publish && decision.device !== undefined) {
+        outlets.push(decision.device);
+      }
+    }
+    this.matterOutlets.syncDevices(outlets);
   }
 
   // biome-ignore lint/suspicious/noExplicitAny: MQTT message payload type
@@ -536,7 +616,20 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
     return result;
   }
 
+  /** Determine if a device must not be exposed via HAP. */
   private isDeviceExcluded(device: DeviceListEntry | string): boolean {
+    if (this.isDeviceExcludedByConfig(device)) {
+      return true;
+    }
+    const matter = this.getMatterOutletDecision(device);
+    if (matter.publish && !matter.keepHap) {
+      this.log.debug(`Device is exposed via Matter only: ${typeof device === 'string' ? device : device.friendly_name}`);
+      return true;
+    }
+    return false;
+  }
+
+  private isDeviceExcludedByConfig(device: DeviceListEntry | string): boolean {
     const additionalConfig = this.getAdditionalConfigForDevice(device);
     if (additionalConfig?.exclude === true) {
       this.log.debug(`Device is excluded: ${additionalConfig.id}`);
@@ -562,7 +655,13 @@ export class Zigbee2mqttPlatform implements DynamicPlatformPlugin {
   private addAccessory(accessory: PlatformAccessory) {
     const ieee_address = accessory.context.device.ieee_address ?? accessory.context.device.ieeeAddr;
     if (this.isDeviceExcluded(accessory.context.device)) {
-      this.log.warn(`Excluded device found on startup: ${accessory.context.device.friendly_name} (${ieee_address}).`);
+      if (this.isDeviceExcludedByConfig(accessory.context.device)) {
+        this.log.warn(`Excluded device found on startup: ${accessory.context.device.friendly_name} (${ieee_address}).`);
+      } else {
+        this.log.info(
+          `Removing HAP accessory, as it is now exposed via Matter: ${accessory.context.device.friendly_name} (${ieee_address}).`
+        );
+      }
       process.nextTick(() => {
         try {
           this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);

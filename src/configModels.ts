@@ -1,6 +1,12 @@
 import { LogLevel, PlatformConfig } from 'homebridge';
 import { ConverterConfigValidatorCollection } from './converters/creators';
 import { BasicLogger } from './logger';
+import {
+  isMatterDeviceConfiguration,
+  isMatterPlatformConfiguration,
+  MatterDeviceConfiguration,
+  MatterPlatformConfiguration,
+} from './matter/outlet';
 import { ExposesEntry, isExposesEntry } from './z2mModels';
 
 export interface PluginConfiguration extends PlatformConfig {
@@ -10,6 +16,7 @@ export interface PluginConfiguration extends PlatformConfig {
   experimental?: string[];
   devices?: DeviceConfiguration[];
   exclude_grouped_devices?: boolean;
+  matter?: MatterPlatformConfiguration;
 }
 
 function hasValidConverterConfigurations(
@@ -88,6 +95,14 @@ export const isPluginConfiguration = (
     return false;
   }
 
+  if (x.matter !== undefined && !isMatterPlatformConfiguration(x.matter)) {
+    logger?.error(
+      'Incorrect configuration: matter must be an object with an optional "outlets" ("auto" or "configured") and "keep_hap" (boolean): ' +
+        JSON.stringify(x.matter)
+    );
+    return false;
+  }
+
   return hasValidDeviceConfigurations(x.devices, converterConfigValidator, logger);
 };
 
@@ -141,6 +156,7 @@ export interface DeviceConfiguration extends BaseDeviceConfiguration {
   id: string;
   included_keys?: string[];
   exposes?: ExposesEntry[];
+  matter?: MatterDeviceConfiguration;
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: type guard function needs to accept any input
@@ -204,6 +220,11 @@ export const isDeviceConfiguration = (x: any): x is DeviceConfiguration => {
 
   // Optional included_keys which must be an array of strings if present
   if (x.included_keys !== undefined && !isStringArray(x.included_keys)) {
+    return false;
+  }
+
+  // Optional matter which must be a boolean or an object with optional booleans
+  if (x.matter !== undefined && !isMatterDeviceConfiguration(x.matter)) {
     return false;
   }
 

@@ -23,10 +23,10 @@ const CHARACTERISTIC_KWH_NAME = 'Total Consumption';
 const CHARACTERISTIC_PRODUCED_KWH_NAME = 'Total Production';
 
 // Property names with fallbacks (first match wins)
-const POWER_NAMES = ['power', 'active_power', 'load'];
-const VOLTAGE_NAMES = ['voltage', 'mains_voltage', 'rms_voltage'];
-const CURRENT_NAMES = ['current'];
-const ENERGY_CONSUMED_NAMES = ['energy', 'consumed_energy', 'energy_consumed'];
+export const POWER_NAMES = ['power', 'active_power', 'load'];
+export const VOLTAGE_NAMES = ['voltage', 'mains_voltage', 'rms_voltage'];
+export const CURRENT_NAMES = ['current'];
+export const ENERGY_CONSUMED_NAMES = ['energy', 'consumed_energy', 'energy_consumed'];
 const ENERGY_PRODUCED_NAMES = ['produced_energy', 'energy_produced'];
 
 // All electrical property names (for filtering)

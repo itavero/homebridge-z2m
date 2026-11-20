@@ -19,6 +19,10 @@ A possible configuration looks like this:
       ]
    },
    "exclude_grouped_devices": false,
+   "matter": {
+      "outlets": "configured",
+      "keep_hap": false
+   },
    "experimental": [
       "FEATURE_FLAG",
    ],
@@ -103,6 +107,7 @@ Currently the following options are available:
 * `excluded_endpoints`: an array of endpoints that should be ignored/excluded for this device. To ignore properties without an endpoint, add `''` (empty string) to the array.
 * `values`: Per property, you can specify an include and/or exclude list to ignore certain values. The values may start or end with an asterisk (`*`) as a wildcard.
 * `exposes`: An array of exposes information, using the [structures defined by Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/usage/exposes.html).
+* `matter`: Publish this device as a Matter outlet with power/energy measurements (`true`, `false` or `{ "outlet": true, "keep_hap": false }`). See [Matter outlets](matter.md).
 * `converters`: An object to optionally provide additional configuration for specific converters. More information can be found in the documentation of the [converters](converters.md), if applicable.
 
 ### Defaults
@@ -139,6 +144,11 @@ For example, to exclude all devices, except a few you want to specifically inclu
    ]
 }
 ```
+
+## Matter {#matter}
+When Matter is enabled on the bridge running this plugin, devices with an on/off state and power and/or energy measurements can be published as Matter outlets,
+so Apple Home (iOS 27 or later) shows their consumption in its Energy view. Use the `matter` object to enable this for all eligible devices (`"outlets": "auto"`)
+and to keep them exposed via HAP as well (`keep_hap`). Please refer to the [Matter documentation](matter.md) for more information.
 
 ## Support for groups
 Groups defined in Zigbee2MQTT will automatically be exposed as a single accessory, so they can be controlled as if they were a single device.

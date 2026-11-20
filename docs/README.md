@@ -12,6 +12,7 @@ This is the documentation website of the Homebridge plugin that integrates [Zigb
 
 * [Getting Started](install.md) (how to install the plugin)
 * [Configuration](config.md)
+* [Matter outlets with energy measurement](matter.md) (Apple Home Energy view)
 * [How it works](howitworks.md)
 * [Service Handlers](converters.md)
 * [Device support](devices/index.md) (automatically generated)

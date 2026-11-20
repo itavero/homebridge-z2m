@@ -4,6 +4,8 @@ Devices that expose electrical measurement properties (`power`, `voltage`, `curr
 
 These characteristics are visible in apps that support custom HomeKit characteristics, such as the [Eve app](https://apps.apple.com/app/eve-for-homekit/id917695792).
 
+To see power on the tile (iOS 27 or later) and power and energy in the Energy view (iOS 27.3 or later) of Apple Home, publish the device via Matter instead. See [Matter outlets](matter.md).
+
 ## Supported Properties
 
 The following table shows the supported exposes entries and the corresponding characteristics:

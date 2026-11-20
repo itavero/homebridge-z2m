@@ -90,6 +90,29 @@ describe('Plugin configuration', () => {
     expect(isPluginConfiguration(configValid, BasicServiceCreatorManager.getInstance())).toBe(true);
   });
 
+  it('accepts a valid matter configuration', () => {
+    const config: PlatformConfig = {
+      ...minimalValidConfiguration,
+      matter: { outlets: 'auto', keep_hap: false },
+      devices: [
+        { id: 'plug_1', matter: { outlet: true } },
+        { id: 'plug_2', matter: { outlet: false } },
+        { id: 'plug_3', matter: { keep_hap: true } },
+      ],
+    };
+    expect(isPluginConfiguration(config, BasicServiceCreatorManager.getInstance())).toBe(true);
+  });
+
+  it('rejects an invalid platform matter configuration', () => {
+    const config: PlatformConfig = { ...minimalValidConfiguration, matter: { outlets: 'everything' } };
+    expect(isPluginConfiguration(config, BasicServiceCreatorManager.getInstance())).toBe(false);
+  });
+
+  it('rejects an invalid device matter configuration', () => {
+    const config: PlatformConfig = { ...minimalValidConfiguration, devices: [{ id: 'plug_1', matter: 'yes' }] };
+    expect(isPluginConfiguration(config, BasicServiceCreatorManager.getInstance())).toBe(false);
+  });
+
   describe('requires valid defaults', () => {
     it('with a boolean exclude value (if present)', () => {
       const configInvalid: PlatformConfig = {

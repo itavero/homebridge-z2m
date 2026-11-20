@@ -343,6 +343,40 @@
         "default": false,
         "required": false
       },
+      "matter": {
+        "title": "Matter",
+        "description": "Publish devices with an on/off state and power/energy measurements as Matter outlets, so Apple Home shows their wattage on the tile (iOS 27+) and lists them individually in the Energy view (iOS 27.3+). Requires Matter to be enabled on the (child) bridge running this plugin (Homebridge 2.5 or newer).",
+        "type": "object",
+        "required": false,
+        "properties": {
+          "outlets": {
+            "title": "Devices to publish as Matter outlets",
+            "type": "string",
+            "default": "configured",
+            "oneOf": [
+              {
+                "title": "Only devices with Matter enabled in their device configuration",
+                "enum": [
+                  "configured"
+                ]
+              },
+              {
+                "title": "All devices exposing an on/off state and power or energy",
+                "enum": [
+                  "auto"
+                ]
+              }
+            ],
+            "required": false
+          },
+          "keep_hap": {
+            "title": "Also keep exposing these devices via HAP (they will appear twice in the Home app)",
+            "type": "boolean",
+            "default": false,
+            "required": false
+          }
+        }
+      },
       "devices": {
         "title": "Devices",
         "type": "array",
@@ -361,6 +395,27 @@
               "title": "Exclude entire device",
               "$ref": "#/definitions/exclude",
               "default": false
+            },
+            "matter": {
+              "title": "Matter",
+              "description": "Publish this device as a Matter outlet with power/energy measurements (only for devices with an on/off state and power or energy).",
+              "type": "object",
+              "required": false,
+              "properties": {
+                "outlet": {
+                  "title": "Publish as Matter outlet (leave empty to follow the platform setting)",
+                  "type": "boolean",
+                  "required": false
+                },
+                "keep_hap": {
+                  "title": "Also keep exposing this device via HAP",
+                  "type": "boolean",
+                  "required": false
+                }
+              },
+              "condition": {
+                "functionBody": "return !model.devices[arrayIndices].exclude;"
+              }
             },
             "ignore_availability": {
               "$ref": "#/definitions/ignore_availability",

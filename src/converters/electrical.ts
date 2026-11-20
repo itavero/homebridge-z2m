@@ -248,6 +248,9 @@ export class ElectricalSensorHandler implements ServiceHandler {
         }
         if (entry.power !== undefined || entry.energy !== undefined) {
           this.historyService.addEntry(entry);
+          this.log.warn(`Fed Eve history entry for ${this.serviceName}: ${JSON.stringify(entry)}`);
+        } else {
+          this.log.warn(`No Eve history entry for ${this.serviceName}; state=${JSON.stringify(state)}`);
         }
       }
     } catch (error) {

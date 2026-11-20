@@ -1,4 +1,4 @@
-import { Characteristic, Controller, Service } from 'homebridge';
+import { Characteristic, Controller, PlatformAccessory, Service } from 'homebridge';
 import { BasicLogger } from '../logger';
 import { ExposesEntry } from '../z2mModels';
 
@@ -6,6 +6,9 @@ export interface BasicAccessory {
   log: BasicLogger;
 
   displayName: string;
+
+  /** Underlying Homebridge PlatformAccessory, used for Eve history services. */
+  getPlatformAccessory?(): PlatformAccessory;
 
   getDefaultServiceDisplayName(subType: string | undefined): string;
 

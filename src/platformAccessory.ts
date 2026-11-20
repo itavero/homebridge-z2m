@@ -356,6 +356,10 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
     return this.accessory.addService(service);
   }
 
+  getPlatformAccessory(): PlatformAccessory {
+    return this.accessory;
+  }
+
   queueDataForSetAction(data: Record<string, unknown>): void {
     this.pendingPublishData = { ...this.pendingPublishData, ...data };
     this.log.debug(`Pending data: ${JSON.stringify(this.pendingPublishData)}`);
@@ -446,8 +450,14 @@ export class Zigbee2mqttAccessory implements BasicAccessory {
   }
 
   private cleanStaleServices(): void {
-    // Remove all services of which identifier is not known
-    const staleServices = this.accessory.services.filter((s) => !this.serviceIds.has(Zigbee2mqttAccessory.getUniqueIdForService(s)));
+    // Remove all services of which identifier is not known.
+    // Keep Eve history services (added by fakegato-history) which are not tracked in serviceIds.
+    const staleServices = this.accessory.services.filter((s) => {
+      if (s.UUID === 'E863F007-079E-48FF-8F27-9C2605A29F52') {
+        return false;
+      }
+      return !this.serviceIds.has(Zigbee2mqttAccessory.getUniqueIdForService(s));
+    });
     staleServices.forEach((s) => {
       this.log.debug(`Clean up stale service ${s.displayName} (${s.UUID}) for accessory ${this.displayName} (${this.ieeeAddress}).`);
       this.accessory.removeService(s);

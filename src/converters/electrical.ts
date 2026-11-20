@@ -1,3 +1,4 @@
+import FakeGatoHistoryModule from 'fakegato-history';
 import { Characteristic, Service } from 'homebridge';
 import { hap } from '../hap';
 import { groupByEndpoint } from '../helpers';
@@ -129,6 +130,10 @@ function getOrAddCustomCharacteristic(service: Service, name: string, factory: (
   return service.addCharacteristic(factory());
 }
 
+interface EveHistoryService {
+  addEntry(entry: { time: number; power?: number }): void;
+}
+
 export class ElectricalSensorHandler implements ServiceHandler {
   protected log: BasicLogger;
   protected monitors: CharacteristicMonitor[] = [];
@@ -141,12 +146,44 @@ export class ElectricalSensorHandler implements ServiceHandler {
   private readonly currentExpose?: ExposesEntryWithProperty;
   private readonly energyExpose?: ExposesEntryWithProperty;
 
+  // Eve history service (optional). Exposes consumption history to the Eve app.
+  protected historyService?: EveHistoryService;
+
   constructor(accessory: BasicAccessory, electricalExposes: ElectricalExposes, endpoint: string | undefined) {
     this.log = accessory.log;
     this.serviceName = accessory.getDefaultServiceDisplayName(endpoint);
     this.identifier = ElectricalSensorHandler.generateIdentifier(endpoint);
 
     this.service = accessory.getOrAddService(createElectricalSensorService(this.serviceName, endpoint));
+
+    // Setup Eve history service (best effort; requires a real Homebridge accessory)
+    try {
+      const platformAccessory = accessory.getPlatformAccessory?.();
+      // Only create an Eve history service for single-endpoint accessories. Multi-endpoint
+      // devices share one PlatformAccessory, and fakegato-history reuses a single history
+      // service across handlers, which would corrupt per-endpoint histories.
+      if (platformAccessory !== undefined && endpoint === undefined) {
+        const platform = (accessory as unknown as { platform?: { api?: { user?: { storagePath?: () => string } } } }).platform;
+        const storagePath = platform?.api?.user?.storagePath?.() ?? process.cwd();
+        const homebridge = { hap, user: { storagePath: () => storagePath } };
+        type FakeGatoHistoryFactory = (
+          homebridge: unknown
+        ) => new (
+          type: string,
+          accessory: unknown,
+          options?: { storage?: string; log?: BasicLogger; filename?: string }
+        ) => EveHistoryService;
+        const FakeGatoHistoryService = (FakeGatoHistoryModule as unknown as FakeGatoHistoryFactory)(homebridge);
+        this.historyService = new FakeGatoHistoryService('energy', platformAccessory, {
+          storage: 'fs',
+          log: this.log,
+          filename: endpoint !== undefined ? `${platformAccessory.displayName ?? 'accessory'}_${endpoint}_persist.json` : undefined,
+        });
+        accessory.log.debug(`Configured Eve history service for ${this.serviceName}`);
+      }
+    } catch (error) {
+      accessory.log.debug(`Eve history service not available for ${this.serviceName}: ${error}`);
+    }
 
     accessory.log.debug(`Configuring ElectricalSensor for ${this.serviceName}`);
 
@@ -214,6 +251,24 @@ export class ElectricalSensorHandler implements ServiceHandler {
 
   updateState(state: Record<string, unknown>): void {
     this.monitors.forEach((m) => m.callback(state, this.log));
+
+    // Feed Eve history service (best effort)
+    try {
+      if (this.historyService !== undefined) {
+        const power = this.powerExpose !== undefined ? state[this.powerExpose.property] : undefined;
+        const entry: Record<string, unknown> = { time: Math.round(Date.now() / 1000) };
+        if (typeof power === 'number') {
+          // Eve energy history encodes power * 10 in 16 bits (max 6553.5 W).
+          entry.power = Math.min(power, 6553.5);
+          this.historyService.addEntry(entry as { time: number; power?: number });
+          this.log.debug(`Fed Eve history entry for ${this.serviceName}: ${JSON.stringify(entry)}`);
+        } else {
+          this.log.debug(`No power reading for ${this.serviceName}; skipping Eve history sample.`);
+        }
+      }
+    } catch (error) {
+      this.log.debug(`Eve history update failed for ${this.serviceName}: ${error}`);
+    }
   }
 
   static generateIdentifier(endpoint: string | undefined): string {

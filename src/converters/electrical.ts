@@ -159,7 +159,10 @@ export class ElectricalSensorHandler implements ServiceHandler {
     // Setup Eve history service (best effort; requires a real Homebridge accessory)
     try {
       const platformAccessory = accessory.getPlatformAccessory?.();
-      if (platformAccessory !== undefined) {
+      // Only create an Eve history service for single-endpoint accessories. Multi-endpoint
+      // devices share one PlatformAccessory, and fakegato-history reuses a single history
+      // service across handlers, which would corrupt per-endpoint histories.
+      if (platformAccessory !== undefined && endpoint === undefined) {
         const platform = (accessory as unknown as { platform?: { api?: { user?: { storagePath?: () => string } } } }).platform;
         const storagePath = platform?.api?.user?.storagePath?.() ?? process.cwd();
         const homebridge = { hap, user: { storagePath: () => storagePath } };
@@ -255,7 +258,8 @@ export class ElectricalSensorHandler implements ServiceHandler {
         const power = this.powerExpose !== undefined ? state[this.powerExpose.property] : undefined;
         const entry: Record<string, unknown> = { time: Math.round(Date.now() / 1000) };
         if (typeof power === 'number') {
-          entry.power = power;
+          // Eve energy history encodes power * 10 in 16 bits (max 6553.5 W).
+          entry.power = Math.min(power, 6553.5);
           this.historyService.addEntry(entry as { time: number; power?: number });
           this.log.debug(`Fed Eve history entry for ${this.serviceName}: ${JSON.stringify(entry)}`);
         } else {
